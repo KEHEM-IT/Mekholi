@@ -40,7 +40,7 @@ const features: (NavItem & { icon: string; description: string })[] = [
     <div class="home-header">
       <i class="fa-solid fa-school home-icon"></i>
       <div>
-        <h1>Welcome to Madol</h1>
+        <h1>Welcome to Mekholi</h1>
         <p>Your school management ERP starting point.</p>
       </div>
     </div>

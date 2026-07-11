@@ -6,7 +6,7 @@ const { user, logout } = useAuth()
 
 <template>
   <header class="app-header">
-    <span class="title">Madol ERP</span>
+    <span class="title">Mekholi ERP</span>
     <div class="actions">
       <span v-if="user" class="user-name">{{ user.name }}</span>
       <button v-if="user" class="btn btn--ghost" @click="logout">Logout</button>

@@ -1,4 +1,4 @@
-# Madol — Setup Instructions
+# Mekholi — Setup Instructions
 
 Vue 3 + Vite + TypeScript ERP frontend, with Vue Router, Pinia, and a SCSS design system.
 
@@ -83,7 +83,7 @@ src/
 - `POST /auth/login` → `{ token, user }`
 - `GET /auth/me` → `User`
 
-Token is stored in `localStorage` under `madol_auth_token` and attached as `Authorization: Bearer <token>` on authenticated requests. Update `src/services/http.ts` / `src/stores/auth.ts` if your backend's auth contract differs.
+Token is stored in `localStorage` under `mekholi_auth_token` and attached as `Authorization: Bearer <token>` on authenticated requests. Update `src/services/http.ts` / `src/stores/auth.ts` if your backend's auth contract differs.
 
 ## Adding a new page
 

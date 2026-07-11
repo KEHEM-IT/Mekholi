@@ -1,6 +1,6 @@
 <template>
   <footer class="app-footer">
-    <span>&copy; {{ new Date().getFullYear() }} Madol ERP</span>
+    <span>&copy; {{ new Date().getFullYear() }} Mekholi ERP</span>
   </footer>
 </template>
 
