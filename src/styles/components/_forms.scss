@@ -10,13 +10,96 @@
   label {
     font-size: 0.9rem;
     font-weight: 600;
+    color: $color-text-secondary;
   }
 
-  input,
-  select,
-  textarea {
+  .form-hint {
+    font-size: 0.8rem;
+    color: $color-text-muted;
+  }
+
+  .form-error {
+    font-size: 0.8rem;
+    color: $color-danger;
+  }
+}
+
+input,
+select,
+textarea {
+  background: $color-input-bg;
+  border: 1px solid $color-input-border;
+  border-radius: $radius-md;
+  padding: $space-2 $space-3;
+  color: $color-text;
+  transition:
+    border-color $transition-fast,
+    background-color $transition-fast;
+
+  &::placeholder {
+    color: $color-input-placeholder;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-input-border-focus;
+  }
+
+  &:disabled {
+    background: $color-input-disabled-bg;
+    color: $color-text-disabled;
+    cursor: not-allowed;
+  }
+
+  &.has-error {
+    border-color: $color-danger;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
     padding: $space-2 $space-3;
-    border: 1px solid $color-border;
-    border-radius: $radius-md;
+    border-bottom: 1px solid $color-border;
+    text-align: left;
+  }
+
+  th {
+    color: $color-text-secondary;
+    font-weight: 600;
+    background: $color-surface-alt;
+  }
+
+  tr:hover td {
+    background: $color-surface-hover;
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: $space-1 $space-2;
+  border-radius: $radius-sm;
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  &--success {
+    background: $color-success-muted;
+    color: $color-success;
+  }
+  &--warning {
+    background: $color-warning-muted;
+    color: $color-warning;
+  }
+  &--danger {
+    background: $color-danger-muted;
+    color: $color-danger;
+  }
+  &--info {
+    background: $color-info-muted;
+    color: $color-info;
   }
 }

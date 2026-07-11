@@ -3,13 +3,16 @@
 .btn {
   padding: $space-2 $space-4;
   border-radius: $radius-md;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
   font-weight: 600;
-  transition: opacity 0.15s ease;
+  transition:
+    background-color $transition-fast,
+    border-color $transition-fast,
+    opacity $transition-fast;
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
   }
 
@@ -18,17 +21,57 @@
     color: #fff;
 
     &:hover:not(:disabled) {
-      background: $color-primary-dark;
+      background: $color-primary-hover;
+    }
+    &:active:not(:disabled) {
+      background: $color-primary-active;
     }
   }
 
   &--secondary {
-    background: $color-background-soft;
+    background: $color-surface-alt;
+    border-color: $color-border;
     color: $color-text;
+
+    &:hover:not(:disabled) {
+      background: $color-surface-hover;
+    }
+  }
+
+  &--success {
+    background: $color-success;
+    color: $color-text-inverse;
+
+    &:hover:not(:disabled) {
+      background: $color-success-hover;
+    }
+  }
+
+  &--warning {
+    background: $color-warning;
+    color: $color-text-inverse;
+
+    &:hover:not(:disabled) {
+      background: $color-warning-hover;
+    }
   }
 
   &--danger {
     background: $color-danger;
     color: #fff;
+
+    &:hover:not(:disabled) {
+      background: $color-danger-hover;
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: $color-text-secondary;
+
+    &:hover:not(:disabled) {
+      background: $color-surface-hover;
+      color: $color-text;
+    }
   }
 }

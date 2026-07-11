@@ -29,40 +29,25 @@ async function onSubmit() {
 </script>
 
 <template>
-  <form @submit.prevent="onSubmit">
+  <form class="login-form" @submit.prevent="onSubmit">
     <h1>Sign in</h1>
-    <label>
-      Email
-      <input v-model="email" type="email" required />
-    </label>
-    <label>
-      Password
-      <input v-model="password" type="password" required />
-    </label>
-    <p v-if="error" class="error">{{ error }}</p>
+    <div class="form-field">
+      <label for="email">Email</label>
+      <input id="email" v-model="email" type="email" required />
+    </div>
+    <div class="form-field">
+      <label for="password">Password</label>
+      <input id="password" v-model="password" type="password" required />
+    </div>
+    <p v-if="error" class="form-error">{{ error }}</p>
     <BaseButton type="submit" :disabled="loading">Sign in</BaseButton>
   </form>
 </template>
 
 <style scoped>
-form {
+.login-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
-label {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  font-size: 0.9rem;
-}
-input {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-}
-.error {
-  color: #dc2626;
-  font-size: 0.85rem;
 }
 </style>

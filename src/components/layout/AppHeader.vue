@@ -8,8 +8,8 @@ const { user, logout } = useAuth()
   <header class="app-header">
     <span class="title">Madol ERP</span>
     <div class="actions">
-      <span v-if="user">{{ user.name }}</span>
-      <button v-if="user" @click="logout">Logout</button>
+      <span v-if="user" class="user-name">{{ user.name }}</span>
+      <button v-if="user" class="btn btn--ghost" @click="logout">Logout</button>
     </div>
   </header>
 </template>
@@ -20,6 +20,17 @@ const { user, logout } = useAuth()
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.user-name {
+  color: var(--color-text-secondary);
+  margin-right: 0.75rem;
 }
 </style>

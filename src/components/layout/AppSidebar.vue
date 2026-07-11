@@ -22,18 +22,28 @@ const items: NavItem[] = [
 <style scoped>
 .app-sidebar {
   width: 220px;
-  border-right: 1px solid #e5e7eb;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
   padding: 1rem;
 }
+
 .nav-link {
   display: block;
   padding: 0.5rem 0.75rem;
   border-radius: 8px;
-  color: inherit;
+  color: var(--color-text-secondary);
   text-decoration: none;
+  transition: background-color var(--transition-fast);
 }
+
+.nav-link:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
 .nav-link.router-link-active {
-  background: #eef2ff;
+  background: var(--color-primary-muted);
+  color: var(--color-primary);
   font-weight: 600;
 }
 </style>

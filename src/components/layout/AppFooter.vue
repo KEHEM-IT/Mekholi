@@ -7,8 +7,9 @@
 <style scoped>
 .app-footer {
   padding: 1rem 1.5rem;
-  border-top: 1px solid #e5e7eb;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
   font-size: 0.85rem;
-  color: #6b7280;
+  color: var(--color-text-muted);
 }
 </style>

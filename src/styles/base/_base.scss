@@ -1,11 +1,57 @@
 @use '../abstracts' as *;
 
 :root {
-  --color-primary: #{$color-primary};
-  --color-background: #{$color-background};
-  --color-background-soft: #{$color-background-soft};
-  --color-text: #{$color-text};
+  // Surfaces
+  --color-bg: #{$color-bg};
+  --color-surface: #{$color-surface};
+  --color-surface-alt: #{$color-surface-alt};
+  --color-surface-hover: #{$color-surface-hover};
+
+  // Borders
   --color-border: #{$color-border};
+  --color-border-strong: #{$color-border-strong};
+
+  // Text
+  --color-text: #{$color-text};
+  --color-text-secondary: #{$color-text-secondary};
+  --color-text-muted: #{$color-text-muted};
+  --color-text-disabled: #{$color-text-disabled};
+  --color-text-inverse: #{$color-text-inverse};
+
+  // Brand
+  --color-primary: #{$color-primary};
+  --color-primary-hover: #{$color-primary-hover};
+  --color-primary-active: #{$color-primary-active};
+  --color-primary-muted: #{$color-primary-muted};
+
+  // Semantic status
+  --color-success: #{$color-success};
+  --color-success-hover: #{$color-success-hover};
+  --color-success-muted: #{$color-success-muted};
+  --color-warning: #{$color-warning};
+  --color-warning-hover: #{$color-warning-hover};
+  --color-warning-muted: #{$color-warning-muted};
+  --color-danger: #{$color-danger};
+  --color-danger-hover: #{$color-danger-hover};
+  --color-danger-muted: #{$color-danger-muted};
+  --color-info: #{$color-info};
+  --color-info-hover: #{$color-info-hover};
+  --color-info-muted: #{$color-info-muted};
+
+  // Forms
+  --color-input-bg: #{$color-input-bg};
+  --color-input-border: #{$color-input-border};
+  --color-input-border-focus: #{$color-input-border-focus};
+  --color-input-placeholder: #{$color-input-placeholder};
+  --color-input-disabled-bg: #{$color-input-disabled-bg};
+
+  // Elevation & motion
+  --shadow-sm: #{$shadow-sm};
+  --shadow-card: #{$shadow-card};
+  --transition-fast: #{$transition-fast};
+  --transition-base: #{$transition-base};
+
+  color-scheme: dark;
 }
 
 html,
