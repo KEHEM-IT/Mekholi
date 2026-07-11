@@ -7,7 +7,12 @@ export const routes: RouteRecordRaw[] = [
     path: '/',
     component: () => import('@/layouts/DefaultLayout.vue'),
     children: [
-      { path: '', name: 'home', component: () => import('@/pages/HomeView.vue') },
+      {
+        path: '',
+        name: 'home',
+        component: () => import('@/pages/HomeView.vue'),
+        beforeEnter: requireAuth,
+      },
       {
         path: 'dashboard',
         name: 'dashboard',
