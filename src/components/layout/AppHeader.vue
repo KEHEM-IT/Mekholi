@@ -137,3 +137,57 @@ onBeforeUnmount(() => {
         </Transition>
       </div>
 
+      <!-- Profile -->
+      <div ref="profileRef" class="dropdown-anchor">
+        <button
+          type="button"
+          class="profile-btn"
+          :aria-expanded="isProfileOpen"
+          @click="toggleProfile"
+        >
+          <span class="avatar">{{ user ? getInitials(user.name) : '' }}</span>
+          <span class="profile-meta">
+            <span class="profile-name">{{ user?.name }}</span>
+            <span class="profile-role">{{ roleLabel }}</span>
+          </span>
+          <i class="fa-duotone fa-chevron-down profile-chevron" :class="{ 'is-open': isProfileOpen }" />
+        </button>
+
+        <Transition name="pop">
+          <div v-if="isProfileOpen" class="dropdown-panel profile-panel">
+            <div class="profile-panel-header">
+              <span class="avatar avatar--lg">{{ user ? getInitials(user.name) : '' }}</span>
+              <div class="profile-panel-info">
+                <p class="profile-panel-name">{{ user?.name }}</p>
+                <p class="profile-panel-email">{{ user?.email }}</p>
+              </div>
+            </div>
+
+            <ul class="profile-menu">
+              <li>
+                <button type="button" class="profile-menu-item">
+                  <i class="fa-duotone fa-user" />
+                  <span>View Profile</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="profile-menu-item">
+                  <i class="fa-duotone fa-gear" />
+                  <span>Account Settings</span>
+                </button>
+              </li>
+            </ul>
+
+            <div class="profile-panel-divider" />
+
+            <button type="button" class="profile-menu-item profile-menu-item--danger" @click="logout">
+              <i class="fa-duotone fa-arrow-right-from-bracket" />
+              <span>Log out</span>
+            </button>
+          </div>
+        </Transition>
+      </div>
+    </div>
+  </header>
+</template>
+
