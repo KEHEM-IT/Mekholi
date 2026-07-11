@@ -1,0 +1,15 @@
+@use '../abstracts' as *;
+
+:root {
+  --color-primary: #{$color-primary};
+  --color-background: #{$color-background};
+  --color-background-soft: #{$color-background-soft};
+  --color-text: #{$color-text};
+  --color-border: #{$color-border};
+}
+
+html,
+body,
+#app {
+  min-height: 100vh;
+}

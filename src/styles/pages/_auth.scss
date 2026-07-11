@@ -1,0 +1,14 @@
+@use '../abstracts' as *;
+
+.auth-shell {
+  min-height: 100vh;
+  @include flex(row, center, center);
+  background: $color-background-soft;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  @include card;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
