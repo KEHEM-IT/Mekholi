@@ -3,51 +3,50 @@ import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import type { UserRole } from '@/types'
+import devUsersJson from '@/assets/auth/dev_users.json'
 
 const email = ref('')
 const password = ref('')
 const error = ref('')
 const loading = ref(false)
+const devLoadingRole = ref<UserRole | null>(null)
 
-const { login } = useAuth()
+const { login, loginAsDev } = useAuth()
 const router = useRouter()
 const route = useRoute()
+
+const devUsers = devUsersJson as { id: string; name: string; email: string; role: UserRole }[]
+
+const roleMeta: Record<UserRole, { label: string; icon: string }> = {
+  super_admin: { label: 'Super Admin', icon: 'fa-duotone fa-user-crown' },
+  institute_admin: { label: 'Institute Admin', icon: 'fa-duotone fa-building-columns' },
+  teacher: { label: 'Teacher', icon: 'fa-duotone fa-chalkboard-user' },
+  accountant: { label: 'Accountant', icon: 'fa-duotone fa-calculator' },
+  student_parent_portal: { label: 'Student / Parent', icon: 'fa-duotone fa-user-graduate' },
+}
 
 async function onSubmit() {
   loading.value = true
   error.value = ''
   try {
     await login(email.value, password.value)
-    const redirect = (route.query.redirect as string) || '/dashboard'
-    router.push(redirect)
+    redirectAfterLogin()
   } catch (e) {
     error.value = (e as Error).message
   } finally {
     loading.value = false
   }
 }
-</script>
 
-<template>
-  <form class="login-form" @submit.prevent="onSubmit">
-    <h1>Sign in</h1>
-    <div class="form-field">
-      <label for="email">Email</label>
-      <input id="email" v-model="email" type="email" required />
-    </div>
-    <div class="form-field">
-      <label for="password">Password</label>
-      <input id="password" v-model="password" type="password" required />
-    </div>
-    <p v-if="error" class="form-error">{{ error }}</p>
-    <BaseButton type="submit" :disabled="loading">Sign in</BaseButton>
-  </form>
-</template>
-
-<style scoped>
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+function onDevLogin(role: UserRole) {
+  devLoadingRole.value = role
+  loginAsDev(role)
+  redirectAfterLogin()
 }
-</style>
+
+function redirectAfterLogin() {
+  const redirect = (route.query.redirect as string) || '/dashboard'
+  router.push(redirect)
+}
+</script>

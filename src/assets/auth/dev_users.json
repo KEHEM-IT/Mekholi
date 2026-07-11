@@ -1,0 +1,32 @@
+[
+  {
+    "id": "dev-super-admin",
+    "name": "Dev Super Admin",
+    "email": "super.admin@mekholi.dev",
+    "role": "super_admin"
+  },
+  {
+    "id": "dev-institute-admin",
+    "name": "Dev Institute Admin",
+    "email": "institute.admin@mekholi.dev",
+    "role": "institute_admin"
+  },
+  {
+    "id": "dev-teacher",
+    "name": "Dev Teacher",
+    "email": "teacher@mekholi.dev",
+    "role": "teacher"
+  },
+  {
+    "id": "dev-accountant",
+    "name": "Dev Accountant",
+    "email": "accountant@mekholi.dev",
+    "role": "accountant"
+  },
+  {
+    "id": "dev-student-parent",
+    "name": "Dev Student/Parent",
+    "email": "student.parent@mekholi.dev",
+    "role": "student_parent_portal"
+  }
+]
