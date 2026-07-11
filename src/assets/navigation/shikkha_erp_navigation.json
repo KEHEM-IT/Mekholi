@@ -1,0 +1,260 @@
+{
+  "shikkha_erp_navigation": {
+    "super_admin": [
+      {
+        "menu": "Dashboard",
+        "menu_bn": "ড্যাশবোর্ড",
+        "icon": "fa-duotone fa-gauge-high",
+        "sub_menus": [
+          {
+            "name": "Platform overview",
+            "name_bn": "প্ল্যাটফর্ম ওভারভিউ",
+            "icon": "fa-duotone fa-chart-network"
+          },
+          {
+            "name": "Active tenants",
+            "name_bn": "সক্রিয় প্রতিষ্ঠান",
+            "icon": "fa-duotone fa-building-circle-check"
+          },
+          {
+            "name": "Revenue",
+            "name_bn": "রাজস্ব",
+            "icon": "fa-duotone fa-sack-dollar"
+          },
+          {
+            "name": "Support tickets",
+            "name_bn": "সাপোর্ট টিকিট",
+            "icon": "fa-duotone fa-headset"
+          }
+        ]
+      },
+      {
+        "menu": "Tenants",
+        "menu_bn": "প্রতিষ্ঠানসমূহ",
+        "icon": "fa-duotone fa-building-user",
+        "sub_menus": [
+          {
+            "name": "Institution list",
+            "name_bn": "প্রতিষ্ঠানের তালিকা",
+            "icon": "fa-duotone fa-list-ul"
+          },
+          {
+            "name": "Create institution",
+            "name_bn": "প্রতিষ্ঠান তৈরি করুন",
+            "icon": "fa-duotone fa-square-plus"
+          },
+          {
+            "name": "Suspend/Activate",
+            "name_bn": "স্থগিত/সক্রিয় করুন",
+            "icon": "fa-duotone fa-power-off"
+          },
+          {
+            "name": "Plan & billing",
+            "name_bn": "প্ল্যান ও বিলিং",
+            "icon": "fa-duotone fa-file-invoice-dollar"
+          }
+        ]
+      },
+      {
+        "menu": "Plugin Marketplace",
+        "menu_bn": "প্লাগইন মার্কেটপ্লেস",
+        "icon": "fa-duotone fa-store",
+        "sub_menus": [
+          {
+            "name": "Installed plugins",
+            "name_bn": "ইনস্টলকৃত প্লাগইন",
+            "icon": "fa-duotone fa-plug-circle-check"
+          },
+          {
+            "name": "Available plugins",
+            "name_bn": "উপলব্ধ প্লাগইন",
+            "icon": "fa-duotone fa-puzzle-piece"
+          },
+          {
+            "name": "Version releases",
+            "name_bn": "ভার্সন রিলিজ",
+            "icon": "fa-duotone fa-code-branch"
+          },
+          {
+            "name": "Pricing",
+            "name_bn": "মূল্য নির্ধারণ",
+            "icon": "fa-duotone fa-tags"
+          }
+        ]
+      },
+      {
+        "menu": "Global Settings",
+        "menu_bn": "গ্লোবাল সেটিংস",
+        "icon": "fa-duotone fa-gears",
+        "sub_menus": [
+          {
+            "name": "SMS/Payment gateway credentials",
+            "name_bn": "এসএমএস/পেমেন্ট গেটওয়ে ক্রেডেনশিয়াল",
+            "icon": "fa-duotone fa-key"
+          },
+          {
+            "name": "Email templates",
+            "name_bn": "ইমেইল টেমপ্লেট",
+            "icon": "fa-duotone fa-envelope-open-text"
+          },
+          {
+            "name": "System-wide announcements",
+            "name_bn": "সিস্টেম-ব্যাপী ঘোষণা",
+            "icon": "fa-duotone fa-bullhorn"
+          }
+        ]
+      },
+      {
+        "menu": "System Health",
+        "menu_bn": "সিস্টেম স্বাস্থ্য",
+        "icon": "fa-duotone fa-server",
+        "sub_menus": [
+          {
+            "name": "Server metrics",
+            "name_bn": "সার্ভার মেট্রিক্স",
+            "icon": "fa-duotone fa-chart-line"
+          },
+          {
+            "name": "Job queue status",
+            "name_bn": "জব কিউ স্ট্যাটাস",
+            "icon": "fa-duotone fa-list-check"
+          },
+          {
+            "name": "Error logs",
+            "name_bn": "এরর লগ",
+            "icon": "fa-duotone fa-triangle-exclamation"
+          },
+          {
+            "name": "Backups",
+            "name_bn": "ব্যাকআপ",
+            "icon": "fa-duotone fa-database"
+          }
+        ]
+      }
+    ],
+    "institute_admin": [
+      {
+        "menu": "Dashboard",
+        "menu_bn": "ড্যাশবোর্ড",
+        "icon": "fa-duotone fa-gauge-high",
+        "sub_menus": [
+          {
+            "name": "Enrolment",
+            "name_bn": "ভর্তি সংখ্যা",
+            "icon": "fa-duotone fa-user-plus"
+          },
+          {
+            "name": "Attendance %",
+            "name_bn": "উপস্থিতি %",
+            "icon": "fa-duotone fa-calendar-check"
+          },
+          {
+            "name": "Fee collection",
+            "name_bn": "ফি সংগ্রহ",
+            "icon": "fa-duotone fa-money-bill-trend-up"
+          },
+          {
+            "name": "Pass rate",
+            "name_bn": "পাসের হার",
+            "icon": "fa-duotone fa-square-poll-vertical"
+          },
+          {
+            "name": "Notices widget",
+            "name_bn": "নোটিশ উইজেট",
+            "icon": "fa-duotone fa-note-sticky"
+          }
+        ]
+      },
+      {
+        "menu": "Institute Setup",
+        "menu_bn": "প্রতিষ্ঠান সেটআপ",
+        "icon": "fa-duotone fa-school",
+        "sub_menus": [
+          {
+            "name": "Profile & EIIN",
+            "name_bn": "প্রোফাইল ও ইআইআইএন",
+            "icon": "fa-duotone fa-id-card"
+          },
+          {
+            "name": "Branches/Campus",
+            "name_bn": "শাখা/ক্যাম্পাস",
+            "icon": "fa-duotone fa-map-location-dot"
+          },
+          {
+            "name": "Academic Year",
+            "name_bn": "শিক্ষাবর্ষ",
+            "icon": "fa-duotone fa-calendar-days"
+          },
+          {
+            "name": "Class/Section/Group/Shift",
+            "name_bn": "শ্রেণি/শাখা/গ্রুপ/শিফট",
+            "icon": "fa-duotone fa-layer-group"
+          },
+          {
+            "name": "Holidays & Working Days",
+            "name_bn": "ছুটি ও কর্মদিবস",
+            "icon": "fa-duotone fa-umbrella-beach"
+          },
+          {
+            "name": "Grading Scheme",
+            "name_bn": "গ্রেডিং পদ্ধতি",
+            "icon": "fa-duotone fa-ranking-star"
+          }
+        ]
+      },
+      {
+        "menu": "Admission",
+        "menu_bn": "ভর্তি",
+        "icon": "fa-duotone fa-user-graduate",
+        "sub_menus": [
+          {
+            "name": "Online Form Builder",
+            "name_bn": "অনলাইন ফরম বিল্ডার",
+            "icon": "fa-duotone fa-file-pen"
+          },
+          {
+            "name": "Applications",
+            "name_bn": "আবেদনসমূহ",
+            "icon": "fa-duotone fa-inbox"
+          },
+          {
+            "name": "Admission Tests",
+            "name_bn": "ভর্তি পরীক্ষা",
+            "icon": "fa-duotone fa-pen-to-square"
+          },
+          {
+            "name": "Merit List",
+            "name_bn": "মেধা তালিকা",
+            "icon": "fa-duotone fa-trophy"
+          },
+          {
+            "name": "Document Verification",
+            "name_bn": "ডকুমেন্ট যাচাই",
+            "icon": "fa-duotone fa-file-circle-check"
+          },
+          {
+            "name": "Seat/Quota",
+            "name_bn": "আসন/কোটা",
+            "icon": "fa-duotone fa-chair"
+          },
+          {
+            "name": "Admission Settings",
+            "name_bn": "ভর্তি সেটিংস",
+            "icon": "fa-duotone fa-sliders"
+          }
+        ]
+      },
+      {
+        "menu": "Students",
+        "menu_bn": "শিক্ষার্থী",
+        "icon": "fa-duotone fa-user-group",
+        "sub_menus": [
+          {
+            "name": "Student List",
+            "name_bn": "শিক্ষার্থী তালিকা",
+            "icon": "fa-duotone fa-list-ul"
+          },
+          {
+            "name": "Add/Bulk Import",
+            "name_bn": "যোগ/বাল্ক ইমপোর্ট",
+            "icon": "fa-duotone fa-file-import"
