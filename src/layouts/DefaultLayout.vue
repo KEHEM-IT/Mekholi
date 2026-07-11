@@ -1,7 +1,15 @@
 <script setup lang="ts">
+import { watch } from 'vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AppSidebar from '@/components/layout/AppSidebar.vue'
-import AppFooter from '@/components/layout/AppFooter.vue'
+import { useSidebar } from '@/composables/useSidebar'
+
+const { isMobileOpen } = useSidebar()
+
+// Prevent background scroll while the mobile drawer is open.
+watch(isMobileOpen, (open) => {
+  document.body.style.overflow = open ? 'hidden' : ''
+})
 </script>
 
 <template>
@@ -12,23 +20,6 @@ import AppFooter from '@/components/layout/AppFooter.vue'
       <main class="app-content">
         <RouterView />
       </main>
-      <AppFooter />
     </div>
   </div>
 </template>
-
-<style scoped>
-.app-shell {
-  display: flex;
-  min-height: 100vh;
-}
-.app-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-.app-content {
-  flex: 1;
-  padding: 1.5rem;
-}
-</style>

@@ -1,49 +1,57 @@
 <script setup lang="ts">
-import type { NavItem } from '@/types'
+import { computed, ref } from 'vue'
+import { useAuth } from '@/composables/useAuth'
+import { useSidebar } from '@/composables/useSidebar'
+import { slugify } from '@/utils'
+import { APP_NAME } from '@/utils/constants'
+import type { NavigationMap, NavMenu } from '@/types'
+import navigationJson from '@/assets/navigation/shikkha_erp_navigation.json'
 
-const items: NavItem[] = [
-  { label: 'Dashboard', to: '/dashboard' },
-  { label: 'Inventory', to: '/inventory' },
-  { label: 'Orders', to: '/orders' },
-  { label: 'Reports', to: '/reports' },
-]
+const navigation = navigationJson.shikkha_erp_navigation as unknown as NavigationMap
+
+const { user } = useAuth()
+const { isCollapsed, isMobileOpen, closeMobile } = useSidebar()
+
+const menus = computed<NavMenu[]>(() => (user.value ? (navigation[user.value.role] ?? []) : []))
+
+// Accordion: one open sub-menu at a time.
+const openMenu = ref<string | null>(null)
+
+function toggleMenu(menu: string) {
+  openMenu.value = openMenu.value === menu ? null : menu
+}
+
+function onNavigate() {
+  closeMobile()
+}
 </script>
 
 <template>
-  <aside class="app-sidebar">
-    <nav>
-      <RouterLink v-for="item in items" :key="item.to" :to="item.to" class="nav-link">
-        {{ item.label }}
-      </RouterLink>
-    </nav>
-  </aside>
-</template>
+  <Transition name="fade">
+    <div v-if="isMobileOpen" class="sidebar-backdrop" @click="closeMobile" />
+  </Transition>
 
-<style scoped>
-.app-sidebar {
-  width: 220px;
-  background: var(--color-surface);
-  border-right: 1px solid var(--color-border);
-  padding: 1rem;
-}
+  <aside
+    class="app-sidebar"
+    :class="{ 'is-collapsed': isCollapsed, 'is-mobile-open': isMobileOpen }"
+  >
+    <div class="sidebar-brand">
+      <span class="brand-mark"><i class="fa-duotone fa-graduation-cap" /></span>
+      <span class="brand-name">{{ APP_NAME }}</span>
+    </div>
 
-.nav-link {
-  display: block;
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  transition: background-color var(--transition-fast);
-}
+    <nav class="sidebar-nav" aria-label="Primary">
+      <template v-if="menus.length">
+        <div v-for="item in menus" :key="item.menu" class="nav-group">
+          <RouterLink
+            v-if="item.menu === 'Dashboard'"
+            to="/dashboard"
+            class="nav-head"
+            active-class="is-active"
+            :title="item.menu"
+            @click="onNavigate"
+          >
+            <i :class="['nav-icon', item.icon]" />
+            <span class="nav-label">{{ item.menu }}</span>
+          </RouterLink>
 
-.nav-link:hover {
-  background: var(--color-surface-hover);
-  color: var(--color-text);
-}
-
-.nav-link.router-link-active {
-  background: var(--color-primary-muted);
-  color: var(--color-primary);
-  font-weight: 600;
-}
-</style>
