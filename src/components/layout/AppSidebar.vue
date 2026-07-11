@@ -55,3 +55,64 @@ function onNavigate() {
             <span class="nav-label">{{ item.menu }}</span>
           </RouterLink>
 
+          <button
+            v-else
+            type="button"
+            class="nav-head"
+            :class="{ 'is-open': openMenu === item.menu }"
+            :aria-expanded="openMenu === item.menu"
+            :aria-controls="`submenu-${slugify(item.menu)}`"
+            :title="item.menu"
+            @click="toggleMenu(item.menu)"
+          >
+            <i :class="['nav-icon', item.icon]" />
+            <span class="nav-label">{{ item.menu }}</span>
+            <i class="nav-chevron fa-duotone fa-chevron-down" />
+          </button>
+
+          <div
+            v-if="item.menu !== 'Dashboard'"
+            :id="`submenu-${slugify(item.menu)}`"
+            class="submenu-wrapper"
+            :class="{ 'is-open': openMenu === item.menu }"
+          >
+            <ul class="submenu">
+              <li v-for="sub in item.sub_menus" :key="sub.name">
+                <button type="button" class="submenu-link" @click="onNavigate">
+                  <i :class="['submenu-icon', sub.icon]" />
+                  <span>{{ sub.name }}</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </template>
+
+      <p v-else class="nav-empty">Sign in to see your menu.</p>
+    </nav>
+  </aside>
+</template>
+
+<style scoped lang="scss">
+@use '../../styles/abstracts' as *;
+
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 40;
+
+  @include respond-to(lg) {
+    display: none;
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity $transition-base;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
