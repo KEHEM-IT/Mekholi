@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useAuth } from '@/composables/useAuth'
 import { useSidebar } from '@/composables/useSidebar'
 import { slugify } from '@/utils'
@@ -14,8 +14,10 @@ const { isCollapsed, isMobileOpen, closeMobile } = useSidebar()
 
 const menus = computed<NavMenu[]>(() => (user.value ? (navigation[user.value.role] ?? []) : []))
 
-// Accordion: one open sub-menu at a time.
+// One open sub-menu at a time. Expanded sidebar: inline accordion.
+// Collapsed sidebar (desktop): flyout panel to the right of the icon.
 const openMenu = ref<string | null>(null)
+const sidebarRef = ref<HTMLElement | null>(null)
 
 function toggleMenu(menu: string) {
   openMenu.value = openMenu.value === menu ? null : menu
@@ -23,7 +25,18 @@ function toggleMenu(menu: string) {
 
 function onNavigate() {
   closeMobile()
+  openMenu.value = null
 }
+
+function onDocumentClick(e: MouseEvent) {
+  if (!openMenu.value) return
+  if (sidebarRef.value && !sidebarRef.value.contains(e.target as Node)) {
+    openMenu.value = null
+  }
+}
+
+onMounted(() => document.addEventListener('click', onDocumentClick))
+onBeforeUnmount(() => document.removeEventListener('click', onDocumentClick))
 </script>
 
 <template>
@@ -32,6 +45,7 @@ function onNavigate() {
   </Transition>
 
   <aside
+    ref="sidebarRef"
     class="app-sidebar"
     :class="{ 'is-collapsed': isCollapsed, 'is-mobile-open': isMobileOpen }"
   >
@@ -144,7 +158,9 @@ function onNavigate() {
   }
 
   @include respond-to(lg) {
-    position: relative;
+    position: sticky;
+    top: 0;
+    height: 100vh;
     transform: none;
     z-index: auto;
   }
@@ -287,20 +303,57 @@ function onNavigate() {
   }
 }
 
+.nav-group {
+  position: relative;
+}
+
 // CSS grid-rows trick: animates height without knowing content size.
+// Expanded sidebar: inline accordion below the icon.
+// Collapsed sidebar (desktop): flyout panel to the right of the icon.
 .submenu-wrapper {
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows $transition-base;
 
+  &.is-open {
+    grid-template-rows: 1fr;
+  }
+
   .is-collapsed & {
     @include respond-to(lg) {
-      display: none;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: calc(100% + #{$space-2});
+      width: max-content;
+      min-width: 190px;
+      max-width: 260px;
+      max-height: 0;
+      opacity: 0;
+      visibility: hidden;
+      overflow: hidden;
+      pointer-events: none;
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: $radius-md;
+      box-shadow: var(--shadow-card);
+      padding: $space-2;
+      z-index: 60;
+      transition:
+        opacity $transition-fast,
+        visibility $transition-fast,
+        max-height $transition-base;
     }
   }
 
-  &.is-open {
-    grid-template-rows: 1fr;
+  .is-collapsed &.is-open {
+    @include respond-to(lg) {
+      max-height: 70vh;
+      opacity: 1;
+      visibility: visible;
+      overflow-y: auto;
+      pointer-events: auto;
+    }
   }
 }
 
@@ -315,6 +368,14 @@ function onNavigate() {
   gap: 2px;
   border-left: 1px solid var(--color-border);
   margin-left: $space-4;
+
+  .is-collapsed & {
+    @include respond-to(lg) {
+      border-left: none;
+      margin: 0;
+      padding: 0;
+    }
+  }
 }
 
 .submenu-link {
