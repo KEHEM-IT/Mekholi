@@ -1,5 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <RouterView />
+  <section>
+    <h1>Inventory</h1>
+  </section>
 </template>
