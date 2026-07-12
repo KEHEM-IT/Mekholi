@@ -1,42 +1,42 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { useAuth } from '@/composables/useAuth'
-import { useSidebar } from '@/composables/useSidebar'
-import { slugify } from '@/utils'
-import { APP_NAME } from '@/utils/constants'
-import type { NavigationMap, NavMenu } from '@/types'
-import navigationJson from '@/assets/navigation/shikkha_erp_navigation.json'
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useAuth } from "@/composables/useAuth";
+import { useSidebar } from "@/composables/useSidebar";
+import { slugify } from "@/utils";
+import { APP_NAME } from "@/utils/constants";
+import type { NavigationMap, NavMenu } from "@/types";
+import navigationJson from "@/assets/navigation/shikkha_erp_navigation.json";
 
-const navigation = navigationJson.shikkha_erp_navigation as unknown as NavigationMap
+const navigation = navigationJson.shikkha_erp_navigation as unknown as NavigationMap;
 
-const { user } = useAuth()
-const { isCollapsed, isMobileOpen, closeMobile } = useSidebar()
+const { user } = useAuth();
+const { isCollapsed, isMobileOpen, closeMobile } = useSidebar();
 
-const menus = computed<NavMenu[]>(() => (user.value ? (navigation[user.value.role] ?? []) : []))
+const menus = computed<NavMenu[]>(() => (user.value ? (navigation[user.value.role] ?? []) : []));
 
 // One open sub-menu at a time. Expanded sidebar: inline accordion.
 // Collapsed sidebar (desktop): flyout panel to the right of the icon.
-const openMenu = ref<string | null>(null)
-const sidebarRef = ref<HTMLElement | null>(null)
+const openMenu = ref<string | null>(null);
+const sidebarRef = ref<HTMLElement | null>(null);
 
 function toggleMenu(menu: string) {
-  openMenu.value = openMenu.value === menu ? null : menu
+  openMenu.value = openMenu.value === menu ? null : menu;
 }
 
 function onNavigate() {
-  closeMobile()
-  openMenu.value = null
+  closeMobile();
+  openMenu.value = null;
 }
 
 function onDocumentClick(e: MouseEvent) {
-  if (!openMenu.value) return
+  if (!openMenu.value) return;
   if (sidebarRef.value && !sidebarRef.value.contains(e.target as Node)) {
-    openMenu.value = null
+    openMenu.value = null;
   }
 }
 
-onMounted(() => document.addEventListener('click', onDocumentClick))
-onBeforeUnmount(() => document.removeEventListener('click', onDocumentClick))
+onMounted(() => document.addEventListener("click", onDocumentClick));
+onBeforeUnmount(() => document.removeEventListener("click", onDocumentClick));
 </script>
 
 <template>
@@ -108,7 +108,7 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocumentClick))
 </template>
 
 <style scoped lang="scss">
-@use '../../styles/abstracts' as *;
+@use "../../styles/abstracts" as *;
 
 .sidebar-backdrop {
   position: fixed;
