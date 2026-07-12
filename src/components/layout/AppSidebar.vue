@@ -140,3 +140,62 @@ onBeforeUnmount(() => {
         <i class="fa-duotone fa-xmark" />
       </button>
     </div>
+
+    <nav ref="navRef" class="sidebar-nav" aria-label="Primary">
+      <template v-if="filteredMenus.length">
+        <div v-for="item in filteredMenus" :key="item.menu" class="nav-group">
+          <RouterLink
+            v-if="item.menu === 'Dashboard'"
+            to="/dashboard"
+            class="nav-head"
+            active-class="is-active"
+            :title="item.menu"
+            @click="onNavigate"
+          >
+            <i :class="['nav-icon', item.icon]" />
+            <span class="nav-label">{{ item.menu }}</span>
+          </RouterLink>
+
+          <button
+            v-else
+            type="button"
+            class="nav-head"
+            :class="{ 'is-open': isMenuOpen(item.menu) }"
+            :aria-expanded="isMenuOpen(item.menu)"
+            :aria-controls="`submenu-${slugify(item.menu)}`"
+            :title="item.menu"
+            @click="toggleMenu(item.menu, $event)"
+          >
+            <i :class="['nav-icon', item.icon]" />
+            <span class="nav-label">{{ item.menu }}</span>
+            <i class="nav-chevron fa-duotone fa-chevron-down" />
+          </button>
+
+          <div
+            v-if="item.menu !== 'Dashboard'"
+            :id="`submenu-${slugify(item.menu)}`"
+            class="submenu-wrapper"
+            :class="{ 'is-open': isMenuOpen(item.menu) }"
+            :style="
+              isCollapsed && openMenu === item.menu && flyoutPos
+                ? { top: flyoutPos.top + 'px', left: flyoutPos.left + 'px' }
+                : undefined
+            "
+          >
+            <ul class="submenu">
+              <li v-for="sub in item.sub_menus" :key="sub.name">
+                <button type="button" class="submenu-link" @click="onNavigate">
+                  <i :class="['submenu-icon', sub.icon]" />
+                  <span>{{ sub.name }}</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </template>
+
+      <p v-else-if="isSearching" class="nav-empty">No menus match "{{ searchQuery }}".</p>
+      <p v-else class="nav-empty">Sign in to see your menu.</p>
+    </nav>
+  </aside>
+</template>
