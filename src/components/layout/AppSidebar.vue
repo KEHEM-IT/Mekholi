@@ -70,10 +70,56 @@ function toggleMenu(menu: string, event?: MouseEvent) {
   }
 }
 
+// Collapsed sidebar only turns into an icon rail at the lg breakpoint
+// (must match $breakpoint-lg in _variables.scss) - below that, "collapsed"
+// still renders as a full drawer, so hover-to-open shouldn't apply there.
+function isDesktopViewport() {
+  return window.matchMedia("(min-width: 1024px)").matches;
+}
+
+// --- Hover-to-open (collapsed desktop) -------------------------------------
+// Click still works (keyboard/accessibility), but on the collapsed desktop
+// rail, hovering the icon opens its flyout directly. A short close delay
+// lets the pointer cross the gap between the icon and the flyout panel
+// without the flyout closing first.
+const HOVER_CLOSE_DELAY = 150;
+let hoverCloseTimer: ReturnType<typeof setTimeout> | null = null;
+
+function clearHoverCloseTimer() {
+  if (hoverCloseTimer !== null) {
+    clearTimeout(hoverCloseTimer);
+    hoverCloseTimer = null;
+  }
+}
+
+function onGroupMouseEnter(item: NavMenu, event: MouseEvent) {
+  if (item.menu === "Dashboard" || !isCollapsed.value || !isDesktopViewport()) return;
+  clearHoverCloseTimer();
+
+  const groupEl = event.currentTarget as HTMLElement;
+  const headEl = groupEl.querySelector(".nav-head") as HTMLElement | null;
+  const rect = (headEl ?? groupEl).getBoundingClientRect();
+
+  flyoutPos.value = { top: rect.top, left: rect.right + 8 };
+  openMenu.value = item.menu;
+}
+
+function onGroupMouseLeave(item: NavMenu) {
+  if (!isCollapsed.value) return;
+  clearHoverCloseTimer();
+  hoverCloseTimer = setTimeout(() => {
+    if (openMenu.value === item.menu) {
+      openMenu.value = null;
+      flyoutPos.value = null;
+    }
+  }, HOVER_CLOSE_DELAY);
+}
+
 function onNavigate() {
   closeMobile();
   openMenu.value = null;
   flyoutPos.value = null;
+  clearHoverCloseTimer();
 }
 
 function onDocumentClick(e: MouseEvent) {
@@ -103,6 +149,7 @@ onBeforeUnmount(() => {
   document.removeEventListener("click", onDocumentClick);
   window.removeEventListener("resize", closeFlyoutIfCollapsed);
   navRef.value?.removeEventListener("scroll", closeFlyoutIfCollapsed);
+  clearHoverCloseTimer();
 });
 </script>
 
@@ -143,7 +190,13 @@ onBeforeUnmount(() => {
 
     <nav ref="navRef" class="sidebar-nav" aria-label="Primary">
       <template v-if="filteredMenus.length">
-        <div v-for="item in filteredMenus" :key="item.menu" class="nav-group">
+        <div
+          v-for="item in filteredMenus"
+          :key="item.menu"
+          class="nav-group"
+          @mouseenter="onGroupMouseEnter(item, $event)"
+          @mouseleave="onGroupMouseLeave(item)"
+        >
           <RouterLink
             v-if="item.menu === 'Dashboard'"
             to="/dashboard"
