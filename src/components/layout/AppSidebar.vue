@@ -73,6 +73,35 @@ function clearSearch() {
   searchQuery.value = "";
 }
 
+// Wraps the portion of `text` matching the current search query in a
+// <mark>, HTML-escaped so menu/sub-menu labels (rendered via v-html below)
+// can't inject markup. Matching mirrors filteredMenus above: plain
+// case-insensitive substring, first occurrence only.
+const HTML_ESCAPES: Record<"&" | "<" | ">" | '"' | "'", string> = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;",
+};
+
+function escapeHtml(text: string) {
+  return text.replace(/[&<>"']/g, (char) => HTML_ESCAPES[char as keyof typeof HTML_ESCAPES]);
+}
+
+function highlightMatch(text: string) {
+  const q = searchQuery.value.trim();
+  if (!q) return escapeHtml(text);
+
+  const idx = text.toLowerCase().indexOf(q.toLowerCase());
+  if (idx === -1) return escapeHtml(text);
+
+  const before = escapeHtml(text.slice(0, idx));
+  const match = escapeHtml(text.slice(idx, idx + q.length));
+  const after = escapeHtml(text.slice(idx + q.length));
+  return `${before}<mark class="search-highlight">${match}</mark>${after}`;
+}
+
 // --- Accordion / flyout submenu -------------------------------------------
 // One open sub-menu at a time. Expanded sidebar: inline accordion.
 // Collapsed sidebar (desktop): flyout panel to the right of the icon,
@@ -287,7 +316,7 @@ onBeforeUnmount(() => {
             @click="onNavigate"
           >
             <i :class="['nav-icon', item.icon]" />
-            <span class="nav-label">{{ item.menu }}</span>
+            <span class="nav-label" v-html="highlightMatch(item.menu)" />
           </RouterLink>
 
           <button
@@ -301,7 +330,7 @@ onBeforeUnmount(() => {
             @click="toggleMenu(item.menu, $event)"
           >
             <i :class="['nav-icon', item.icon]" />
-            <span class="nav-label">{{ item.menu }}</span>
+            <span class="nav-label" v-html="highlightMatch(item.menu)" />
             <i class="nav-chevron fa-duotone fa-chevron-down" />
           </button>
 
@@ -316,7 +345,7 @@ onBeforeUnmount(() => {
               <li v-for="sub in item.sub_menus" :key="sub.name">
                 <button type="button" class="submenu-link" @click="onNavigate">
                   <i :class="['submenu-icon', sub.icon]" />
-                  <span>{{ sub.name }}</span>
+                  <span v-html="highlightMatch(sub.name)" />
                 </button>
               </li>
             </ul>

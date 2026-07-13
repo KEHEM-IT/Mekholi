@@ -170,6 +170,18 @@
   pointer-events: none;
 }
 
+// Matched substring inside a nav-label/submenu-link when the sidebar
+// search is active (see highlightMatch() in AppSidebar.vue). Uses <mark>
+// for it's semantic meaning, reset to inherit the surrounding text's own
+// size/weight since <mark> defaults to the browser's own text styling.
+.search-highlight {
+  background: var(--color-primary-muted);
+  color: var(--color-primary);
+  border-radius: 2px;
+  font: inherit;
+  padding: 0 1px;
+}
+
 .sidebar-nav {
   flex: 1;
   overflow-y: auto;
