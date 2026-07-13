@@ -175,8 +175,8 @@
 // for it's semantic meaning, reset to inherit the surrounding text's own
 // size/weight since <mark> defaults to the browser's own text styling.
 .search-highlight {
-  background: var(--color-primary-muted);
-  color: var(--color-primary);
+  background: var(--color-warning-muted);
+  color: var(--color-warning);
   border-radius: 2px;
   font: inherit;
   padding: 0 1px;
