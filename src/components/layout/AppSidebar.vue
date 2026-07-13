@@ -11,7 +11,7 @@ import navigationJson from "@/assets/navigation/shikkha_erp_navigation.json";
 const navigation = navigationJson.shikkha_erp_navigation as unknown as NavigationMap;
 
 const { user } = useAuth();
-const { isCollapsed, isMobileOpen, closeMobile } = useSidebar();
+const { isCollapsed, isMobileOpen, toggleCollapsed, closeMobile } = useSidebar();
 
 const menus = computed<NavMenu[]>(() => (user.value ? (navigation[user.value.role] ?? []) : []));
 
@@ -23,14 +23,32 @@ const isSearching = computed(() => searchQuery.value.trim().length > 0);
 
 // Ctrl+K focuses (and selects) the sidebar search input, from anywhere in
 // the app - including while typing in another field, hence allowInInputs.
+// If the desktop rail is collapsed to icons-only, expand it first so the
+// search field actually exists to be focused; nextTick waits for that
+// reactive class change to apply before the focus() call runs.
+//
+// Escape clears the search box, but only when it's the field that's
+// actually focused - a bare "Escape" key match would otherwise fire this
+// binding (and swallow the keystroke) no matter where focus is on the page.
 useShortcutKeySet([
   {
     key: "k",
     ctrl: true,
     allowInInputs: true,
     handler: () => {
-      searchInputRef.value?.focus();
-      searchInputRef.value?.select();
+      if (isCollapsed.value) toggleCollapsed();
+      nextTick(() => {
+        searchInputRef.value?.focus();
+        searchInputRef.value?.select();
+      });
+    },
+  },
+  {
+    key: "Escape",
+    allowInInputs: true,
+    handler: () => {
+      if (document.activeElement !== searchInputRef.value) return;
+      clearSearch();
     },
   },
 ]);
