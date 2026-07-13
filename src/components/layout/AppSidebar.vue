@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { useAuth } from "@/composables/useAuth";
 import { useSidebar } from "@/composables/useSidebar";
 import { slugify } from "@/utils";
@@ -45,7 +45,18 @@ function clearSearch() {
 // positioned via JS (fixed) so it can escape the sidebar's overflow clipping
 // instead of being invisibly cut off at the sidebar's edge.
 const openMenu = ref<string | null>(null);
-const flyoutPos = ref<{ top: number; left: number } | null>(null);
+// Last known flyout position per menu, keyed by menu name. Deliberately
+// never deleted on close - the panel fades out via the `is-open` class
+// instead, and if an entry vanished the instant its menu closed, the
+// inline top/left would disappear mid-fade and the panel would visibly
+// snap to its CSS fallback position (top: 0, left: 0) before fading out.
+//
+// This is keyed per-menu rather than a single shared "current position"
+// because hovering from menu A to menu B before A's close transition
+// finishes reassigns the "current" menu to B - with a shared position, A's
+// entry would be overwritten with B's coordinates mid-fade, producing the
+// exact same jump-to-corner glitch for A instead of fixing it.
+const flyoutPositions = ref<Record<string, { top: number; left: number }>>({});
 const sidebarRef = ref<HTMLElement | null>(null);
 const navRef = ref<HTMLElement | null>(null);
 
@@ -57,16 +68,56 @@ function isMenuOpen(menu: string) {
   return isSearching.value ? true : openMenu.value === menu;
 }
 
+// Places the flyout next to the anchor, then nudges it up if it would run
+// off the bottom of the screen (e.g. for menus near the end of the list).
+// Measured after the DOM updates since the panel's real height depends on
+// its (variable) list of sub-menu items.
+const FLYOUT_MARGIN = 8;
+
+function setFlyoutPosition(menu: string, top: number, left: number) {
+  flyoutPositions.value = { ...flyoutPositions.value, [menu]: { top, left } };
+}
+
+// Style for a menu's flyout wrapper, read directly from the per-menu
+// position map. Because entries survive close (see flyoutPositions above),
+// this keeps returning the last good coordinates while a closing panel
+// fades out, instead of falling through to `undefined` and letting the
+// CSS fallback (top: 0, left: 0) show through mid-transition.
+function flyoutStyle(menu: string) {
+  const pos = flyoutPositions.value[menu];
+  if (!isCollapsed.value || !pos) return undefined;
+  return { top: `${pos.top}px`, left: `${pos.left}px` };
+}
+
+function positionFlyout(menu: string, anchorRect: DOMRect) {
+  setFlyoutPosition(menu, anchorRect.top, anchorRect.right + 8);
+
+  nextTick(() => {
+    if (openMenu.value !== menu) return; // this menu closed (or another opened) before this ran
+
+    const wrapperEl = document.getElementById(`submenu-${slugify(menu)}`);
+    const listEl = wrapperEl?.querySelector(".submenu") as HTMLElement | null;
+    if (!wrapperEl || !listEl) return;
+
+    const { paddingTop, paddingBottom } = window.getComputedStyle(wrapperEl);
+    const contentHeight = listEl.scrollHeight + parseFloat(paddingTop) + parseFloat(paddingBottom);
+    const maxAllowedHeight = window.innerHeight * 0.7; // matches the CSS max-height: 70vh cap
+    const height = Math.min(contentHeight, maxAllowedHeight);
+
+    const maxTop = window.innerHeight - height - FLYOUT_MARGIN;
+    const top = Math.max(FLYOUT_MARGIN, Math.min(anchorRect.top, maxTop));
+
+    setFlyoutPosition(menu, top, anchorRect.right + 8);
+  });
+}
+
 function toggleMenu(menu: string, event?: MouseEvent) {
   const wasOpen = openMenu.value === menu;
   openMenu.value = wasOpen ? null : menu;
 
   if (!wasOpen && isCollapsed.value && event) {
     const btn = event.currentTarget as HTMLElement;
-    const rect = btn.getBoundingClientRect();
-    flyoutPos.value = { top: rect.top, left: rect.right + 8 };
-  } else {
-    flyoutPos.value = null;
+    positionFlyout(menu, btn.getBoundingClientRect());
   }
 }
 
@@ -98,9 +149,7 @@ function onGroupMouseEnter(item: NavMenu, event: MouseEvent) {
 
   const groupEl = event.currentTarget as HTMLElement;
   const headEl = groupEl.querySelector(".nav-head") as HTMLElement | null;
-  const rect = (headEl ?? groupEl).getBoundingClientRect();
-
-  flyoutPos.value = { top: rect.top, left: rect.right + 8 };
+  positionFlyout(item.menu, (headEl ?? groupEl).getBoundingClientRect());
   openMenu.value = item.menu;
 }
 
@@ -110,7 +159,6 @@ function onGroupMouseLeave(item: NavMenu) {
   hoverCloseTimer = setTimeout(() => {
     if (openMenu.value === item.menu) {
       openMenu.value = null;
-      flyoutPos.value = null;
     }
   }, HOVER_CLOSE_DELAY);
 }
@@ -118,7 +166,6 @@ function onGroupMouseLeave(item: NavMenu) {
 function onNavigate() {
   closeMobile();
   openMenu.value = null;
-  flyoutPos.value = null;
   clearHoverCloseTimer();
 }
 
@@ -126,16 +173,14 @@ function onDocumentClick(e: MouseEvent) {
   if (!openMenu.value) return;
   if (sidebarRef.value && !sidebarRef.value.contains(e.target as Node)) {
     openMenu.value = null;
-    flyoutPos.value = null;
   }
 }
 
-// The flyout's position is computed once at click time; it goes stale on
-// scroll/resize, so just close it rather than tracking it live.
+// The flyout's position is computed once at click/hover time; it goes stale
+// on scroll/resize, so just close it rather than tracking it live.
 function closeFlyoutIfCollapsed() {
   if (isCollapsed.value && openMenu.value) {
     openMenu.value = null;
-    flyoutPos.value = null;
   }
 }
 
@@ -229,11 +274,7 @@ onBeforeUnmount(() => {
             :id="`submenu-${slugify(item.menu)}`"
             class="submenu-wrapper"
             :class="{ 'is-open': isMenuOpen(item.menu) }"
-            :style="
-              isCollapsed && openMenu === item.menu && flyoutPos
-                ? { top: flyoutPos.top + 'px', left: flyoutPos.left + 'px' }
-                : undefined
-            "
+            :style="flyoutStyle(item.menu)"
           >
             <ul class="submenu">
               <li v-for="sub in item.sub_menus" :key="sub.name">
