@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useAuth } from '@/composables/useAuth'
 import { useSidebar } from '@/composables/useSidebar'
+import { useShortcutKeySet } from '@/composables/shortcut_key_set'
 import { getInitials } from '@/utils'
 import { ROLE_LABELS } from '@/utils/constants'
 import type { NotificationItem } from '@/types'
@@ -16,6 +17,11 @@ function toggleSidebar() {
     toggleMobile()
   }
 }
+
+// Ctrl+M collapses/expands the sidebar (or opens/closes the mobile drawer
+// below the lg breakpoint) from anywhere in the app, mirroring the header
+// toggle button.
+useShortcutKeySet([{ key: 'm', ctrl: true, handler: () => toggleSidebar() }])
 
 const roleLabel = computed(() => (user.value ? (ROLE_LABELS[user.value.role] ?? user.value.role) : ''))
 

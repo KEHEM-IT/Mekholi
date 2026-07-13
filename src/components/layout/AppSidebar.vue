@@ -2,6 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { useAuth } from "@/composables/useAuth";
 import { useSidebar } from "@/composables/useSidebar";
+import { useShortcutKeySet } from "@/composables/shortcut_key_set";
 import { slugify } from "@/utils";
 import { APP_NAME } from "@/utils/constants";
 import type { NavigationMap, NavMenu } from "@/types";
@@ -17,7 +18,22 @@ const menus = computed<NavMenu[]>(() => (user.value ? (navigation[user.value.rol
 // --- Search ---------------------------------------------------------------
 
 const searchQuery = ref("");
+const searchInputRef = ref<HTMLInputElement | null>(null);
 const isSearching = computed(() => searchQuery.value.trim().length > 0);
+
+// Ctrl+K focuses (and selects) the sidebar search input, from anywhere in
+// the app - including while typing in another field, hence allowInInputs.
+useShortcutKeySet([
+  {
+    key: "k",
+    ctrl: true,
+    allowInInputs: true,
+    handler: () => {
+      searchInputRef.value?.focus();
+      searchInputRef.value?.select();
+    },
+  },
+]);
 
 const filteredMenus = computed<NavMenu[]>(() => {
   const q = searchQuery.value.trim().toLowerCase();
@@ -216,6 +232,7 @@ onBeforeUnmount(() => {
     <div class="sidebar-search">
       <i class="fa-duotone fa-magnifying-glass search-icon" />
       <input
+        ref="searchInputRef"
         v-model="searchQuery"
         type="search"
         class="search-input"
@@ -231,6 +248,7 @@ onBeforeUnmount(() => {
       >
         <i class="fa-duotone fa-xmark" />
       </button>
+      <kbd v-else class="search-shortcut" aria-hidden="true">Ctrl K</kbd>
     </div>
 
     <nav ref="navRef" class="sidebar-nav" aria-label="Primary">
