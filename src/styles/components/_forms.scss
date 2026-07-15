@@ -78,6 +78,53 @@ table {
   }
 }
 
+// Toggle switch - <button role="switch" class="switch" :class="{ 'is-on': value }">
+.switch {
+  --switch-w: 2.5rem;
+  --switch-h: 1.5rem;
+
+  position: relative;
+  width: var(--switch-w);
+  height: var(--switch-h);
+  flex-shrink: 0;
+  border-radius: $radius-lg;
+  background: $color-surface-alt;
+  border: 1px solid $color-border;
+  cursor: pointer;
+  transition:
+    background-color $transition-fast,
+    border-color $transition-fast;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: calc(var(--switch-h) - 6px);
+    height: calc(var(--switch-h) - 6px);
+    border-radius: 50%;
+    background: $color-text-secondary;
+    transition:
+      transform $transition-base,
+      background-color $transition-fast;
+  }
+
+  &.is-on {
+    background: $color-primary-muted;
+    border-color: $color-primary;
+
+    &::after {
+      transform: translateX(calc(var(--switch-w) - var(--switch-h)));
+      background: $color-primary;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
 .badge {
   display: inline-flex;
   align-items: center;

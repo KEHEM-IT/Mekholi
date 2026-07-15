@@ -51,7 +51,17 @@
   --transition-fast: #{$transition-fast};
   --transition-base: #{$transition-base};
 
+  // Typography (overridden per html[data-font-size]/[data-bn-font]/
+  // [data-font-en] in styles/themes/_fonts.scss)
+  --font-scale: #{$font-scale-medium};
+  --font-family-en: #{$font-family-base};
+  --font-family-bn: #{$font-family-bn-hind-siliguri};
+
   color-scheme: dark;
+}
+
+html {
+  font-size: calc(100% * var(--font-scale));
 }
 
 html,

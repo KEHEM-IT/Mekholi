@@ -1,11 +1,19 @@
 @use '../abstracts' as *;
 
 body {
-  font-family: $font-family-base;
+  font-family: var(--font-family-en);
   font-size: $font-size-base;
   line-height: $line-height-base;
   color: $color-text;
   background: $color-bg;
+}
+
+// Bangla UI uses a dedicated font (default: Hind Siliguri) instead of the
+// English system-font stack - see html[lang="bn"] set in
+// composables/useAppPreferences.ts, and the selectable faces in
+// styles/themes/_fonts.scss.
+html[lang='bn'] body {
+  font-family: var(--font-family-bn);
 }
 
 h1,

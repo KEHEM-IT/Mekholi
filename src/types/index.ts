@@ -20,6 +20,12 @@ export interface Pagination {
   total: number
 }
 
+// Used by HomeView's feature-card grid (label + route)
+export interface NavItem {
+  label: string
+  to: string
+}
+
 // Shape of src/assets/navigation/shikkha_erp_navigation.json
 export interface NavSubMenu {
   name: string
@@ -43,4 +49,47 @@ export interface NotificationItem {
   time: string
   read: boolean
   icon: string
+}
+
+// --- Language & Theme settings (Plugins & Settings > Language & Theme) ----
+
+export type UILanguage = 'en' | 'bn'
+
+export type AccentTheme = 'indigo' | 'emerald' | 'amber' | 'crimson' | 'sky' | 'violet'
+
+export type DateCalendar = 'gregorian' | 'bangla'
+
+export type DocumentLanguage = 'en' | 'bn' | 'both'
+
+export type SettingsDensity = 'comfortable' | 'compact'
+
+// English UI font (Language & Theme > Typography). 'system' (the OS font
+// stack) is the default; the rest are common ERP/SaaS dashboard faces.
+export type EnglishFont = 'system' | 'inter' | 'roboto' | 'open-sans' | 'lato' | 'ibm-plex-sans'
+
+// Bengali UI font (Language & Theme > Typography). Hind Siliguri is the
+// recommended default; Kalpurush and Noto Sans Bengali are offered as
+// alternatives.
+export type BengaliFont = 'hind-siliguri' | 'kalpurush' | 'noto-sans-bengali'
+
+// Base interface font-size scale (Language & Theme > Typography)
+export type FontSizeScale = 'small' | 'medium' | 'large'
+
+export interface DocumentLanguagePrefs {
+  admitCard: DocumentLanguage
+  idCard: DocumentLanguage
+  certificate: DocumentLanguage
+  markSheet: DocumentLanguage
+}
+
+export interface AppPreferences {
+  uiLanguage: UILanguage
+  accentTheme: AccentTheme
+  banglaNumerals: boolean
+  dateCalendar: DateCalendar
+  density: SettingsDensity
+  englishFont: EnglishFont
+  bengaliFont: BengaliFont
+  fontSize: FontSizeScale
+  documentLanguage: DocumentLanguagePrefs
 }

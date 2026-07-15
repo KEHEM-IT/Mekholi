@@ -1,17 +1,45 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 import { useAuth } from "@/composables/useAuth";
 import { useSidebar } from "@/composables/useSidebar";
+import { useAppPreferences } from "@/composables/useAppPreferences";
 import { useShortcutKeySet } from "@/composables/shortcut_key_set";
 import { slugify } from "@/utils";
 import { APP_NAME } from "@/utils/constants";
-import type { NavigationMap, NavMenu } from "@/types";
+import type { NavigationMap, NavMenu, NavSubMenu } from "@/types";
 import navigationJson from "@/assets/navigation/shikkha_erp_navigation.json";
 
 const navigation = navigationJson.shikkha_erp_navigation as unknown as NavigationMap;
 
 const { user } = useAuth();
 const { isCollapsed, isMobileOpen, toggleCollapsed, closeMobile } = useSidebar();
+const { preferences } = useAppPreferences();
+const router = useRouter();
+
+const isBn = computed(() => preferences.uiLanguage === "bn");
+
+function menuLabel(item: NavMenu) {
+  return isBn.value ? item.menu_bn : item.menu;
+}
+
+function subLabel(sub: NavSubMenu) {
+  return isBn.value ? sub.name_bn : sub.name;
+}
+
+// Sub-menu items are mostly placeholders (Core + Plugin blueprint - most
+// modules aren't built yet), so only the sub-menus with a real page behind
+// them navigate; keyed by the sub-menu's stable English name from the nav
+// JSON. Everything else just closes the sidebar, same as before.
+const SUBMENU_ROUTES: Record<string, string> = {
+  "Language & Theme (Bilingual)": "settings-language-theme",
+};
+
+function onSubmenuClick(sub: NavSubMenu) {
+  const routeName = SUBMENU_ROUTES[sub.name];
+  if (routeName) router.push({ name: routeName });
+  onNavigate();
+}
 
 const menus = computed<NavMenu[]>(() => (user.value ? (navigation[user.value.role] ?? []) : []));
 
@@ -316,7 +344,7 @@ onBeforeUnmount(() => {
             @click="onNavigate"
           >
             <i :class="['nav-icon', item.icon]" />
-            <span class="nav-label" v-html="highlightMatch(item.menu)" />
+            <span class="nav-label" v-html="highlightMatch(menuLabel(item))" />
           </RouterLink>
 
           <button
@@ -330,7 +358,7 @@ onBeforeUnmount(() => {
             @click="toggleMenu(item.menu, $event)"
           >
             <i :class="['nav-icon', item.icon]" />
-            <span class="nav-label" v-html="highlightMatch(item.menu)" />
+            <span class="nav-label" v-html="highlightMatch(menuLabel(item))" />
             <i class="nav-chevron fa-duotone fa-chevron-down" />
           </button>
 
@@ -343,9 +371,9 @@ onBeforeUnmount(() => {
           >
             <ul class="submenu">
               <li v-for="sub in item.sub_menus" :key="sub.name">
-                <button type="button" class="submenu-link" @click="onNavigate">
+                <button type="button" class="submenu-link" @click="onSubmenuClick(sub)">
                   <i :class="['submenu-icon', sub.icon]" />
-                  <span v-html="highlightMatch(sub.name)" />
+                  <span v-html="highlightMatch(subLabel(sub))" />
                 </button>
               </li>
             </ul>

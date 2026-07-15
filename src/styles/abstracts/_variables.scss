@@ -85,3 +85,26 @@ $font-family-base:
   sans-serif;
 $font-size-base: 1rem;
 $line-height-base: 1.5;
+
+// English UI fonts, selectable via Language & Theme > Typography
+// (html[data-font-en], see styles/themes/_fonts.scss). 'system' (the OS
+// font stack above) is the default; these are common ERP/SaaS dashboard
+// faces offered as alternatives.
+$font-family-en-inter: 'Inter', $font-family-base;
+$font-family-en-roboto: 'Roboto', $font-family-base;
+$font-family-en-open-sans: 'Open Sans', $font-family-base;
+$font-family-en-lato: 'Lato', $font-family-base;
+$font-family-en-ibm-plex-sans: 'IBM Plex Sans', $font-family-base;
+
+// Bengali fonts, selectable via Language & Theme > Typography
+// (html[data-bn-font], see styles/themes/_fonts.scss). Hind Siliguri is
+// the default/recommended face for Bangla UI text.
+$font-family-bn-hind-siliguri: 'Hind Siliguri', $font-family-base;
+$font-family-bn-kalpurush: 'Kalpurush', $font-family-base;
+$font-family-bn-noto-sans-bengali: 'Noto Sans Bengali', $font-family-base;
+
+// Base font-size scale, selectable via Language & Theme > Typography
+// (html[data-font-size], see styles/themes/_fonts.scss).
+$font-scale-small: 0.9375; // ~15px
+$font-scale-medium: 1; // 16px (default)
+$font-scale-large: 1.0625; // ~17px

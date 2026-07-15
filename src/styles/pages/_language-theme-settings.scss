@@ -1,0 +1,308 @@
+@use '../abstracts' as *;
+
+.lts {
+  max-width: 880px;
+  @include flex(column, stretch, flex-start, $space-6);
+}
+
+.lts-header {
+  @include flex(column, flex-start, flex-start, $space-1);
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  p {
+    color: $color-text-secondary;
+  }
+}
+
+.lts-section {
+  @include card;
+  @include flex(column, stretch, flex-start, $space-4);
+}
+
+.lts-section__head {
+  @include flex(row, flex-start, space-between, $space-4);
+
+  .lts-section__title {
+    @include flex(row, center, flex-start, $space-3);
+
+    i {
+      display: grid;
+      place-items: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: $radius-md;
+      background: $color-primary-muted;
+      color: $color-primary;
+      font-size: 1rem;
+    }
+
+    h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    span {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: $color-text-secondary;
+    }
+  }
+}
+
+.lts-section__body {
+  @include flex(column, stretch, flex-start, $space-4);
+}
+
+// --- Row: label + hint on the left, control on the right --------------
+
+.lts-row {
+  @include flex(row, center, space-between, $space-4);
+  padding-block: $space-1;
+
+  @include respond-to(sm) {
+    flex-wrap: nowrap;
+  }
+  flex-wrap: wrap;
+
+  &__label {
+    font-weight: 600;
+  }
+
+  &__hint {
+    font-size: 0.82rem;
+    color: $color-text-muted;
+    max-width: 46ch;
+  }
+
+  &__control {
+    flex-shrink: 0;
+  }
+}
+
+.lts-divider {
+  height: 1px;
+  background: $color-border;
+}
+
+// --- Language toggle (English / বাংলা) ---------------------------------
+
+.lts-lang-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-3;
+}
+
+.lts-lang-option {
+  @include flex(row, center, flex-start, $space-3);
+  padding: $space-3 $space-4;
+  border-radius: $radius-md;
+  border: 1px solid $color-border;
+  background: $color-surface-alt;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color $transition-fast,
+    background-color $transition-fast;
+
+  &:hover {
+    background: $color-surface-hover;
+  }
+
+  &__flag {
+    font-size: 1.35rem;
+    line-height: 1;
+  }
+
+  &__name {
+    font-weight: 700;
+  }
+
+  &__native {
+    font-size: 0.82rem;
+    color: $color-text-secondary;
+  }
+
+  &.is-active {
+    border-color: $color-primary;
+    background: $color-primary-muted;
+
+    .lts-lang-option__native {
+      color: $color-text;
+    }
+  }
+}
+
+// --- Bengali font picker ---------------------------------------------------
+// The face itself is chosen via a plain <select> (reuses .lts-row__control);
+// this just previews the selected face at a slightly larger size.
+
+.lts-bn-font-preview {
+  padding: $space-3 $space-4;
+  border-radius: $radius-md;
+  border: 1px solid $color-border;
+  background: $color-surface-alt;
+  font-size: 1.05rem;
+  color: $color-text;
+}
+
+// --- Accent swatches -----------------------------------------------------
+
+.lts-accents {
+  @include flex(row, center, flex-start, $space-3);
+  flex-wrap: wrap;
+}
+
+.lts-accent-swatch {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: border-color $transition-fast;
+
+  i {
+    color: #fff;
+    font-size: 0.85rem;
+    opacity: 0;
+    transition: opacity $transition-fast;
+  }
+
+  &:hover {
+    border-color: $color-border-strong;
+  }
+
+  &.is-active {
+    border-color: $color-text;
+
+    i {
+      opacity: 1;
+    }
+  }
+}
+
+.lts-accent-name {
+  font-size: 0.85rem;
+  color: $color-text-secondary;
+  margin-top: $space-2;
+}
+
+// --- Density segmented control -------------------------------------------
+
+.lts-segmented {
+  display: inline-flex;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  overflow: hidden;
+}
+
+.lts-segmented__option {
+  padding: $space-2 $space-4;
+  background: $color-surface-alt;
+  color: $color-text-secondary;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color $transition-fast;
+
+  & + & {
+    border-left: 1px solid $color-border;
+  }
+
+  &:hover {
+    background: $color-surface-hover;
+  }
+
+  &.is-active {
+    background: $color-primary;
+    color: #fff;
+  }
+}
+
+// --- Document language table ---------------------------------------------
+
+.lts-doc-table {
+  select {
+    min-width: 9rem;
+  }
+}
+
+// --- Live preview card (mini ID card) ------------------------------------
+
+.lts-preview {
+  @include flex(row, center, flex-start, $space-4);
+  flex-wrap: wrap;
+}
+
+.lts-id-card {
+  width: 220px;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  border: 1px solid $color-border;
+  background: $color-surface-alt;
+  box-shadow: $shadow-sm;
+}
+
+.lts-id-card__band {
+  height: 3rem;
+  background: $color-primary;
+}
+
+.lts-id-card__body {
+  padding: $space-3;
+  @include flex(column, center, flex-start, $space-1);
+  text-align: center;
+
+  .avatar {
+    width: 2.75rem;
+    height: 2.75rem;
+    margin: -1.75rem auto $space-2;
+    border-radius: 50%;
+    background: $color-surface;
+    border: 3px solid $color-surface-alt;
+    display: grid;
+    place-items: center;
+    color: $color-primary;
+  }
+
+  strong {
+    font-size: 0.85rem;
+  }
+
+  small {
+    color: $color-text-muted;
+    font-size: 0.72rem;
+  }
+}
+
+// --- Sticky save bar -------------------------------------------------------
+
+.lts-savebar {
+  position: sticky;
+  bottom: $space-4;
+  @include flex(row, center, space-between, $space-4);
+  @include card;
+  border-color: $color-border-strong;
+  flex-wrap: wrap;
+
+  &__status {
+    @include flex(row, center, flex-start, $space-2);
+    color: $color-text-secondary;
+    font-size: 0.85rem;
+
+    i {
+      color: $color-success;
+    }
+  }
+
+  &__actions {
+    @include flex(row, center, flex-start, $space-3);
+  }
+}

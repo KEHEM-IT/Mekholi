@@ -37,6 +37,12 @@ export const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/ReportsView.vue'),
         beforeEnter: requireAuth,
       },
+      {
+        path: 'settings/language-theme',
+        name: 'settings-language-theme',
+        component: () => import('@/pages/LanguageThemeSettingsView.vue'),
+        beforeEnter: requireAuth,
+      },
       { path: 'forbidden', name: 'forbidden', component: () => import('@/pages/ForbiddenView.vue') },
     ],
   },

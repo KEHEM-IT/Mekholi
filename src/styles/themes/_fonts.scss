@@ -1,0 +1,44 @@
+@use '../abstracts' as *;
+
+// English UI font family + Bengali font family + base font-size scale,
+// set via html[data-font-en] / html[data-bn-font] / html[data-font-size]
+// by composables/useAppPreferences.ts (Plugins & Settings > Language &
+// Theme > Typography). 'system' (the OS font stack, base/_base.scss) is
+// the default English face and Hind Siliguri is the default Bangla face;
+// these blocks only need to cover the non-default choices.
+
+html[data-font-en='inter'] {
+  --font-family-en: #{$font-family-en-inter};
+}
+
+html[data-font-en='roboto'] {
+  --font-family-en: #{$font-family-en-roboto};
+}
+
+html[data-font-en='open-sans'] {
+  --font-family-en: #{$font-family-en-open-sans};
+}
+
+html[data-font-en='lato'] {
+  --font-family-en: #{$font-family-en-lato};
+}
+
+html[data-font-en='ibm-plex-sans'] {
+  --font-family-en: #{$font-family-en-ibm-plex-sans};
+}
+
+html[data-bn-font='kalpurush'] {
+  --font-family-bn: #{$font-family-bn-kalpurush};
+}
+
+html[data-bn-font='noto-sans-bengali'] {
+  --font-family-bn: #{$font-family-bn-noto-sans-bengali};
+}
+
+html[data-font-size='small'] {
+  --font-scale: #{$font-scale-small};
+}
+
+html[data-font-size='large'] {
+  --font-scale: #{$font-scale-large};
+}
