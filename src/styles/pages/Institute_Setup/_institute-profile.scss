@@ -81,6 +81,15 @@
   @include flex(column, stretch, flex-start, $space-4);
 }
 
+// Sub-group label inside a section body (e.g. "Principal" within
+// Leadership & Administration) - lighter weight than .ipf-section__head's
+// h2, just enough separation to group a run of related fields.
+.ipf-subhead {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: $color-text-secondary;
+}
+
 .ipf-divider {
   height: 1px;
   background: $color-border;
@@ -330,4 +339,93 @@
   width: 4.5rem;
   border-radius: $radius-sm;
   display: inline-block;
+}
+
+// --- Multi-select chips ------------------------------------------------------
+// Working days, academic groups, mediums, payment methods - all plain
+// string[] fields toggled on/off by clicking a pill (same is-active idiom
+// as .lts-accent-swatch on the Language & Theme page).
+
+.ipf-chips {
+  @include flex(row, center, flex-start, $space-2);
+  flex-wrap: wrap;
+}
+
+.ipf-chip {
+  padding: $space-2 $space-3;
+  border-radius: $radius-lg;
+  border: 1px solid $color-border;
+  background: $color-surface-alt;
+  color: $color-text-secondary;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color $transition-fast,
+    background-color $transition-fast,
+    color $transition-fast;
+
+  &:hover {
+    background: $color-surface-hover;
+  }
+
+  &.is-active {
+    border-color: $color-primary;
+    background: $color-primary-muted;
+    color: $color-primary;
+  }
+}
+
+// --- Facilities toggle grid --------------------------------------------------
+
+.ipf-toggle-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: $space-3;
+
+  @include respond-to(sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include respond-to(lg) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.ipf-toggle-row {
+  @include flex(row, center, space-between, $space-3);
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+  border: 1px solid $color-border;
+  background: $color-surface-alt;
+
+  &__label {
+    @include flex(row, center, flex-start, $space-2);
+    font-size: 0.88rem;
+    font-weight: 600;
+
+    i {
+      color: $color-primary;
+      flex-shrink: 0;
+    }
+  }
+}
+
+// --- Colour pickers -----------------------------------------------------------
+
+.ipf-color-field {
+  @include flex(row, center, flex-start, $space-3);
+
+  input[type='color'] {
+    width: 2.75rem;
+    height: 2.5rem;
+    padding: 2px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  input[type='text'] {
+    flex: 1;
+    min-width: 0;
+  }
 }

@@ -171,6 +171,11 @@
         "icon": "fa-duotone fa-school",
         "sub_menus": [
           {
+            "name": "Command Center",
+            "name_bn": "কমান্ড সেন্টার",
+            "icon": "fa-duotone fa-gauge-high"
+          },
+          {
             "name": "Profile & EIIN",
             "name_bn": "প্রোফাইল ও ইআইআইএন",
             "icon": "fa-duotone fa-id-card"

@@ -3,7 +3,22 @@ import { computed, onMounted, ref } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { useAppPreferences } from '@/composables/useAppPreferences'
 import { useInstituteProfile } from '@/composables/Institute_Setup/useInstituteProfile'
-import { EDUCATION_BOARDS, INSTITUTION_TYPES } from '@/utils/constants'
+import {
+  ACADEMIC_GROUP_OPTIONS,
+  ACADEMIC_VERSIONS,
+  BD_DIVISIONS,
+  EDUCATION_BOARDS,
+  FACILITY_OPTIONS,
+  INSTITUTE_SHIFTS,
+  INSTITUTION_LEVELS,
+  INSTITUTION_TYPES,
+  MANAGEMENT_TYPES,
+  MEDIUM_OPTIONS,
+  PAYMENT_METHOD_OPTIONS,
+  PROFILE_STATUSES,
+  STUDY_TYPES,
+  WORKING_DAY_OPTIONS,
+} from '@/utils/constants'
 
 const { preferences } = useAppPreferences()
 const { profile } = useInstituteProfile()
@@ -28,6 +43,9 @@ const selectedType = computed(
 const selectedBoard = computed(
   () => EDUCATION_BOARDS.find((opt) => opt.value === profile.educationBoard) ?? EDUCATION_BOARDS[0],
 )
+const selectedStatus = computed(
+  () => PROFILE_STATUSES.find((opt) => opt.value === profile.status) ?? PROFILE_STATUSES[0],
+)
 
 // EIIN is a 6-digit government identifier (blueprint 2.2) - only flag it
 // once something has been typed, so a fresh/empty form doesn't open with
@@ -40,7 +58,7 @@ const eiinError = computed(() => {
   return ''
 })
 
-// --- Logo / letterhead upload ----------------------------------------
+// --- Logo / letterhead / seal upload ----------------------------------------
 // Read straight into a data URL and hold it on the profile object - no
 // backend yet, so this is the same "good enough for a prototype" approach
 // as the rest of the persisted settings (see useInstituteProfile).
@@ -65,12 +83,33 @@ async function onLetterheadChange(event: Event) {
   profile.letterheadDataUrl = await readAsDataUrl(file)
 }
 
+async function onSealChange(event: Event) {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (!file) return
+  profile.sealImage = await readAsDataUrl(file)
+}
+
 function clearLogo() {
   profile.logoDataUrl = null
 }
 
 function clearLetterhead() {
   profile.letterheadDataUrl = null
+}
+
+function clearSeal() {
+  profile.sealImage = null
+}
+
+// --- Multi-select chip toggles ---------------------------------------------
+// Working days, academic groups, mediums, and payment methods are all
+// plain string[] fields on the profile - clicking a chip adds/removes its
+// value from the array in place (the profile is a reactive() object, so
+// array mutation is tracked and auto-persisted same as any other field).
+function toggleArrayValue(list: string[], value: string) {
+  const idx = list.indexOf(value)
+  if (idx === -1) list.push(value)
+  else list.splice(idx, 1)
 }
 
 // --- Save affordance ----------------------------------------------------
@@ -97,7 +136,7 @@ function handleSave() {
 
       <div class="ipf-layout">
         <div class="ipf-main">
-          <div v-for="n in 3" :key="n" class="ipf-section">
+          <div v-for="n in 4" :key="n" class="ipf-section">
             <div class="ipf-section__head">
               <div class="ipf-section__title">
                 <span class="skeleton ipf-skel-icon" />
@@ -201,7 +240,12 @@ function handleSave() {
 
             <div class="ipf-divider" />
 
-            <div class="ipf-grid">
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
+                <label>{{ isBn ? 'সংক্ষিপ্ত নাম' : 'Short Name' }}</label>
+                <input v-model="profile.shortName" type="text" placeholder="e.g. SMHS" />
+              </div>
+
               <div class="form-field">
                 <label>{{ isBn ? 'EIIN' : 'EIIN' }}</label>
                 <input
@@ -219,8 +263,22 @@ function handleSave() {
               </div>
 
               <div class="form-field">
+                <label>{{ isBn ? 'EMIS কোড' : 'EMIS Code' }}</label>
+                <input v-model="profile.emisCode" type="text" placeholder="optional" />
+              </div>
+            </div>
+
+            <div class="ipf-divider" />
+
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
                 <label>{{ isBn ? 'প্রতিষ্ঠা সাল' : 'Established Year' }}</label>
                 <input v-model="profile.establishedYear" type="number" placeholder="e.g. 1998" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'স্বীকৃতির তারিখ' : 'Recognition Date' }}</label>
+                <input v-model="profile.recognitionDate" type="date" />
               </div>
 
               <div class="form-field">
@@ -231,11 +289,20 @@ function handleSave() {
 
             <div class="ipf-divider" />
 
-            <div class="ipf-grid">
+            <div class="ipf-grid ipf-grid--three">
               <div class="form-field">
                 <label>{{ isBn ? 'প্রতিষ্ঠানের ধরন' : 'Institution Type' }}</label>
                 <select v-model="profile.institutionType">
                   <option v-for="opt in INSTITUTION_TYPES" :key="opt.value" :value="opt.value">
+                    {{ isBn ? opt.label_bn : opt.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'শিক্ষা স্তর' : 'Institution Level' }}</label>
+                <select v-model="profile.institutionLevel">
+                  <option v-for="opt in INSTITUTION_LEVELS" :key="opt.value" :value="opt.value">
                     {{ isBn ? opt.label_bn : opt.label }}
                   </option>
                 </select>
@@ -250,26 +317,137 @@ function handleSave() {
                 </select>
               </div>
             </div>
+
+            <div class="ipf-divider" />
+
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
+                <label>{{ isBn ? 'ব্যবস্থাপনা' : 'Management' }}</label>
+                <select v-model="profile.management">
+                  <option v-for="opt in MANAGEMENT_TYPES" :key="opt.value" :value="opt.value">
+                    {{ isBn ? opt.label_bn : opt.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'একাডেমিক ভার্সন' : 'Academic Version' }}</label>
+                <select v-model="profile.academicVersion">
+                  <option v-for="opt in ACADEMIC_VERSIONS" :key="opt.value" :value="opt.value">
+                    {{ isBn ? opt.label_bn : opt.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'শিক্ষার্থীর ধরন' : 'Study Type' }}</label>
+                <select v-model="profile.studyType">
+                  <option v-for="opt in STUDY_TYPES" :key="opt.value" :value="opt.value">
+                    {{ isBn ? opt.label_bn : opt.label }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="ipf-divider" />
+
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
+                <label>{{ isBn ? 'শিফট' : 'Shift' }}</label>
+                <select v-model="profile.shift">
+                  <option v-for="opt in INSTITUTE_SHIFTS" :key="opt.value" :value="opt.value">
+                    {{ isBn ? opt.label_bn : opt.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'এমপিও স্ট্যাটাস' : 'MPO Status' }}</label>
+                <button
+                  type="button"
+                  role="switch"
+                  class="switch"
+                  :class="{ 'is-on': profile.mpoStatus }"
+                  :aria-checked="profile.mpoStatus"
+                  @click="profile.mpoStatus = !profile.mpoStatus"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Contact & Address -->
+        <!-- Location -->
         <div class="ipf-section">
           <div class="ipf-section__head">
             <div class="ipf-section__title">
-              <i class="fa-duotone fa-location-dot" />
+              <i class="fa-duotone fa-map-location-dot" />
               <div>
-                <h2>{{ isBn ? 'যোগাযোগ ও ঠিকানা' : 'Contact & Address' }}</h2>
+                <h2>{{ isBn ? 'অবস্থান' : 'Location' }}</h2>
                 <span>{{
                   isBn
-                    ? 'প্রিন্ট ডকুমেন্ট ও ওয়েবসাইটে ব্যবহৃত ঠিকানা ও যোগাযোগের তথ্য'
-                    : 'Address and contact details used on printed documents and the public website'
+                    ? 'বিভাগ, জেলা ও প্রশাসনিক ঠিকানার বিবরণ'
+                    : 'Division, district, and administrative address breakdown'
                 }}</span>
               </div>
             </div>
           </div>
 
           <div class="ipf-section__body">
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
+                <label>{{ isBn ? 'বিভাগ' : 'Division' }}</label>
+                <select v-model="profile.division">
+                  <option value="" disabled>{{ isBn ? 'নির্বাচন করুন' : 'Select division' }}</option>
+                  <option v-for="opt in BD_DIVISIONS" :key="opt" :value="opt">{{ opt }}</option>
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'জেলা' : 'District' }}</label>
+                <input v-model="profile.district" type="text" placeholder="e.g. Sylhet" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'উপজেলা' : 'Upazila' }}</label>
+                <input v-model="profile.upazila" type="text" placeholder="e.g. Sylhet Sadar" />
+              </div>
+            </div>
+
+            <div class="ipf-divider" />
+
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
+                <label>{{ isBn ? 'ইউনিয়ন' : 'Union' }}</label>
+                <input v-model="profile.union" type="text" placeholder="e.g. Kandigaon" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'পোস্ট অফিস' : 'Post Office' }}</label>
+                <input v-model="profile.postOffice" type="text" placeholder="e.g. Tuker Bazar" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'মৌজা' : 'Mouza' }}</label>
+                <input v-model="profile.mouza" type="text" placeholder="optional" />
+              </div>
+            </div>
+
+            <div class="ipf-divider" />
+
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
+                <label>{{ isBn ? 'গ্রাম' : 'Village' }}</label>
+                <input v-model="profile.village" type="text" placeholder="optional" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'পোস্ট কোড' : 'Post Code' }}</label>
+                <input v-model="profile.postCode" type="text" placeholder="e.g. 3100" />
+              </div>
+            </div>
+
+            <div class="ipf-divider" />
+
             <div class="form-field">
               <label>{{ isBn ? 'ঠিকানা (ইংরেজি)' : 'Address (English)' }}</label>
               <textarea v-model="profile.addressEn" rows="2" placeholder="Street, Upazila, District" />
@@ -282,36 +460,31 @@ function handleSave() {
 
             <div class="ipf-divider" />
 
-            <div class="ipf-grid ipf-grid--three">
+            <div class="ipf-grid">
               <div class="form-field">
-                <label>{{ isBn ? 'ফোন' : 'Phone' }}</label>
-                <input v-model="profile.phone" type="tel" placeholder="+880 1XXX-XXXXXX" />
+                <label>{{ isBn ? 'অক্ষাংশ (Latitude)' : 'Latitude' }}</label>
+                <input v-model="profile.latitude" type="text" placeholder="e.g. 24.901234" />
               </div>
 
               <div class="form-field">
-                <label>{{ isBn ? 'ইমেইল' : 'Email' }}</label>
-                <input v-model="profile.email" type="email" placeholder="info@institution.edu.bd" />
-              </div>
-
-              <div class="form-field">
-                <label>{{ isBn ? 'ওয়েবসাইট' : 'Website' }}</label>
-                <input v-model="profile.website" type="url" placeholder="https://institution.edu.bd" />
+                <label>{{ isBn ? 'দ্রাঘিমাংশ (Longitude)' : 'Longitude' }}</label>
+                <input v-model="profile.longitude" type="text" placeholder="e.g. 91.901234" />
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Head of Institution -->
+        <!-- Contact & Social -->
         <div class="ipf-section">
           <div class="ipf-section__head">
             <div class="ipf-section__title">
-              <i class="fa-duotone fa-user-tie" />
+              <i class="fa-duotone fa-phone" />
               <div>
-                <h2>{{ isBn ? 'প্রতিষ্ঠান প্রধান' : 'Head of Institution' }}</h2>
+                <h2>{{ isBn ? 'যোগাযোগ ও সামাজিক মাধ্যম' : 'Contact & Social' }}</h2>
                 <span>{{
                   isBn
-                    ? 'সনদ ও অফিসিয়াল চিঠিতে স্বাক্ষরকারী কর্তৃপক্ষ'
-                    : 'The signing authority shown on certificates and official letters'
+                    ? 'প্রিন্ট ডকুমেন্ট ও ওয়েবসাইটে ব্যবহৃত যোগাযোগ ও সামাজিক মাধ্যমের তথ্য'
+                    : 'Contact and social details used on printed documents and the public website'
                 }}</span>
               </div>
             </div>
@@ -320,18 +493,493 @@ function handleSave() {
           <div class="ipf-section__body">
             <div class="ipf-grid ipf-grid--three">
               <div class="form-field">
+                <label>{{ isBn ? 'ফোন' : 'Phone' }}</label>
+                <input v-model="profile.phone" type="tel" placeholder="+880 1XXX-XXXXXX" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'বিকল্প ফোন' : 'Alternate Phone' }}</label>
+                <input v-model="profile.alternatePhone" type="tel" placeholder="+880 1XXX-XXXXXX" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'জরুরি ফোন' : 'Emergency Phone' }}</label>
+                <input v-model="profile.emergencyPhone" type="tel" placeholder="+880 1XXX-XXXXXX" />
+              </div>
+            </div>
+
+            <div class="ipf-divider" />
+
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
+                <label>{{ isBn ? 'ফ্যাক্স' : 'Fax' }}</label>
+                <input v-model="profile.fax" type="text" placeholder="optional" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'ইমেইল' : 'Email' }}</label>
+                <input v-model="profile.email" type="email" placeholder="info@institution.edu.bd" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'অফিসিয়াল ইমেইল' : 'Official Email' }}</label>
+                <input v-model="profile.officialEmail" type="email" placeholder="principal@institution.edu.bd" />
+              </div>
+            </div>
+
+            <div class="ipf-divider" />
+
+            <div class="form-field">
+              <label>{{ isBn ? 'ওয়েবসাইট' : 'Website' }}</label>
+              <input v-model="profile.website" type="url" placeholder="https://institution.edu.bd" />
+            </div>
+
+            <div class="ipf-divider" />
+
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
+                <label>{{ isBn ? 'ফেসবুক' : 'Facebook' }}</label>
+                <input v-model="profile.facebook" type="url" placeholder="https://facebook.com/..." />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'ইউটিউব' : 'YouTube' }}</label>
+                <input v-model="profile.youtube" type="url" placeholder="https://youtube.com/@..." />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'লিংকডইন' : 'LinkedIn' }}</label>
+                <input v-model="profile.linkedin" type="url" placeholder="https://linkedin.com/company/..." />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leadership & Administration -->
+        <div class="ipf-section">
+          <div class="ipf-section__head">
+            <div class="ipf-section__title">
+              <i class="fa-duotone fa-user-tie" />
+              <div>
+                <h2>{{ isBn ? 'প্রশাসন ও নেতৃত্ব' : 'Leadership & Administration' }}</h2>
+                <span>{{
+                  isBn
+                    ? 'সনদ ও অফিসিয়াল চিঠিতে স্বাক্ষরকারী কর্তৃপক্ষ'
+                    : 'Signing authorities shown on certificates and official letters'
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ipf-section__body">
+            <p class="ipf-subhead">{{ isBn ? 'প্রতিষ্ঠান প্রধান' : 'Head of Institution' }}</p>
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
                 <label>{{ isBn ? 'নাম' : 'Name' }}</label>
                 <input v-model="profile.headName" type="text" placeholder="e.g. Md. Kamal Hossain" />
               </div>
 
               <div class="form-field">
                 <label>{{ isBn ? 'পদবি' : 'Designation' }}</label>
-                <input v-model="profile.headDesignation" type="text" placeholder="e.g. Headmaster / Principal" />
+                <input v-model="profile.headDesignation" type="text" placeholder="e.g. President" />
               </div>
 
               <div class="form-field">
                 <label>{{ isBn ? 'ফোন' : 'Phone' }}</label>
                 <input v-model="profile.headPhone" type="tel" placeholder="+880 1XXX-XXXXXX" />
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>{{ isBn ? 'ইমেইল' : 'Email' }}</label>
+              <input v-model="profile.headEmail" type="email" placeholder="president@institution.edu.bd" />
+            </div>
+
+            <div class="ipf-divider" />
+
+            <p class="ipf-subhead">{{ isBn ? 'অধ্যক্ষ' : 'Principal' }}</p>
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
+                <label>{{ isBn ? 'নাম' : 'Name' }}</label>
+                <input v-model="profile.principalName" type="text" placeholder="e.g. Sitesh Talukder" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'পদবি' : 'Designation' }}</label>
+                <input v-model="profile.principalDesignation" type="text" placeholder="e.g. Principal" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'ফোন' : 'Phone' }}</label>
+                <input v-model="profile.principalPhone" type="tel" placeholder="+880 1XXX-XXXXXX" />
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>{{ isBn ? 'ইমেইল' : 'Email' }}</label>
+              <input v-model="profile.principalEmail" type="email" placeholder="principal@institution.edu.bd" />
+            </div>
+
+            <div class="ipf-divider" />
+
+            <p class="ipf-subhead">{{ isBn ? 'সহকারী অধ্যক্ষ' : 'Vice Principal' }}</p>
+            <div class="ipf-grid">
+              <div class="form-field">
+                <label>{{ isBn ? 'নাম' : 'Name' }}</label>
+                <input v-model="profile.vicePrincipalName" type="text" placeholder="e.g. Md. Abdul Karim" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'ফোন' : 'Phone' }}</label>
+                <input v-model="profile.vicePrincipalPhone" type="tel" placeholder="+880 1XXX-XXXXXX" />
+              </div>
+            </div>
+
+            <div class="ipf-divider" />
+
+            <p class="ipf-subhead">{{ isBn ? 'অফিস সুপারিনটেনডেন্ট' : 'Office Superintendent' }}</p>
+            <div class="ipf-grid">
+              <div class="form-field">
+                <label>{{ isBn ? 'নাম' : 'Name' }}</label>
+                <input v-model="profile.officeSuperName" type="text" placeholder="e.g. Abdul Mannan" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'ফোন' : 'Phone' }}</label>
+                <input v-model="profile.officeSuperPhone" type="tel" placeholder="+880 1XXX-XXXXXX" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Infrastructure & Capacity -->
+        <div class="ipf-section">
+          <div class="ipf-section__head">
+            <div class="ipf-section__title">
+              <i class="fa-duotone fa-building" />
+              <div>
+                <h2>{{ isBn ? 'অবকাঠামো ও ধারণক্ষমতা' : 'Infrastructure & Capacity' }}</h2>
+                <span>{{
+                  isBn
+                    ? 'ক্যাম্পাস, ভবন এবং শিক্ষার্থী/শিক্ষক ধারণক্ষমতা'
+                    : 'Campus, buildings, and student/teacher capacity'
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ipf-section__body">
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
+                <label>{{ isBn ? 'ক্যাম্পাসের আয়তন' : 'Campus Area' }}</label>
+                <input v-model="profile.campusArea" type="text" placeholder="e.g. 3.50 Acres" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'ভবনের সংখ্যা' : 'Number of Buildings' }}</label>
+                <input v-model="profile.numberOfBuildings" type="number" placeholder="e.g. 4" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'শ্রেণিকক্ষের সংখ্যা' : 'Number of Classrooms' }}</label>
+                <input v-model="profile.numberOfClassrooms" type="number" placeholder="e.g. 36" />
+              </div>
+            </div>
+
+            <div class="ipf-divider" />
+
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
+                <label>{{ isBn ? 'ল্যাবরেটরির সংখ্যা' : 'Number of Laboratories' }}</label>
+                <input v-model="profile.numberOfLaboratories" type="number" placeholder="e.g. 5" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'লাইব্রেরির সংখ্যা' : 'Number of Libraries' }}</label>
+                <input v-model="profile.numberOfLibraries" type="number" placeholder="e.g. 1" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'খেলার মাঠের সংখ্যা' : 'Number of Playgrounds' }}</label>
+                <input v-model="profile.numberOfPlaygrounds" type="number" placeholder="e.g. 1" />
+              </div>
+            </div>
+
+            <div class="ipf-divider" />
+
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
+                <label>{{ isBn ? 'শিক্ষার্থী ধারণক্ষমতা' : 'Student Capacity' }}</label>
+                <input v-model="profile.studentCapacity" type="number" placeholder="e.g. 2500" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'শিক্ষক ধারণক্ষমতা' : 'Teacher Capacity' }}</label>
+                <input v-model="profile.teacherCapacity" type="number" placeholder="e.g. 80" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'কর্মচারী ধারণক্ষমতা' : 'Staff Capacity' }}</label>
+                <input v-model="profile.staffCapacity" type="number" placeholder="e.g. 25" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timings & Working Days -->
+        <div class="ipf-section">
+          <div class="ipf-section__head">
+            <div class="ipf-section__title">
+              <i class="fa-duotone fa-clock" />
+              <div>
+                <h2>{{ isBn ? 'সময়সূচি ও কর্মদিবস' : 'Timings & Working Days' }}</h2>
+                <span>{{
+                  isBn ? 'অফিস ও শ্রেণির সময় এবং সাপ্তাহিক কর্মদিবস' : 'Office and class hours, and the weekly working days'
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ipf-section__body">
+            <div class="ipf-grid">
+              <div class="form-field">
+                <label>{{ isBn ? 'অফিস শুরুর সময়' : 'Office Start Time' }}</label>
+                <input v-model="profile.officeStartTime" type="time" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'অফিস শেষের সময়' : 'Office End Time' }}</label>
+                <input v-model="profile.officeEndTime" type="time" />
+              </div>
+            </div>
+
+            <div class="ipf-divider" />
+
+            <div class="ipf-grid">
+              <div class="form-field">
+                <label>{{ isBn ? 'ক্লাস শুরুর সময়' : 'Class Start Time' }}</label>
+                <input v-model="profile.classStartTime" type="time" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'ক্লাস শেষের সময়' : 'Class End Time' }}</label>
+                <input v-model="profile.classEndTime" type="time" />
+              </div>
+            </div>
+
+            <div class="ipf-divider" />
+
+            <div class="form-field">
+              <label>{{ isBn ? 'কর্মদিবস' : 'Working Days' }}</label>
+              <div class="ipf-chips">
+                <button
+                  v-for="opt in WORKING_DAY_OPTIONS"
+                  :key="opt.value"
+                  type="button"
+                  class="ipf-chip"
+                  :class="{ 'is-active': profile.workingDays.includes(opt.value) }"
+                  @click="toggleArrayValue(profile.workingDays, opt.value)"
+                >
+                  {{ isBn ? opt.label_bn : opt.label }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Academic Offering -->
+        <div class="ipf-section">
+          <div class="ipf-section__head">
+            <div class="ipf-section__title">
+              <i class="fa-duotone fa-graduation-cap" />
+              <div>
+                <h2>{{ isBn ? 'একাডেমিক অফার' : 'Academic Offering' }}</h2>
+                <span>{{
+                  isBn ? 'গ্রুপ ও শিক্ষার মাধ্যম যা প্রতিষ্ঠান প্রদান করে' : 'Groups and mediums the institution offers'
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ipf-section__body">
+            <div class="form-field">
+              <label>{{ isBn ? 'একাডেমিক গ্রুপ' : 'Academic Groups' }}</label>
+              <div class="ipf-chips">
+                <button
+                  v-for="opt in ACADEMIC_GROUP_OPTIONS"
+                  :key="opt.value"
+                  type="button"
+                  class="ipf-chip"
+                  :class="{ 'is-active': profile.academicGroups.includes(opt.value) }"
+                  @click="toggleArrayValue(profile.academicGroups, opt.value)"
+                >
+                  {{ isBn ? opt.label_bn : opt.label }}
+                </button>
+              </div>
+            </div>
+
+            <div class="ipf-divider" />
+
+            <div class="form-field">
+              <label>{{ isBn ? 'শিক্ষার মাধ্যম' : 'Mediums of Instruction' }}</label>
+              <div class="ipf-chips">
+                <button
+                  v-for="opt in MEDIUM_OPTIONS"
+                  :key="opt.value"
+                  type="button"
+                  class="ipf-chip"
+                  :class="{ 'is-active': profile.mediums.includes(opt.value) }"
+                  @click="toggleArrayValue(profile.mediums, opt.value)"
+                >
+                  {{ isBn ? opt.label_bn : opt.label }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Facilities -->
+        <div class="ipf-section">
+          <div class="ipf-section__head">
+            <div class="ipf-section__title">
+              <i class="fa-duotone fa-house-laptop" />
+              <div>
+                <h2>{{ isBn ? 'সুযোগ-সুবিধা' : 'Facilities' }}</h2>
+                <span>{{
+                  isBn ? 'ক্যাম্পাসে উপলব্ধ সুযোগ-সুবিধাসমূহ' : 'Facilities available on campus'
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ipf-section__body">
+            <div class="ipf-toggle-grid">
+              <div v-for="opt in FACILITY_OPTIONS" :key="opt.key" class="ipf-toggle-row">
+                <div class="ipf-toggle-row__label">
+                  <i :class="['fa-duotone', opt.icon]" />
+                  <span>{{ isBn ? opt.label_bn : opt.label }}</span>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  class="switch"
+                  :class="{ 'is-on': profile.facilities[opt.key] }"
+                  :aria-checked="profile.facilities[opt.key]"
+                  @click="profile.facilities[opt.key] = !profile.facilities[opt.key]"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bank & Payment -->
+        <div class="ipf-section">
+          <div class="ipf-section__head">
+            <div class="ipf-section__title">
+              <i class="fa-duotone fa-building-columns" />
+              <div>
+                <h2>{{ isBn ? 'ব্যাংক ও পেমেন্ট' : 'Bank & Payment' }}</h2>
+                <span>{{
+                  isBn
+                    ? 'ফি সংগ্রহে ব্যবহৃত ব্যাংক হিসাব ও পেমেন্ট পদ্ধতি'
+                    : 'Bank account and payment methods used for fee collection'
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ipf-section__body">
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
+                <label>{{ isBn ? 'ব্যাংকের নাম' : 'Bank Name' }}</label>
+                <input v-model="profile.bankInfo.bankName" type="text" placeholder="e.g. Sonali Bank PLC" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'শাখা' : 'Branch' }}</label>
+                <input v-model="profile.bankInfo.branch" type="text" placeholder="e.g. Sylhet Main Branch" />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'হিসাবের নাম' : 'Account Name' }}</label>
+                <input v-model="profile.bankInfo.accountName" type="text" placeholder="Institution's account name" />
+              </div>
+            </div>
+
+            <div class="ipf-divider" />
+
+            <div class="form-field">
+              <label>{{ isBn ? 'হিসাব নম্বর' : 'Account Number' }}</label>
+              <input v-model="profile.bankInfo.accountNumber" type="text" placeholder="e.g. 1234567890123" />
+            </div>
+
+            <div class="ipf-divider" />
+
+            <div class="form-field">
+              <label>{{ isBn ? 'পেমেন্ট পদ্ধতি' : 'Payment Methods' }}</label>
+              <div class="ipf-chips">
+                <button
+                  v-for="opt in PAYMENT_METHOD_OPTIONS"
+                  :key="opt.value"
+                  type="button"
+                  class="ipf-chip"
+                  :class="{ 'is-active': profile.paymentMethods.includes(opt.value) }"
+                  @click="toggleArrayValue(profile.paymentMethods, opt.value)"
+                >
+                  {{ isBn ? opt.label_bn : opt.label }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status & Verification -->
+        <div class="ipf-section">
+          <div class="ipf-section__head">
+            <div class="ipf-section__title">
+              <i class="fa-duotone fa-circle-check" />
+              <div>
+                <h2>{{ isBn ? 'স্ট্যাটাস ও যাচাইকরণ' : 'Status & Verification' }}</h2>
+                <span>{{
+                  isBn ? 'প্রতিষ্ঠানের বর্তমান স্ট্যাটাস ও যাচাইকরণ অবস্থা' : "The institution's current status and verification state"
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ipf-section__body">
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
+                <label>{{ isBn ? 'স্ট্যাটাস' : 'Status' }}</label>
+                <select v-model="profile.status">
+                  <option v-for="opt in PROFILE_STATUSES" :key="opt.value" :value="opt.value">
+                    {{ isBn ? opt.label_bn : opt.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'যাচাইকৃত' : 'Verified' }}</label>
+                <button
+                  type="button"
+                  role="switch"
+                  class="switch"
+                  :class="{ 'is-on': profile.verified }"
+                  :aria-checked="profile.verified"
+                  @click="profile.verified = !profile.verified"
+                />
+              </div>
+
+              <div class="form-field">
+                <label>{{ isBn ? 'ফিচার্ড' : 'Featured' }}</label>
+                <button
+                  type="button"
+                  role="switch"
+                  class="switch"
+                  :class="{ 'is-on': profile.featured }"
+                  :aria-checked="profile.featured"
+                  @click="profile.featured = !profile.featured"
+                />
               </div>
             </div>
           </div>
@@ -399,6 +1047,48 @@ function handleSave() {
                 </div>
               </div>
             </div>
+
+            <div class="ipf-divider" />
+
+            <div class="ipf-upload">
+              <div class="ipf-upload__preview ipf-upload__preview--logo">
+                <img v-if="profile.sealImage" :src="profile.sealImage" alt="Institution seal" />
+                <i v-else class="fa-duotone fa-stamp" />
+              </div>
+              <div class="ipf-upload__controls">
+                <label class="ipf-upload__label">
+                  {{ isBn ? 'সিল' : 'Seal' }}
+                  <span>{{ isBn ? 'সনদ ও চিঠিতে ব্যবহৃত হবে' : 'Used on certificates and letters' }}</span>
+                </label>
+                <div class="ipf-upload__actions">
+                  <label class="btn btn--secondary ipf-upload__button">
+                    {{ isBn ? 'আপলোড' : 'Upload' }}
+                    <input type="file" accept="image/*" class="ipf-upload__input" @change="onSealChange" />
+                  </label>
+                  <BaseButton v-if="profile.sealImage" variant="ghost" @click="clearSeal">
+                    {{ isBn ? 'মুছুন' : 'Remove' }}
+                  </BaseButton>
+                </div>
+              </div>
+            </div>
+
+            <div class="ipf-divider" />
+
+            <div class="form-field">
+              <label>{{ isBn ? 'প্রাতিষ্ঠানিক রং (প্রাথমিক)' : 'School Color (Primary)' }}</label>
+              <div class="ipf-color-field">
+                <input v-model="profile.schoolColor" type="color" />
+                <input v-model="profile.schoolColor" type="text" placeholder="#0F766E" />
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>{{ isBn ? 'প্রাতিষ্ঠানিক রং (দ্বিতীয়)' : 'School Color (Secondary)' }}</label>
+              <div class="ipf-color-field">
+                <input v-model="profile.secondaryColor" type="color" />
+                <input v-model="profile.secondaryColor" type="text" placeholder="#F59E0B" />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -416,6 +1106,9 @@ function handleSave() {
             <div class="ipf-preview__badges">
               <span class="badge badge--info">{{ isBn ? (selectedType && selectedType.label_bn) || '' : (selectedType && selectedType.label) || '' }}</span>
               <span class="badge badge--success">{{ isBn ? (selectedBoard && selectedBoard.label_bn) || '' : (selectedBoard && selectedBoard.label) || '' }}</span>
+              <span class="badge" :class="profile.status === 'active' ? 'badge--success' : 'badge--warning'">
+                {{ isBn ? (selectedStatus && selectedStatus.label_bn) || '' : (selectedStatus && selectedStatus.label) || '' }}
+              </span>
             </div>
           </div>
         </div>
