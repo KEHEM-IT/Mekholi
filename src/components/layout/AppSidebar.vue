@@ -33,6 +33,7 @@ function subLabel(sub: NavSubMenu) {
 // JSON. Everything else just closes the sidebar, same as before.
 const SUBMENU_ROUTES: Record<string, string> = {
   "Language & Theme (Bilingual)": "settings-language-theme",
+  "Profile & EIIN": "institute-profile",
 };
 
 function onSubmenuClick(sub: NavSubMenu) {

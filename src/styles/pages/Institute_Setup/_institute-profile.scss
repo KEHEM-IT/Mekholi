@@ -1,0 +1,333 @@
+@use '../../abstracts' as *;
+
+// Institute Setup > Profile & EIIN. Unlike Language & Theme (.lts, capped
+// at 880px), this page runs full page width per the blueprint - a main
+// column (identity/contact/head-of-institution) plus a narrower side
+// column (branding uploads + live preview card).
+.ipf {
+  width: 100%;
+  @include flex(column, stretch, flex-start, $space-6);
+}
+
+.ipf-header {
+  @include flex(column, flex-start, flex-start, $space-1);
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  p {
+    color: $color-text-secondary;
+    max-width: 100%;
+  }
+}
+
+.ipf-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: $space-6;
+  align-items: start;
+
+  @include respond-to(lg) {
+    grid-template-columns: minmax(0, 1fr) 320px;
+  }
+}
+
+.ipf-main,
+.ipf-side {
+  @include flex(column, stretch, flex-start, $space-6);
+  min-width: 0;
+}
+
+.ipf-section {
+  @include card;
+  @include flex(column, stretch, flex-start, $space-4);
+}
+
+.ipf-section__head {
+  @include flex(row, flex-start, space-between, $space-4);
+
+  .ipf-section__title {
+    @include flex(row, center, flex-start, $space-3);
+
+    i {
+      display: grid;
+      place-items: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: $radius-md;
+      background: $color-primary-muted;
+      color: $color-primary;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    span {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: $color-text-secondary;
+    }
+  }
+}
+
+.ipf-section__body {
+  @include flex(column, stretch, flex-start, $space-4);
+}
+
+.ipf-divider {
+  height: 1px;
+  background: $color-border;
+}
+
+// --- Field grids -----------------------------------------------------------
+
+.ipf-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: $space-4;
+
+  @include respond-to(sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  &--three {
+    @include respond-to(md) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+}
+
+// --- Logo / letterhead upload rows -----------------------------------------
+
+.ipf-upload {
+  @include flex(row, flex-start, flex-start, $space-4);
+  flex-wrap: wrap;
+}
+
+.ipf-upload__preview {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: 1px dashed $color-border-strong;
+  border-radius: $radius-md;
+  background: $color-surface-alt;
+  overflow: hidden;
+  color: $color-text-muted;
+  font-size: 1.5rem;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  &--logo {
+    width: 5.5rem;
+    height: 5.5rem;
+  }
+
+  &--letterhead {
+    width: 100%;
+    max-width: 12rem;
+    height: 3.5rem;
+  }
+}
+
+.ipf-upload__controls {
+  @include flex(column, flex-start, flex-start, $space-2);
+  min-width: 12rem;
+  flex: 1;
+}
+
+.ipf-upload__label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+
+  span {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: $color-text-muted;
+    margin-top: 2px;
+  }
+}
+
+.ipf-upload__actions {
+  @include flex(row, center, flex-start, $space-3);
+}
+
+.ipf-upload__button {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.ipf-upload__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+// --- Live preview card -------------------------------------------------------
+
+.ipf-preview {
+  @include card;
+  padding: 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.ipf-preview__band {
+  height: 4.5rem;
+  background: linear-gradient(135deg, $color-primary, $color-primary-active);
+  display: grid;
+  place-items: center;
+}
+
+.ipf-preview__logo,
+.ipf-preview__logo-fallback {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-top: 2.75rem;
+  border-radius: 50%;
+  background: $color-surface;
+  border: 3px solid $color-surface;
+  box-shadow: $shadow-sm;
+}
+
+.ipf-preview__logo {
+  object-fit: cover;
+}
+
+.ipf-preview__logo-fallback {
+  display: grid;
+  place-items: center;
+  color: $color-primary;
+  font-size: 1.25rem;
+}
+
+.ipf-preview__body {
+  padding: $space-4 $space-3 $space-4;
+  @include flex(column, center, flex-start, $space-2);
+
+  strong {
+    font-size: 0.95rem;
+  }
+}
+
+.ipf-preview__eiin {
+  font-size: 0.8rem;
+  color: $color-text-muted;
+}
+
+.ipf-preview__badges {
+  @include flex(row, center, center, $space-2);
+  flex-wrap: wrap;
+}
+
+// --- Sticky save bar ---------------------------------------------------------
+
+.ipf-savebar {
+  position: sticky;
+  bottom: $space-4;
+  @include flex(row, center, space-between, $space-4);
+  @include card;
+  border-color: $color-border-strong;
+  flex-wrap: wrap;
+
+  &__status {
+    @include flex(row, center, flex-start, $space-2);
+    color: $color-text-secondary;
+    font-size: 0.85rem;
+
+    i {
+      color: $color-success;
+    }
+  }
+
+  &__actions {
+    @include flex(row, center, flex-start, $space-3);
+  }
+}
+
+// --- Loading skeleton --------------------------------------------------------
+// Shown briefly on mount while the profile "loads" (see isLoading in
+// InstituteProfileView). Mirrors the real .ipf-layout structure with
+// generic .skeleton blocks (styles/components/_skeleton) sized by the
+// modifiers below, so the page doesn't jump once real content swaps in.
+
+.ipf-skel-title {
+  height: 1.6rem;
+  width: 260px;
+  max-width: 60%;
+}
+
+.ipf-skel-subtitle {
+  height: 0.9rem;
+  width: 90%;
+  margin-top: $space-3;
+}
+
+.ipf-skel-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: $radius-md;
+  flex-shrink: 0;
+}
+
+.ipf-skel-heading {
+  height: 1rem;
+  width: 140px;
+}
+
+.ipf-skel-hint {
+  height: 0.75rem;
+  width: 200px;
+  margin-top: $space-2;
+}
+
+.ipf-skel-field {
+  height: 2.4rem;
+  width: 100%;
+}
+
+.ipf-skel-square {
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: $radius-md;
+  flex-shrink: 0;
+}
+
+.ipf-skel-wide {
+  width: 100%;
+  max-width: 12rem;
+  height: 3.5rem;
+}
+
+.ipf-skel-band {
+  height: 4.5rem;
+}
+
+.ipf-skel-line {
+  height: 0.85rem;
+  width: 70%;
+  margin: $space-3 auto 0;
+}
+
+.ipf-skel-badge {
+  height: 1.4rem;
+  width: 4.5rem;
+  border-radius: $radius-sm;
+  display: inline-block;
+}

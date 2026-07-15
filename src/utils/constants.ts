@@ -38,3 +38,53 @@ export const ACCENT_THEMES: Record<
   sky: { label: 'Sky Blue', label_bn: 'আকাশী নীল', swatch: '#0ea5e9' },
   violet: { label: 'Violet', label_bn: 'বেগুনি', swatch: '#8b5cf6' },
 }
+
+// Institute Profile & EIIN (Institute Setup > Profile & EIIN)
+export const INSTITUTE_PROFILE_KEY = 'mekholi_institute_profile'
+
+// Institution types, per blueprint Section 2.1 (institution types the ERP
+// must support).
+export const INSTITUTION_TYPES: {
+  value: import('@/types').InstitutionType
+  label: string
+  label_bn: string
+}[] = [
+  { value: 'government_mpo', label: 'Government / MPO', label_bn: 'সরকারি / এমপিও' },
+  {
+    value: 'bangla_medium_private',
+    label: 'Bangla Medium (Non-MPO/Private)',
+    label_bn: 'বাংলা মাধ্যম (বেসরকারি)',
+  },
+  { value: 'english_version', label: 'English Version', label_bn: 'ইংরেজি ভার্সন' },
+  {
+    value: 'english_medium',
+    label: 'English Medium (Cambridge/Edexcel)',
+    label_bn: 'ইংরেজি মাধ্যম (ক্যামব্রিজ/এডেক্সেল)',
+  },
+  { value: 'madrasa_aliya', label: 'Madrasa - Aliya (Dakhil/Alim/Fazil)', label_bn: 'মাদ্রাসা - আলিয়া' },
+  { value: 'madrasa_qawmi_hifz', label: 'Madrasa - Qawmi / Hifz', label_bn: 'মাদ্রাসা - কওমি / হিফজ' },
+  { value: 'college_hsc', label: 'College / Intermediate (HSC)', label_bn: 'কলেজ / উচ্চ মাধ্যমিক' },
+  { value: 'technical_vocational', label: 'Technical & Vocational', label_bn: 'কারিগরি ও বৃত্তিমূলক' },
+  { value: 'multi_campus_group', label: 'Multi-campus Group', label_bn: 'বহু-ক্যাম্পাস গ্রুপ' },
+]
+
+// Education boards, per blueprint Section 2.2 (9 general boards plus
+// Madrasah/BMEB and Technical/BTEB).
+export const EDUCATION_BOARDS: {
+  value: import('@/types').EducationBoard
+  label: string
+  label_bn: string
+}[] = [
+  { value: 'dhaka', label: 'Dhaka', label_bn: 'ঢাকা' },
+  { value: 'rajshahi', label: 'Rajshahi', label_bn: 'রাজশাহী' },
+  { value: 'chattogram', label: 'Chattogram', label_bn: 'চট্টগ্রাম' },
+  { value: 'barishal', label: 'Barishal', label_bn: 'বরিশাল' },
+  { value: 'sylhet', label: 'Sylhet', label_bn: 'সিলেট' },
+  { value: 'mymensingh', label: 'Mymensingh', label_bn: 'ময়মনসিংহ' },
+  { value: 'jashore', label: 'Jashore', label_bn: 'যশোর' },
+  { value: 'dinajpur', label: 'Dinajpur', label_bn: 'দিনাজপুর' },
+  { value: 'cumilla', label: 'Cumilla', label_bn: 'কুমিল্লা' },
+  { value: 'bmeb', label: 'Madrasah Board (BMEB)', label_bn: 'মাদ্রাসা বোর্ড (বিএমইবি)' },
+  { value: 'bteb', label: 'Technical Board (BTEB)', label_bn: 'কারিগরি বোর্ড (বিটিইবি)' },
+  { value: 'not_applicable', label: 'Not Applicable', label_bn: 'প্রযোজ্য নয়' },
+]

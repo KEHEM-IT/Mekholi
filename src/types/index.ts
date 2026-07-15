@@ -93,3 +93,52 @@ export interface AppPreferences {
   fontSize: FontSizeScale
   documentLanguage: DocumentLanguagePrefs
 }
+
+// --- Institute Profile & EIIN (Institute Setup > Profile & EIIN) ----------
+// Modeled on the blueprint's Institution entity (Section 8) and the
+// institution-type / education-board tables (Section 2.1 / 2.2).
+
+export type InstitutionType =
+  | 'government_mpo'
+  | 'bangla_medium_private'
+  | 'english_version'
+  | 'english_medium'
+  | 'madrasa_aliya'
+  | 'madrasa_qawmi_hifz'
+  | 'college_hsc'
+  | 'technical_vocational'
+  | 'multi_campus_group'
+
+export type EducationBoard =
+  | 'dhaka'
+  | 'rajshahi'
+  | 'chattogram'
+  | 'barishal'
+  | 'sylhet'
+  | 'mymensingh'
+  | 'jashore'
+  | 'dinajpur'
+  | 'cumilla'
+  | 'bmeb'
+  | 'bteb'
+  | 'not_applicable'
+
+export interface InstituteProfile {
+  nameEn: string
+  nameBn: string
+  eiin: string
+  establishedYear: string
+  institutionType: InstitutionType
+  educationBoard: EducationBoard
+  registrationCode: string
+  addressEn: string
+  addressBn: string
+  phone: string
+  email: string
+  website: string
+  headName: string
+  headDesignation: string
+  headPhone: string
+  logoDataUrl: string | null
+  letterheadDataUrl: string | null
+}

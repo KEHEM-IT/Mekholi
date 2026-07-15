@@ -1,0 +1,25 @@
+@use '../abstracts' as *;
+
+// Generic shimmering placeholder block, used on any page while its data is
+// "loading" (see pages/_institute-profile.scss for a full page built from
+// these). This file only owns the shimmer look - size comes from a
+// page-specific modifier class or an inline style on the element.
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  position: relative;
+  display: block;
+  border-radius: $radius-sm;
+  background: linear-gradient(90deg, $color-surface-alt 25%, $color-surface-hover 37%, $color-surface-alt 63%);
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+  pointer-events: none;
+}
