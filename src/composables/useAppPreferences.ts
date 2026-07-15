@@ -50,6 +50,7 @@ function applyToDocument(prefs: AppPreferences) {
   root.setAttribute('lang', prefs.uiLanguage)
   root.setAttribute('data-accent', prefs.accentTheme)
   root.setAttribute('data-density', prefs.density)
+  root.setAttribute('data-font-en', prefs.englishFont)
   root.setAttribute('data-bn-font', prefs.bengaliFont)
   root.setAttribute('data-font-size', prefs.fontSize)
 }

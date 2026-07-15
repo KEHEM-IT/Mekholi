@@ -3,7 +3,14 @@ import { computed, ref } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { useAppPreferences } from '@/composables/useAppPreferences'
 import { ACCENT_THEMES } from '@/utils/constants'
-import type { AccentTheme, BengaliFont, DocumentLanguage, FontSizeScale, UILanguage } from '@/types'
+import type {
+  AccentTheme,
+  BengaliFont,
+  DocumentLanguage,
+  EnglishFont,
+  FontSizeScale,
+  UILanguage,
+} from '@/types'
 
 const { preferences, resetToDefaults } = useAppPreferences()
 
@@ -58,6 +65,49 @@ const docLangOptions: { value: DocumentLanguage; en: string; bn: string }[] = [
   { value: 'both', en: 'Bilingual (EN + BN)', bn: 'দ্বিভাষিক' },
 ]
 
+const englishFontOptions: { value: EnglishFont; label: string; hint: string; hint_bn: string }[] = [
+  {
+    value: 'system',
+    label: 'System default',
+    hint: 'Recommended - native OS font, fastest to render',
+    hint_bn: 'প্রস্তাবিত - ডিভাইসের নিজস্ব ফন্ট, দ্রুততম রেন্ডার',
+  },
+  {
+    value: 'inter',
+    label: 'Inter',
+    hint: 'Popular modern SaaS/dashboard face, very readable at small sizes',
+    hint_bn: 'জনপ্রিয় আধুনিক ড্যাশবোর্ড ফন্ট, ছোট আকারেও স্পষ্ট',
+  },
+  {
+    value: 'roboto',
+    label: 'Roboto',
+    hint: 'Neutral, widely used in admin panels and Android apps',
+    hint_bn: 'নিরপেক্ষ ফন্ট, অ্যাডমিন প্যানেল ও অ্যান্ড্রয়েড অ্যাপে বহুল ব্যবহৃত',
+  },
+  {
+    value: 'open-sans',
+    label: 'Open Sans',
+    hint: 'Friendly, highly legible face common in ERP/report UIs',
+    hint_bn: 'সহজপাঠ্য ফন্ট, ERP ও রিপোর্ট ইন্টারফেসে প্রচলিত',
+  },
+  {
+    value: 'lato',
+    label: 'Lato',
+    hint: 'Warm, slightly rounded - reads well on forms and tables',
+    hint_bn: 'উষ্ণ ও কিছুটা গোলাকার - ফর্ম ও টেবিলে ভালো দেখায়',
+  },
+  {
+    value: 'ibm-plex-sans',
+    label: 'IBM Plex Sans',
+    hint: 'Technical, enterprise-grade look for data-heavy screens',
+    hint_bn: 'টেকনিক্যাল ও এন্টারপ্রাইজ ধাঁচের, ডেটা-নির্ভর স্ক্রিনের জন্য উপযোগী',
+  },
+]
+
+const selectedEnglishFont = computed(
+  () => englishFontOptions.find((opt) => opt.value === preferences.englishFont) ?? englishFontOptions[0],
+)
+
 const bengaliFontOptions: { value: BengaliFont; label: string; hint: string; hint_bn: string }[] = [
   {
     value: 'hind-siliguri',
@@ -90,6 +140,7 @@ const fontSizeOptions: { value: FontSizeScale; en: string; bn: string }[] = [
 ]
 
 const bengaliPreviewText = 'শিক্ষা প্রতিষ্ঠান ব্যবস্থাপনা সিস্টেম - Mekholi'
+const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417'
 </script>
 
 <template>
@@ -202,14 +253,38 @@ const bengaliPreviewText = 'শিক্ষা প্রতিষ্ঠান �
             <h2>{{ isBn ? 'টাইপোগ্রাফি' : 'Typography' }}</h2>
             <span>{{
               isBn
-                ? 'বাংলা লেখার ফন্ট এবং ইন্টারফেসের লেখার আকার'
-                : 'Bengali font face and base interface text size'
+                ? 'ইংরেজি ও বাংলা লেখার ফন্ট এবং ইন্টারফেসের লেখার আকার'
+                : 'English and Bengali font faces and base interface text size'
             }}</span>
           </div>
         </div>
       </div>
 
       <div class="lts-section__body">
+        <div class="lts-row">
+          <div>
+            <div class="lts-row__label">{{ isBn ? 'ইংরেজি ফন্ট' : 'English font' }}</div>
+            <div class="lts-row__hint">{{ isBn ? selectedEnglishFont?.hint_bn : selectedEnglishFont?.hint }}</div>
+          </div>
+          <select
+            class="lts-row__control"
+            v-model="preferences.englishFont"
+          >
+            <option v-for="opt in englishFontOptions" :key="opt.value" :value="opt.value">
+              {{ opt.label }}
+            </option>
+          </select>
+        </div>
+
+        <p
+          class="lts-bn-font-preview"
+          :style="{ fontFamily: selectedEnglishFont!.value === 'system' ? 'var(--font-family-base, system-ui)' : `'${selectedEnglishFont!.label}', sans-serif` }"
+        >
+          {{ englishPreviewText }}
+        </p>
+
+        <div class="lts-divider" />
+
         <div class="lts-row">
           <div>
             <div class="lts-row__label">{{ isBn ? 'বাংলা ফন্ট' : 'Bengali font' }}</div>
