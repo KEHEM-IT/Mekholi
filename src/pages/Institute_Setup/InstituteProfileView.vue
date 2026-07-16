@@ -6,7 +6,6 @@ import { useInstituteProfile } from "@/composables/Institute_Setup/useInstituteP
 import {
   ACADEMIC_GROUP_OPTIONS,
   ACADEMIC_VERSIONS,
-  BD_DIVISIONS,
   EDUCATION_BOARDS,
   FACILITY_OPTIONS,
   INSTITUTE_SHIFTS,
@@ -19,6 +18,16 @@ import {
   STUDY_TYPES,
   WORKING_DAY_OPTIONS,
 } from "@/utils/constants";
+import {
+  BD_GEO_DISTRICTS,
+  BD_GEO_DIVISIONS,
+  districtsByDivisionId,
+  findDistrictByName,
+  findDivisionByName,
+  findUpazilaByName,
+  unionsByUpazilaId,
+  upazilasByDistrictId,
+} from "@/utils/bdGeo";
 
 const { preferences } = useAppPreferences();
 const { profile } = useInstituteProfile();
@@ -47,6 +56,55 @@ const selectedBoard = computed(
 const selectedStatus = computed(
   () => PROFILE_STATUSES.find((opt) => opt.value === profile.status) ?? PROFILE_STATUSES[0],
 );
+
+// --- Division -> District -> Upazila -> Union cascading selects -----------
+// Backed by the real BD geolocation dataset (src/assets/geolocation).
+// profile.division/district/upazila/union store plain English names (same
+// convention as before), so each level looks up its parent's id by name to
+// filter the next level's options.
+const selectedDivisionId = computed(() => findDivisionByName(profile.division)?.id ?? "");
+const districtOptions = computed(() =>
+  selectedDivisionId.value ? districtsByDivisionId(selectedDivisionId.value) : BD_GEO_DISTRICTS,
+);
+
+const selectedDistrictId = computed(() => findDistrictByName(profile.district)?.id ?? "");
+const upazilaOptions = computed(() =>
+  selectedDistrictId.value ? upazilasByDistrictId(selectedDistrictId.value) : [],
+);
+
+const selectedUpazilaId = computed(() => findUpazilaByName(profile.upazila)?.id ?? "");
+const unionOptions = computed(() =>
+  selectedUpazilaId.value ? unionsByUpazilaId(selectedUpazilaId.value) : [],
+);
+
+// Changing a level clears any child value that no longer belongs to the
+// new parent's list, so the form never shows a stale mismatched chain.
+function onDivisionChange() {
+  if (profile.district && !districtOptions.value.some((d) => d.name === profile.district)) {
+    profile.district = "";
+  }
+  if (profile.upazila && !upazilaOptions.value.some((u) => u.name === profile.upazila)) {
+    profile.upazila = "";
+  }
+  if (profile.union && !unionOptions.value.some((u) => u.name === profile.union)) {
+    profile.union = "";
+  }
+}
+
+function onDistrictChange() {
+  if (profile.upazila && !upazilaOptions.value.some((u) => u.name === profile.upazila)) {
+    profile.upazila = "";
+  }
+  if (profile.union && !unionOptions.value.some((u) => u.name === profile.union)) {
+    profile.union = "";
+  }
+}
+
+function onUpazilaChange() {
+  if (profile.union && !unionOptions.value.some((u) => u.name === profile.union)) {
+    profile.union = "";
+  }
+}
 
 // EIIN is a 6-digit government identifier (blueprint 2.2) - only flag it
 // once something has been typed, so a fresh/empty form doesn't open with
@@ -413,22 +471,50 @@ function handleSave() {
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field">
                   <label>{{ isBn ? "বিভাগ" : "Division" }}</label>
-                  <select v-model="profile.division">
+                  <select v-model="profile.division" @change="onDivisionChange">
                     <option value="" disabled>
                       {{ isBn ? "নির্বাচন করুন" : "Select division" }}
                     </option>
-                    <option v-for="opt in BD_DIVISIONS" :key="opt" :value="opt">{{ opt }}</option>
+                    <option v-for="opt in BD_GEO_DIVISIONS" :key="opt.id" :value="opt.name">
+                      {{ isBn ? opt.bn_name : opt.name }}
+                    </option>
                   </select>
                 </div>
 
                 <div class="form-field">
                   <label>{{ isBn ? "জেলা" : "District" }}</label>
-                  <input v-model="profile.district" type="text" placeholder="e.g. Sylhet" />
+                  <select v-model="profile.district" @change="onDistrictChange">
+                    <option value="" disabled>
+                      {{ isBn ? "নির্বাচন করুন" : "Select district" }}
+                    </option>
+                    <option v-for="opt in districtOptions" :key="opt.id" :value="opt.name">
+                      {{ isBn ? opt.bn_name : opt.name }}
+                    </option>
+                  </select>
                 </div>
 
                 <div class="form-field">
                   <label>{{ isBn ? "উপজেলা" : "Upazila" }}</label>
-                  <input v-model="profile.upazila" type="text" placeholder="e.g. Sylhet Sadar" />
+                  <select
+                    v-model="profile.upazila"
+                    :disabled="!upazilaOptions.length"
+                    @change="onUpazilaChange"
+                  >
+                    <option value="" disabled>
+                      {{
+                        upazilaOptions.length
+                          ? isBn
+                            ? "নির্বাচন করুন"
+                            : "Select upazila"
+                          : isBn
+                            ? "প্রথমে জেলা নির্বাচন করুন"
+                            : "Select district first"
+                      }}
+                    </option>
+                    <option v-for="opt in upazilaOptions" :key="opt.id" :value="opt.name">
+                      {{ isBn ? opt.bn_name : opt.name }}
+                    </option>
+                  </select>
                 </div>
               </div>
 
@@ -437,7 +523,22 @@ function handleSave() {
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field">
                   <label>{{ isBn ? "ইউনিয়ন" : "Union" }}</label>
-                  <input v-model="profile.union" type="text" placeholder="e.g. Kandigaon" />
+                  <select v-model="profile.union" :disabled="!unionOptions.length">
+                    <option value="" disabled>
+                      {{
+                        unionOptions.length
+                          ? isBn
+                            ? "নির্বাচন করুন"
+                            : "Select union"
+                          : isBn
+                            ? "প্রথমে উপজেলা নির্বাচন করুন"
+                            : "Select upazila first"
+                      }}
+                    </option>
+                    <option v-for="opt in unionOptions" :key="opt.id" :value="opt.name">
+                      {{ isBn ? opt.bn_name : opt.name }}
+                    </option>
+                  </select>
                 </div>
 
                 <div class="form-field">

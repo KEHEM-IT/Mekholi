@@ -159,18 +159,10 @@ export const PROFILE_STATUSES: {
   { value: 'suspended', label: 'Suspended', label_bn: 'স্থগিত' },
 ]
 
-// Bangladesh's 8 administrative divisions - used for the Location section's
-// Division dropdown (blueprint Section 8, address block).
-export const BD_DIVISIONS: string[] = [
-  'Dhaka',
-  'Chattogram',
-  'Rajshahi',
-  'Khulna',
-  'Barishal',
-  'Sylhet',
-  'Rangpur',
-  'Mymensingh',
-]
+// Bangladesh Division/District/Upazila/Union data now lives in
+// src/utils/bdGeo.ts, backed by the real dataset in
+// src/assets/geolocation (BD_GEO_DIVISIONS, BD_GEO_DISTRICTS,
+// districtsByDivisionId, upazilasByDistrictId, unionsByUpazilaId, etc).
 
 export const WORKING_DAY_OPTIONS: { value: string; label: string; label_bn: string }[] = [
   { value: 'Sunday', label: 'Sunday', label_bn: 'রবিবার' },
