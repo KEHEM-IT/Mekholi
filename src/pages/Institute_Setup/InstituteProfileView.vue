@@ -19,7 +19,6 @@ import {
   WORKING_DAY_OPTIONS,
 } from "@/utils/constants";
 import {
-  BD_GEO_DISTRICTS,
   BD_GEO_DIVISIONS,
   districtsByDivisionId,
   findDistrictByName,
@@ -63,8 +62,12 @@ const selectedStatus = computed(
 // convention as before), so each level looks up its parent's id by name to
 // filter the next level's options.
 const selectedDivisionId = computed(() => findDivisionByName(profile.division)?.id ?? "");
+// No fallback to the full district list here on purpose: District (and
+// everything below it) stays locked until a Division is chosen, so the
+// cascade always reflects a real Division -> District -> Upazila -> Union
+// chain instead of letting someone pick a District from the wrong Division.
 const districtOptions = computed(() =>
-  selectedDivisionId.value ? districtsByDivisionId(selectedDivisionId.value) : BD_GEO_DISTRICTS,
+  selectedDivisionId.value ? districtsByDivisionId(selectedDivisionId.value) : [],
 );
 
 const selectedDistrictId = computed(() => findDistrictByName(profile.district)?.id ?? "");
@@ -483,9 +486,21 @@ function handleSave() {
 
                 <div class="form-field">
                   <label>{{ isBn ? "জেলা" : "District" }}</label>
-                  <select v-model="profile.district" @change="onDistrictChange">
+                  <select
+                    v-model="profile.district"
+                    :disabled="!districtOptions.length"
+                    @change="onDistrictChange"
+                  >
                     <option value="" disabled>
-                      {{ isBn ? "নির্বাচন করুন" : "Select district" }}
+                      {{
+                        districtOptions.length
+                          ? isBn
+                            ? "নির্বাচন করুন"
+                            : "Select district"
+                          : isBn
+                            ? "প্রথমে বিভাগ নির্বাচন করুন"
+                            : "Select division first"
+                      }}
                     </option>
                     <option v-for="opt in districtOptions" :key="opt.id" :value="opt.name">
                       {{ isBn ? opt.bn_name : opt.name }}
