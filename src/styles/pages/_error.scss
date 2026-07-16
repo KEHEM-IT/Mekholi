@@ -1,0 +1,87 @@
+// Shared full-viewport shell for standalone status/error pages (404, 403,
+// generic runtime errors) that render outside DefaultLayout/AuthLayout.
+// Variant modifiers tint the icon badge: default = primary (informational,
+// e.g. 404), --danger = red (hard failures, e.g. 500), --warning = amber
+// (permission/blocked states, e.g. 403).
+
+@use '../abstracts' as *;
+
+.error-shell {
+  min-height: 100vh;
+  width: 100%;
+  @include flex(column, center, center, $space-6);
+  padding: $space-6;
+  text-align: center;
+  background: $color-bg;
+}
+
+.error-card {
+  width: 100%;
+  max-width: 480px;
+  @include flex(column, center, center, $space-4);
+}
+
+.error-icon {
+  display: grid;
+  place-items: center;
+  width: 5rem;
+  height: 5rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: $color-primary-muted;
+  color: $color-primary;
+  font-size: 2rem;
+
+  .error-shell--danger & {
+    background: $color-danger-muted;
+    color: $color-danger;
+  }
+
+  .error-shell--warning & {
+    background: $color-warning-muted;
+    color: $color-warning;
+  }
+}
+.error-code {
+  font-size: 4.5rem;
+  font-weight: 800;
+  line-height: 1;
+  color: $color-text;
+  letter-spacing: -0.02em;
+}
+
+.error-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $color-text;
+}
+
+.error-message {
+  color: $color-text-secondary;
+  max-width: 42ch;
+}
+
+// Optional raw error/stack detail, shown only when provided (e.g. dev
+// mode or a message forwarded via the global error handler).
+.error-details {
+  width: 100%;
+  @include card;
+  text-align: left;
+  font-size: 0.82rem;
+  font-family: monospace;
+  color: $color-text-muted;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 10rem;
+  overflow-y: auto;
+}
+
+.error-actions {
+  @include flex(row, center, center, $space-3);
+  flex-wrap: wrap;
+  margin-top: $space-2;
+
+  .btn {
+    @include flex(row, center, center, $space-2);
+  }
+}

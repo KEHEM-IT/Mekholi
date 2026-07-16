@@ -70,5 +70,6 @@ export const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  { path: '/error', name: 'error', component: () => import('@/pages/ErrorView.vue') },
   { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/pages/NotFoundView.vue') },
 ]
