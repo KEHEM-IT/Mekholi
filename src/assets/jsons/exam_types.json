@@ -1,0 +1,62 @@
+[
+  {
+    "Id": 8,
+    "Name": "Alim",
+    "Name_bn": "Alim",
+    "LookupText": "Alim - Alim"
+  },
+  {
+    "Id": 7,
+    "Name": "Dakhil",
+    "Name_bn": "Dakhil",
+    "LookupText": "Dakhil - Dakhil"
+  },
+  {
+    "Id": 12,
+    "Name": "HSC (BM)",
+    "Name_bn": "এইচএসসি (বি.এম)",
+    "LookupText": "HSC (BM) - এইচএসসি (বি.এম)"
+  },
+  {
+    "Id": 6,
+    "Name": "HSC",
+    "Name_bn": "HSC",
+    "LookupText": "HSC - HSC"
+  },
+  {
+    "Id": 23,
+    "Name": "Hon. Pass",
+    "Name_bn": "স্নাতক (পাস)",
+    "LookupText": "Hon. Pass - স্নাতক (পাস)"
+  },
+  {
+    "Id": 14,
+    "Name": "JDC",
+    "Name_bn": "JDC",
+    "LookupText": "JDC - JDC"
+  },
+  {
+    "Id": 9,
+    "Name": "JSC",
+    "Name_bn": "JSC",
+    "LookupText": "JSC - JSC"
+  },
+  {
+    "Id": 10,
+    "Name": "SSC",
+    "Name_bn": "SSC",
+    "LookupText": "SSC - SSC"
+  },
+  {
+    "Id": 11,
+    "Name": "SSC Vocational",
+    "Name_bn": "এসএসসি (ভোকেশনাল)",
+    "LookupText": "SSC Vocational - এসএসসি (ভোকেশনাল)"
+  },
+  {
+    "Id": 13,
+    "Name": "স্নাতক (সম্মান ) ও স্নাতকোত্তর",
+    "Name_bn": "স্নাতক (সম্মান ) ও স্নাতকোত্তর",
+    "LookupText": "স্নাতক (সম্মান ) ও স্নাতকোত্তর - স্নাতক (সম্মান ) ও স্নাতকোত্তর"
+  }
+]

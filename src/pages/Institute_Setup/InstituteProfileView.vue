@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
+import BaseCombobox from "@/components/ui/BaseCombobox.vue";
 import { useAppPreferences } from "@/composables/useAppPreferences";
 import { useInstituteProfile } from "@/composables/Institute_Setup/useInstituteProfile";
 import {
@@ -56,12 +57,14 @@ const selectedStatus = computed(
   () => PROFILE_STATUSES.find((opt) => opt.value === profile.status) ?? PROFILE_STATUSES[0],
 );
 
-// --- Division -> District -> Upazila -> Union cascading selects -----------
+// --- Division -> District -> Upazila -> Union cascading combobox chain ----
 // Backed by the real BD geolocation dataset (src/assets/geolocation).
 // profile.division/district/upazila/union store plain English names (same
-// convention as before), so each level looks up its parent's id by name to
-// filter the next level's options.
-const selectedDivisionId = computed(() => findDivisionByName(profile.division)?.id ?? "");
+// convention as before), so each level looks up its parent's Id by name to
+// filter the next level's options. BaseCombobox is bound with
+// optionValue="ZoneName"/"Name" for the same reason - v-model keeps writing
+// the plain name straight into the profile, no extra mapping needed.
+const selectedDivisionId = computed(() => findDivisionByName(profile.division)?.Id ?? "");
 // No fallback to the full district list here on purpose: District (and
 // everything below it) stays locked until a Division is chosen, so the
 // cascade always reflects a real Division -> District -> Upazila -> Union
@@ -70,12 +73,12 @@ const districtOptions = computed(() =>
   selectedDivisionId.value ? districtsByDivisionId(selectedDivisionId.value) : [],
 );
 
-const selectedDistrictId = computed(() => findDistrictByName(profile.district)?.id ?? "");
+const selectedDistrictId = computed(() => findDistrictByName(profile.district)?.Id ?? "");
 const upazilaOptions = computed(() =>
   selectedDistrictId.value ? upazilasByDistrictId(selectedDistrictId.value) : [],
 );
 
-const selectedUpazilaId = computed(() => findUpazilaByName(profile.upazila)?.id ?? "");
+const selectedUpazilaId = computed(() => findUpazilaByName(profile.upazila)?.Id ?? "");
 const unionOptions = computed(() =>
   selectedUpazilaId.value ? unionsByUpazilaId(selectedUpazilaId.value) : [],
 );
@@ -83,28 +86,28 @@ const unionOptions = computed(() =>
 // Changing a level clears any child value that no longer belongs to the
 // new parent's list, so the form never shows a stale mismatched chain.
 function onDivisionChange() {
-  if (profile.district && !districtOptions.value.some((d) => d.name === profile.district)) {
+  if (profile.district && !districtOptions.value.some((d) => d.Name === profile.district)) {
     profile.district = "";
   }
-  if (profile.upazila && !upazilaOptions.value.some((u) => u.name === profile.upazila)) {
+  if (profile.upazila && !upazilaOptions.value.some((u) => u.Name === profile.upazila)) {
     profile.upazila = "";
   }
-  if (profile.union && !unionOptions.value.some((u) => u.name === profile.union)) {
+  if (profile.union && !unionOptions.value.some((u) => u.Name === profile.union)) {
     profile.union = "";
   }
 }
 
 function onDistrictChange() {
-  if (profile.upazila && !upazilaOptions.value.some((u) => u.name === profile.upazila)) {
+  if (profile.upazila && !upazilaOptions.value.some((u) => u.Name === profile.upazila)) {
     profile.upazila = "";
   }
-  if (profile.union && !unionOptions.value.some((u) => u.name === profile.union)) {
+  if (profile.union && !unionOptions.value.some((u) => u.Name === profile.union)) {
     profile.union = "";
   }
 }
 
 function onUpazilaChange() {
-  if (profile.union && !unionOptions.value.some((u) => u.name === profile.union)) {
+  if (profile.union && !unionOptions.value.some((u) => u.Name === profile.union)) {
     profile.union = "";
   }
 }
@@ -474,62 +477,62 @@ function handleSave() {
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field">
                   <label>{{ isBn ? "বিভাগ" : "Division" }}</label>
-                  <select v-model="profile.division" @change="onDivisionChange">
-                    <option value="" disabled>
-                      {{ isBn ? "নির্বাচন করুন" : "Select division" }}
-                    </option>
-                    <option v-for="opt in BD_GEO_DIVISIONS" :key="opt.id" :value="opt.name">
-                      {{ isBn ? opt.bn_name : opt.name }}
-                    </option>
-                  </select>
+                  <BaseCombobox
+                    v-model="profile.division"
+                    :options="BD_GEO_DIVISIONS"
+                    option-value="ZoneName"
+                    option-label="LookupText"
+                    :placeholder="isBn ? 'নির্বাচন করুন' : 'Select division'"
+                    :search-placeholder="isBn ? 'খুঁজুন…' : 'Search…'"
+                    :empty-text="isBn ? 'কোনো ফলাফল নেই' : 'No results found'"
+                    @change="onDivisionChange"
+                  />
                 </div>
 
                 <div class="form-field">
                   <label>{{ isBn ? "জেলা" : "District" }}</label>
-                  <select
+                  <BaseCombobox
                     v-model="profile.district"
+                    :options="districtOptions"
+                    option-value="Name"
+                    option-label="LookupText"
                     :disabled="!districtOptions.length"
+                    :placeholder="
+                      districtOptions.length
+                        ? isBn
+                          ? 'নির্বাচন করুন'
+                          : 'Select district'
+                        : isBn
+                          ? 'প্রথমে বিভাগ নির্বাচন করুন'
+                          : 'Select division first'
+                    "
+                    :search-placeholder="isBn ? 'খুঁজুন…' : 'Search…'"
+                    :empty-text="isBn ? 'কোনো ফলাফল নেই' : 'No results found'"
                     @change="onDistrictChange"
-                  >
-                    <option value="" disabled>
-                      {{
-                        districtOptions.length
-                          ? isBn
-                            ? "নির্বাচন করুন"
-                            : "Select district"
-                          : isBn
-                            ? "প্রথমে বিভাগ নির্বাচন করুন"
-                            : "Select division first"
-                      }}
-                    </option>
-                    <option v-for="opt in districtOptions" :key="opt.id" :value="opt.name">
-                      {{ isBn ? opt.bn_name : opt.name }}
-                    </option>
-                  </select>
+                  />
                 </div>
 
                 <div class="form-field">
                   <label>{{ isBn ? "উপজেলা" : "Upazila" }}</label>
-                  <select
+                  <BaseCombobox
                     v-model="profile.upazila"
+                    :options="upazilaOptions"
+                    option-value="Name"
+                    option-label="LookupText"
                     :disabled="!upazilaOptions.length"
+                    :placeholder="
+                      upazilaOptions.length
+                        ? isBn
+                          ? 'নির্বাচন করুন'
+                          : 'Select upazila'
+                        : isBn
+                          ? 'প্রথমে জেলা নির্বাচন করুন'
+                          : 'Select district first'
+                    "
+                    :search-placeholder="isBn ? 'খুঁজুন…' : 'Search…'"
+                    :empty-text="isBn ? 'কোনো ফলাফল নেই' : 'No results found'"
                     @change="onUpazilaChange"
-                  >
-                    <option value="" disabled>
-                      {{
-                        upazilaOptions.length
-                          ? isBn
-                            ? "নির্বাচন করুন"
-                            : "Select upazila"
-                          : isBn
-                            ? "প্রথমে জেলা নির্বাচন করুন"
-                            : "Select district first"
-                      }}
-                    </option>
-                    <option v-for="opt in upazilaOptions" :key="opt.id" :value="opt.name">
-                      {{ isBn ? opt.bn_name : opt.name }}
-                    </option>
-                  </select>
+                  />
                 </div>
               </div>
 
@@ -538,22 +541,24 @@ function handleSave() {
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field">
                   <label>{{ isBn ? "ইউনিয়ন" : "Union" }}</label>
-                  <select v-model="profile.union" :disabled="!unionOptions.length">
-                    <option value="" disabled>
-                      {{
-                        unionOptions.length
-                          ? isBn
-                            ? "নির্বাচন করুন"
-                            : "Select union"
-                          : isBn
-                            ? "প্রথমে উপজেলা নির্বাচন করুন"
-                            : "Select upazila first"
-                      }}
-                    </option>
-                    <option v-for="opt in unionOptions" :key="opt.id" :value="opt.name">
-                      {{ isBn ? opt.bn_name : opt.name }}
-                    </option>
-                  </select>
+                  <BaseCombobox
+                    v-model="profile.union"
+                    :options="unionOptions"
+                    option-value="Name"
+                    option-label="LookupText"
+                    :disabled="!unionOptions.length"
+                    :placeholder="
+                      unionOptions.length
+                        ? isBn
+                          ? 'নির্বাচন করুন'
+                          : 'Select union'
+                        : isBn
+                          ? 'প্রথমে উপজেলা নির্বাচন করুন'
+                          : 'Select upazila first'
+                    "
+                    :search-placeholder="isBn ? 'খুঁজুন…' : 'Search…'"
+                    :empty-text="isBn ? 'কোনো ফলাফল নেই' : 'No results found'"
+                  />
                 </div>
 
                 <div class="form-field">

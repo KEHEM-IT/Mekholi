@@ -1,0 +1,38 @@
+[
+  {
+    "Id": 4,
+    "Name": "Haor area",
+    "NameInBangla": "হাওর অঞ্চল",
+    "LookupText": "Haor area - হাওর অঞ্চল"
+  },
+  {
+    "Id": 2,
+    "Name": "Hilly region",
+    "NameInBangla": "পাহাড়ী অঞ্চল",
+    "LookupText": "Hilly region - পাহাড়ী অঞ্চল"
+  },
+  {
+    "Id": 6,
+    "Name": "Marsh area",
+    "NameInBangla": "বিল অঞ্চল",
+    "LookupText": "Marsh area - বিল অঞ্চল"
+  },
+  {
+    "Id": 1,
+    "Name": "Plain Land",
+    "NameInBangla": "সমতল",
+    "LookupText": "Plain Land - সমতল"
+  },
+  {
+    "Id": 5,
+    "Name": "River Coast / Char Anchal",
+    "NameInBangla": "নদীর উপকুল/চরাঞ্চল",
+    "LookupText": "River Coast / Char Anchal - নদীর উপকুল/চরাঞ্চল"
+  },
+  {
+    "Id": 3,
+    "Name": "Sea Coast",
+    "NameInBangla": "সমুদ্র উপকুল",
+    "LookupText": "Sea Coast - সমুদ্র উপকুল"
+  }
+]

@@ -1,0 +1,242 @@
+[
+  {
+    "Id": 1,
+    "NameInEnglish": "10 th",
+    "NameInBangla": "দশম",
+    "LookupText": "10 th - দশম"
+  },
+  {
+    "Id": 16,
+    "NameInEnglish": "11 th",
+    "NameInBangla": "একাদশ",
+    "LookupText": "11 th - একাদশ"
+  },
+  {
+    "Id": 12,
+    "NameInEnglish": "12 th",
+    "NameInBangla": "দ্বাদশ",
+    "LookupText": "12 th - দ্বাদশ"
+  },
+  {
+    "Id": 62,
+    "NameInEnglish": "1st",
+    "NameInBangla": "১ম",
+    "LookupText": "1st - ১ম"
+  },
+  {
+    "Id": 33,
+    "NameInEnglish": "1st Year(9th)",
+    "NameInBangla": "১ম বর্ষ (৯ম)",
+    "LookupText": "1st Year(9th) - ১ম বর্ষ (৯ম)"
+  },
+  {
+    "Id": 63,
+    "NameInEnglish": "2nd",
+    "NameInBangla": "২য়",
+    "LookupText": "2nd - ২য়"
+  },
+  {
+    "Id": 34,
+    "NameInEnglish": "2nd Year(10th)",
+    "NameInBangla": "২য় বর্ষ (১০ম)",
+    "LookupText": "2nd Year(10th) - ২য় বর্ষ (১০ম)"
+  },
+  {
+    "Id": 64,
+    "NameInEnglish": "3rd",
+    "NameInBangla": "৩য়",
+    "LookupText": "3rd - ৩য়"
+  },
+  {
+    "Id": 65,
+    "NameInEnglish": "4th",
+    "NameInBangla": "৪র্থ",
+    "LookupText": "4th - ৪র্থ"
+  },
+  {
+    "Id": 66,
+    "NameInEnglish": "5th",
+    "NameInBangla": "৫ম",
+    "LookupText": "5th - ৫ম"
+  },
+  {
+    "Id": 5,
+    "NameInEnglish": "6th",
+    "NameInBangla": "৬ষ্ঠ",
+    "LookupText": "6th - ৬ষ্ঠ"
+  },
+  {
+    "Id": 8,
+    "NameInEnglish": "7 th",
+    "NameInBangla": "৭ম",
+    "LookupText": "7 th - ৭ম"
+  },
+  {
+    "Id": 19,
+    "NameInEnglish": "8 th",
+    "NameInBangla": "৮ম",
+    "LookupText": "8 th - ৮ম"
+  },
+  {
+    "Id": 20,
+    "NameInEnglish": "9 th",
+    "NameInBangla": "নবম",
+    "LookupText": "9 th - নবম"
+  },
+  {
+    "Id": 2,
+    "NameInEnglish": "Alim 1st Year",
+    "NameInBangla": "আলিম ১ম বর্ষ",
+    "LookupText": "Alim 1st Year - আলিম ১ম বর্ষ"
+  },
+  {
+    "Id": 11,
+    "NameInEnglish": "Dakhil 10 th",
+    "NameInBangla": "দাখিল ১০ম",
+    "LookupText": "Dakhil 10 th - দাখিল ১০ম"
+  },
+  {
+    "Id": 17,
+    "NameInEnglish": "Dakhil 6 th",
+    "NameInBangla": "দাখিল ৬ষ্ঠ",
+    "LookupText": "Dakhil 6 th - দাখিল ৬ষ্ঠ"
+  },
+  {
+    "Id": 9,
+    "NameInEnglish": "Dakhil 7 th",
+    "NameInBangla": "দাখিল ৭ম",
+    "LookupText": "Dakhil 7 th - দাখিল ৭ম"
+  },
+  {
+    "Id": 10,
+    "NameInEnglish": "Dakhil 8 th",
+    "NameInBangla": "দাখিল ৮ম",
+    "LookupText": "Dakhil 8 th - দাখিল ৮ম"
+  },
+  {
+    "Id": 6,
+    "NameInEnglish": "Dakhil 9 th",
+    "NameInBangla": "দাখিল ৯ম",
+    "LookupText": "Dakhil 9 th - দাখিল ৯ম"
+  },
+  {
+    "Id": 61,
+    "NameInEnglish": "Pre-Primary",
+    "NameInBangla": "প্রি-প্রাইমারি",
+    "LookupText": "Pre-Primary - প্রি-প্রাইমারি"
+  },
+  {
+    "Id": 28,
+    "NameInEnglish": "আলিম",
+    "NameInBangla": "আলিম",
+    "LookupText": "আলিম - আলিম"
+  },
+  {
+    "Id": 14,
+    "NameInEnglish": "আলিম ২য় বর্ষ",
+    "NameInBangla": "আলিম ২য় বর্ষ",
+    "LookupText": "আলিম ২য় বর্ষ - আলিম ২য় বর্ষ"
+  },
+  {
+    "Id": 24,
+    "NameInEnglish": "উচ্চ মাধ্যমিক",
+    "NameInBangla": "উচ্চ মাধ্যমিক",
+    "LookupText": "উচ্চ মাধ্যমিক - উচ্চ মাধ্যমিক"
+  },
+  {
+    "Id": 67,
+    "NameInEnglish": "উচ্চ মাধ্যমিক সত্মরে পড়ানের জন্য শিক্ষার্থী",
+    "NameInBangla": "উচ্চ মাধ্যমিক সত্মরে পড়ানের জন্য শিক্ষার্থী",
+    "LookupText": "উচ্চ মাধ্যমিক সত্মরে পড়ানের জন্য শিক্ষার্থী - উচ্চ মাধ্যমিক সত্মরে পড়ানের জন্য শিক্ষার্থী"
+  },
+  {
+    "Id": 30,
+    "NameInEnglish": "কামিল",
+    "NameInBangla": "কামিল",
+    "LookupText": "কামিল - কামিল"
+  },
+  {
+    "Id": 21,
+    "NameInEnglish": "কামিল ১ম বর্ষ",
+    "NameInBangla": "কামিল ১ম বর্ষ",
+    "LookupText": "কামিল ১ম বর্ষ - কামিল ১ম বর্ষ"
+  },
+  {
+    "Id": 22,
+    "NameInEnglish": "কামিল ২য় বর্ষ",
+    "NameInBangla": "কামিল ২য় বর্ষ",
+    "LookupText": "কামিল ২য় বর্ষ - কামিল ২য় বর্ষ"
+  },
+  {
+    "Id": 13,
+    "NameInEnglish": "ডিগ্রী সম্মান",
+    "NameInBangla": "ডিগ্রী সম্মান",
+    "LookupText": "ডিগ্রী সম্মান - ডিগ্রী সম্মান"
+  },
+  {
+    "Id": 18,
+    "NameInEnglish": "ডিগ্রী ১ম বর্ষ",
+    "NameInBangla": "ডিগ্রী ১ম বর্ষ",
+    "LookupText": "ডিগ্রী ১ম বর্ষ - ডিগ্রী ১ম বর্ষ"
+  },
+  {
+    "Id": 7,
+    "NameInEnglish": "ডিগ্রী ২য় বর্ষ",
+    "NameInBangla": "ডিগ্রী ২য় বর্ষ",
+    "LookupText": "ডিগ্রী ২য় বর্ষ - ডিগ্রী ২য় বর্ষ"
+  },
+  {
+    "Id": 4,
+    "NameInEnglish": "ডিগ্রী ৩য় বর্ষ",
+    "NameInBangla": "ডিগ্রী ৩য় বর্ষ",
+    "LookupText": "ডিগ্রী ৩য় বর্ষ - ডিগ্রী ৩য় বর্ষ"
+  },
+  {
+    "Id": 29,
+    "NameInEnglish": "ফাযিল",
+    "NameInBangla": "ফাযিল",
+    "LookupText": "ফাযিল - ফাযিল"
+  },
+  {
+    "Id": 3,
+    "NameInEnglish": "ফাযিল ১ম বর্ষ",
+    "NameInBangla": "ফাযিল ১ম বর্ষ",
+    "LookupText": "ফাযিল ১ম বর্ষ - ফাযিল ১ম বর্ষ"
+  },
+  {
+    "Id": 15,
+    "NameInEnglish": "ফাযিল ২য় বর্ষ",
+    "NameInBangla": "ফাযিল ২য় বর্ষ",
+    "LookupText": "ফাযিল ২য় বর্ষ - ফাযিল ২য় বর্ষ"
+  },
+  {
+    "Id": 26,
+    "NameInEnglish": "সম্মান",
+    "NameInBangla": "সম্মান",
+    "LookupText": "সম্মান - সম্মান"
+  },
+  {
+    "Id": 25,
+    "NameInEnglish": "স্নাতক",
+    "NameInBangla": "স্নাতক",
+    "LookupText": "স্নাতক - স্নাতক"
+  },
+  {
+    "Id": 23,
+    "NameInEnglish": "স্নাতকোত্তর",
+    "NameInBangla": "স্নাতকোত্তর",
+    "LookupText": "স্নাতকোত্তর - স্নাতকোত্তর"
+  },
+  {
+    "Id": 31,
+    "NameInEnglish": "১ম বর্ষ (একাদশ)",
+    "NameInBangla": "১ম বর্ষ (একাদশ)",
+    "LookupText": "১ম বর্ষ (একাদশ) - ১ম বর্ষ (একাদশ)"
+  },
+  {
+    "Id": 32,
+    "NameInEnglish": "২য় বর্ষ (দ্বাদশ)",
+    "NameInBangla": "২য় বর্ষ (দ্বাদশ)",
+    "LookupText": "২য় বর্ষ (দ্বাদশ) - ২য় বর্ষ (দ্বাদশ)"
+  }
+]

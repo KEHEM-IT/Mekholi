@@ -1,0 +1,167 @@
+@use '../abstracts' as *;
+
+// Searchable single-select dropdown — see components/ui/BaseCombobox.vue.
+// Markup:
+//   .combobox[.is-open][.is-disabled]
+//     .combobox__control (button)
+//       .combobox__value[.is-placeholder]
+//       .combobox__actions > .combobox__clear + .combobox__caret
+//     .combobox__panel
+//       .combobox__search > input
+//       .combobox__list (ul, role="listbox")
+//         .combobox__option[.is-active][.is-selected]
+//         .combobox__empty
+
+.combobox {
+  position: relative;
+  width: 100%;
+}
+
+.combobox__control {
+  @include flex(row, center, space-between, $space-2);
+  width: 100%;
+  background: $color-input-bg;
+  border: 1px solid $color-input-border;
+  border-radius: $radius-md;
+  padding: $space-2 $space-3;
+  color: $color-text;
+  font-family: var(--font-family-base);
+  font-size: $font-size-base;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color $transition-fast,
+    background-color $transition-fast;
+
+  &:hover:not(:disabled) {
+    border-color: $color-border-strong;
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: $color-input-border-focus;
+  }
+
+  &:disabled {
+    background: $color-input-disabled-bg;
+    color: $color-text-disabled;
+    cursor: not-allowed;
+  }
+}
+
+.combobox.is-open .combobox__control {
+  border-color: $color-input-border-focus;
+}
+
+.combobox__value {
+  @include truncate;
+  flex: 1 1 auto;
+  min-width: 0;
+
+  &.is-placeholder {
+    color: $color-input-placeholder;
+  }
+}
+
+.combobox__actions {
+  @include flex(row, center, flex-end, $space-2);
+  flex-shrink: 0;
+}
+
+.combobox__clear {
+  @include flex(row, center, center);
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  line-height: 1;
+  color: $color-text-muted;
+  transition:
+    background-color $transition-fast,
+    color $transition-fast;
+
+  &:hover {
+    background: $color-surface-hover;
+    color: $color-text;
+  }
+}
+
+.combobox__caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid $color-text-muted;
+  transition: transform $transition-fast;
+}
+
+.combobox.is-open .combobox__caret {
+  transform: rotate(180deg);
+}
+
+// Dropdown panel — floats over surrounding content, same elevated
+// surface + shadow used for other popovers/menus.
+.combobox__panel {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + #{$space-1});
+  left: 0;
+  right: 0;
+  background: $color-surface-alt;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 16rem;
+
+  @include respond-to(sm) {
+    max-height: 18rem;
+  }
+}
+
+.combobox__search {
+  flex-shrink: 0;
+  padding: $space-2;
+  border-bottom: 1px solid $color-border;
+
+  input {
+    width: 100%;
+    // Slightly tighter than the global input style so the search field
+    // reads as part of the panel chrome rather than a full form field.
+    padding: $space-1 $space-2;
+    font-size: 0.9rem;
+    background: $color-surface;
+  }
+}
+
+.combobox__list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: $space-1 0;
+}
+
+.combobox__option {
+  padding: $space-2 $space-3;
+  font-size: 0.9rem;
+  color: $color-text;
+  cursor: pointer;
+  transition: background-color $transition-fast;
+
+  &.is-active {
+    background: $color-surface-hover;
+  }
+
+  &.is-selected {
+    color: $color-primary;
+    font-weight: 600;
+  }
+}
+
+.combobox__empty {
+  padding: $space-3;
+  font-size: 0.85rem;
+  color: $color-text-muted;
+  text-align: center;
+}

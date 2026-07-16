@@ -1,83 +1,98 @@
 // Bangladesh administrative geolocation lookups (Division -> District ->
-// Upazila -> Union), backed by the PHPMyAdmin JSON exports living in
-// src/assets/geolocation. Each raw file is a 3-entry array: a header entry,
-// a database entry, and a single "table" entry whose `data` field holds the
-// actual rows. `extractTableData` pulls just the rows out so the rest of
-// the app only ever deals with plain typed arrays.
-import divisionsData from "@/assets/geolocation/divisions.json";
-import districtsData from "@/assets/geolocation/districts.json";
-import upazilasData from "@/assets/geolocation/upazilas.json";
-import unionsData from "@/assets/geolocation/unions.json";
+// Upazila -> Union), backed by the flat JSON exports living in
+// src/assets/geolocation. Each file is a plain array of rows (Id +
+// name fields + a parent foreign key), so the JSON imports are used
+// directly — no unwrapping needed.
+import divisionsData from '@/assets/geolocation/divisions.json'
+import districtsData from '@/assets/geolocation/districts.json'
+import upazilasData from '@/assets/geolocation/upazilas.json'
+import unionsData from '@/assets/geolocation/unions.json'
 
+// Each row also carries an index signature so these interfaces satisfy
+// BaseCombobox's generic `ComboboxOption = Record<string, unknown>` options
+// prop - without it TS rejects passing e.g. BdDistrict[] where
+// Record<string, unknown>[] is expected, even though every named field
+// already fits `unknown`.
 export interface BdDivision {
-  id: string;
-  name: string;
-  bn_name: string;
-  url: string;
+  [key: string]: unknown
+  Id: number
+  ZoneName: string
+  Zone_Bn: string
+  LookupText: string
 }
 
 export interface BdDistrict {
-  id: string;
-  division_id: string;
-  name: string;
-  bn_name: string;
-  lat: string;
-  lon: string;
-  url: string;
+  [key: string]: unknown
+  Id: number
+  Name: string
+  NameBn: string
+  DivisionId: number
+  ZoneId: number
+  LookupText: string
 }
 
 export interface BdUpazila {
-  id: string;
-  district_id: string;
-  name: string;
-  bn_name: string;
-  url: string;
+  [key: string]: unknown
+  Id: number
+  Name: string
+  NameBn: string
+  DistrictId: number
+  LookupText: string
 }
 
-// Note: the source dump spells the foreign key "upazilla_id" (double L).
 export interface BdUnion {
-  id: string;
-  upazilla_id: string;
-  name: string;
-  bn_name: string;
-  url: string;
+  [key: string]: unknown
+  Id: number
+  Name: string
+  NameBn: string
+  SubDistrictId: number
+  /** Not present in the source dump — built once at load time below so
+   *  unions can be dropped straight into BaseCombobox like every other
+   *  level (which all carry a real LookupText column). */
+  LookupText: string
 }
 
-function extractTableData<T>(raw: unknown): T[] {
-  const tableEntry = (raw as Array<Record<string, unknown>>).find(
-    (entry) => entry.type === "table",
-  );
-  return (tableEntry?.data as T[]) ?? [];
+export const BD_GEO_DIVISIONS = divisionsData as BdDivision[]
+export const BD_GEO_DISTRICTS = districtsData as BdDistrict[]
+export const BD_GEO_UPAZILAS = upazilasData as BdUpazila[]
+
+type RawUnion = Omit<BdUnion, 'LookupText'>
+export const BD_GEO_UNIONS: BdUnion[] = (unionsData as RawUnion[]).map((u) => ({
+  ...u,
+  LookupText: u.Name === u.NameBn ? u.Name : `${u.Name} - ${u.NameBn}`,
+}))
+
+export function districtsByDivisionId(divisionId: number | string): BdDistrict[] {
+  const id = Number(divisionId)
+  return BD_GEO_DISTRICTS.filter((d) => d.DivisionId === id)
 }
 
-export const BD_GEO_DIVISIONS: BdDivision[] = extractTableData<BdDivision>(divisionsData);
-export const BD_GEO_DISTRICTS: BdDistrict[] = extractTableData<BdDistrict>(districtsData);
-export const BD_GEO_UPAZILAS: BdUpazila[] = extractTableData<BdUpazila>(upazilasData);
-export const BD_GEO_UNIONS: BdUnion[] = extractTableData<BdUnion>(unionsData);
-
-export function districtsByDivisionId(divisionId: string): BdDistrict[] {
-  return BD_GEO_DISTRICTS.filter((d) => d.division_id === divisionId);
+export function upazilasByDistrictId(districtId: number | string): BdUpazila[] {
+  const id = Number(districtId)
+  return BD_GEO_UPAZILAS.filter((u) => u.DistrictId === id)
 }
 
-export function upazilasByDistrictId(districtId: string): BdUpazila[] {
-  return BD_GEO_UPAZILAS.filter((u) => u.district_id === districtId);
-}
-
-export function unionsByUpazilaId(upazilaId: string): BdUnion[] {
-  return BD_GEO_UNIONS.filter((u) => u.upazilla_id === upazilaId);
+export function unionsByUpazilaId(upazilaId: number | string): BdUnion[] {
+  const id = Number(upazilaId)
+  return BD_GEO_UNIONS.filter((u) => u.SubDistrictId === id)
 }
 
 export function findDivisionByName(name?: string): BdDivision | undefined {
-  if (!name) return undefined;
-  return BD_GEO_DIVISIONS.find((d) => d.name === name);
+  if (!name) return undefined
+  return BD_GEO_DIVISIONS.find((d) => d.ZoneName === name)
 }
 
 export function findDistrictByName(name?: string): BdDistrict | undefined {
-  if (!name) return undefined;
-  return BD_GEO_DISTRICTS.find((d) => d.name === name);
+  if (!name) return undefined
+  return BD_GEO_DISTRICTS.find((d) => d.Name === name)
 }
 
 export function findUpazilaByName(name?: string): BdUpazila | undefined {
-  if (!name) return undefined;
-  return BD_GEO_UPAZILAS.find((u) => u.name === name);
+  if (!name) return undefined
+  return BD_GEO_UPAZILAS.find((u) => u.Name === name)
+}
+
+export function findUnionByName(name?: string): BdUnion | undefined {
+  if (!name) return undefined
+  return BD_GEO_UNIONS.find((u) => u.Name === name)
 }

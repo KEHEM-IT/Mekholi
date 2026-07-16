@@ -1,0 +1,20 @@
+[
+  {
+    "Id": 1,
+    "Name": "Grameen",
+    "NameInBangla": "গ্রামীণ",
+    "LookupText": "Grameen - গ্রামীণ"
+  },
+  {
+    "Id": 3,
+    "Name": "Metropolitan",
+    "NameInBangla": "মেট্রোপলিটান",
+    "LookupText": "Metropolitan - মেট্রোপলিটান"
+  },
+  {
+    "Id": 2,
+    "Name": "Pouro",
+    "NameInBangla": "পৌর",
+    "LookupText": "Pouro - পৌর"
+  }
+]

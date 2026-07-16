@@ -1,0 +1,32 @@
+[
+  {
+    "Id": 4,
+    "Name": "Autonomous",
+    "NameInBangla": "স্বায়ত্বশাসিত",
+    "LookupText": "Autonomous - স্বায়ত্বশাসিত"
+  },
+  {
+    "Id": 1,
+    "Name": "Govt.",
+    "NameInBangla": "সরকারি",
+    "LookupText": "Govt. - সরকারি"
+  },
+  {
+    "Id": 3,
+    "Name": "Local Govt.",
+    "NameInBangla": "স্থানীয় সরকার",
+    "LookupText": "Local Govt. - স্থানীয় সরকার"
+  },
+  {
+    "Id": 2,
+    "Name": "Non-Govt.",
+    "NameInBangla": "বেসরকারি",
+    "LookupText": "Non-Govt. - বেসরকারি"
+  },
+  {
+    "Id": 5,
+    "Name": "Others",
+    "NameInBangla": "অন্যান্য",
+    "LookupText": "Others - অন্যান্য"
+  }
+]

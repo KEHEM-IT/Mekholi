@@ -1,0 +1,191 @@
+[
+  {
+    "Id": 11,
+    "Name": "Admission Fees",
+    "NameBn": "ভর্তি ফি",
+    "HeadType": 1,
+    "LookupText": "Admission Fees - ভর্তি ফি"
+  },
+  {
+    "Id": 24,
+    "Name": "Books",
+    "NameBn": "বই",
+    "HeadType": 2,
+    "LookupText": "Books - বই"
+  },
+  {
+    "Id": 19,
+    "Name": "Co-curricular Expenditure",
+    "NameBn": "সহশিক্ষা কার্যক্রম ব্যয়",
+    "HeadType": 2,
+    "LookupText": "Co-curricular Expenditure - সহশিক্ষা কার্যক্রম ব্যয়"
+  },
+  {
+    "Id": 20,
+    "Name": "Development Expenditure",
+    "NameBn": "উন্নয়ন ব্যয়",
+    "HeadType": 2,
+    "LookupText": "Development Expenditure - উন্নয়ন ব্যয়"
+  },
+  {
+    "Id": 7,
+    "Name": "Development Income",
+    "NameBn": "উন্নয়ন মঞ্জুরী",
+    "HeadType": 1,
+    "LookupText": "Development Income - উন্নয়ন মঞ্জুরী"
+  },
+  {
+    "Id": 5,
+    "Name": "Donation By Local Public",
+    "NameBn": "স্থানীয় জনগণ কর্তৃক সাহায্য",
+    "HeadType": 1,
+    "LookupText": "Donation By Local Public - স্থানীয় জনগণ কর্তৃক সাহায্য"
+  },
+  {
+    "Id": 8,
+    "Name": "Donation for Development",
+    "NameBn": "উন্নয়ন চাঁদা",
+    "HeadType": 1,
+    "LookupText": "Donation for Development - উন্নয়ন চাঁদা"
+  },
+  {
+    "Id": 25,
+    "Name": "Education Materials",
+    "NameBn": "শিক্ষা সামগ্রী",
+    "HeadType": 2,
+    "LookupText": "Education Materials - শিক্ষা সামগ্রী"
+  },
+  {
+    "Id": 14,
+    "Name": "Examination Fees",
+    "NameBn": "পরীক্ষার ফি",
+    "HeadType": 1,
+    "LookupText": "Examination Fees - পরীক্ষার ফি"
+  },
+  {
+    "Id": 21,
+    "Name": "Examination's Expenditure",
+    "NameBn": "পরীক্ষা বাবদ ব্যয়",
+    "HeadType": 2,
+    "LookupText": "Examination's Expenditure - পরীক্ষা বাবদ ব্যয়"
+  },
+  {
+    "Id": 9,
+    "Name": "For Examination Fees",
+    "NameBn": "পরীক্ষার ফিস বাবদ",
+    "HeadType": 1,
+    "LookupText": "For Examination Fees - পরীক্ষার ফিস বাবদ"
+  },
+  {
+    "Id": 6,
+    "Name": "Government's Donation",
+    "NameBn": "সরকারি আবর্তক মঞ্জুরী",
+    "HeadType": 1,
+    "LookupText": "Government's Donation - সরকারি আবর্তক মঞ্জুরী"
+  },
+  {
+    "Id": 4,
+    "Name": "Income from Own Property",
+    "NameBn": "নিজস্ব সম্পত্তির আয়",
+    "HeadType": 1,
+    "LookupText": "Income from Own Property - নিজস্ব সম্পত্তির আয়"
+  },
+  {
+    "Id": 17,
+    "Name": "Miscellaneous Expenditure",
+    "NameBn": "আনুসঙ্গিক ব্যয়",
+    "HeadType": 2,
+    "LookupText": "Miscellaneous Expenditure - আনুসঙ্গিক ব্যয়"
+  },
+  {
+    "Id": 13,
+    "Name": "Others",
+    "NameBn": "অন্যান্য",
+    "HeadType": 1,
+    "LookupText": "Others - অন্যান্য"
+  },
+  {
+    "Id": 26,
+    "Name": "Others",
+    "NameBn": "অন্যান্য",
+    "HeadType": 2,
+    "LookupText": "Others - অন্যান্য"
+  },
+  {
+    "Id": 18,
+    "Name": "Repair/Maintenance Expenditure",
+    "NameBn": "মেরামত/সংরক্ষণ ব্যয়",
+    "HeadType": 2,
+    "LookupText": "Repair/Maintenance Expenditure - মেরামত/সংরক্ষণ ব্যয়"
+  },
+  {
+    "Id": 22,
+    "Name": "Scout/BNCC's Expenditure",
+    "NameBn": "স্কাউট/বিএনসিসি কার্যক্রম বাবদ ব্যয়",
+    "HeadType": 2,
+    "LookupText": "Scout/BNCC's Expenditure - স্কাউট/বিএনসিসি কার্যক্রম বাবদ ব্যয়"
+  },
+  {
+    "Id": 10,
+    "Name": "Scouts/BNCC Fees",
+    "NameBn": "স্কাউট/বিএনসিসি ফিস বাবদ",
+    "HeadType": 1,
+    "LookupText": "Scouts/BNCC Fees - স্কাউট/বিএনসিসি ফিস বাবদ"
+  },
+  {
+    "Id": 12,
+    "Name": "Session Charge",
+    "NameBn": "সেশনচার্জ ",
+    "HeadType": 1,
+    "LookupText": "Session Charge - সেশনচার্জ "
+  },
+  {
+    "Id": 1,
+    "Name": "Student Fees",
+    "NameBn": "ছাত্র-ছাত্রীর বেতন",
+    "HeadType": 1,
+    "LookupText": "Student Fees - ছাত্র-ছাত্রীর বেতন"
+  },
+  {
+    "Id": 2,
+    "Name": "Teacher/Employee's Salary",
+    "NameBn": "শিক্ষক/কর্মচারীদের বেতন বাবদ সরকারি অংশ",
+    "HeadType": 1,
+    "LookupText": "Teacher/Employee's Salary - শিক্ষক/কর্মচারীদের বেতন বাবদ সরকারি অংশ"
+  },
+  {
+    "Id": 15,
+    "Name": "Teachers/Employee Salary (Revenue)",
+    "NameBn": "শিক্ষক/কর্মচারীদের বেতন বাবদ সরকারি অংশ",
+    "HeadType": 2,
+    "LookupText": "Teachers/Employee Salary (Revenue) - শিক্ষক/কর্মচারীদের বেতন বাবদ সরকারি অংশ"
+  },
+  {
+    "Id": 27,
+    "Name": "Teachers/Employee Salary",
+    "NameBn": "এমপিও বিহীন শিক্ষক/কর্মচারীদের(বিদ্যালয় কর্তৃক প্রদত্ত)বেতন",
+    "HeadType": 2,
+    "LookupText": "Teachers/Employee Salary - এমপিও বিহীন শিক্ষক/কর্মচারীদের(বিদ্যালয় কর্তৃক প্রদত্ত)বেতন"
+  },
+  {
+    "Id": 16,
+    "Name": "Teachers/Employee Salary(Institute)",
+    "NameBn": "এমপিও ভুক্ত শিক্ষক/কর্মচারীদের(বিদ্যালয় কর্তৃক প্রদত্ত)বেতন",
+    "HeadType": 2,
+    "LookupText": "Teachers/Employee Salary(Institute) - এমপিও ভুক্ত শিক্ষক/কর্মচারীদের(বিদ্যালয় কর্তৃক প্রদত্ত)বেতন"
+  },
+  {
+    "Id": 23,
+    "Name": "Tour/Travel Expenditure",
+    "NameBn": "ভ্রমণ/যাতায়াত ব্যয়",
+    "HeadType": 2,
+    "LookupText": "Tour/Travel Expenditure - ভ্রমণ/যাতায়াত ব্যয়"
+  },
+  {
+    "Id": 3,
+    "Name": "Tuition Fee From Female Students Scholarship",
+    "NameBn": "ছাত্রী উপবৃত্তি খাতে প্রাপ্ত টিউশন ফি",
+    "HeadType": 1,
+    "LookupText": "Tuition Fee From Female Students Scholarship - ছাত্রী উপবৃত্তি খাতে প্রাপ্ত টিউশন ফি"
+  }
+]
