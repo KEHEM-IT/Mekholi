@@ -31,6 +31,7 @@ textarea {
   border: 1px solid $color-input-border;
   border-radius: $radius-md;
   padding: $space-2 $space-3;
+  font-family: var(--font-family-base);
   color: $color-text;
   transition:
     border-color $transition-fast,

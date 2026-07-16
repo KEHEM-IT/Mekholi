@@ -42,7 +42,9 @@ by default.
 - `components/layout/` — `AppHeader`, `AppSidebar`, `AppFooter`
 - `components/ui/` — generic reusable pieces (`BaseButton`, etc.)
 - `styles/` — SCSS 7-1 (`abstracts/base/components/layout/pages/themes`);
-  design tokens in `styles/abstracts/_variables.scss`
+  design tokens in `styles/abstracts/_variables.scss`. Read
+  `styles/README.md` first for the full map (tokens, mixins, functions,
+  folder purposes, load order) before editing or adding SCSS
 - `types/index.ts` — shared TS types
 - `utils/constants.ts` — app-wide constants (roles, localStorage keys,
   option lists)
