@@ -1,9 +1,91 @@
 import { fileURLToPath, URL } from 'node:url'
+import fs from 'node:fs'
+import path from 'node:path'
 
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
+
+// Dev-only middleware backing the Institute Setup > Excel Import feature.
+// The app is a pure static SPA with no backend, but "save the parsed
+// Excel as a JSON file in src/assets/school" needs real filesystem
+// access - so during `pnpm dev` we expose two tiny endpoints that read/
+// write *only* inside src/assets/school. Never registered for
+// `vite build`/`vite preview`, same spirit as the dev-only fake login.
+function instituteSetupImportApi(): Plugin {
+  const SCHOOL_DIR = fileURLToPath(new URL('./src/assets/school', import.meta.url))
+  // Letters (incl. Bengali), digits, space, dash, underscore, dot - nothing
+  // that could be used to escape SCHOOL_DIR (no slashes/backslashes/"..").
+  const SAFE_NAME = /^[\p{L}\p{N} _.-]+$/u
+
+  function resolveJsonPath(rawName: string): string | null {
+    const name = rawName.trim().replace(/\.json$/i, '')
+    if (!name || !SAFE_NAME.test(name)) return null
+    const full = path.join(SCHOOL_DIR, `${name}.json`)
+    if (!full.startsWith(SCHOOL_DIR)) return null
+    return full
+  }
+
+  function readBody(req: import('node:http').IncomingMessage): Promise<string> {
+    return new Promise((resolve, reject) => {
+      let data = ''
+      req.on('data', (chunk) => (data += chunk))
+      req.on('end', () => resolve(data))
+      req.on('error', reject)
+    })
+  }
+
+  return {
+    name: 'institute-setup-import-api',
+    apply: 'serve',
+    configureServer(server) {
+      fs.mkdirSync(SCHOOL_DIR, { recursive: true })
+
+      server.middlewares.use('/__institute-setup/import', async (req, res, next) => {
+        if (req.method !== 'POST') return next()
+        try {
+          const body = JSON.parse((await readBody(req)) || '{}') as {
+            fileName?: string
+            data?: unknown
+          }
+          const filePath = resolveJsonPath(body.fileName ?? '')
+          if (!filePath || body.data === undefined) {
+            res.statusCode = 400
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ ok: false, message: 'Invalid fileName or data' }))
+            return
+          }
+          fs.writeFileSync(filePath, JSON.stringify(body.data, null, 2), 'utf-8')
+          res.statusCode = 200
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify({ ok: true, path: `src/assets/school/${path.basename(filePath)}` }))
+        } catch (err) {
+          res.statusCode = 500
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify({ ok: false, message: (err as Error).message }))
+        }
+      })
+
+      // Lists previously-imported JSON files so the page can show a
+      // "recent imports" list without a hardcoded manifest.
+      server.middlewares.use('/__institute-setup/list', (req, res, next) => {
+        if (req.method !== 'GET') return next()
+        const files = fs
+          .readdirSync(SCHOOL_DIR)
+          .filter((f) => f.toLowerCase().endsWith('.json'))
+          .map((f) => {
+            const stat = fs.statSync(path.join(SCHOOL_DIR, f))
+            return { name: f, savedAt: stat.mtime.toISOString(), size: stat.size }
+          })
+          .sort((a, b) => b.savedAt.localeCompare(a.savedAt))
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'application/json')
+        res.end(JSON.stringify({ ok: true, files }))
+      })
+    },
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -11,6 +93,7 @@ export default defineConfig({
     vue(),
     vueJsx(),
     vueDevTools(),
+    instituteSetupImportApi(),
   ],
   resolve: {
     alias: {

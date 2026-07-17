@@ -46,7 +46,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'institute-setup',
         name: 'institute-setup',
-        component: () => import('@/pages/Institute_Setup/InstituteProfileView.vue'),
+        component: () => import('@/pages/Institute_Setup/InstituteSetupView.vue'),
         beforeEnter: requireAuth,
       },
       {
