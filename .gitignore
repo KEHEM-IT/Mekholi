@@ -40,3 +40,6 @@ __screenshots__/
 
 # Compiled SCSS output (generated via `pnpm scss:build`)
 src/assets/styles/main.css
+
+# Git Auto Commit Generator learned data
+.git-auto-commit/
