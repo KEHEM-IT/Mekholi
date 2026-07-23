@@ -126,9 +126,7 @@ async function handleSave() {
   const ok = await saveAsJson(savedFileName.value.trim());
   if (ok) {
     toast.success(
-      isBn.value
-        ? "JSON ফাইল হিসেবে সংরক্ষণ করা হয়েছে"
-        : "Saved to src/assets/school as JSON",
+      isBn.value ? "JSON ফাইল হিসেবে সংরক্ষণ করা হয়েছে" : "Saved to src/assets/school as JSON",
     );
   } else if (importError.value) {
     toast.error(importError.value);
@@ -157,7 +155,6 @@ function formatDate(iso: string) {
   });
 }
 </script>
-
 
 <template>
   <section class="isc">
