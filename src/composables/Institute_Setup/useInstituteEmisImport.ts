@@ -547,6 +547,38 @@ function parseEmisHtml(html: string, sourceFileName: string): EmisInstitute {
   return institute
 }
 
+/**
+ * ASCII-slug a name for use in a file name: lowercase, diacritics
+ * stripped, anything that isn't a-z/0-9 collapsed to a single underscore,
+ * leading/trailing underscores trimmed. Bengali text (which has no case
+ * or Latin diacritics to strip) simply falls through the "non a-z0-9"
+ * rule, so callers should prefer institution_name_en when available.
+ */
+function slugify(text: string): string {
+  return text
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+}
+
+/**
+ * Deterministic "<eiin>_<school_name>" file name (no extension) for one
+ * institute, e.g. "130430_sofir_uddin_high_school_and_college". Same EIIN
+ * + name always yields the same file name, so re-importing the same
+ * institute's saved page overwrites its existing file under
+ * src/assets/school/ instead of creating a duplicate.
+ */
+function fileNameForInstitute(institute: EmisInstitute): string {
+  const eiin = (institute.eiin ?? '').replace(/\D/g, '')
+  const nameSource = institute.institution_name_en || institute.institution_name_bn || ''
+  const slug = slugify(nameSource)
+  if (eiin && slug) return `${eiin}_${slug}`
+  if (eiin) return eiin
+  return slug || 'institute'
+}
+
 // ---------------------------------------------------------------------------
 // Composable
 // ---------------------------------------------------------------------------
@@ -625,6 +657,63 @@ export function useInstituteEmisImport() {
     }
   }
 
+  /**
+   * Save a single institute under its deterministic "<eiin>_<name>.json"
+   * file name. Re-saving the same institute (e.g. the user re-uploads the
+   * same saved EMIS page, or a batch contains a repeat) overwrites the
+   * existing file in place - the dev middleware always does a plain
+   * `writeFileSync`, so no duplicate/"(1)" file is ever created.
+   */
+  async function saveInstitute(institute: EmisInstitute): Promise<{ ok: boolean; fileName: string }> {
+    const fileName = fileNameForInstitute(institute)
+    isSaving.value = true
+    error.value = ''
+    try {
+      const res = await fetch(IMPORT_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileName, data: institute }),
+      })
+      const body = (await res.json()) as { ok: boolean; message?: string }
+      if (!res.ok || !body.ok) {
+        error.value = body.message || `Failed to save ${fileName}.json`
+        return { ok: false, fileName }
+      }
+      return { ok: true, fileName }
+    } catch {
+      error.value = 'Dev save endpoint unavailable (only works with `pnpm dev`).'
+      return { ok: false, fileName }
+    } finally {
+      isSaving.value = false
+    }
+  }
+
+  /** Save every currently-parsed institute, each to its own file. */
+  async function saveAllInstitutes(): Promise<{
+    savedCount: number
+    failedCount: number
+    fileNames: string[]
+  }> {
+    if (!parsed.value) return { savedCount: 0, failedCount: 0, fileNames: [] }
+
+    const fileNames: string[] = []
+    let savedCount = 0
+    let failedCount = 0
+
+    for (const institute of parsed.value.institutes) {
+      const result = await saveInstitute(institute)
+      if (result.ok) {
+        savedCount++
+        fileNames.push(result.fileName)
+      } else {
+        failedCount++
+      }
+    }
+
+    await loadRecentImports()
+    return { savedCount, failedCount, fileNames }
+  }
+
   function downloadAsJson(fileName: string) {
     if (!parsed.value) return
     const blob = new Blob([JSON.stringify(parsed.value, null, 2)], { type: 'application/json' })
@@ -658,6 +747,9 @@ export function useInstituteEmisImport() {
     parsed,
     recentImports,
     parseFiles,
+    fileNameForInstitute,
+    saveInstitute,
+    saveAllInstitutes,
     saveAsJson,
     downloadAsJson,
     loadRecentImports,

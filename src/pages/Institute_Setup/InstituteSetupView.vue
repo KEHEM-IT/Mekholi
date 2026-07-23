@@ -5,6 +5,10 @@ import BaseButton from "@/components/ui/BaseButton.vue";
 import { useAppPreferences } from "@/composables/useAppPreferences";
 import { useInstituteProfile } from "@/composables/Institute_Setup/useInstituteProfile";
 import { useInstituteSetupImport } from "@/composables/Institute_Setup/useInstituteSetupImport";
+import {
+  useInstituteEmisImport,
+  type EmisInstitute,
+} from "@/composables/Institute_Setup/useInstituteEmisImport";
 import { useToast } from "@/composables/useToast";
 import type { SetupChecklistItem } from "@/types";
 
@@ -153,6 +157,83 @@ function formatDate(iso: string) {
     dateStyle: "medium",
     timeStyle: "short",
   });
+}
+
+// --- EMIS HTML import -------------------------------------------------------
+const {
+  isParsing: isParsingEmis,
+  isSaving: isSavingEmis,
+  error: emisError,
+  parsed: emisParsed,
+  recentImports: recentEmisImports,
+  parseFiles: parseEmisFiles,
+  fileNameForInstitute,
+  saveInstitute: saveEmisInstitute,
+  saveAllInstitutes: saveAllEmisInstitutes,
+  loadRecentImports: loadRecentEmisImports,
+  reset: resetEmisImport,
+} = useInstituteEmisImport();
+
+onMounted(loadRecentEmisImports);
+
+const isDraggingEmis = ref(false);
+const savedEmisFileNames = ref<Set<string>>(new Set());
+
+async function onEmisFileChange(event: Event) {
+  const files = (event.target as HTMLInputElement).files;
+  (event.target as HTMLInputElement).value = "";
+  if (!files?.length) return;
+  savedEmisFileNames.value = new Set();
+  await parseEmisFiles(files);
+  if (emisError.value && !emisParsed.value) toast.error(emisError.value);
+}
+
+async function onEmisDrop(event: DragEvent) {
+  isDraggingEmis.value = false;
+  const files = event.dataTransfer?.files;
+  if (!files?.length) return;
+  savedEmisFileNames.value = new Set();
+  await parseEmisFiles(files);
+  if (emisError.value && !emisParsed.value) toast.error(emisError.value);
+}
+
+function chooseAnotherEmisFile() {
+  resetEmisImport();
+  savedEmisFileNames.value = new Set();
+}
+
+function emisFileName(institute: EmisInstitute) {
+  return `${fileNameForInstitute(institute)}.json`;
+}
+
+async function handleSaveEmisInstitute(institute: EmisInstitute) {
+  const result = await saveEmisInstitute(institute);
+  if (result.ok) {
+    savedEmisFileNames.value = new Set(savedEmisFileNames.value).add(result.fileName);
+    await loadRecentEmisImports();
+    toast.success(
+      isBn.value
+        ? `${result.fileName}.json হিসেবে সংরক্ষণ করা হয়েছে`
+        : `Saved as ${result.fileName}.json`,
+    );
+  } else if (emisError.value) {
+    toast.error(emisError.value);
+  }
+}
+
+async function handleSaveAllEmisInstitutes() {
+  const { savedCount, failedCount, fileNames } = await saveAllEmisInstitutes();
+  savedEmisFileNames.value = new Set([...savedEmisFileNames.value, ...fileNames]);
+  if (savedCount) {
+    toast.success(
+      isBn.value
+        ? `${savedCount}টি প্রতিষ্ঠান src/assets/school-এ সংরক্ষণ করা হয়েছে`
+        : `Saved ${savedCount} institute${savedCount === 1 ? "" : "s"} to src/assets/school`,
+    );
+  }
+  if (failedCount && emisError.value) {
+    toast.error(emisError.value);
+  }
 }
 </script>
 
@@ -382,6 +463,157 @@ function formatDate(iso: string) {
           <p class="isc-subhead">{{ isBn ? "সাম্প্রতিক ইম্পোর্ট" : "Recent imports" }}</p>
           <ul class="isc-recent__list">
             <li v-for="file in recentImports" :key="file.name" class="isc-recent__item">
+              <i class="fa-duotone fa-file-code" />
+              <span class="isc-recent__name">{{ file.name }}</span>
+              <span class="isc-recent__meta">
+                {{ formatDate(file.savedAt) }} · {{ formatBytes(file.size) }}
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMIS HTML import -->
+    <div class="isc-section">
+      <div class="isc-section__head">
+        <div class="isc-section__title">
+          <i class="fa-duotone fa-file-code" />
+          <div>
+            <h2>{{ isBn ? "EMIS HTML থেকে ইম্পোর্ট" : "Import from EMIS HTML" }}</h2>
+            <span>
+              {{
+                isBn
+                  ? "emis.gov.bd থেকে সংরক্ষিত একটি বা একাধিক প্রতিষ্ঠানের তথ্য পাতা আপলোড করুন"
+                  : "Upload one or more saved emis.gov.bd institute report pages"
+              }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="isc-section__body">
+        <div
+          v-if="!emisParsed"
+          class="isc-dropzone"
+          :class="{ 'is-dragging': isDraggingEmis, 'is-busy': isParsingEmis }"
+          @dragover.prevent="isDraggingEmis = true"
+          @dragleave.prevent="isDraggingEmis = false"
+          @drop.prevent="onEmisDrop"
+        >
+          <i class="fa-duotone fa-cloud-arrow-up" />
+          <p v-if="isParsingEmis">{{ isBn ? "ফাইল পড়া হচ্ছে…" : "Reading file(s)…" }}</p>
+          <template v-else>
+            <p>
+              {{
+                isBn
+                  ? "এখানে .html ফাইল(গুলো) টেনে আনুন, অথবা"
+                  : "Drag & drop .html file(s) here, or"
+              }}
+            </p>
+            <label class="isc-dropzone__browse">
+              {{ isBn ? "ফাইল বেছে নিন" : "Browse file(s)" }}
+              <input
+                type="file"
+                accept=".html,.htm"
+                multiple
+                class="isc-dropzone__input"
+                @change="onEmisFileChange"
+              />
+            </label>
+          </template>
+        </div>
+
+        <p v-if="emisError && !emisParsed" class="form-error">{{ emisError }}</p>
+
+        <template v-if="emisParsed">
+          <div class="isc-import-meta">
+            <div class="isc-import-meta__file">
+              <i class="fa-duotone fa-file-lines" />
+              <div>
+                <strong>
+                  {{
+                    isBn
+                      ? `${emisParsed.institutes.length}টি প্রতিষ্ঠান পাওয়া গেছে`
+                      : `${emisParsed.institutes.length} institute${
+                          emisParsed.institutes.length === 1 ? "" : "s"
+                        } found`
+                  }}
+                </strong>
+                <span>{{ emisParsed.sourceFileNames.join(", ") }}</span>
+              </div>
+            </div>
+            <button type="button" class="isc-import-meta__clear" @click="chooseAnotherEmisFile">
+              <i class="fa-duotone fa-xmark" />
+              {{ isBn ? "অন্য ফাইল বেছে নিন" : "Choose another file" }}
+            </button>
+          </div>
+
+          <ul class="isc-emis-list">
+            <li v-for="institute in emisParsed.institutes" :key="institute.sourceFileName" class="isc-emis-item">
+              <div class="isc-emis-item__info">
+                <strong>
+                  {{ institute.institution_name_en || institute.institution_name_bn || "—" }}
+                </strong>
+                <span>
+                  EIIN: {{ institute.eiin || "—" }}
+                  <template v-if="institute.institution_name_bn">
+                    · {{ institute.institution_name_bn }}
+                  </template>
+                </span>
+                <code class="isc-emis-item__filename">{{ emisFileName(institute) }}</code>
+              </div>
+              <div class="isc-emis-item__actions">
+                <span v-if="savedEmisFileNames.has(fileNameForInstitute(institute))" class="badge badge--success">
+                  <i class="fa-duotone fa-check" />
+                  {{ isBn ? "সংরক্ষিত" : "Saved" }}
+                </span>
+                <BaseButton
+                  variant="secondary"
+                  type="button"
+                  :disabled="isSavingEmis"
+                  @click="handleSaveEmisInstitute(institute)"
+                >
+                  <i class="fa-duotone fa-floppy-disk" />
+                  {{ isBn ? "সংরক্ষণ করুন" : "Save" }}
+                </BaseButton>
+              </div>
+            </li>
+          </ul>
+
+          <div class="isc-divider" />
+
+          <div class="isc-save-row">
+            <p class="form-hint">
+              {{
+                isBn
+                  ? "প্রতিটি প্রতিষ্ঠান src/assets/school/-এ EIIN_প্রতিষ্ঠানের-নাম.json হিসেবে সংরক্ষিত হবে। পুনরায় আপলোড করলে একই ফাইল ওভাররাইট হবে, নতুন ফাইল তৈরি হবে না।"
+                  : "Each institute is saved under src/assets/school/ as eiin_school_name.json. Re-uploading the same institute overwrites its existing file rather than creating a new one."
+              }}
+            </p>
+            <div class="isc-save-row__actions">
+              <BaseButton
+                variant="primary"
+                type="button"
+                :disabled="isSavingEmis"
+                @click="handleSaveAllEmisInstitutes"
+              >
+                <i v-if="isSavingEmis" class="fa-duotone fa-spinner-third fa-spin" />
+                <i v-else class="fa-duotone fa-floppy-disk" />
+                {{ isBn ? "সব সংরক্ষণ করুন" : "Save all" }}
+              </BaseButton>
+            </div>
+          </div>
+
+          <p v-if="emisError" class="form-error">{{ emisError }}</p>
+        </template>
+
+        <div v-if="recentEmisImports.length" class="isc-divider" />
+
+        <div v-if="recentEmisImports.length" class="isc-recent">
+          <p class="isc-subhead">{{ isBn ? "সাম্প্রতিক ইম্পোর্ট" : "Recent imports" }}</p>
+          <ul class="isc-recent__list">
+            <li v-for="file in recentEmisImports" :key="file.name" class="isc-recent__item">
               <i class="fa-duotone fa-file-code" />
               <span class="isc-recent__name">{{ file.name }}</span>
               <span class="isc-recent__meta">

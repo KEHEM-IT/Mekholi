@@ -405,6 +405,54 @@
   flex-shrink: 0;
 }
 
+// --- EMIS HTML import: per-institute list ---------------------------------------
+
+.isc-emis-list {
+  @include flex(column, stretch, flex-start, $space-2);
+}
+
+.isc-emis-item {
+  @include flex(column, stretch, flex-start, $space-3);
+  padding: $space-3;
+  border-radius: $radius-md;
+  background: $color-surface-alt;
+  border: 1px solid $color-border;
+
+  @include respond-to(sm) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.isc-emis-item__info {
+  @include flex(column, flex-start, flex-start, $space-1);
+  min-width: 0;
+
+  strong {
+    font-size: 0.9rem;
+  }
+
+  span {
+    font-size: 0.78rem;
+    color: $color-text-muted;
+  }
+}
+
+.isc-emis-item__filename {
+  padding: $space-1 $space-2;
+  border-radius: $radius-sm;
+  background: $color-surface;
+  color: $color-text-secondary;
+  font-size: 0.75rem;
+  width: fit-content;
+}
+
+.isc-emis-item__actions {
+  @include flex(row, center, flex-start, $space-3);
+  flex-shrink: 0;
+}
+
 // --- Recent imports --------------------------------------------------------------
 
 .isc-recent__list {
