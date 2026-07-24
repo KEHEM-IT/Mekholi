@@ -426,23 +426,31 @@ function emptyInstitute(sourceFileName: string): EmisInstitute {
 
 /**
  * Flat "label cell -> value cell" tables: basic info, address, MPO status.
- * Scans every td/th in the document; whenever a cell's cleaned text matches
- * a known Bengali label, its next sibling cell is taken as the value. This
- * is deliberately table-agnostic since the govt template lays these pairs
- * out two-per-row across several unrelated-looking tables.
+ * Scans <td> label cells (never <th>, and never inside a <thead>) and
+ * takes the next sibling cell as the value.
+ *
+ * IMPORTANT: several of these Bengali labels (e.g. "গ্রুপ", "স্বীকৃতিপ্রাপ্ত
+ * স্তর") are reused as *column headers* in unrelated columnar tables further
+ * down the same report (student-count breakdowns, subject-wise tables,
+ * etc.). Those headers are always <th> inside a <thead>, so excluding both
+ * is what keeps this scan from matching them and clobbering the real value
+ * with a neighbouring header's text. As a second safety net, the first
+ * non-null match for a field wins - later accidental matches never
+ * overwrite an already-populated value.
  */
 function parseFlatFields(doc: Document, institute: EmisInstitute): void {
-  const cells = Array.from(doc.querySelectorAll('td, th'))
+  const record = institute as unknown as Record<string, string | null>
+  const cells = Array.from(doc.querySelectorAll('td'))
   for (const cell of cells) {
+    if (cell.closest('thead')) continue
     const label = clean(cell.textContent)
     if (!label) continue
     const field = FLAT_LABEL_MAP_N[label]
     if (!field) continue
+    if (record[field] !== null) continue // first match wins
     const valueCell = cell.nextElementSibling
     if (!valueCell) continue
-    const value = clean(valueCell.textContent)
-    // FLAT_LABEL_MAP only ever points at string|null fields on EmisInstitute.
-    ;(institute as unknown as Record<string, string | null>)[field] = value
+    record[field] = clean(valueCell.textContent)
   }
 }
 
@@ -499,7 +507,7 @@ function extractArrayRows(
     let hasValue = false
     cells.forEach((cell, i) => {
       const field = colMap.get(i)
-      if (!field) return
+      if (!field || field === 'serial') return // running-number column is dropped
       const value = clean(cell.textContent)
       record[field] = value
       if (value) hasValue = true

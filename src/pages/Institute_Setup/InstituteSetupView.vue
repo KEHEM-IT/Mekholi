@@ -86,8 +86,11 @@ const {
 onMounted(loadRecentImports);
 
 const activeSheet = ref(0);
-const savedFileName = ref("");
 const isDragging = ref(false);
+
+// File name is derived from the uploaded file itself (no separate name
+// field to fill in) - single upload in, single save out.
+const derivedFileName = computed(() => parsed.value?.sourceFileName.replace(/\.(xlsx|xls|csv)$/i, "") ?? "");
 
 async function onFileChange(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0];
@@ -95,11 +98,7 @@ async function onFileChange(event: Event) {
   if (!file) return;
   activeSheet.value = 0;
   await parseFile(file);
-  if (parsed.value) {
-    savedFileName.value = parsed.value.sourceFileName.replace(/\.(xlsx|xls|csv)$/i, "");
-  } else if (importError.value) {
-    toast.error(importError.value);
-  }
+  if (importError.value && !parsed.value) toast.error(importError.value);
 }
 
 function onDrop(event: DragEvent) {
@@ -108,26 +107,17 @@ function onDrop(event: DragEvent) {
   if (!file) return;
   activeSheet.value = 0;
   parseFile(file).then(() => {
-    if (parsed.value) {
-      savedFileName.value = parsed.value.sourceFileName.replace(/\.(xlsx|xls|csv)$/i, "");
-    } else if (importError.value) {
-      toast.error(importError.value);
-    }
+    if (importError.value && !parsed.value) toast.error(importError.value);
   });
 }
 
 function chooseAnotherFile() {
   resetImport();
-  savedFileName.value = "";
   activeSheet.value = 0;
 }
 
 async function handleSave() {
-  if (!savedFileName.value.trim()) {
-    toast.error(isBn.value ? "একটি ফাইলের নাম দিন" : "Enter a file name first");
-    return;
-  }
-  const ok = await saveAsJson(savedFileName.value.trim());
+  const ok = await saveAsJson(derivedFileName.value);
   if (ok) {
     toast.success(
       isBn.value ? "JSON ফাইল হিসেবে সংরক্ষণ করা হয়েছে" : "Saved to src/assets/school as JSON",
@@ -425,23 +415,19 @@ async function handleSaveAllEmisInstitutes() {
           <div class="isc-divider" />
 
           <div class="isc-save-row">
-            <div class="form-field">
-              <label>{{ isBn ? "ফাইলের নাম" : "File name" }}</label>
-              <input v-model="savedFileName" type="text" placeholder="e.g. institute_students" />
-              <span class="form-hint">
-                {{
-                  isBn
-                    ? "src/assets/school/-এ .json হিসেবে সংরক্ষিত হবে"
-                    : "Will be saved as .json under src/assets/school/"
-                }}
-              </span>
-            </div>
+            <p class="form-hint">
+              {{
+                isBn
+                  ? `"${derivedFileName}.json" নামে src/assets/school/-এ সংরক্ষিত হবে`
+                  : `Will be saved as "${derivedFileName}.json" under src/assets/school/`
+              }}
+            </p>
             <div class="isc-save-row__actions">
               <BaseButton
                 variant="secondary"
                 type="button"
                 :disabled="isSaving"
-                @click="downloadAsJson(savedFileName || parsed.sourceFileName)"
+                @click="downloadAsJson(derivedFileName)"
               >
                 <i class="fa-duotone fa-download" />
                 {{ isBn ? "ডাউনলোড" : "Download" }}
