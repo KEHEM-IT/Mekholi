@@ -29,11 +29,20 @@
     background:var(--panel); color:var(--text); font-size:0.95rem; outline:none;
   }
   .toolbar input[type=text]:focus{border-color:var(--accent);}
+  .toolbar select{
+    padding:9px 12px; border-radius:8px; border:1px solid var(--border);
+    background:var(--panel); color:var(--text); font-size:0.9rem; outline:none;
+  }
   .toolbar button{
     padding:9px 14px; border-radius:8px; border:1px solid var(--border); background:var(--panel2);
     color:var(--text); cursor:pointer; font-size:0.88rem;
   }
   .toolbar button:hover{border-color:var(--accent); color:var(--accent);}
+  .toolbar label.file-btn{
+    padding:9px 14px; border-radius:8px; border:1px solid var(--border); background:var(--panel2);
+    color:var(--text); cursor:pointer; font-size:0.88rem;
+  }
+  .toolbar label.file-btn:hover{border-color:var(--accent); color:var(--accent);}
   main{padding:20px 28px 60px; max-width:1400px; margin:0 auto;}
   .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; margin-bottom:16px;}
   .card{
@@ -44,8 +53,8 @@
     padding:12px 16px; background:var(--panel2); display:flex; align-items:center; justify-content:space-between;
     cursor:pointer; user-select:none;
   }
-  .card-header h2{margin:0; font-size:1rem; font-weight:600;}
-  .card-header .count{color:var(--muted); font-size:0.82rem; font-weight:400; margin-left:8px;}
+  .card-header h2{margin:0; font-size:1rem; font-weight:600; font-family:'Consolas','Courier New',monospace;}
+  .card-header .count{color:var(--muted); font-size:0.82rem; font-weight:400; margin-left:8px; font-family:'Segoe UI',sans-serif;}
   .chev{transition:transform .18s ease; color:var(--muted);}
   .card.collapsed .chev{transform:rotate(-90deg);}
   .card-body{padding:14px 16px;}
@@ -54,13 +63,14 @@
   .kv tr{border-bottom:1px solid var(--border);}
   .kv tr:last-child{border-bottom:none;}
   .kv td{padding:7px 6px; vertical-align:top; font-size:0.9rem;}
-  .kv td.k{color:var(--muted); width:42%; white-space:nowrap;}
+  .kv td.k{color:var(--muted); width:42%; white-space:nowrap; font-family:'Consolas','Courier New',monospace; font-size:0.83rem;}
   .kv td.v{color:var(--text); word-break:break-word;}
   .empty{color:var(--muted); font-style:italic; font-size:0.88rem; padding:6px 0;}
   table.data{width:100%; border-collapse:collapse; font-size:0.85rem;}
   table.data thead th{
     position:sticky; top:0; background:var(--panel2); color:var(--muted); text-align:left;
     padding:8px 10px; border-bottom:1px solid var(--border); white-space:nowrap; font-weight:600;
+    font-family:'Consolas','Courier New',monospace; font-size:0.78rem;
   }
   table.data tbody td{padding:7px 10px; border-bottom:1px solid var(--border); vertical-align:top;}
   table.data tbody tr:hover{background:rgba(91,140,255,0.06);}
@@ -68,450 +78,422 @@
   .badge{
     display:inline-block; padding:2px 8px; border-radius:999px; font-size:0.76rem; font-weight:600;
   }
-  .badge.ok{background:rgba(56,212,164,0.15); color:var(--accent2);}
-  .badge.missing{background:rgba(255,107,107,0.12); color:var(--danger);}
-  .null-val{color:var(--muted); font-style:italic;}
-  .hidden{display:none !important;}
-  .toplevel-title{
-    margin:0; font-size:1.6rem;
+  .badge--success{background:rgba(56,212,164,0.16); color:var(--accent2);}
+  .badge--warning{background:rgba(255,180,84,0.16); color:var(--warn);}
+  .badge--danger{background:rgba(255,107,107,0.16); color:var(--danger);}
+  .badge--info{background:rgba(91,140,255,0.16); color:var(--accent);}
+  .badge--neutral{background:rgba(139,147,171,0.16); color:var(--muted);}
+  .stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:16px;}
+  .stat-card{
+    background:var(--panel); border:1px solid var(--border); border-radius:12px;
+    padding:16px; text-align:center;
   }
-  .toplevel-sub{color:var(--muted); margin-top:2px;}
-  a{color:var(--accent);}
-  .footer-note{color:var(--muted); font-size:0.8rem; text-align:center; margin-top:30px;}
+  .stat-num{font-size:1.6rem; font-weight:700; color:var(--accent2); font-family:'Consolas','Courier New',monospace;}
+  .stat-label{color:var(--muted); font-size:0.78rem; margin-top:4px;}
+  .kv td.k.nested-1{padding-left:22px;}
+  .kv td.k.nested-2{padding-left:38px;}
+  .search-hidden{display:none !important;}
+  .status-banner{
+    padding:14px 16px; border-radius:10px; border:1px solid var(--border);
+    background:var(--panel); color:var(--muted); font-size:0.9rem; margin-bottom:16px;
+  }
+  .status-banner.is-error{border-color:var(--danger); color:var(--danger);}
+  .match-count{
+    color:var(--muted); font-size:0.82rem; margin-left:auto; white-space:nowrap;
+  }
+  @media (max-width:640px){
+    header{padding:16px 18px;}
+    main{padding:14px 18px 40px;}
+    .kv td.k{width:48%;}
+  }
 </style>
 </head>
 <body>
-
 <header>
-  <h1 id="instituteTitle">School Data Viewer</h1>
-  <div class="sub" id="instituteSub"></div>
+  <h1 id="pageTitle">School Data Viewer</h1>
+  <div class="sub" id="pageSub">Loading school_new.json…</div>
   <div class="toolbar">
-    <input type="text" id="searchBox" placeholder="Search across all fields (name, phone, position, etc.)...">
-    <button id="expandAllBtn">Expand All</button>
-    <button id="collapseAllBtn">Collapse All</button>
+    <input type="text" id="searchInput" placeholder="🔎 Search any field, name, phone, address…">
+    <select id="schoolSelect" style="display:none;"></select>
+    <button type="button" id="expandAllBtn">Expand All</button>
+    <button type="button" id="collapseAllBtn">Collapse All</button>
+    <button type="button" id="reloadBtn">↻ Reload</button>
+    <label class="file-btn" for="fileInput">📂 Open JSON File</label>
+    <input type="file" id="fileInput" accept="application/json,.json" hidden>
   </div>
 </header>
-
-<main id="app"></main>
-
-<div class="footer-note">Generated viewer for school_new.json — loaded locally, no data leaves this page.</div>
+<main id="app">
+  <div class="empty" id="statusMsg">Loading school_new.json…</div>
+</main>
 
 <script>
-const DATA = {
-  "institute_name_bn": "দয়াময় সিংহ উচ্চ বিদ্যালয়,তিলকপুর।",
-  "institute_name_en": "DAYAMOY SINGHA HIGH SCHOOL,TILOKPUR.",
-  "address": {
-    "village_road_holding_no": "TILAKPUR",
-    "union": "ALINAGAR",
-    "mouza_name": "TILAKPUR",
-    "plot_dag_number": 3199,
-    "post_office": "KAMALGANJ",
-    "post_code": 3220,
-    "upazila_thana": "KAMOLGANJ",
-    "district": "MOULVIBAZAR",
-    "division_region": "SYLHET"
-  },
-  "contact": {
-    "institute_phone": 862356148,
-    "head_of_institute_mobile": 1710039628,
-    "fax": null,
-    "institute_email": "doyamoysinghahs@gmail.com",
-    "website": "www.dshst.edu.bd"
-  },
-  "founder_name": "কানাইলাল সিংহ",
-  "head_of_institute_name": "PROVAT KUMAR SINGHA",
-  "parliamentary_constituency": "Maulvibazar-4",
-  "establishment_date": "20/12/1974",
-  "classification": {
-    "institute_type": "Secondary",
-    "attached_technical_branch_type": null,
-    "group": "Humanities, Science",
-    "student_type": "সহশিক্ষা একত্রে",
-    "shift_count": "1 Shift",
-    "has_english_version": "না",
-    "management": "Non-Govt.",
-    "recognition_status": "Recognized",
-    "recognized_level": "Secondary"
-  },
-  "recognition_history": [
-    { "level": "Junior", "first_recognition_date": "1980-01-01", "latest_recognition_expiry_date": null },
-    { "level": "Secondary", "first_recognition_date": "1988-01-01", "latest_recognition_expiry_date": null }
-  ],
-  "mpo_info": [
-    { "level": "Secondary", "mpo_date": "1987-01-03", "mpo_code": 1302061302 }
-  ],
-  "legal_cases": [],
-  "bank_accounts": [
-    { "serial_no": 1, "bank_name": "JANATA BANK", "branch": "BHANUGACH", "account_type": "Savings", "account_holder_name": "Doyamoy Singha High School", "account_number": 100037780621, "account_purpose": "বিদ্যালয়ের পরিচালনা" },
-    { "serial_no": 2, "bank_name": "JANATA BANK", "branch": "BHANUGACH", "account_type": "FD", "account_holder_name": "Dayamoy Singha High School", "account_number": 100140381238, "account_purpose": "বিদ্যালয়ের পরিচালনা" },
-    { "serial_no": 3, "bank_name": "JANATA BANK", "branch": "BHANUGACH", "account_type": "Other", "account_holder_name": "Doyamoy Singha High School", "account_number": 100037949251, "account_purpose": "বিদ্যালয় পরিচালনা" },
-    { "serial_no": 4, "bank_name": "AGRANI BANK", "branch": "MADHABPUR BAZAR", "account_type": "Savings", "account_holder_name": "Doya Moy High School", "account_number": 200008273920, "account_purpose": "বিদ্যালয় পরিচালনা" },
-    { "serial_no": 5, "bank_name": "SONALI BANK", "branch": "KAMALGANJ", "account_type": "Savings", "account_holder_name": "DAYAMOY SINGH HIGH SCHOOL, TILOKPUR", "account_number": 200580762, "account_purpose": "বিদ্যালয় পরিচালনা" }
-  ],
-  "event_photos": [
-    { "serial_no": 1, "photo_name": "শিক্ষার্থীদের মিড ডে মিল" },
-    { "serial_no": 2, "photo_name": "দৈনন্দিন সমাবেশ" },
-    { "serial_no": 3, "photo_name": "শিক্ষক-অভিভাবক সমাবেশ" },
-    { "serial_no": 4, "photo_name": "বাৎসরিক মিলাদ" },
-    { "serial_no": 5, "photo_name": "শিক্ষা কর্মকর্তার পরিদর্শন" }
-  ],
-  "contact_persons": [
-    { "serial_no": 1, "name": "PROVAT KUMAR SINGHA", "designation": null, "mobile_number": 1710039628, "email": "singhaprovat@gmail.com" }
-  ],
-  "committee_status_history": [
-    { "serial_no": 1, "has_committee": "হ্যাঁ", "committee_type": "Managing", "approval_date": "2017-07-03", "expiry_date": "18/03/2019", "election_date": null, "remarks": null },
-    { "serial_no": 2, "has_committee": "হ্যাঁ", "committee_type": "Managing", "approval_date": "24/03/2019", "expiry_date": "26/03/2021", "election_date": "15/02/2019", "remarks": null },
-    { "serial_no": 3, "has_committee": "হ্যাঁ", "committee_type": "Managing", "approval_date": "23/05/2022", "expiry_date": "2024-11-06", "election_date": "21/04/2022", "remarks": null },
-    { "serial_no": 4, "has_committee": "হ্যাঁ", "committee_type": "Managing", "approval_date": "23/05/2022", "expiry_date": "2024-11-06", "election_date": "21/04/2022", "remarks": null },
-    { "serial_no": 5, "has_committee": "হ্যাঁ", "committee_type": "Managing", "approval_date": "2024-01-07", "expiry_date": "26/07/2026", "election_date": null, "remarks": null },
-    { "serial_no": 6, "has_committee": "হ্যাঁ", "committee_type": "Adhock", "approval_date": "20/11/2021", "expiry_date": "19/05/2022", "election_date": null, "remarks": null },
-    { "serial_no": 7, "has_committee": "হ্যাঁ", "committee_type": "Adhock", "approval_date": "20/11/2021", "expiry_date": "19/05/2022", "election_date": null, "remarks": "নিয়মিত কমিটি গঠন কার্যক্রম প্রক্রিয়াধীন।" }
-  ],
-  "committee_members": [
-    { "serial_no": 1, "member_name": "ASHEKUL HAQUE", "joining_date": null, "leaving_date": null, "phone": 1730331073, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "President", "education_qualification": "MA/Equivalent", "occupation": "UNO", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 2, "member_name": "MD. FAKRUL ISLAM", "joining_date": null, "leaving_date": null, "phone": 1731381365, "trainings_received_count": null, "gender": null, "committee_position": "Parents", "education_qualification": "Class Five Passed", "occupation": "DEO", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 3, "member_name": "SURAJIT RAJKUMAR", "joining_date": null, "leaving_date": null, "phone": 1746860136, "trainings_received_count": null, "gender": null, "committee_position": "Education", "education_qualification": "Under SSC", "occupation": "USEO", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 4, "member_name": "ABDUL MOTIN", "joining_date": null, "leaving_date": null, "phone": 1737589894, "trainings_received_count": null, "gender": null, "committee_position": "Parents", "education_qualification": "Under SSC", "occupation": "USEO", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 5, "member_name": "SUNITA SINHA", "joining_date": null, "leaving_date": null, "phone": 1722453326, "trainings_received_count": null, "gender": null, "committee_position": "Parents", "education_qualification": "Under SSC", "occupation": "USEO", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 6, "member_name": "NOBOKUMAR SINGHA", "joining_date": null, "leaving_date": null, "phone": 1774030456, "trainings_received_count": null, "gender": null, "committee_position": "Parents", "education_qualification": "Under SSC", "occupation": "USEO", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 7, "member_name": "RUPENDRO SINGHA", "joining_date": null, "leaving_date": null, "phone": 1716262761, "trainings_received_count": null, "gender": null, "committee_position": "President", "education_qualification": "SSC/Equivalent", "occupation": "Pouro Chairman", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 8, "member_name": "RAMESHWAR SINGHA", "joining_date": null, "leaving_date": null, "phone": 1724235788, "trainings_received_count": null, "gender": null, "committee_position": "Donor", "education_qualification": "SSC/Equivalent", "occupation": "Pouro Chairman", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 9, "member_name": "PROVAT KUMAR SINGHA", "joining_date": null, "leaving_date": null, "phone": 1710039628, "trainings_received_count": null, "gender": null, "committee_position": "Member Secretary", "education_qualification": "Graduate/Equivalent", "occupation": "Union Chairman", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 10, "member_name": "SURAJIT KUMAR SINGHA", "joining_date": null, "leaving_date": null, "phone": 1712108885, "trainings_received_count": null, "gender": null, "committee_position": "Teacher Representative", "education_qualification": "Graduate/Equivalent", "occupation": "Union Chairman", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 11, "member_name": "SHEULY RANI SINHA", "joining_date": null, "leaving_date": null, "phone": 1737099807, "trainings_received_count": null, "gender": null, "committee_position": "Teacher Representative", "education_qualification": "Graduate/Equivalent", "occupation": "Union Chairman", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 12, "member_name": "PROTIVA SINHA", "joining_date": null, "leaving_date": null, "phone": 1719231128, "trainings_received_count": null, "gender": null, "committee_position": "Teacher Representative", "education_qualification": "Graduate/Equivalent", "occupation": "Union Chairman", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 13, "member_name": "RUPENDRO SINGHA", "joining_date": "27/03/2019", "leaving_date": null, "phone": 1716262761, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "President", "education_qualification": "SSC/Equivalent", "occupation": "Union Member", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 14, "member_name": "PROVAT KUMAR SINGHA", "joining_date": "2013-06-11", "leaving_date": null, "phone": 1710039628, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Member Secretary", "education_qualification": "Graduate/Equivalent", "occupation": "Teacher", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 15, "member_name": "PROVAT KUMAR SINGHA", "joining_date": null, "leaving_date": null, "phone": 1710039628, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Member Secretary", "education_qualification": "Graduate/Equivalent", "occupation": "Teacher", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 16, "member_name": "PROVAT KUMAR SINGHA", "joining_date": null, "leaving_date": null, "phone": 1309129598, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Member Secretary", "education_qualification": "Graduate/Equivalent", "occupation": "Teacher", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 17, "member_name": "SHEULY RANI SINHA", "joining_date": "21/09/2014", "leaving_date": null, "phone": 1737099807, "trainings_received_count": null, "gender": "মহিলা", "committee_position": "Teacher Representative", "education_qualification": "Graduate/Equivalent", "occupation": "Teacher", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 18, "member_name": "SURAJIT KUMAR SINGHA", "joining_date": "20/09/2015", "leaving_date": null, "phone": 1712108885, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Teacher Representative", "education_qualification": "Graduate/Equivalent", "occupation": "Teacher", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 19, "member_name": "SURAJIT KUMAR SINGHA", "joining_date": null, "leaving_date": null, "phone": 1712108885, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Teacher Representative", "education_qualification": "Graduate/Equivalent", "occupation": "Teacher", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 20, "member_name": "SURAJIT KUMAR SINGHA", "joining_date": null, "leaving_date": null, "phone": 1712108885, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Teacher Representative", "education_qualification": "Graduate/Equivalent", "occupation": "Teacher", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 21, "member_name": "MANUJ PRAJAPATI", "joining_date": null, "leaving_date": null, "phone": 1778889430, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Teacher Representative", "education_qualification": "MA/Equivalent", "occupation": "Teacher", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 22, "member_name": "ANUPOM KUMAR SINGHA", "joining_date": null, "leaving_date": null, "phone": 1712246502, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Parents", "education_qualification": "Graduate/Equivalent", "occupation": "Teacher", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 23, "member_name": "PROTIVA SINHA", "joining_date": "2003-01-12", "leaving_date": null, "phone": 1719231128, "trainings_received_count": null, "gender": "মহিলা", "committee_position": "Reserved female teacher member", "education_qualification": "Graduate/Equivalent", "occupation": "Teacher", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 24, "member_name": "PROTIVA SINHA", "joining_date": null, "leaving_date": null, "phone": 1719231128, "trainings_received_count": null, "gender": "মহিলা", "committee_position": "Reserved female teacher member", "education_qualification": "Graduate/Equivalent", "occupation": "Teacher", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 25, "member_name": "SURAJIT RAJKUMAR", "joining_date": "27/03/2019", "leaving_date": null, "phone": 1746860136, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Education", "education_qualification": "Under SSC", "occupation": "Agriculture", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 26, "member_name": "KASHEM ALI", "joining_date": null, "leaving_date": null, "phone": 1749988718, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Education", "education_qualification": "Under SSC", "occupation": "Agriculture", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 27, "member_name": "RAMESHWAR SINGHA", "joining_date": "27/03/2019", "leaving_date": null, "phone": 1724235788, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Donor", "education_qualification": "SSC/Equivalent", "occupation": "Agriculture", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 28, "member_name": "ABDUL MOTIN", "joining_date": "27/03/2019", "leaving_date": null, "phone": 1737589894, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Parents", "education_qualification": "Under SSC", "occupation": "Agriculture", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 29, "member_name": "NOBOKUMAR SINGHA", "joining_date": "27/03/2019", "leaving_date": null, "phone": 1774030456, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Parents", "education_qualification": "Under SSC", "occupation": "Agriculture", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 30, "member_name": "ABU SUFIAN", "joining_date": null, "leaving_date": null, "phone": 1746859008, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Parents", "education_qualification": "Under SSC", "occupation": "Agriculture", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 31, "member_name": "FUL MIA", "joining_date": null, "leaving_date": null, "phone": 1762148406, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Parents", "education_qualification": "Under SSC", "occupation": "Agriculture", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 32, "member_name": "MD. FAKRUL ISLAM", "joining_date": "27/03/2019", "leaving_date": null, "phone": 1731381365, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Parents", "education_qualification": "SSC/Equivalent", "occupation": "Agriculture", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 33, "member_name": "BROJO CHAND SINGHA", "joining_date": null, "leaving_date": null, "phone": 1717542202, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Parents", "education_qualification": "Graduate/Equivalent", "occupation": "Agriculture", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 34, "member_name": "NOBO KUMAR SINGHA", "joining_date": null, "leaving_date": null, "phone": 1774030456, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "President", "education_qualification": "SSC/Equivalent", "occupation": "Others", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 35, "member_name": "SUNITA SINHA", "joining_date": "27/03/2019", "leaving_date": null, "phone": 1722453326, "trainings_received_count": null, "gender": "মহিলা", "committee_position": "Reserved female guardian member", "education_qualification": "Under SSC", "occupation": "Others", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 36, "member_name": "LAKSMI RANI SINHA", "joining_date": null, "leaving_date": null, "phone": 1742206941, "trainings_received_count": null, "gender": "মহিলা", "committee_position": "Reserved female guardian member", "education_qualification": "Under SSC", "occupation": "Others", "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 37, "member_name": "NOBO KUMAR SINGHA", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "President", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 38, "member_name": "JOYNAL ABEDIN", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "President", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 39, "member_name": "PROVAT KUMAR SINGHA", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Member Secretary", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 40, "member_name": "PROVAT KUMAR SINGHA", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Member Secretary", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 41, "member_name": "KASHEM ALI", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Education", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 42, "member_name": "SURAJIT KUMAR SINGHA", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Teacher Representative", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 43, "member_name": "MANUJ PRAJAPATI", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Teacher Representative", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 44, "member_name": "MANUJ KUMAR PRAJAPATI", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Teacher Representative", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 45, "member_name": "SUBIR PAUL CHOWDHURY", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Teacher Representative", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 46, "member_name": "RAMESWAR SINGHA", "joining_date": null, "leaving_date": null, "phone": 1724235788, "trainings_received_count": null, "gender": "পুরুষ", "committee_position": "Donor", "education_qualification": "SSC/Equivalent", "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 47, "member_name": "RAMESWAR SINGHA", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Donor", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 48, "member_name": "RAMESWAR SINGHA", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Donor", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 49, "member_name": "ABU SUFIAN", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Parents", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 50, "member_name": "ANUPOM KUMAR SINGHA", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Parents", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 51, "member_name": "FUL MIA", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Parents", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 52, "member_name": "ANUPAM KUMAR SINGHA", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Parents", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 53, "member_name": "ABU SUFIAN", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Parents", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 54, "member_name": "MD. FUL MIA", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Parents", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 55, "member_name": "SHOMORJIT SINGHA", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Parents", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 56, "member_name": "PROTIVA SINHA", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Reserved female teacher member", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 57, "member_name": "BASANA RANI SINHA", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Reserved female teacher member", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 58, "member_name": "LAKSMI RANI SINHA", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Reserved female guardian member", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null },
-    { "serial_no": 59, "member_name": "LIPI AKTER", "joining_date": null, "leaving_date": null, "phone": null, "trainings_received_count": null, "gender": null, "committee_position": "Reserved female guardian member", "education_qualification": null, "occupation": null, "left_committee": "না", "reason_for_leaving": null }
-  ],
-  "committee_meetings": [
-    { "serial_no": 1, "meeting_date": "20/02/2020", "attendees_count": 0, "agenda_summary": "১। নিয়োগ সংক্রান্ত ২। বিবিধ", "decision_summary": "১। লাইব্রেরিয়ান কাম ক্যাটালগার পুণঃ নিয়োগ বিজ্ঞপ্তি অনুমোদন" },
-    { "serial_no": 1, "meeting_date": "2021-03-06", "attendees_count": 4, "agenda_summary": "1। বিদ্যালয়ের ব্যাংক হিসাবসমূহের সিগনেটরী পরিবর্তন প্রসঙ্গে। ২। ধর্মীয় শিক্ষক মিঃ শহিদুল ইসলাম খানের উচ্চতর স্কেল প্রাপ্তি প্রসঙ্গে।", "decision_summary": "১। লেনদেনকারী ব্যাংকসমূহের সিগনেটরী পরিবর্তনের সিদ্ধান্ত গৃহীত হয়। ২। মিঃ শহিদুল ইসলাম খানের উচ্চতর স্কেল প্রাপ্তির প্রক্রিয়া অনুমোদিত হয়।" },
-    { "serial_no": 1, "meeting_date": "2022-03-02", "attendees_count": 4, "agenda_summary": "বাংলা, শরীরচর্চা এবং ভৌতবিজ্ঞান বিষয়ের নবনিয়োগপ্রাপ্ত শিক্ষকদের যোগদান অনুমোদন প্রসঙ্গে।", "decision_summary": "অনুমোদিত" },
-    { "serial_no": 1, "meeting_date": "2022-06-03", "attendees_count": 4, "agenda_summary": "খসড়া ভোটার তালিকা পর্যালোচনা ও অনুমোদন।", "decision_summary": "অনুমোদিত" },
-    { "serial_no": 1, "meeting_date": "27/02/2022", "attendees_count": 4, "agenda_summary": "খসড়া ভোটার তালিকা প্রণয়ন।", "decision_summary": "অনুমোদিত" },
-    { "serial_no": 1, "meeting_date": "20/03/2022", "attendees_count": 4, "agenda_summary": "চুড়ান্ত ভোটার তালিকা অনুমোদন।", "decision_summary": "অনুমোদিত" },
-    { "serial_no": 1, "meeting_date": "2022-12-06", "attendees_count": 10, "agenda_summary": "কো-অপ্ট সদস্য মনোনয়ন প্রসঙ্গে। বিদ্যালয়ের ব্যাংক হিসাব পরিচালনা। একজন খণ্ডকালীন শিক্ষক নিয়োগ। জনাব একরামুল হক, বিকাশ সিংহ, গোপাল চন্দ্র পাল এর বকেয়া বেতনের আবেদন অনুমোদন। জনাব মনোজ কুমার প্রজাপতি ও সুবীর পাল চৌধুরী ও সুরজিত সিংহ এর উচ্চতর স্কেল অনুমোদ", "decision_summary": "জনাব কাসেম আলী কো-অপ্ট সদস্য হিসাবে মনোনীত সভাপতি ও প্রধান শিক্ষক হিসাব পরিচালনা করবেন মিস রোমা সিনহা কে খণ্ডকালীন শিক্ষক হিসাবে নিয়োগ প্রদান অনুমোদিত" },
-    { "serial_no": 1, "meeting_date": "2022-01-09", "attendees_count": 11, "agenda_summary": "শুন্যপদে ১জন করে নিরাপত্তাকর্মী, কম্পিউটার অপারেটর, অফিস সহায়ক, পরিচ্চন্নতাকর্মী, ও আয়া নিয়োগ প্রসঙ্গে। নৃপেন্দ্র শব্দকর এর অতিরিক্ত দায়িত্বভাতা প্রদান প্রসঙ্গে।", "decision_summary": "নিয়োগ বিজ্ঞপ্তি প্রকাশের অনুমোদন। অতিরিক্ত ভাতা প্রদানের ব্যবস্থা গ্রহণ।" },
-    { "serial_no": 1, "meeting_date": "29/12/2022", "attendees_count": 11, "agenda_summary": "২০২৩ সালের ভর্তি ফি নির্ধারণ শহিদুল ইসলাম খান এর ইনক্রিমেন্টের আবেদন সুবীর পাল চৌধুরী ও মনোজ কুমার প্রজাপতি এর বকেয়া বেতনের আবেদন", "decision_summary": "ভর্তি ফি ৮০০ টাকা নির্ধারণ অনুমোদিত" },
-    { "serial_no": 1, "meeting_date": "24/04/2022", "attendees_count": 11, "agenda_summary": "নবনির্বাচিত ম্যানেজিং কমিটির সভাপতি মনোনয়ন।", "decision_summary": "জনাব নব কুমার সিংক -কে সভাপতি হিসাবে মনোনীত করা হয়।" },
-    { "serial_no": 1, "meeting_date": "30/01/2022", "attendees_count": 4, "agenda_summary": "এনটিআরসিএ কর্তৃক সুপারিশকৃত শিক্ষকদের নিয়োগ অনুমোদন প্রসঙ্গে। মি. রাজেশ দাশ এর বিএড প্রশিক্ষণের অনুমতি প্রদান প্রসঙ্গে।", "decision_summary": "অনুমোদিত" },
-    { "serial_no": 1, "meeting_date": "25/09/2022", "attendees_count": 11, "agenda_summary": "বাছাই ও নিয়োগ কমিটি গঠন। বাসনা সিনহা এর মাতৃত্বকার্লীন ছুটি অনুমোদন।", "decision_summary": "বাছাই ও নিয়োগ কমিটি গঠন ও অনুমোদন। ছুটি মঞ্জুর" },
-    { "serial_no": 1, "meeting_date": "23/11/2023", "attendees_count": 9, "agenda_summary": "বাছায় ও নিয়োগ কমিটি গঠন, ঈদ এ মিলাদুন্নবী উদযাপনে ব্যয়কৃত অর্থ অনুমোদন", "decision_summary": "বাছায় ও নিয়োগ কমিটি গঠিত হয়, ঈদ এ মিলাদুন্নবী উদযাপনে ব্যয়কৃত অর্থ অনুমোদন করা হয়" },
-    { "serial_no": 1, "meeting_date": "29/10/2023", "attendees_count": 9, "agenda_summary": "নিয়োগ সংক্রান্ত", "decision_summary": "সিদ্ধান্ত গৃহীত হয়" },
-    { "serial_no": 1, "meeting_date": "27/09/2023", "attendees_count": 9, "agenda_summary": "বিদ্যালয় কর্তৃপক্ষের অনুমতি ব্যতিত শিক্ষার্হীদের নিকট হতে টাকা উত্তোলন প্রসঙ্গে।", "decision_summary": "বিদ্যালয় কর্তৃপক্ষের অনুমতি ব্যতিত শিক্ষার্হীদের নিকট হতে কোন শিক্ষক বা শ্রেণিশিক্ষক টাকা উত্তোলন থেকে বিরত থাকতে বলা হয়।" },
-    { "serial_no": 1, "meeting_date": "28/12/2023", "attendees_count": 9, "agenda_summary": "সহকারী শিক্ষক মিঃ সুরজিত কুমার সিংহের বিরুদ্ধে আনিত অভিযোগ প্রসঙ্গে, ২০২৪খ্রিঃ সনের বিদ্যালয়ে ভর্তি ফি নির্ধারন প্রসঙ্গে।", "decision_summary": "সহকারী শিক্ষক মিঃ সুরজিত কুমার সিংহকে সর্তক করা হয়, ২০২৪খ্রিঃ সনের বিদ্যালয়ে ভর্তি ফি ১০০০ নির্ধারিত হয়।" },
-    { "serial_no": 1, "meeting_date": "25/05/2023", "attendees_count": 9, "agenda_summary": "বাছাই ও নিয়োগ কমিটি গঠন, বিদ্যালয়ের পুরাতন বইপত্র বিক্রি, বিদ্যালয় অঙ্গণের ৩টি গাছ কর্তন, বিদ্যালয়ের পশ্চিম দিকের ঘরের টিনের চালা নির্মাণ", "decision_summary": "বাছাই ও নিয়োগ কমিটি গঠন করা হয়, বিদ্যলয়ের পুরাতন বইপত্র বিক্রির সিদ্ধান্ত গৃহীত হয়, গাছ কর্তনের অনুমোদন করা হয়, চালা নির্মাণের সিদ্ধান্ত গৃহীত হয়।" },
-    { "serial_no": 1, "meeting_date": "2023-05-04", "attendees_count": 9, "agenda_summary": "নিয়োগ সংক্রান্ত", "decision_summary": "বিদ্যালয়ে ৫ টি শুণ্য পদে নিয়োগের সিদ্ধান্ত গ্রহণ করা হয়।" },
-    { "serial_no": 1, "meeting_date": "17/09/2024", "attendees_count": 6, "agenda_summary": "গোপাল পাল এর পদত্যাগ অনুমোদন", "decision_summary": "অনুমোদিত" },
-    { "serial_no": 1, "meeting_date": "27/07/2024", "attendees_count": 9, "agenda_summary": "পাঁচটি পদের যোগদান অনুমোদন", "decision_summary": "অনুমোদিত" },
-    { "serial_no": 1, "meeting_date": "2024-01-02", "attendees_count": 6, "agenda_summary": "খসড়া ভোটার তালিকা প্রণয়ন; বারান্দার চালা নির্মাণ", "decision_summary": "অনুমোদিত" },
-    { "serial_no": 1, "meeting_date": "14/05/2024", "attendees_count": 9, "agenda_summary": "নবনির্বাচিত কমিটির সভাপতি মনোনয়ন", "decision_summary": "সিদ্ধান্ত হয়নি" },
-    { "serial_no": 1, "meeting_date": "27/02/2024", "attendees_count": 7, "agenda_summary": "নিয়োগ সংক্রান্ত", "decision_summary": "সিদ্ধান্ত গৃহীত" },
-    { "serial_no": 1, "meeting_date": "20/05/2024", "attendees_count": 8, "agenda_summary": "নবনির্বাচিত কমিটির সভাপতি মনোনয়ন", "decision_summary": "মনোনিত" },
-    { "serial_no": 1, "meeting_date": "2024-02-04", "attendees_count": 6, "agenda_summary": "চূড়ান্ত ভোটার তালিকা অনুমোদন", "decision_summary": "অনুমোদিত" },
-    { "serial_no": 1, "meeting_date": "14/03/2024", "attendees_count": 6, "agenda_summary": "খসড়া ভোটার তালিকা অনুমোদন", "decision_summary": "অনুমোদিত" },
-    { "serial_no": 1, "meeting_date": "21/05/2024", "attendees_count": 6, "agenda_summary": "নিয়োগ অনুমোদন", "decision_summary": "অনুমোদিত" },
-    { "serial_no": 1, "meeting_date": "24/03/2024", "attendees_count": 7, "agenda_summary": "নিয়োগ কমিটি অনুমোদন", "decision_summary": "অনুমোদিত" }
-  ],
-  "staff_positions": [
-    { "serial_no": 1, "designation": "ASSISTANT TEACHER ( PHYSICAL EDUCATION )", "currently_working_total": 1, "currently_working_male": 1, "currently_working_female": 0, "mpo_total": 1, "mpo_male": 1, "mpo_female": 0, "vacant_post": -1, "branch_post": 0 },
-    { "serial_no": 2, "designation": "ASSISTANT TEACHER ( BANGLA )", "currently_working_total": 1, "currently_working_male": 1, "currently_working_female": 0, "mpo_total": 1, "mpo_male": 1, "mpo_female": 0, "vacant_post": -1, "branch_post": 0 },
-    { "serial_no": 3, "designation": "ASSISTANT TEACHER ( PHYSICAL SCIENCE )", "currently_working_total": 1, "currently_working_male": 1, "currently_working_female": 0, "mpo_total": 1, "mpo_male": 1, "mpo_female": 0, "vacant_post": -1, "branch_post": 0 },
-    { "serial_no": 4, "designation": "ASSISTANT TEACHER ( N/A (NOT APPLICABLE) )", "currently_working_total": 1, "currently_working_male": 1, "currently_working_female": 0, "mpo_total": 1, "mpo_male": 1, "mpo_female": 0, "vacant_post": -1, "branch_post": 0 },
-    { "serial_no": 5, "designation": "ASSISTANT TEACHER (ENGLISH) ( ENGLISH )", "currently_working_total": 1, "currently_working_male": 1, "currently_working_female": 0, "mpo_total": 1, "mpo_male": 1, "mpo_female": 0, "vacant_post": -1, "branch_post": 0 },
-    { "serial_no": 6, "designation": "ASSISTANT TEACHER (MATH & G.SCIENCE) ( MATHEMATICS )", "currently_working_total": 1, "currently_working_male": 1, "currently_working_female": 0, "mpo_total": 1, "mpo_male": 1, "mpo_female": 0, "vacant_post": -1, "branch_post": 0 },
-    { "serial_no": 7, "designation": "ASSISTANT TEACHER (SOCIAL SCIENCE) ( N/A (NOT APPLICABLE) )", "currently_working_total": 1, "currently_working_male": 1, "currently_working_female": 0, "mpo_total": 1, "mpo_male": 1, "mpo_female": 0, "vacant_post": -1, "branch_post": 0 },
-    { "serial_no": 8, "designation": "MUSLIM R.TEACHER ( N/A (NOT APPLICABLE) )", "currently_working_total": 1, "currently_working_male": 1, "currently_working_female": 0, "mpo_total": 1, "mpo_male": 1, "mpo_female": 0, "vacant_post": -1, "branch_post": 0 },
-    { "serial_no": 9, "designation": "AGRICULTURE ( N/A (NOT APPLICABLE) )", "currently_working_total": 1, "currently_working_male": 0, "currently_working_female": 1, "mpo_total": 1, "mpo_male": 0, "mpo_female": 1, "vacant_post": -1, "branch_post": 0 },
-    { "serial_no": 10, "designation": "ASSISTANT TEACHER ( MATHEMATICS )", "currently_working_total": 1, "currently_working_male": 0, "currently_working_female": 1, "mpo_total": 0, "mpo_male": 0, "mpo_female": 0, "vacant_post": -1, "branch_post": 0 },
-    { "serial_no": 11, "designation": "HEAD MASTER ( N/A (NOT APPLICABLE) )", "currently_working_total": 1, "currently_working_male": 0, "currently_working_female": 1, "mpo_total": 1, "mpo_male": 0, "mpo_female": 1, "vacant_post": -1, "branch_post": 0 },
-    { "serial_no": 12, "designation": "HINDU RELIGION TEACHER ( N/A (NOT APPLICABLE) )", "currently_working_total": 1, "currently_working_male": 0, "currently_working_female": 1, "mpo_total": 1, "mpo_male": 0, "mpo_female": 1, "vacant_post": -1, "branch_post": 0 }
-  ],
-  "staff_positions_total": {
-    "currently_working_total": 12, "currently_working_male": 8, "currently_working_female": 4,
-    "mpo_total": 11, "mpo_male": 8, "mpo_female": 3, "vacant_post": -12, "branch_post": 0
-  },
-  "former_committee_members": [
-    { "serial_no": 1, "member_name": "SUNILA CHANU", "gender": "মহিলা", "phone": null, "reason_for_leaving": null },
-    { "serial_no": 2, "member_name": "SHUVASIS SINGHA", "gender": "পুরুষ", "phone": null, "reason_for_leaving": null },
-    { "serial_no": 3, "member_name": "PROKASH KANTI SINGHA", "gender": "পুরুষ", "phone": null, "reason_for_leaving": null },
-    { "serial_no": 4, "member_name": "SRISHTI SINHA", "gender": "মহিলা", "phone": null, "reason_for_leaving": null },
-    { "serial_no": 5, "member_name": "HENA BEGUM", "gender": "মহিলা", "phone": null, "reason_for_leaving": null },
-    { "serial_no": 6, "member_name": "INUNG NGANBA KAISHAM", "gender": "পুরুষ", "phone": null, "reason_for_leaving": null },
-    { "serial_no": 7, "member_name": "SAMIA ISLAM", "gender": "মহিলা", "phone": null, "reason_for_leaving": null },
-    { "serial_no": 8, "member_name": "ANAMIKA SUROVI", "gender": "মহিলা", "phone": null, "reason_for_leaving": null }
-  ],
-  "land_by_acquisition_type": { "purchased": null, "received_from_government": null, "waqf_or_donation": null, "other": null, "total": null },
-  "land_possession": { "attached_to_main_building_undivided": null, "total_in_possession": null, "total_dispossessed": null },
-  "land_by_use": { "hostel": null, "teacher_residential_building": null, "school_buildings": null, "playground": null, "cultivable_land": null, "pond": null, "garden": null, "unused": null, "other": null, "total": null },
-  "buildings": [],
-  "building_floor_construction": [],
-  "classrooms": [],
-  "science_labs": [],
-  "library": [],
-  "computer_labs": [],
-  "common_rooms": [],
-  "other_rooms": [],
-  "building_room_summary": [],
-  "wash_blocks": [],
-  "facilities": [
-    { "serial_no": 1, "name": "Play Ground", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 2, "name": "Electricity", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 3, "name": "Tubewell", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 4, "name": "Tap", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 5, "name": "Transport", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 6, "name": "Auditorium", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 7, "name": "Gas", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 8, "name": "Canteen", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 9, "name": "Audio-Sound System", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 10, "name": "Health Aid", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 11, "name": "Gymnasium", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 12, "name": "Audio-Visual", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 13, "name": "Television", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 14, "name": "Boundary Wall", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 15, "name": "Current Electricity", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 16, "name": null, "status": "ব্যবস্থা নেই" },
-    { "serial_no": 17, "name": "Solar Panel", "status": "ব্যবস্থা নেই" },
-    { "serial_no": 18, "name": "Static Electricity", "status": "ব্যবস্থা নেই" }
-  ],
-  "student_enrollment_by_class": [],
-  "exam_promotion_by_class": [],
-  "students_by_annual_family_income": [],
-  "students_by_age": [],
-  "students_by_category": [],
-  "students_by_religion": [],
-  "students_by_optional_subject": [],
-  "ict_equipment": [],
-  "jsc_jdc_exam_results": [],
-  "jsc_jdc_subject_results": [],
-  "ssc_exam_results": [],
-  "dakhil_exam_results": [],
-  "monitoring_visits": [],
-  "audits": [],
-  "equipment_inventory": [],
-  "services_provided": [],
-  "student_fee_and_session_charge_total": 0,
-  "annual_income_sources": [],
-  "annual_income_total": 0,
-  "annual_expense_sources": [],
-  "annual_expense_total": 0,
-  "development_projects": [
-    { "serial_no": 1, "work_type": "Building Construction", "description": "আধাপাঁকা ভবন", "progress": "সম্পূর্ণ", "start_date": "2019-01-11", "duration_months": 4, "end_date": "29/02/2020", "total_allocated_cost_taka": 100000, "funding_source": null, "project_name": "শ্রেণিকক্ষ নির্মাণ" },
-    { "serial_no": 2, "work_type": "Building Construction", "description": "আধাপাঁকা ভবন", "progress": "সম্পূর্ণ", "start_date": "2019-01-11", "duration_months": 4, "end_date": "29/02/2020", "total_allocated_cost_taka": 100000, "funding_source": null, "project_name": "শ্রেণিকক্ষ নির্মাণ" },
-    { "serial_no": 3, "work_type": "Furniture", "description": "ব্রেঞ্চ, দরজা-জানালা নির্মাণ", "progress": "সম্পূর্ণ", "start_date": "15/01/2020", "duration_months": 1, "end_date": "14/02/2020", "total_allocated_cost_taka": 20000, "funding_source": null, "project_name": "বিদ্যালয়ের আসবাপত্র নির্মাণ" },
-    { "serial_no": 4, "work_type": "Furniture", "description": "ব্রেঞ্চ, দরজা-জানালা নির্মাণ", "progress": "সম্পূর্ণ", "start_date": "15/01/2020", "duration_months": 1, "end_date": "14/02/2020", "total_allocated_cost_taka": 20000, "funding_source": null, "project_name": "বিদ্যালয়ের আসবাপত্র নির্মাণ" },
-    { "serial_no": 5, "work_type": "Science Instrument", "description": "বৈজ্ঞানিক যন্ত্রপাতি", "progress": "সম্পূর্ণ", "start_date": "2020-01-01", "duration_months": 1, "end_date": "2020-02-02", "total_allocated_cost_taka": 100000, "funding_source": null, "project_name": "বৈজ্ঞানিক যন্ত্রপাতি ক্রয়" },
-    { "serial_no": 6, "work_type": "Science Instrument", "description": "বৈজ্ঞানিক যন্ত্রপাতি", "progress": "সম্পূর্ণ", "start_date": "2020-01-01", "duration_months": 1, "end_date": "2020-02-02", "total_allocated_cost_taka": 100000, "funding_source": null, "project_name": "বৈজ্ঞানিক যন্ত্রপাতি ক্রয়" }
-  ],
-  "nearby_institutions": [],
-  "achievements": [],
-  "disasters": [],
-  "compliance_implementation": [],
-  "trainings": []
-};
+(function () {
+  'use strict';
 
-function titleCase(key){
-  return key
-    .replace(/_/g,' ')
-    .replace(/\b\w/g, c => c.toUpperCase());
-}
+  // ---------------------------------------------------------------------
+  // State
+  // ---------------------------------------------------------------------
+  var rawData = null;      // whatever top-level JSON object was loaded
+  var records = [];        // array of school objects being displayed
+  var currentIndex = 0;    // which record in `records` is on screen
 
-function isEmptyValue(v){
-  if(v === null || v === undefined) return true;
-  if(Array.isArray(v)) return v.length === 0;
-  if(typeof v === 'object') return Object.keys(v).length === 0;
-  if(typeof v === 'string') return v.trim() === '';
-  return false;
-}
+  var app = document.getElementById('app');
+  var statusMsg = document.getElementById('statusMsg');
+  var pageTitle = document.getElementById('pageTitle');
+  var pageSub = document.getElementById('pageSub');
+  var searchInput = document.getElementById('searchInput');
+  var schoolSelect = document.getElementById('schoolSelect');
+  var expandAllBtn = document.getElementById('expandAllBtn');
+  var collapseAllBtn = document.getElementById('collapseAllBtn');
+  var reloadBtn = document.getElementById('reloadBtn');
+  var fileInput = document.getElementById('fileInput');
 
-function formatScalar(v){
-  if(v === null || v === undefined) return '<span class="null-val">—</span>';
-  if(typeof v === 'boolean') return v ? '<span class="badge ok">Yes</span>' : '<span class="badge missing">No</span>';
-  return String(v);
-}
+  // ---------------------------------------------------------------------
+  // Helpers
+  // ---------------------------------------------------------------------
 
-function renderKV(obj){
-  const keys = Object.keys(obj);
-  if(keys.length === 0) return '<div class="empty">No data</div>';
-  let rows = keys.map(k => {
-    const v = obj[k];
-    return `<tr><td class="k">${titleCase(k)}</td><td class="v">${formatScalar(v)}</td></tr>`;
-  }).join('');
-  return `<table class="kv">${rows}</table>`;
-}
-
-function renderTable(arr){
-  if(arr.length === 0) return '<div class="empty">No records</div>';
-  // union of all keys across all rows, preserving first-seen order
-  const colSet = [];
-  arr.forEach(row => {
-    if(row && typeof row === 'object' && !Array.isArray(row)){
-      Object.keys(row).forEach(k => { if(!colSet.includes(k)) colSet.push(k); });
-    }
-  });
-  if(colSet.length === 0){
-    // array of primitives
-    const items = arr.map(v => `<li>${formatScalar(v)}</li>`).join('');
-    return `<ul>${items}</ul>`;
+  // "institute_name_bn" -> "Institute Name Bn" (key text itself is never
+  // changed/renamed — this only affects how it is *displayed*).
+  function humanizeKey(key) {
+    return String(key)
+      .replace(/[_\-]+/g, ' ')
+      .trim()
+      .split(' ')
+      .filter(Boolean)
+      .map(function (w) { return w.charAt(0).toUpperCase() + w.slice(1); })
+      .join(' ');
   }
-  const thead = `<thead><tr>${colSet.map(c => `<th>${titleCase(c)}</th>`).join('')}</tr></thead>`;
-  const tbody = `<tbody>${arr.map(row => {
-    const cells = colSet.map(c => {
-      const v = row ? row[c] : undefined;
-      if(v && typeof v === 'object') return `<td>${JSON.stringify(v)}</td>`;
-      return `<td>${formatScalar(v)}</td>`;
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function isPlainObject(v) {
+    return v !== null && typeof v === 'object' && !Array.isArray(v);
+  }
+
+  function isArrayOfObjects(v) {
+    return Array.isArray(v) && v.length > 0 && v.every(isPlainObject);
+  }
+
+  // Bengali "হ্যাঁ/না" and English "Yes/No" style flags get a colored badge;
+  // everything else is plain escaped text. Null/empty renders as an em-dash.
+  function formatScalar(v) {
+    if (v === null || v === undefined || v === '') {
+      return '<span class="empty">—</span>';
+    }
+    var s = String(v);
+    var low = s.trim().toLowerCase();
+    if (low === 'yes' || s === 'হ্যাঁ' || low === 'recognized' || low === 'active') {
+      return '<span class="badge badge--success">' + escapeHtml(s) + '</span>';
+    }
+    if (low === 'no' || s === 'না') {
+      return '<span class="badge badge--neutral">' + escapeHtml(s) + '</span>';
+    }
+    return escapeHtml(s);
+  }
+
+  // ---------------------------------------------------------------------
+  // Flatten a plain object (possibly nested) into an ordered list of
+  // { key, depth, value } rows for a .kv table — key is the original
+  // JSON key (never renamed), depth only controls display indentation.
+  // ---------------------------------------------------------------------
+  function flattenObject(obj, depth) {
+    depth = depth || 0;
+    var rows = [];
+    Object.keys(obj).forEach(function (key) {
+      var val = obj[key];
+      if (isPlainObject(val)) {
+        rows.push({ key: key, depth: depth, isGroup: true });
+        rows = rows.concat(flattenObject(val, depth + 1));
+      } else if (Array.isArray(val)) {
+        // A nested array inside what is otherwise a flat object: show it
+        // inline as a joined list rather than opening a whole sub-table.
+        rows.push({ key: key, depth: depth, value: val.length ? val.join(', ') : null });
+      } else {
+        rows.push({ key: key, depth: depth, value: val });
+      }
+    });
+    return rows;
+  }
+
+  function kvRowsHtml(rows) {
+    return rows.map(function (r) {
+      var nestClass = r.depth > 0 ? ' nested-' + Math.min(r.depth, 2) : '';
+      var keyHtml = escapeHtml(r.key);
+      if (r.isGroup) {
+        return '<tr class="kv-row" data-search="' + escapeHtml(r.key.toLowerCase()) + '">' +
+          '<td class="k' + nestClass + '"><strong>' + keyHtml + '</strong></td><td class="v"></td></tr>';
+      }
+      var valText = String(r.value == null ? '' : r.value).toLowerCase();
+      return '<tr class="kv-row" data-search="' + escapeHtml(r.key.toLowerCase() + ' ' + valText) + '">' +
+        '<td class="k' + nestClass + '">' + keyHtml + '</td>' +
+        '<td class="v">' + formatScalar(r.value) + '</td></tr>';
     }).join('');
-    return `<tr>${cells}</tr>`;
-  }).join('')}</tbody>`;
-  return `<div class="table-wrap"><table class="data">${thead}${tbody}</table></div>`;
-}
-
-function renderSectionBody(value){
-  if(Array.isArray(value)){
-    return renderTable(value);
-  }
-  if(value && typeof value === 'object'){
-    return renderKV(value);
-  }
-  return `<div class="kv">${formatScalar(value)}</div>`;
-}
-
-function countLabel(value){
-  if(Array.isArray(value)) return `${value.length} record${value.length===1?'':'s'}`;
-  if(value && typeof value === 'object') return `${Object.keys(value).length} field${Object.keys(value).length===1?'':'s'}`;
-  return '';
-}
-
-function buildApp(data){
-  const app = document.getElementById('app');
-  app.innerHTML = '';
-
-  document.getElementById('instituteTitle').textContent =
-    data.institute_name_en || data.institute_name_bn || 'School Data Viewer';
-  const subParts = [];
-  if(data.institute_name_bn) subParts.push(data.institute_name_bn);
-  if(data.establishment_date) subParts.push('Est. ' + data.establishment_date);
-  document.getElementById('instituteSub').textContent = subParts.join(' · ');
-
-  const grid = document.createElement('div');
-  grid.className = 'grid';
-  app.appendChild(grid);
-
-  // top-level scalar fields (non-object, non-array) grouped into one "Overview" card
-  const scalarKeys = Object.keys(data).filter(k => {
-    const v = data[k];
-    return v === null || typeof v !== 'object';
-  });
-  if(scalarKeys.length){
-    const overviewObj = {};
-    scalarKeys.forEach(k => overviewObj[k] = data[k]);
-    grid.appendChild(makeCard('overview', 'Overview', overviewObj, false));
   }
 
-  Object.keys(data).forEach(key => {
-    const v = data[key];
-    if(scalarKeys.includes(key)) return;
-    const empty = isEmptyValue(v);
-    const card = makeCard(key, titleCase(key), v, empty);
-    grid.appendChild(card);
-  });
-}
-
-function makeCard(key, label, value, isEmpty){
-  const card = document.createElement('div');
-  card.className = 'card full';
-  card.dataset.key = key;
-
-  const cnt = countLabel(value);
-  const header = document.createElement('div');
-  header.className = 'card-header';
-  header.innerHTML = `<h2>${label}${cnt ? `<span class="count">${cnt}</span>` : ''}</h2><span class="chev">▾</span>`;
-  header.addEventListener('click', () => card.classList.toggle('collapsed'));
-
-  const body = document.createElement('div');
-  body.className = 'card-body';
-  body.innerHTML = renderSectionBody(value);
-
-  if(isEmpty) card.classList.add('collapsed');
-
-  card.appendChild(header);
-  card.appendChild(body);
-  return card;
-}
-
-buildApp(DATA);
-
-// Search
-const searchBox = document.getElementById('searchBox');
-searchBox.addEventListener('input', () => {
-  const q = searchBox.value.trim().toLowerCase();
-  const cards = document.querySelectorAll('#app .card');
-  if(!q){
-    cards.forEach(c => { c.classList.remove('hidden'); });
-    return;
+  // A card built from a flat/nested plain object -> .kv table.
+  function buildObjectCard(title, obj, opts) {
+    opts = opts || {};
+    var rows = flattenObject(obj);
+    var body = rows.length
+      ? '<div class="table-wrap"><table class="kv">' + kvRowsHtml(rows) + '</table></div>'
+      : '<div class="empty">No data</div>';
+    return buildCard(title, rows.length, body, opts);
   }
-  cards.forEach(c => {
-    const text = c.textContent.toLowerCase();
-    if(text.includes(q)){
-      c.classList.remove('hidden');
-      c.classList.remove('collapsed');
-    } else {
-      c.classList.add('hidden');
+
+  // A card built from an array of objects -> table.data. Columns are the
+  // union of every key seen across all items, in first-seen order, so
+  // rows with occasional extra fields (e.g. a null vs missing key) don't
+  // break the table. Column headers use the raw JSON key (humanized for
+  // display only).
+  function buildArrayCard(title, arr, opts) {
+    opts = opts || {};
+    if (!arr.length) {
+      return buildCard(title, 0, '<div class="empty">No entries</div>', opts);
     }
-  });
-});
 
-document.getElementById('expandAllBtn').addEventListener('click', () => {
-  document.querySelectorAll('#app .card').forEach(c => c.classList.remove('collapsed'));
-});
-document.getElementById('collapseAllBtn').addEventListener('click', () => {
-  document.querySelectorAll('#app .card').forEach(c => c.classList.add('collapsed'));
-});
+    if (!isArrayOfObjects(arr)) {
+      // Array of primitives.
+      var listHtml = '<div class="table-wrap"><table class="kv"><tr class="kv-row" data-search="' +
+        escapeHtml(arr.join(' ').toLowerCase()) + '"><td class="v">' +
+        arr.map(function (v) { return formatScalar(v); }).join(', ') + '</td></tr></table></div>';
+      return buildCard(title, arr.length, listHtml, opts);
+    }
+
+    var columns = [];
+    arr.forEach(function (item) {
+      Object.keys(item).forEach(function (k) {
+        if (columns.indexOf(k) === -1) columns.push(k);
+      });
+    });
+
+    var thead = '<thead><tr>' + columns.map(function (c) {
+      return '<th>' + escapeHtml(humanizeKey(c)) + '</th>';
+    }).join('') + '</tr></thead>';
+
+    var tbody = '<tbody>' + arr.map(function (item) {
+      var searchText = columns.map(function (c) { return item[c] == null ? '' : String(item[c]); }).join(' ').toLowerCase();
+      var cells = columns.map(function (c) {
+        var v = item[c];
+        if (isPlainObject(v) || Array.isArray(v)) v = JSON.stringify(v);
+        return '<td>' + formatScalar(v) + '</td>';
+      }).join('');
+      return '<tr class="data-row" data-search="' + escapeHtml(searchText) + '">' + cells + '</tr>';
+    }).join('') + '</tbody>';
+
+    var body = '<div class="table-wrap"><table class="data">' + thead + tbody + '</table></div>';
+    return buildCard(title, arr.length, body, opts);
+  }
+
+  function buildCard(title, count, bodyHtml, opts) {
+    var full = opts.full ? ' full' : '';
+    var countHtml = count === undefined ? '' : '<span class="count">(' + count + ')</span>';
+    return (
+      '<div class="card' + full + '" data-card>' +
+        '<div class="card-header" data-card-toggle>' +
+          '<h2>' + escapeHtml(humanizeKey(title)) + countHtml + '</h2>' +
+          '<i class="chev">▾</i>' +
+        '</div>' +
+        '<div class="card-body">' + bodyHtml + '</div>' +
+      '</div>'
+    );
+  }
+
+  // Basic Info card: every top-level key on the record whose value is a
+  // plain scalar (string/number/boolean/null) — original key order kept.
+  function scalarKeys(record) {
+    var out = {};
+    Object.keys(record).forEach(function (k) {
+      var v = record[k];
+      if (!isPlainObject(v) && !Array.isArray(v)) out[k] = v;
+    });
+    return out;
+  }
+
+  function buildStatGrid(record) {
+    var cards = [];
+    Object.keys(record).forEach(function (k) {
+      var v = record[k];
+      if (Array.isArray(v)) {
+        cards.push(
+          '<div class="stat-card"><div class="stat-num">' + v.length + '</div>' +
+          '<div class="stat-label">' + escapeHtml(humanizeKey(k)) + '</div></div>'
+        );
+      }
+    });
+    if (!cards.length) return '';
+    return '<div class="stat-grid">' + cards.join('') + '</div>';
+  }
+
+  // ---------------------------------------------------------------------
+  // Render one school record (an object from school_data[]) into #app.
+  // ---------------------------------------------------------------------
+  function renderRecord(record) {
+    var nameEn = record.institute_name_en || record.institute_name_bn || 'Untitled record';
+    pageTitle.textContent = nameEn;
+    pageSub.textContent = (record.institute_name_bn || '') +
+      (records.length > 1 ? '  •  record ' + (currentIndex + 1) + ' of ' + records.length : '');
+
+    var html = '';
+    html += buildStatGrid(record);
+    html += '<div class="grid">';
+    html += buildObjectCard('Basic Info', scalarKeys(record), { full: true });
+
+    Object.keys(record).forEach(function (key) {
+      var val = record[key];
+      if (!isPlainObject(val) && !Array.isArray(val)) return; // already in Basic Info
+      if (isPlainObject(val)) {
+        html += buildObjectCard(key, val, { full: true });
+      } else if (Array.isArray(val)) {
+        html += buildArrayCard(key, val, { full: isArrayOfObjects(val) });
+      }
+    });
+
+    html += '</div>';
+    app.innerHTML = html;
+    applySearch(searchInput.value);
+  }
+
+  function renderSchoolSelect() {
+    if (records.length <= 1) {
+      schoolSelect.style.display = 'none';
+      return;
+    }
+    schoolSelect.style.display = '';
+    schoolSelect.innerHTML = records.map(function (r, i) {
+      var label = r.institute_name_en || r.institute_name_bn || ('Record ' + (i + 1));
+      return '<option value="' + i + '">' + escapeHtml(label) + '</option>';
+    }).join('');
+    schoolSelect.value = String(currentIndex);
+  }
+
+  // ---------------------------------------------------------------------
+  // Search — filters rows inside every card by their data-search text,
+  // and hides any card left with zero visible rows.
+  // ---------------------------------------------------------------------
+  function applySearch(term) {
+    term = (term || '').trim().toLowerCase();
+    var cards = app.querySelectorAll('[data-card]');
+    cards.forEach(function (card) {
+      var rows = card.querySelectorAll('[data-search]');
+      var visibleCount = 0;
+      rows.forEach(function (row) {
+        var match = !term || row.getAttribute('data-search').indexOf(term) !== -1;
+        row.classList.toggle('search-hidden', !match);
+        if (match) visibleCount++;
+      });
+      var hasSearchableRows = rows.length > 0;
+      card.classList.toggle('search-hidden', term !== '' && hasSearchableRows && visibleCount === 0);
+    });
+  }
+
+  // ---------------------------------------------------------------------
+  // Loading data — accepts either { "school_data": [ {...}, ... ] } or a
+  // bare array / single object, so any similarly-shaped export still works.
+  // ---------------------------------------------------------------------
+  function useData(json, sourceLabel) {
+    rawData = json;
+    if (Array.isArray(json)) {
+      records = json;
+    } else if (json && Array.isArray(json.school_data)) {
+      records = json.school_data;
+    } else if (isPlainObject(json)) {
+      records = [json];
+    } else {
+      records = [];
+    }
+
+    if (!records.length) {
+      showStatus('Loaded ' + sourceLabel + ', but no school records were found inside it.', true);
+      return;
+    }
+
+    currentIndex = 0;
+    renderSchoolSelect();
+    renderRecord(records[currentIndex]);
+  }
+
+  function showStatus(message, isError) {
+    app.innerHTML = '<div class="status-banner' + (isError ? ' is-error' : '') + '">' + escapeHtml(message) + '</div>';
+    pageSub.textContent = isError ? 'Failed to load data' : 'Loading…';
+  }
+
+  function loadFromFetch() {
+    showStatus('Loading school_new.json…', false);
+    fetch('./school_new.json')
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (json) { useData(json, 'school_new.json'); })
+      .catch(function (err) {
+        showStatus(
+          'Could not fetch school_new.json directly (' + err.message + '). ' +
+          'If you opened this file straight from disk (file://), browsers block that request — ' +
+          'use the "Open JSON File" button above to pick school_new.json manually instead.',
+          true
+        );
+      });
+  }
+
+  function loadFromFile(file) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var json = JSON.parse(String(reader.result));
+        useData(json, file.name);
+      } catch (e) {
+        showStatus('Could not parse "' + file.name + '" as JSON: ' + e.message, true);
+      }
+    };
+    reader.onerror = function () {
+      showStatus('Could not read "' + file.name + '".', true);
+    };
+    reader.readAsText(file);
+  }
+
+  // ---------------------------------------------------------------------
+  // Events
+  // ---------------------------------------------------------------------
+  searchInput.addEventListener('input', function () { applySearch(searchInput.value); });
+
+  schoolSelect.addEventListener('change', function () {
+    currentIndex = Number(schoolSelect.value) || 0;
+    renderRecord(records[currentIndex]);
+  });
+
+  expandAllBtn.addEventListener('click', function () {
+    app.querySelectorAll('[data-card]').forEach(function (c) { c.classList.remove('collapsed'); });
+  });
+
+  collapseAllBtn.addEventListener('click', function () {
+    app.querySelectorAll('[data-card]').forEach(function (c) { c.classList.add('collapsed'); });
+  });
+
+  reloadBtn.addEventListener('click', loadFromFetch);
+
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files && fileInput.files[0]) loadFromFile(fileInput.files[0]);
+  });
+
+  // Event delegation for per-card collapse/expand toggling.
+  app.addEventListener('click', function (e) {
+    var toggle = e.target.closest ? e.target.closest('[data-card-toggle]') : null;
+    if (!toggle) return;
+    toggle.closest('[data-card]').classList.toggle('collapsed');
+  });
+
+  // ---------------------------------------------------------------------
+  // Bootstrap
+  // ---------------------------------------------------------------------
+  loadFromFetch();
+})();
 </script>
 </body>
 </html>
