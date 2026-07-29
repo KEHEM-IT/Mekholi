@@ -148,7 +148,23 @@ export function useInstituteSetupImport() {
     errorMessage.value = "";
   }
 
-  // --- Save to src/assets/school/<name>.json (dev only) ----------------------
+  // --- Save JSON -----------------------------------------------------------
+  // In dev mode (pnpm dev) the Vite middleware writes the file into
+  // src/assets/school/. In production (Vercel, etc.) the endpoint doesn't
+  // exist, so we fall back to a browser download instead.
+
+  function downloadJson(targetName: string) {
+    if (!parsed.value) return;
+    const blob = new Blob([JSON.stringify(parsed.value, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${targetName.trim()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
 
   async function saveAs(targetName: string) {
     if (!parsed.value || !targetName.trim()) return;
@@ -160,20 +176,20 @@ export function useInstituteSetupImport() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fileName: targetName.trim(), data: parsed.value }),
       });
-      // The /__institute-setup/import endpoint only exists in dev mode
-      // (registered by the Vite plugin with apply: 'serve'). In production
-      // (Vercel, etc.) the fetch hits a 404 page that isn't JSON, so we
-      // must check the content-type before trying to parse.
       const contentType = res.headers.get("content-type") ?? "";
       if (!contentType.includes("application/json")) {
-        throw new Error(
-          "Save is only available in development mode (pnpm dev). " +
-            "In production, download the JSON from the browser instead.",
-        );
+        // Dev endpoint not available (production) — fall back to browser download
+        downloadJson(targetName);
+        return;
       }
       const data = (await res.json()) as { ok: boolean; message?: string };
       if (!data.ok) throw new Error(data.message ?? "Save failed.");
     } catch (err) {
+      // If fetch itself fails (network error, CORS, etc.) also fall back to download
+      if (err instanceof TypeError) {
+        downloadJson(targetName);
+        return;
+      }
       errorMessage.value = err instanceof Error ? err.message : "Failed to save the import.";
     } finally {
       isSaving.value = false;
