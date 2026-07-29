@@ -130,6 +130,165 @@ export interface SchoolDetails {
   staff_positions_total: StaffPositionsTotal;
   former_committee_members: FormerCommitteeMember[];
   development_projects: DevelopmentProject[];
+  identifiers: SchoolIdentifiers;
+  mpo_status: MpoStatus;
+  location_details: LocationDetails;
+  institute_photos: InstitutePhoto[];
+  institute_contacts: InstituteContact[];
+  committee_formation_history: CommitteeFormationRecord[];
+  committee_meetings: CommitteeMeeting[];
+  facilities: Facility[];
+  inspection_visits: InspectionVisit[];
+  income_sources: IncomeSource[];
+  income_total: number | null;
+  expense_sources: ExpenseSource[];
+  expense_total: number | null;
+  student_fee_amount: number | null;
+  disasters: DisasterRecord[];
+  trainings: TrainingRecord[];
+  academic_result_tables: AcademicResultTable[];
+  other_tables: RawDataTable[];
+}
+
+// --- Newly captured sections (previously silently dropped) ------------------
+
+export interface SchoolIdentifiers {
+  geo_code: string | null;
+  board_institute_code: string | null;
+  technical_board_code: string | null;
+  eiin: string | null;
+  mpo_code: string | null;
+  technical_branch_mpo_code: string | null;
+  stipend_code: string | null;
+}
+
+export interface MpoStatus {
+  is_mpo_enrolled: string | null;
+  technical_branch_mpo_status: string | null;
+}
+
+export interface LocationDetails {
+  nationalization_date: string | null;
+  nearest_admin_unit: string | null;
+  nearest_admin_unit_distance_km: number | null;
+  area_type: string | null;
+  geographic_location: string | null;
+  is_enclave: string | null;
+}
+
+export interface InstitutePhoto {
+  serial_no: number | null;
+  photo_name: string | null;
+}
+
+export interface InstituteContact {
+  serial_no: number | null;
+  name: string | null;
+  designation: string | null;
+  mobile: number | null;
+  email: string | null;
+}
+
+export interface CommitteeFormationRecord {
+  serial_no: number | null;
+  has_committee: string | null;
+  committee_type: string | null;
+  approval_date: string | null;
+  expiry_date: string | null;
+  election_date: string | null;
+  remarks: string | null;
+}
+
+export interface CommitteeMeeting {
+  serial_no: number | null;
+  meeting_date: string | null;
+  attendees_count: number | null;
+  agenda: string | null;
+  decision: string | null;
+}
+
+export interface Facility {
+  serial_no: number | null;
+  name: string | null;
+  status: string | null;
+}
+
+export interface InspectionVisit {
+  serial_no: number | null;
+  inspector_name: string | null;
+  inspector_designation: string | null;
+  visits_last_5_years: number | null;
+  last_visit_date: string | null;
+}
+
+export interface IncomeSource {
+  serial_no: number | null;
+  source: string | null;
+  amount: number | null;
+}
+
+export interface ExpenseSource {
+  serial_no: number | null;
+  source: string | null;
+  amount: number | null;
+}
+
+export interface DisasterRecord {
+  serial_no: number | null;
+  disaster_name: string | null;
+  start_date: string | null;
+  end_date: string | null;
+  closed_days: number | null;
+  damage_details: string | null;
+  cause: string | null;
+  remarks: string | null;
+}
+
+export interface TrainingRecord {
+  serial_no: number | null;
+  training_subject: string | null;
+  head_teacher_trained: number | null;
+  head_teacher_untrained: number | null;
+  assistant_teacher_trained: number | null;
+  assistant_teacher_untrained: number | null;
+  smc_member_trained: number | null;
+  smc_member_untrained: number | null;
+}
+
+// The BANBEIS enrollment / exam-result tables (student counts by year+branch,
+// pass results, subject-wise results, GPA-grade breakdowns). Their column
+// COUNT and labels genuinely differ between institute levels (e.g. 8 cols in
+// one export, 17 in another), and when a section has no real data yet, the
+// export repeats header-like text as a fake "data" row instead of leaving it
+// blank. So rather than hardcoding fixed field names (which would be wrong
+// for some files) we key `values` by each table's own header text — every
+// column is still captured, under its real label, however many there are.
+// Placeholder/echo rows (no parseable year or subject code) are filtered out.
+export interface AcademicResultRow {
+  year: number | null; // set for every table except the subject-wise one
+  subject_code: number | null; // set only for the subject-wise results table
+  branch: string | null;
+  values: Record<string, string | number | null>;
+}
+
+export interface AcademicResultTable {
+  table_type:
+    | "enrollment_summary"
+    | "exam_pass_summary"
+    | "subject_wise_pass_results"
+    | "grade_distribution_ssc_level"
+    | "grade_distribution_hsc_level"
+    | "other";
+  headers: string[];
+  rows: AcademicResultRow[];
+}
+
+// Final safety net: any table this converter doesn't otherwise recognize
+// (a genuinely new section in a future export) lands here instead of being
+// silently dropped.
+export interface RawDataTable {
+  headers: string[];
+  rows: string[][];
 }
 
 export interface SchoolDataWrapper {
