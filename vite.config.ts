@@ -66,23 +66,6 @@ function instituteSetupImportApi(): Plugin {
           res.end(JSON.stringify({ ok: false, message: (err as Error).message }))
         }
       })
-
-      // Lists previously-imported JSON files so the page can show a
-      // "recent imports" list without a hardcoded manifest.
-      server.middlewares.use('/__institute-setup/list', (req, res, next) => {
-        if (req.method !== 'GET') return next()
-        const files = fs
-          .readdirSync(SCHOOL_DIR)
-          .filter((f) => f.toLowerCase().endsWith('.json'))
-          .map((f) => {
-            const stat = fs.statSync(path.join(SCHOOL_DIR, f))
-            return { name: f, savedAt: stat.mtime.toISOString(), size: stat.size }
-          })
-          .sort((a, b) => b.savedAt.localeCompare(a.savedAt))
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify({ ok: true, files }))
-      })
     },
   }
 }

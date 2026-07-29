@@ -1,137 +1,241 @@
 <!-- D:\Web\ERP\Mekholi\src\pages\Institute_Setup\Index.vue -->
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useAppPreferences } from '@/composables/useAppPreferences'
+import {
+  TABLE_TABS,
+  formatBytes,
+  useInstituteSetupImport,
+} from '@/composables/Institute_Setup/useInstituteSetupImport'
+import navigationJson from '@/assets/navigation/shikkha_erp_navigation.json'
+import type { NavigationMap } from '@/types'
+
+// Explicit multi-word component name to satisfy the linter (filename is
+// single-word "Index.vue" per pages/Institute_Setup/ convention).
+defineOptions({ name: 'InstituteDashboard' })
+
+const { preferences } = useAppPreferences()
+const isBn = computed(() => preferences.uiLanguage === 'bn')
+
+const {
+  school,
+  fileName,
+  fileSize,
+  isDragging,
+  isBusy,
+  isSaving,
+  errorMessage,
+  activeTab,
+  activeRows,
+  activeColumns,
+  onDrop,
+  onFileInputChange,
+  clear,
+  saveAs,
+} = useInstituteSetupImport()
+
+// Setup checklist mirrors the other "Institute Setup" sub-menus from the
+// nav JSON (everything after this dashboard itself), so it stays in sync
+// automatically as more of them get real pages behind them.
+const navigation = navigationJson.shikkha_erp_navigation as unknown as NavigationMap
+const checklistSteps = computed(
+  () => navigation.institute_admin?.find((m) => m.menu === 'Institute Setup')?.sub_menus.slice(1) ?? [],
+)
+
+const saveName = ref('')
+
+function tabRowCount(key: (typeof TABLE_TABS)[number]['key']) {
+  const rows = school.value?.[key]
+  return Array.isArray(rows) ? rows.length : 0
+}
+
+async function handleSave() {
+  await saveAs(saveName.value)
+}
+</script>
+
 <template>
-  <section class="institute-setup">
-    <h1>Institute Setup</h1>
-    <p>This is the Institute Setup page.</p>
+  <section class="isc">
+    <header class="isc-header">
+      <h1>{{ isBn ? 'ইনস্টিটিউট ড্যাশবোর্ড' : 'Institute Dashboard' }}</h1>
+      <p>
+        {{
+          isBn
+            ? 'আপনার প্রতিষ্ঠানের সেটআপ অগ্রগতি দেখুন এবং সরকারি ইএমআইএস ওয়ার্কবুক থেকে তথ্য আমদানি করুন।'
+            : 'Track your institute setup progress and import data from a government EMIS workbook.'
+        }}
+      </p>
+    </header>
 
-    <!-- File Upload Section -->
-    <div class="upload-section" style="margin: 24px 0">
-      <label
-        for="file-upload"
-        style="display: block; font-weight: bold; margin-bottom: 8px; cursor: pointer"
-      >
-        Upload School Info File (.md, .txt, .json):
-      </label>
-      <input
-        id="file-upload"
-        type="file"
-        accept=".md,.txt,.json"
-        @change="handleFileUpload"
-        style="
-          padding: 8px;
-          background: #1e293b;
-          color: #f8fafc;
-          border: 1px solid #334155;
-          border-radius: 6px;
-        "
-      />
+    <!-- Setup checklist -->
+    <div class="isc-section">
+      <div class="isc-section__head">
+        <div class="isc-section__title">
+          <i class="fa-duotone fa-list-check" />
+          <div>
+            <h2>{{ isBn ? 'সেটআপ চেকলিস্ট' : 'Setup checklist' }}</h2>
+            <span>{{
+              isBn
+                ? 'এই ধাপগুলো একে একে সম্পন্ন করুন'
+                : 'Work through these to finish setting up your institute'
+            }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="isc-section__body">
+        <div class="isc-checklist">
+          <button
+            v-for="step in checklistSteps"
+            :key="step.name"
+            type="button"
+            class="isc-check-card is-upcoming"
+            disabled
+          >
+            <span class="isc-check-card__icon"><i :class="step.icon" /></span>
+            <span class="isc-check-card__label">{{ isBn ? step.name_bn : step.name }}</span>
+            <span class="isc-check-card__badge badge badge--info">
+              {{ isBn ? 'শীঘ্রই আসছে' : 'Coming soon' }}
+            </span>
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- Error Display -->
-    <div v-if="errorMessage" style="color: #ef4444; margin-bottom: 16px; font-weight: 500">
-      {{ errorMessage }}
-    </div>
+    <!-- EMIS data import -->
+    <div class="isc-section">
+      <div class="isc-section__head">
+        <div class="isc-section__title">
+          <i class="fa-duotone fa-file-import" />
+          <div>
+            <h2>{{ isBn ? 'ইএমআইএস তথ্য আমদানি' : 'EMIS data import' }}</h2>
+            <span>{{
+              isBn
+                ? 'সরকারি ইএমআইএস ওয়ার্কবুক (মার্কডাউন/জেএসওএন) থেকে প্রতিষ্ঠানের তথ্য আমদানি করুন'
+                : 'Import institute data from a government EMIS workbook export (Markdown/JSON)'
+            }}</span>
+          </div>
+        </div>
+      </div>
 
-    <!-- Raw JSON Return Display -->
-    <div v-if="returnedJson" class="json-display-section" style="margin-top: 24px">
-      <h2 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; color: #818cf8">
-        Returned JSON:
-      </h2>
-      <pre
-        style="
-          background: #020617;
-          color: #10b981;
-          padding: 16px;
-          border: 1px solid #1e293b;
-          border-radius: 8px;
-          overflow: auto;
-          max-height: 500px;
-          font-family: monospace;
-          font-size: 0.85rem;
-          line-height: 1.5;
-          white-space: pre-wrap;
-          word-break: break-all;
-        "
-        >{{ returnedJson }}</pre
-      >
+      <div class="isc-section__body">
+        <div
+          class="isc-dropzone"
+          :class="{ 'is-dragging': isDragging, 'is-busy': isBusy }"
+          @dragover.prevent="isDragging = true"
+          @dragleave.prevent="isDragging = false"
+          @drop="onDrop"
+        >
+          <i class="fa-duotone fa-cloud-arrow-up" />
+          <p>
+            {{ isBn ? 'ফাইল টেনে আনুন অথবা' : 'Drag a file here, or' }}
+          </p>
+
+            <span class="isc-dropzone__browse">
+              {{ isBn ? 'ব্রাউজ করুন' : 'Browse' }}
+              <input
+                type="file"
+                class="isc-dropzone__input"
+                accept=".md,.txt,.json"
+                aria-label="Upload EMIS workbook"
+                @change="onFileInputChange"
+              />
+            </span>
+          <span class="isc-dropzone__hint">{{ isBn ? 'গ্রহণযোগ্য: .md, .json' : 'Accepted: .md, .json' }}</span>
+        </div>
+
+        <p v-if="errorMessage" class="isc-error">{{ errorMessage }}</p>
+
+        <template v-if="school">
+          <div class="isc-import-meta">
+            <div class="isc-import-meta__file">
+              <i class="fa-duotone fa-file-lines" />
+              <div>
+                <strong>{{ fileName }}</strong>
+                <span>{{ formatBytes(fileSize) }}</span>
+              </div>
+            </div>
+            <button type="button" class="isc-import-meta__clear" @click="clear">
+              <i class="fa-duotone fa-xmark" />
+              {{ isBn ? 'সাফ করুন' : 'Clear' }}
+            </button>
+          </div>
+
+          <div class="isc-divider" />
+
+          <div class="isc-subhead">
+            {{ isBn ? 'প্রতিষ্ঠান সংক্ষিপ্ত তথ্য' : 'Institute summary' }}
+          </div>
+          <p>
+            <strong>{{ isBn ? school.institute_name_bn : school.institute_name_en }}</strong>
+            <template v-if="school.classification.institute_type">
+              &mdash; {{ school.classification.institute_type }}
+            </template>
+          </p>
+
+          <div class="isc-tabs">
+            <button
+              v-for="tab in TABLE_TABS"
+              :key="tab.key"
+              type="button"
+              class="isc-tab"
+              :class="{ 'is-active': activeTab === tab.key }"
+              @click="activeTab = tab.key"
+            >
+              {{ isBn ? tab.label_bn : tab.label }}
+              <span class="isc-tab__count">{{ tabRowCount(tab.key) }}</span>
+            </button>
+          </div>
+
+          <div class="isc-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th v-for="col in activeColumns" :key="col">{{ col }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(row, i) in activeRows" :key="i">
+                  <td v-for="col in activeColumns" :key="col">{{ row[col] ?? '—' }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <p v-if="!activeRows.length" class="isc-table-more">
+              {{ isBn ? 'এই বিভাগে কোনো তথ্য নেই' : 'No rows in this section' }}
+            </p>
+          </div>
+
+          <div class="isc-save-row">
+            <div class="form-field">
+              <label>{{ isBn ? 'সংরক্ষণের নাম (EIIN)' : 'Save as (EIIN)' }}</label>
+              <input
+                v-model="saveName"
+                type="text"
+                :placeholder="isBn ? 'যেমন: 129332' : 'e.g. 129332'"
+              />
+            </div>
+            <div class="isc-save-row__actions">
+              <button
+                type="button"
+                class="btn btn--primary"
+                :disabled="isSaving || !saveName.trim()"
+                @click="handleSave"
+              >
+                <i class="fa-duotone fa-floppy-disk" />
+                {{
+                  isSaving
+                    ? isBn
+                      ? 'সংরক্ষণ হচ্ছে...'
+                      : 'Saving...'
+                    : isBn
+                      ? 'JSON হিসেবে সংরক্ষণ করুন'
+                      : 'Save as JSON'
+                }}
+              </button>
+            </div>
+          </div>
+        </template>
+      </div>
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-import { ref } from "vue";
-import { convertMarkdownToSchoolJson } from "../../assets/school/converter";
-
-// Explicit multi-word component name to satisfy linter
-defineOptions({ name: "InstituteSetup" });
-
-const returnedJson = ref<string>("");
-const errorMessage = ref<string>("");
-
-const handleFileUpload = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const file = target.files?.[0];
-
-  if (!file) return;
-
-  errorMessage.value = "";
-  returnedJson.value = "";
-
-  const reader = new FileReader();
-
-  reader.onload = (e) => {
-    const text = e.target?.result as string;
-    try {
-      let resultObj: any;
-
-      // Check if file is a JSON file
-      if (file.name.endsWith(".json") || text.trim().startsWith("{")) {
-        resultObj = JSON.parse(text);
-
-        // Normalize: if the JSON is just the raw school object, wrap it
-        if (resultObj && !resultObj.school_data) {
-          if (Array.isArray(resultObj)) {
-            resultObj = { school_data: resultObj };
-          } else if (resultObj.institute_name_en || resultObj.institute_name_bn) {
-            resultObj = { school_data: [resultObj] };
-          } else {
-            resultObj = { school_data: [resultObj] };
-          }
-        }
-      } else {
-        // Parse Markdown or Text
-        resultObj = convertMarkdownToSchoolJson(text);
-      }
-
-      // Return pretty-formatted raw JSON string as expected
-      returnedJson.value = JSON.stringify(resultObj, null, 2);
-    } catch (err: any) {
-      console.error(err);
-      errorMessage.value = "Failed to parse file: " + err.message;
-    }
-  };
-
-  reader.onerror = () => {
-    errorMessage.value = "FileReader encountered an error reading the file.";
-  };
-
-  reader.readAsText(file);
-};
-</script>
-
-<style scoped lang="scss">
-.institute-setup {
-  padding: 1.5rem;
-
-  h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-
-  p {
-    color: #94a3b8;
-    font-size: 0.95rem;
-  }
-}
-</style>

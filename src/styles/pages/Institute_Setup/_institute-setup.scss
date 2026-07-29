@@ -1,12 +1,13 @@
-@use '../../abstracts' as *;
+@use "../../abstracts" as *;
 
-// Institute Setup > Command Center. The checklist grid drives people to
+// Institute Setup > Institute Dashboard. The checklist grid drives people to
 // the individual setup pages (Profile & EIIN today, more later); the
 // Excel import panel below it is a standalone dev-only utility (see
 // useInstituteSetupImport + vite.config.ts's instituteSetupImportApi)
 // for seeding src/assets/school/*.json from a BD govt-style workbook.
 .isc {
   width: 100%;
+  min-width: 0;
   @include flex(column, stretch, flex-start, $space-6);
 }
 
@@ -27,6 +28,7 @@
 .isc-section {
   @include card;
   @include flex(column, stretch, flex-start, $space-4);
+  min-width: 0;
 }
 
 .isc-section__head {
@@ -69,11 +71,21 @@
 
 .isc-section__body {
   @include flex(column, stretch, flex-start, $space-4);
+  min-width: 0;
 }
 
 .isc-divider {
   height: 1px;
   background: $color-border;
+}
+
+.isc-error {
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+  background: $color-danger-muted;
+  border: 1px solid $color-danger;
+  color: $color-danger;
+  font-size: 0.85rem;
 }
 
 .isc-subhead {
@@ -214,6 +226,11 @@
   }
 }
 
+.isc-dropzone__hint {
+  font-size: 0.75rem;
+  color: $color-text-muted;
+}
+
 .isc-dropzone__browse {
   position: relative;
   display: inline-block;
@@ -336,19 +353,23 @@
 
 .isc-table-wrap {
   width: 100%;
-  overflow-x: auto;
+  max-height: 32rem; // all rows render; this just keeps a very long import from taking over the whole page
+  overflow: auto;
   border-radius: $radius-md;
   border: 1px solid $color-border;
 
   table {
-    width: 100%;
-    min-width: 32rem;
     border-collapse: collapse;
+    table-layout: auto;
+    width: max-content;
     font-size: 0.85rem;
   }
 
   thead {
+    position: sticky;
+    top: 0;
     background: $color-surface-alt;
+    z-index: 1;
   }
 
   th {
@@ -402,90 +423,5 @@
 
 .isc-save-row__actions {
   @include flex(row, center, flex-start, $space-3);
-  flex-shrink: 0;
-}
-
-// --- EMIS HTML import: per-institute list ---------------------------------------
-
-.isc-emis-list {
-  @include flex(column, stretch, flex-start, $space-2);
-}
-
-.isc-emis-item {
-  @include flex(column, stretch, flex-start, $space-3);
-  padding: $space-3;
-  border-radius: $radius-md;
-  background: $color-surface-alt;
-  border: 1px solid $color-border;
-
-  @include respond-to(sm) {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-}
-
-.isc-emis-item__info {
-  @include flex(column, flex-start, flex-start, $space-1);
-  min-width: 0;
-
-  strong {
-    font-size: 0.9rem;
-  }
-
-  span {
-    font-size: 0.78rem;
-    color: $color-text-muted;
-  }
-}
-
-.isc-emis-item__filename {
-  padding: $space-1 $space-2;
-  border-radius: $radius-sm;
-  background: $color-surface;
-  color: $color-text-secondary;
-  font-size: 0.75rem;
-  width: fit-content;
-}
-
-.isc-emis-item__actions {
-  @include flex(row, center, flex-start, $space-3);
-  flex-shrink: 0;
-}
-
-// --- Recent imports --------------------------------------------------------------
-
-.isc-recent__list {
-  @include flex(column, stretch, flex-start, $space-2);
-}
-
-.isc-recent__item {
-  @include flex(row, center, flex-start, $space-3);
-  padding: $space-2 $space-3;
-  border-radius: $radius-md;
-  background: $color-surface-alt;
-  border: 1px solid $color-border;
-  font-size: 0.85rem;
-
-  i {
-    color: $color-text-muted;
-    flex-shrink: 0;
-  }
-}
-
-.isc-recent__name {
-  flex: 1;
-  min-width: 0;
-  font-weight: 600;
-  color: $color-text;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.isc-recent__meta {
-  color: $color-text-muted;
-  font-size: 0.78rem;
-  white-space: nowrap;
   flex-shrink: 0;
 }

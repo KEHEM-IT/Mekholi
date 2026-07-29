@@ -171,8 +171,8 @@
         "icon": "fa-duotone fa-school",
         "sub_menus": [
           {
-            "name": "Command Center",
-            "name_bn": "কমান্ড সেন্টার",
+            "name": "Institute Dashboard",
+            "name_bn": "প্রতিষ্ঠান ড্যাশবোর্ড",
             "icon": "fa-duotone fa-gauge-high"
           },
           {

@@ -1,4 +1,4 @@
-@use '../abstracts' as *;
+@use "../abstracts" as *;
 
 .app-shell {
   @include flex(row, stretch, flex-start);
@@ -9,9 +9,18 @@
 .app-main {
   @include flex(column, stretch, flex-start);
   flex: 1;
+  // Flex items default to `min-width: auto`, i.e. the intrinsic width of
+  // their content. Without this, wide content inside .app-content (tables,
+  // long unbreakable strings, fixed-width charts) forces .app-main to grow
+  // past the space left by .app-sidebar, overflowing .app-shell instead of
+  // scrolling locally — which looks like the sidebar is being ignored.
+  min-width: 0;
 }
 
 .app-content {
   flex: 1;
+  min-width: 0; // same reason as .app-main above
+  width: 100%;
   padding: $space-6;
+  overflow-x: auto; // wide content scrolls inside here, not the whole page
 }

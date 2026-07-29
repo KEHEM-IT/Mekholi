@@ -1,4 +1,4 @@
-@use '../abstracts' as *;
+@use "../abstracts" as *;
 
 // Accent theme overrides, set via html[data-accent] by
 // composables/useAppPreferences.ts (Plugins & Settings > Language & Theme).
@@ -7,35 +7,35 @@
 //
 // "indigo" matches the default token values and needs no override block.
 
-html[data-accent='emerald'] {
+html[data-accent="emerald"] {
   --color-primary: #10b981;
   --color-primary-hover: #34d399;
   --color-primary-active: #059669;
   --color-primary-muted: #{rgba(#10b981, 0.16)};
 }
 
-html[data-accent='amber'] {
+html[data-accent="amber"] {
   --color-primary: #f59e0b;
   --color-primary-hover: #fbbf24;
   --color-primary-active: #d97706;
   --color-primary-muted: #{rgba(#f59e0b, 0.16)};
 }
 
-html[data-accent='crimson'] {
+html[data-accent="crimson"] {
   --color-primary: #e11d48;
   --color-primary-hover: #f43f5e;
   --color-primary-active: #be123c;
   --color-primary-muted: #{rgba(#e11d48, 0.16)};
 }
 
-html[data-accent='sky'] {
+html[data-accent="sky"] {
   --color-primary: #0ea5e9;
   --color-primary-hover: #38bdf8;
   --color-primary-active: #0284c7;
   --color-primary-muted: #{rgba(#0ea5e9, 0.16)};
 }
 
-html[data-accent='violet'] {
+html[data-accent="violet"] {
   --color-primary: #8b5cf6;
   --color-primary-hover: #a78bfa;
   --color-primary-active: #7c3aed;
@@ -45,7 +45,7 @@ html[data-accent='violet'] {
 // Compact density, set via html[data-density="compact"]. Kept intentionally
 // narrow in scope (nav + content padding, form field gap) rather than
 // rewriting every spacing token app-wide.
-html[data-density='compact'] {
+html[data-density="compact"] {
   .app-content {
     padding: $space-4;
   }

@@ -166,9 +166,9 @@ export function formatTemplateDate(dateStr: string | undefined | null): string |
   // If it matches DD/MM/YYYY or D/M/YYYY
   const parts = dateStr.split('/');
   if (parts.length === 3) {
-    const p1 = parseInt(parts[0], 10);
-    const p2 = parseInt(parts[1], 10);
-    const p3 = parseInt(parts[2], 10);
+    const p1 = parseInt(parts[0] ?? '', 10);
+    const p2 = parseInt(parts[1] ?? '', 10);
+    const p3 = parseInt(parts[2] ?? '', 10);
 
     // Check if it's YYYY/MM/DD (e.g. 2019/01/11)
     if (p1 > 1000) {
@@ -203,7 +203,7 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
   let currentTable: ParsedTable | null = null;
 
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
+    const line = (lines[i] ?? '').trim();
     if (line.startsWith('|')) {
       const cells = line.split('|').map(c => c.trim());
       if (cells[0] === '') cells.shift();
@@ -244,15 +244,15 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
     if (table.header[0] && table.header[0].startsWith('Column_')) {
       for (const row of table.rows) {
         if (row.length >= 2) {
-          const k1 = row[0].trim();
-          const v1 = row[1].trim();
+          const k1 = (row[0] ?? '').trim();
+          const v1 = (row[1] ?? '').trim();
           if (k1 && !k1.startsWith('http')) {
             kvMap[k1] = v1;
           }
         }
         if (row.length >= 4) {
-          const k2 = row[2].trim();
-          const v2 = row[3].trim();
+          const k2 = (row[2] ?? '').trim();
+          const v2 = (row[3] ?? '').trim();
           if (k2 && !k2.startsWith('http')) {
             kvMap[k2] = v2;
           }
@@ -285,7 +285,7 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
 
     // 1. Recognition History
     if (headerStr.includes('প্রথম স্বীকৃতির তারিখ') || headerStr.includes('স্বীকৃতিপ্রাপ্ত স্তর')) {
-      if (!table.header[0].startsWith('Column_')) {
+      if (!table.header[0]?.startsWith('Column_')) {
         for (const row of table.rows) {
           if (row.length >= 2) {
             recognition_history.push({
@@ -299,7 +299,7 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
     }
     // 2. MPO Info
     else if (headerStr.includes('এমপিওভুক্তির তারিখ') || headerStr.includes('এমপিও কোড')) {
-      if (!table.header[0].startsWith('Column_')) {
+      if (!table.header[0]?.startsWith('Column_')) {
         for (const row of table.rows) {
           if (row.length >= 2) {
             mpo_info.push({
@@ -366,7 +366,7 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
     else if (headerStr.includes('পদবি') && headerStr.includes('বর্তমানে কাজ করতেছে') && headerStr.includes('শূন্যপদ')) {
       for (const row of table.rows) {
         if (row.length >= 9) {
-          const isTotal = row[0].includes('মোট') || row[0].includes('Total');
+          const isTotal = row[0]?.includes('মোট') || row[0]?.includes('Total');
           if (isTotal) {
             staff_positions_total = {
               currently_working_total: parseIntVal(row[1]),
