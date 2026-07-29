@@ -244,15 +244,16 @@ export interface DisasterRecord {
   remarks: string | null;
 }
 
+// Note: the source header only labels 6 columns here (serial, subject, then
+// 4 role columns) while a populated row would carry a trained/untrained
+// split per role — i.e. the header itself is a collapsed multi-row header,
+// same as the academic tables above. Rather than guess which of the 4
+// labeled slots pairs with which count, the remaining columns are kept
+// under their own header text in `values`.
 export interface TrainingRecord {
   serial_no: number | null;
   training_subject: string | null;
-  head_teacher_trained: number | null;
-  head_teacher_untrained: number | null;
-  assistant_teacher_trained: number | null;
-  assistant_teacher_untrained: number | null;
-  smc_member_trained: number | null;
-  smc_member_untrained: number | null;
+  values: Record<string, string | number | null>;
 }
 
 // The BANBEIS enrollment / exam-result tables (student counts by year+branch,
@@ -349,6 +350,41 @@ export function formatTemplateDate(dateStr: string | undefined | null): string |
   return dateStr;
 }
 
+// Figures out which of the known BANBEIS enrollment/exam-result table shapes
+// a given header belongs to, purely from the header text + column count
+// (the same signal a human would use to tell them apart at a glance).
+function classifyAcademicTable(header: string[]): AcademicResultTable['table_type'] {
+  const h = header.join(' ');
+  if (header[0] === 'Subject Code') return 'subject_wise_pass_results';
+  if (h.includes('রেজিস্ট্রেশন ছাত্র-ছাত্রী')) {
+    return header.length > 14 ? 'grade_distribution_hsc_level' : 'grade_distribution_ssc_level';
+  }
+  if (h.includes('বহিস্কৃত পরীক্ষাথীর সংখ্যা')) return 'exam_pass_summary';
+  if (h.includes('রেজিঃ শিক্ষার্থী সংখ্যা')) return 'enrollment_summary';
+  return 'other';
+}
+
+// Zips a table's own header row onto a data row so every column keeps its
+// real label, deduplicating repeated headers (e.g. two columns both named
+// "মোট") instead of the second silently overwriting the first.
+function buildAcademicRowValues(
+  headers: string[],
+  row: string[],
+  startAt: number,
+): Record<string, string | number | null> {
+  const values: Record<string, string | number | null> = {};
+  const seen: { [label: string]: number } = {};
+  for (let i = startAt; i < headers.length; i++) {
+    let key = (headers[i] ?? `Column_${i + 1}`).trim() || `Column_${i + 1}`;
+    seen[key] = (seen[key] ?? 0) + 1;
+    if (seen[key] > 1) key = `${key} (${seen[key]})`;
+    const raw = row[i];
+    const num = parseIntVal(raw);
+    values[key] = num !== null ? num : parseString(raw);
+  }
+  return values;
+}
+
 interface ParsedTable {
   header: string[];
   rows: string[][];
@@ -405,14 +441,17 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
         if (row.length >= 2) {
           const k1 = (row[0] ?? '').trim();
           const v1 = (row[1] ?? '').trim();
-          if (k1 && !k1.startsWith('http')) {
+          // Some exports repeat the same Column_ label twice (e.g.
+          // "কারিগরি শিক্ষা বোর্ড কর্তৃক কোড" appears twice, usually both
+          // blank). Don't let a later blank duplicate erase a real value.
+          if (k1 && !k1.startsWith('http') && (v1 !== '' || !(k1 in kvMap))) {
             kvMap[k1] = v1;
           }
         }
         if (row.length >= 4) {
           const k2 = (row[2] ?? '').trim();
           const v2 = (row[3] ?? '').trim();
-          if (k2 && !k2.startsWith('http')) {
+          if (k2 && !k2.startsWith('http') && (v2 !== '' || !(k2 in kvMap))) {
             kvMap[k2] = v2;
           }
         }
@@ -438,6 +477,21 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
     branch_post: null
   };
   const development_projects: DevelopmentProject[] = [];
+  const institute_photos: InstitutePhoto[] = [];
+  const institute_contacts: InstituteContact[] = [];
+  const committee_formation_history: CommitteeFormationRecord[] = [];
+  const committee_meetings: CommitteeMeeting[] = [];
+  const facilities: Facility[] = [];
+  const inspection_visits: InspectionVisit[] = [];
+  const income_sources: IncomeSource[] = [];
+  let income_total: number | null = null;
+  const expense_sources: ExpenseSource[] = [];
+  let expense_total: number | null = null;
+  let student_fee_amount: number | null = null;
+  const disasters: DisasterRecord[] = [];
+  const trainings: TrainingRecord[] = [];
+  const academic_result_tables: AcademicResultTable[] = [];
+  const other_tables: RawDataTable[] = [];
 
   for (const table of tables) {
     const headerStr = table.header.join(' ');
@@ -573,6 +627,178 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
         }
       }
     }
+    // 8. Institute photo list ("চিত্রের নাম")
+    else if (table.header.length === 2 && table.header[1] === 'চিত্রের নাম') {
+      for (const row of table.rows) {
+        institute_photos.push({
+          serial_no: parseIntVal(row[0]),
+          photo_name: parseString(row[1])
+        });
+      }
+    }
+    // 9. Institute contact person(s) - distinct from committee_members: this
+    // one has "মোবাইল নম্বর"/"ই-মেইল" columns, committee_members doesn't.
+    else if (headerStr.includes('মোবাইল নম্বর') && headerStr.includes('ই-মেইল')) {
+      for (const row of table.rows) {
+        if (row.length >= 2) {
+          institute_contacts.push({
+            serial_no: parseIntVal(row[0]),
+            name: parseString(row[1]),
+            designation: parseString(row[2]),
+            mobile: parseIntVal(row[3]),
+            email: parseString(row[4])
+          });
+        }
+      }
+    }
+    // 10. Committee formation history (separate from the member roster)
+    else if (headerStr.includes('কমিটি আছে কি না')) {
+      for (const row of table.rows) {
+        if (row.length >= 2) {
+          committee_formation_history.push({
+            serial_no: parseIntVal(row[0]),
+            has_committee: parseString(row[1]),
+            committee_type: parseString(row[2]),
+            approval_date: formatTemplateDate(row[3]),
+            expiry_date: formatTemplateDate(row[4]),
+            election_date: formatTemplateDate(row[5]),
+            remarks: parseString(row[6])
+          });
+        }
+      }
+    }
+    // 11. Committee meeting minutes
+    else if (headerStr.includes('সভার তারিখ') && headerStr.includes('আলোচ্যসূচি')) {
+      for (const row of table.rows) {
+        if (row.length >= 2) {
+          committee_meetings.push({
+            serial_no: parseIntVal(row[0]),
+            meeting_date: formatTemplateDate(row[1]),
+            attendees_count: parseIntVal(row[2]),
+            agenda: parseString(row[3]),
+            decision: parseString(row[4])
+          });
+        }
+      }
+    }
+    // 12. Facilities checklist (Play Ground, Electricity, ...)
+    else if (table.header.length === 3 && table.header[1] === 'নাম' && table.header[2] === 'অবস্থা') {
+      for (const row of table.rows) {
+        facilities.push({
+          serial_no: parseIntVal(row[0]),
+          name: parseString(row[1]),
+          status: parseString(row[2])
+        });
+      }
+    }
+    // 13. Government inspection visits
+    else if (headerStr.includes('পরিদর্শকের নাম')) {
+      for (const row of table.rows) {
+        if (row.length >= 2) {
+          inspection_visits.push({
+            serial_no: parseIntVal(row[0]),
+            inspector_name: parseString(row[1]),
+            inspector_designation: parseString(row[2]),
+            visits_last_5_years: parseIntVal(row[3]),
+            last_visit_date: formatTemplateDate(row[4])
+          });
+        }
+      }
+    }
+    // 14. Student fee/session charge (single value, header IS the label)
+    else if (table.header[0]?.includes('বেতন ও সেশনচার্জ')) {
+      if (table.rows[0]) {
+        student_fee_amount = parseIntVal(table.rows[0][1] ?? table.rows[0][0]);
+      }
+    }
+    // 15. Income sources (+ its "মোট" total row)
+    else if (headerStr.includes('আয়ের উৎস')) {
+      for (const row of table.rows) {
+        if (row[0]?.includes('মোট')) {
+          income_total = parseIntVal(row[1]);
+        } else if (row.length >= 2) {
+          income_sources.push({
+            serial_no: parseIntVal(row[0]),
+            source: parseString(row[1]),
+            amount: parseIntVal(row[2])
+          });
+        }
+      }
+    }
+    // 16. Expense sources (+ its "মোট" total row)
+    else if (headerStr.includes('ব্যয়ের উৎস')) {
+      for (const row of table.rows) {
+        if (row[0]?.includes('মোট')) {
+          expense_total = parseIntVal(row[1]);
+        } else if (row.length >= 2) {
+          expense_sources.push({
+            serial_no: parseIntVal(row[0]),
+            source: parseString(row[1]),
+            amount: parseIntVal(row[2])
+          });
+        }
+      }
+    }
+    // 17. Disasters/calamities. When a school has none on record, the export
+    // repeats its own header text as a fake row instead of leaving it blank
+    // (no serial number), so we skip anything that doesn't start with one.
+    else if (headerStr.includes('দুর্যোগ শুরুর তারিখ')) {
+      for (const row of table.rows) {
+        const serial_no = parseIntVal(row[0]);
+        if (serial_no === null) continue;
+        disasters.push({
+          serial_no,
+          disaster_name: parseString(row[1]),
+          start_date: formatTemplateDate(row[2]),
+          end_date: formatTemplateDate(row[3]),
+          closed_days: parseIntVal(row[4]),
+          damage_details: parseString(row[5]),
+          cause: parseString(row[6]),
+          remarks: parseString(row[7])
+        });
+      }
+    }
+    // 18. Staff trainings. Same empty-template-echo quirk as disasters above.
+    else if (headerStr.includes('প্রশিক্ষণের বিষয়')) {
+      for (const row of table.rows) {
+        const serial_no = parseIntVal(row[0]);
+        if (serial_no === null) continue;
+        trainings.push({
+          serial_no,
+          training_subject: parseString(row[1]),
+          head_teacher_trained: parseIntVal(row[2]),
+          head_teacher_untrained: parseIntVal(row[3]),
+          assistant_teacher_trained: parseIntVal(row[4]),
+          assistant_teacher_untrained: parseIntVal(row[5]),
+          smc_member_trained: parseIntVal(row[6]),
+          smc_member_untrained: parseIntVal(row[7])
+        });
+      }
+    }
+    // 19. BANBEIS enrollment / exam-result tables (see AcademicResultTable
+    // comment above for why these are keyed dynamically rather than fixed).
+    else if (table.header[0] === 'বছর' || table.header[0] === 'Subject Code') {
+      const table_type = classifyAcademicTable(table.header);
+      const isSubjectWise = table_type === 'subject_wise_pass_results';
+      const rows: AcademicResultRow[] = [];
+      for (const row of table.rows) {
+        const lead = parseIntVal(row[0]);
+        if (lead === null) continue; // placeholder/echo row, not real data
+        rows.push({
+          year: isSubjectWise ? null : lead,
+          subject_code: isSubjectWise ? lead : null,
+          branch: parseString(row[1]),
+          values: buildAcademicRowValues(table.header, row, 2)
+        });
+      }
+      if (rows.length) {
+        academic_result_tables.push({ table_type, headers: table.header, rows });
+      }
+    }
+    // 20. Safety net - capture anything else so nothing is silently dropped.
+    else if (!table.header[0]?.startsWith('Column_')) {
+      other_tables.push({ headers: table.header, rows: table.rows });
+    }
   }
 
   const school: SchoolDetails = {
@@ -618,7 +844,43 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
     staff_positions,
     staff_positions_total,
     former_committee_members,
-    development_projects
+    development_projects,
+    identifiers: {
+      geo_code: parseString(kvMap['জিইও কোড (বিবিএস)']),
+      board_institute_code: parseString(kvMap['শিক্ষা বোর্ড কর্তৃক প্রতিষ্ঠানের কোড']),
+      technical_board_code: parseString(kvMap['কারিগরি শিক্ষা বোর্ড কর্তৃক কোড']),
+      eiin: parseString(kvMap['ইআইআইএন']),
+      mpo_code: parseString(kvMap['এমপিও কোড']),
+      technical_branch_mpo_code: parseString(kvMap['কারিগরি শাখার এমপিও কোড']),
+      stipend_code: parseString(kvMap['উপবৃত্তি কোড'])
+    },
+    mpo_status: {
+      is_mpo_enrolled: parseString(kvMap['প্রতিষ্ঠানটি কি এমপিওভুক্ত']),
+      technical_branch_mpo_status: parseString(kvMap['কারিগরি শাখা এমপিওভুক্ত?'])
+    },
+    location_details: {
+      nationalization_date: parseString(kvMap['প্রতিষ্ঠানটি সরকারিকরণের তারিখ (প্রযোজ্য ক্ষেত্রে)']),
+      nearest_admin_unit: parseString(kvMap['নিকটবর্তী প্রশাসনিক ইউনিট']),
+      nearest_admin_unit_distance_km: parseIntVal(kvMap['নিকটবর্তী প্রশাসনিক ইউনিটের দূরত্ব(কিঃমিঃ)']),
+      area_type: parseString(kvMap['প্রতিষ্ঠানটি কোন এলাকায়']),
+      geographic_location: parseString(kvMap['প্রতিষ্ঠানটির ভৌগোলিক অবস্থান']),
+      is_enclave: parseString(kvMap['প্রতিষ্ঠান ছিটমহলের অন্তর্ভুক্ত কিনা?'])
+    },
+    institute_photos,
+    institute_contacts,
+    committee_formation_history,
+    committee_meetings,
+    facilities,
+    inspection_visits,
+    income_sources,
+    income_total,
+    expense_sources,
+    expense_total,
+    student_fee_amount,
+    disasters,
+    trainings,
+    academic_result_tables,
+    other_tables
   };
 
   return {
