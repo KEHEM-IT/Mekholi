@@ -28,6 +28,13 @@ type TableTabKey = keyof Pick<
   | "staff_positions"
   | "former_committee_members"
   | "development_projects"
+  | "committee_formation_history"
+  | "committee_meetings"
+  | "facilities"
+  | "disasters"
+  | "trainings"
+  | "academic_result_tables"
+  | "other_tables"
 >;
 
 export interface TableTab {
@@ -48,6 +55,13 @@ export const TABLE_TABS: TableTab[] = [
     label_bn: "সাবেক কমিটির সদস্য",
   },
   { key: "development_projects", label: "Development projects", label_bn: "উন্নয়ন প্রকল্প" },
+  { key: "committee_formation_history", label: "Committee formation", label_bn: "কমিটি গঠন" },
+  { key: "committee_meetings", label: "Meeting minutes", label_bn: "সভার বিবরণ" },
+  { key: "facilities", label: "Facilities", label_bn: "সুবিধাদি" },
+  { key: "disasters", label: "Disasters", label_bn: "দুর্যোগ" },
+  { key: "trainings", label: "Trainings", label_bn: "প্রশিক্ষণ" },
+  { key: "academic_result_tables", label: "Academic results", label_bn: "পরীক্ষার ফলাফল" },
+  { key: "other_tables", label: "Other data", label_bn: "অন্যান্য তথ্য" },
 ];
 
 export function formatBytes(bytes: number): string {
@@ -146,6 +160,17 @@ export function useInstituteSetupImport() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fileName: targetName.trim(), data: parsed.value }),
       });
+      // The /__institute-setup/import endpoint only exists in dev mode
+      // (registered by the Vite plugin with apply: 'serve'). In production
+      // (Vercel, etc.) the fetch hits a 404 page that isn't JSON, so we
+      // must check the content-type before trying to parse.
+      const contentType = res.headers.get("content-type") ?? "";
+      if (!contentType.includes("application/json")) {
+        throw new Error(
+          "Save is only available in development mode (pnpm dev). " +
+            "In production, download the JSON from the browser instead.",
+        );
+      }
       const data = (await res.json()) as { ok: boolean; message?: string };
       if (!data.ok) throw new Error(data.message ?? "Save failed.");
     } catch (err) {
