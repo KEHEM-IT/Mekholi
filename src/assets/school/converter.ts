@@ -374,12 +374,12 @@ function buildAcademicRowValues(
   startAt: number,
 ): Record<string, string | number | null> {
   const values: Record<string, string | number | null> = {};
-  const seen: { [label: string]: number } = {};
+  const seen: Map<string, number> = new Map();
   for (let i = startAt; i < headers.length; i++) {
     let key = (headers[i] ?? `Column_${i + 1}`).trim() || `Column_${i + 1}`;
-    const count = (seen[key] ?? 0) + 1
-    seen[key] = count
-    if (count > 1) key = `${key} (${count})`
+    const count = (seen.get(key) ?? 0) + 1;
+    seen.set(key, count);
+    if (count > 1) key = `${key} (${count})`;
     const raw = row[i];
     const num = parseIntVal(raw);
     values[key] = num !== null ? num : parseString(raw);
