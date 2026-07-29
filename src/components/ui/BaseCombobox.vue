@@ -133,11 +133,14 @@ function onSearchKeydown(event: KeyboardEvent) {
       activeIndex.value = Math.max(activeIndex.value - 1, 0)
       scrollActiveIntoView()
       break
-    case 'Enter':
+    case 'Enter': {
       event.preventDefault()
-      if (activeIndex.value >= 0 && filteredOptions.value[activeIndex.value]) {
-        selectOption(filteredOptions.value[activeIndex.value])
+      const opt = filteredOptions.value[activeIndex.value]
+      if (activeIndex.value >= 0 && opt) {
+        selectOption(opt)
       }
+      break
+    }
       break
     case 'Escape':
       event.preventDefault()

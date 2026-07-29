@@ -60,7 +60,7 @@ type RawUnion = Omit<BdUnion, 'LookupText'>
 export const BD_GEO_UNIONS: BdUnion[] = (unionsData as RawUnion[]).map((u) => ({
   ...u,
   LookupText: u.Name === u.NameBn ? u.Name : `${u.Name} - ${u.NameBn}`,
-}))
+})) as BdUnion[]
 
 export function districtsByDivisionId(divisionId: number | string): BdDistrict[] {
   const id = Number(divisionId)
