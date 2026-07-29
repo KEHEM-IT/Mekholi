@@ -354,8 +354,9 @@ export function formatTemplateDate(dateStr: string | undefined | null): string |
 // a given header belongs to, purely from the header text + column count
 // (the same signal a human would use to tell them apart at a glance).
 function classifyAcademicTable(header: string[]): AcademicResultTable['table_type'] {
-  const h = header.join(' ');
+  const h = header.join(' ').normalize('NFC');
   if (header[0] === 'Subject Code') return 'subject_wise_pass_results';
+  if (h.includes('শ্রেণি') && h.includes('শাখা কি অনুমোদিত')) return 'enrollment_summary';
   if (h.includes('রেজিস্ট্রেশন ছাত্র-ছাত্রী')) {
     return header.length > 14 ? 'grade_distribution_hsc_level' : 'grade_distribution_ssc_level';
   }
@@ -376,8 +377,9 @@ function buildAcademicRowValues(
   const seen: { [label: string]: number } = {};
   for (let i = startAt; i < headers.length; i++) {
     let key = (headers[i] ?? `Column_${i + 1}`).trim() || `Column_${i + 1}`;
-    seen[key] = (seen[key] ?? 0) + 1;
-    if (seen[key] > 1) key = `${key} (${seen[key]})`;
+    const count = (seen[key] ?? 0) + 1
+    seen[key] = count
+    if (count > 1) key = `${key} (${count})`
     const raw = row[i];
     const num = parseIntVal(raw);
     values[key] = num !== null ? num : parseString(raw);
@@ -439,8 +441,8 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
     if (table.header[0] && table.header[0].startsWith('Column_')) {
       for (const row of table.rows) {
         if (row.length >= 2) {
-          const k1 = (row[0] ?? '').trim();
-          const v1 = (row[1] ?? '').trim();
+          const k1 = (row[0] ?? '').trim().normalize('NFC');
+          const v1 = (row[1] ?? '').trim().normalize('NFC');
           // Some exports repeat the same Column_ label twice (e.g.
           // "কারিগরি শিক্ষা বোর্ড কর্তৃক কোড" appears twice, usually both
           // blank). Don't let a later blank duplicate erase a real value.
@@ -449,8 +451,8 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
           }
         }
         if (row.length >= 4) {
-          const k2 = (row[2] ?? '').trim();
-          const v2 = (row[3] ?? '').trim();
+          const k2 = (row[2] ?? '').trim().normalize('NFC');
+          const v2 = (row[3] ?? '').trim().normalize('NFC');
           if (k2 && !k2.startsWith('http') && (v2 !== '' || !(k2 in kvMap))) {
             kvMap[k2] = v2;
           }
@@ -494,7 +496,7 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
   const other_tables: RawDataTable[] = [];
 
   for (const table of tables) {
-    const headerStr = table.header.join(' ');
+    const headerStr = table.header.join(' ').normalize('NFC');
 
     // 1. Recognition History
     if (headerStr.includes('প্রথম স্বীকৃতির তারিখ') || headerStr.includes('স্বীকৃতিপ্রাপ্ত স্তর')) {
@@ -759,6 +761,10 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
       }
     }
     // 18. Staff trainings. Same empty-template-echo quirk as disasters above.
+    // The header has only 6 visible columns (serial, subject, then 4 role
+    // columns), but the real data may carry trained/untrained pairs per role.
+    // Rather than hardcode column indices that may shift, we zip the remaining
+    // columns into `values` keyed by their own header text.
     else if (headerStr.includes('প্রশিক্ষণের বিষয়')) {
       for (const row of table.rows) {
         const serial_no = parseIntVal(row[0]);
@@ -766,18 +772,14 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
         trainings.push({
           serial_no,
           training_subject: parseString(row[1]),
-          head_teacher_trained: parseIntVal(row[2]),
-          head_teacher_untrained: parseIntVal(row[3]),
-          assistant_teacher_trained: parseIntVal(row[4]),
-          assistant_teacher_untrained: parseIntVal(row[5]),
-          smc_member_trained: parseIntVal(row[6]),
-          smc_member_untrained: parseIntVal(row[7])
+          values: buildAcademicRowValues(table.header, row, 2)
         });
       }
     }
     // 19. BANBEIS enrollment / exam-result tables (see AcademicResultTable
     // comment above for why these are keyed dynamically rather than fixed).
-    else if (table.header[0] === 'বছর' || table.header[0] === 'Subject Code') {
+    else if (table.header[0] === 'বছর' || table.header[0] === 'Subject Code'
+             || headerStr.includes('শ্রেণি') && headerStr.includes('শাখা কি অনুমোদিত')) {
       const table_type = classifyAcademicTable(table.header);
       const isSubjectWise = table_type === 'subject_wise_pass_results';
       const rows: AcademicResultRow[] = [];
