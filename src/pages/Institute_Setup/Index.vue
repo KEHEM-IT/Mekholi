@@ -28,6 +28,7 @@ const {
   activeTab,
   activeRows,
   activeColumns,
+  generalInfoRows,
   onDrop,
   onFileInputChange,
   clear,
@@ -172,6 +173,23 @@ async function handleSave() {
               &mdash; {{ school.classification.institute_type }}
             </template>
           </p>
+
+          <!-- General Info key-value table -->
+          <div class="isc-subhead">
+            {{ isBn ? 'সাধারণ তথ্য' : 'General Info' }}
+          </div>
+          <div class="isc-table-wrap isc-table-wrap--kv">
+            <table>
+              <tbody>
+                <tr v-for="row in generalInfoRows" :key="row.key">
+                  <th>{{ row.key }}</th>
+                  <td>{{ row.value ?? '—' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="isc-divider" />
 
           <div class="isc-tabs">
             <button

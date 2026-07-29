@@ -358,6 +358,40 @@
   border-radius: $radius-md;
   border: 1px solid $color-border;
 
+  // Key-value variant for general-info display
+  &--kv {
+    max-height: 24rem;
+
+    th {
+      width: 1%;
+      white-space: nowrap;
+      color: $color-text-muted;
+      font-size: 0.8rem;
+      font-family: 'Consolas', 'Courier New', monospace;
+      background: $color-surface-alt;
+      padding: $space-2 $space-3;
+      text-align: left;
+      border-bottom: 1px solid $color-border;
+      vertical-align: top;
+    }
+
+    td {
+      padding: $space-2 $space-3;
+      border-bottom: 1px solid $color-border;
+      word-break: break-word;
+    }
+
+    tr:last-child th,
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td,
+    tr:hover th {
+      background: $color-surface-hover;
+    }
+  }
+
   table {
     border-collapse: collapse;
     table-layout: auto;

@@ -113,6 +113,10 @@ export interface DevelopmentProject {
 }
 
 export interface SchoolDetails {
+  /** Flat key-value map of every non-array field (nested objects
+   *  flattened with dot-notation keys) so the UI can render a
+   *  "General Info" summary table without duplicating property lists. */
+  general_info: Record<string, string | number | null>;
   institute_name_bn: string | null;
   institute_name_en: string | null;
   address: SchoolAddress;
@@ -391,6 +395,24 @@ interface ParsedTable {
   header: string[];
   rows: string[][];
   hasSeparator: boolean;
+}
+
+/** Flatten a nested plain object into a flat Record with dot-notation keys
+ *  so the UI can render a single key-value table without recursion. */
+function flattenObject(
+  obj: Record<string, unknown>,
+  prefix: string,
+): Record<string, string | number | null> {
+  const out: Record<string, string | number | null> = {};
+  for (const [k, v] of Object.entries(obj)) {
+    const fullKey = `${prefix}.${k}`;
+    if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
+      Object.assign(out, flattenObject(v as Record<string, unknown>, fullKey));
+    } else {
+      out[fullKey] = v as string | number | null;
+    }
+  }
+  return out;
 }
 
 export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrapper {
@@ -803,42 +825,88 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
     }
   }
 
-  const school: SchoolDetails = {
+  // Build the flattened general_info record BEFORE constructing the school
+  // object so we can reuse the same parsed values.
+  const addressObj: SchoolAddress = {
+    village_road_holding_no: parseString(kvMap['গ্রাম/হোল্ডি নম্বর/রোড']),
+    union: parseString(kvMap['ইউনিয়ন']),
+    mouza_name: parseString(kvMap['মূলভবনের মৌজার নাম']),
+    plot_dag_number: parseIntVal(kvMap['মূল ভবনের দাগ নম্বর']),
+    post_office: parseString(kvMap['ডাকঘর']),
+    post_code: parseIntVal(kvMap['পোস্ট কোড']),
+    upazila_thana: parseString(kvMap['উপজেলা/থানা']),
+    district: parseString(kvMap['জেলা']),
+    division_region: parseString(kvMap['অঞ্চল']),
+  };
+  const contactObj: SchoolContact = {
+    institute_phone: parseIntVal(kvMap['প্রতিষ্ঠানের ফোন']),
+    head_of_institute_mobile: parseIntVal(kvMap['মোবাইল (প্রতিষ্ঠান প্রধান)']),
+    fax: parseString(kvMap['ফ্যাক্স']),
+    institute_email: parseString(kvMap['প্রতিষ্ঠানের ই-মেইল']),
+    website: parseString(kvMap['ওয়েব এড্রেস']),
+  };
+  const classificationObj: SchoolClassification = {
+    institute_type: parseString(kvMap['প্রতিষ্ঠানের প্রকার']),
+    attached_technical_branch_type: parseString(kvMap['সংযুক্ত কারিগরি শাখার ধরন']),
+    group: parseString(kvMap['গ্রুপ']),
+    student_type: parseString(kvMap['কাদের জন্য']),
+    shift_count: parseString(kvMap['শিফট সংখ্যা']),
+    has_english_version: parseString(kvMap['ইংরেজি ভার্সন আছে কিনা ?']),
+    management: parseString(kvMap['ব্যবস্থাপনা']),
+    recognition_status: parseString(kvMap['স্বীকৃতি/অনুমোদিত']),
+    recognized_level: parseString(kvMap['স্বীকৃতিপ্রাপ্ত স্তর']),
+  };
+  const identifiersObj: SchoolIdentifiers = {
+    geo_code: parseString(kvMap['জিইও কোড (বিবিএস)']),
+    board_institute_code: parseString(kvMap['শিক্ষা বোর্ড কর্তৃক প্রতিষ্ঠানের কোড']),
+    technical_board_code: parseString(kvMap['কারিগরি শিক্ষা বোর্ড কর্তৃক কোড']),
+    eiin: parseString(kvMap['ইআইআইএন']),
+    mpo_code: parseString(kvMap['এমপিও কোড']),
+    technical_branch_mpo_code: parseString(kvMap['কারিগরি শাখার এমপিও কোড']),
+    stipend_code: parseString(kvMap['উপবৃত্তি কোড']),
+  };
+  const mpoStatusObj: MpoStatus = {
+    is_mpo_enrolled: parseString(kvMap['প্রতিষ্ঠানটি কি এমপিওভুক্ত']),
+    technical_branch_mpo_status: parseString(kvMap['কারিগরি শাখা এমপিওভুক্ত?']),
+  };
+  const locationObj: LocationDetails = {
+    nationalization_date: parseString(kvMap['প্রতিষ্ঠানটি সরকারিকরণের তারিখ (প্রযোজ্য ক্ষেত্রে)']),
+    nearest_admin_unit: parseString(kvMap['নিকটবর্তী প্রশাসনিক ইউনিট']),
+    nearest_admin_unit_distance_km: parseIntVal(kvMap['নিকটবর্তী প্রশাসনিক ইউনিটের দূরত্ব(কিঃমিঃ)']),
+    area_type: parseString(kvMap['প্রতিষ্ঠানটি কোন এলাকায়']),
+    geographic_location: parseString(kvMap['প্রতিষ্ঠানটির ভৌগোলিক অবস্থান']),
+    is_enclave: parseString(kvMap['প্রতিষ্ঠান ছিটমহলের অন্তর্ভুক্ত কিনা?']),
+  };
+
+  const general_info: Record<string, string | number | null> = {
     institute_name_bn: parseString(kvMap['প্রতিষ্ঠানের নাম (বাংলায়)']),
     institute_name_en: parseString(kvMap['ইংরেজীতে নাম (ব্লক লেটার)']),
-    address: {
-      village_road_holding_no: parseString(kvMap['গ্রাম/হোল্ডি নম্বর/রোড']),
-      union: parseString(kvMap['ইউনিয়ন']),
-      mouza_name: parseString(kvMap['মূলভবনের মৌজার নাম']),
-      plot_dag_number: parseIntVal(kvMap['মূল ভবনের দাগ নম্বর']),
-      post_office: parseString(kvMap['ডাকঘর']),
-      post_code: parseIntVal(kvMap['পোস্ট কোড']),
-      upazila_thana: parseString(kvMap['উপজেলা/থানা']),
-      district: parseString(kvMap['জেলা']),
-      division_region: parseString(kvMap['অঞ্চল'])
-    },
-    contact: {
-      institute_phone: parseIntVal(kvMap['প্রতিষ্ঠানের ফোন']),
-      head_of_institute_mobile: parseIntVal(kvMap['মোবাইল (প্রতিষ্ঠান প্রধান)']),
-      fax: parseString(kvMap['ফ্যাক্স']),
-      institute_email: parseString(kvMap['প্রতিষ্ঠানের ই-মেইল']),
-      website: parseString(kvMap['ওয়েব এড্রেস'])
-    },
     founder_name: parseString(kvMap['প্রতিষ্ঠাতা']),
     head_of_institute_name: parseString(kvMap['প্রতিষ্ঠান প্রধানের নাম']),
     parliamentary_constituency: parseString(kvMap['সংসদীয় আসন (নির্বাচনক্ষেত্র)']),
     establishment_date: parseString(kvMap['প্রতিষ্ঠার তারিখ']),
-    classification: {
-      institute_type: parseString(kvMap['প্রতিষ্ঠানের প্রকার']),
-      attached_technical_branch_type: parseString(kvMap['সংযুক্ত কারিগরি শাখার ধরন']),
-      group: parseString(kvMap['গ্রুপ']),
-      student_type: parseString(kvMap['কাদের জন্য']),
-      shift_count: parseString(kvMap['শিফট সংখ্যা']),
-      has_english_version: parseString(kvMap['ইংরেজি ভার্সন আছে কিনা ?']),
-      management: parseString(kvMap['ব্যবস্থাপনা']),
-      recognition_status: parseString(kvMap['স্বীকৃতি/অনুমোদিত']),
-      recognized_level: parseString(kvMap['স্বীকৃতিপ্রাপ্ত স্তর'])
-    },
+    income_total,
+    expense_total,
+    student_fee_amount,
+    ...flattenObject(addressObj as unknown as Record<string, unknown>, 'address'),
+    ...flattenObject(contactObj as unknown as Record<string, unknown>, 'contact'),
+    ...flattenObject(classificationObj as unknown as Record<string, unknown>, 'classification'),
+    ...flattenObject(identifiersObj as unknown as Record<string, unknown>, 'identifiers'),
+    ...flattenObject(mpoStatusObj as unknown as Record<string, unknown>, 'mpo_status'),
+    ...flattenObject(locationObj as unknown as Record<string, unknown>, 'location_details'),
+  };
+
+  const school: SchoolDetails = {
+    general_info,
+    institute_name_bn: parseString(kvMap['প্রতিষ্ঠানের নাম (বাংলায়)']),
+    institute_name_en: parseString(kvMap['ইংরেজীতে নাম (ব্লক লেটার)']),
+    address: addressObj,
+    contact: contactObj,
+    founder_name: parseString(kvMap['প্রতিষ্ঠাতা']),
+    head_of_institute_name: parseString(kvMap['প্রতিষ্ঠান প্রধানের নাম']),
+    parliamentary_constituency: parseString(kvMap['সংসদীয় আসন (নির্বাচনক্ষেত্র)']),
+    establishment_date: parseString(kvMap['প্রতিষ্ঠার তারিখ']),
+    classification: classificationObj,
     recognition_history,
     mpo_info,
     bank_accounts,
@@ -847,27 +915,9 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
     staff_positions_total,
     former_committee_members,
     development_projects,
-    identifiers: {
-      geo_code: parseString(kvMap['জিইও কোড (বিবিএস)']),
-      board_institute_code: parseString(kvMap['শিক্ষা বোর্ড কর্তৃক প্রতিষ্ঠানের কোড']),
-      technical_board_code: parseString(kvMap['কারিগরি শিক্ষা বোর্ড কর্তৃক কোড']),
-      eiin: parseString(kvMap['ইআইআইএন']),
-      mpo_code: parseString(kvMap['এমপিও কোড']),
-      technical_branch_mpo_code: parseString(kvMap['কারিগরি শাখার এমপিও কোড']),
-      stipend_code: parseString(kvMap['উপবৃত্তি কোড'])
-    },
-    mpo_status: {
-      is_mpo_enrolled: parseString(kvMap['প্রতিষ্ঠানটি কি এমপিওভুক্ত']),
-      technical_branch_mpo_status: parseString(kvMap['কারিগরি শাখা এমপিওভুক্ত?'])
-    },
-    location_details: {
-      nationalization_date: parseString(kvMap['প্রতিষ্ঠানটি সরকারিকরণের তারিখ (প্রযোজ্য ক্ষেত্রে)']),
-      nearest_admin_unit: parseString(kvMap['নিকটবর্তী প্রশাসনিক ইউনিট']),
-      nearest_admin_unit_distance_km: parseIntVal(kvMap['নিকটবর্তী প্রশাসনিক ইউনিটের দূরত্ব(কিঃমিঃ)']),
-      area_type: parseString(kvMap['প্রতিষ্ঠানটি কোন এলাকায়']),
-      geographic_location: parseString(kvMap['প্রতিষ্ঠানটির ভৌগোলিক অবস্থান']),
-      is_enclave: parseString(kvMap['প্রতিষ্ঠান ছিটমহলের অন্তর্ভুক্ত কিনা?'])
-    },
+    identifiers: identifiersObj,
+    mpo_status: mpoStatusObj,
+    location_details: locationObj,
     institute_photos,
     institute_contacts,
     committee_formation_history,

@@ -108,6 +108,14 @@ export function useInstituteSetupImport() {
 
   const activeColumns = computed(() => Object.keys(activeRows.value[0] ?? {}));
 
+  /** Flat key-value rows from the converter's `general_info` record so the
+   *  page can render a summary table without manual property lists. */
+  const generalInfoRows = computed<{ key: string; value: unknown }[]>(() => {
+    const info = school.value?.general_info;
+    if (!info) return [];
+    return Object.entries(info).map(([key, value]) => ({ key, value }));
+  });
+
   async function parseText(text: string, isJsonHint: boolean) {
     const isJson = isJsonHint || text.trim().startsWith("{");
     return isJson ? normalizeJson(JSON.parse(text)) : convertMarkdownToSchoolJson(text);
@@ -208,6 +216,7 @@ export function useInstituteSetupImport() {
     activeTab,
     activeRows,
     activeColumns,
+    generalInfoRows,
     importFile,
     onDrop,
     onFileInputChange,
