@@ -357,6 +357,12 @@
   overflow: auto;
   border-radius: $radius-md;
   border: 1px solid $color-border;
+  cursor: grab;
+
+  &.is-drag-scrolling {
+    cursor: grabbing;
+    user-select: none; // avoid selecting cell text while panning
+  }
 
   // Key-value variant for general-info display
   &--kv {

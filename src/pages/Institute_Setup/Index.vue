@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useAppPreferences } from '@/composables/useAppPreferences'
+import { useDragScroll } from '@/composables/useDragScroll'
 import {
   TABLE_TABS,
   formatBytes,
@@ -68,6 +69,19 @@ function tabRowCount(key: (typeof TABLE_TABS)[number]['key']) {
 async function handleSave() {
   await saveAs(saveName.value)
 }
+
+// Click-and-drag panning for the tab strip and the (possibly wide/tall)
+// table preview beneath it - see useDragScroll for the shared logic.
+const {
+  elRef: tabsRef,
+  isDragging: isDraggingTabs,
+  onMouseDown: onTabsMouseDown,
+} = useDragScroll<HTMLDivElement>()
+const {
+  elRef: tableWrapRef,
+  isDragging: isDragScrolling,
+  onMouseDown: startDragScroll,
+} = useDragScroll<HTMLDivElement>()
 </script>
 
 <template>
@@ -203,7 +217,12 @@ async function handleSave() {
             </button>
           </div>
 
-          <div class="isc-table-wrap">
+          <div
+            ref="tableWrapRef"
+            class="isc-table-wrap"
+            :class="{ 'is-drag-scrolling': isDragScrolling }"
+            @mousedown="startDragScroll"
+          >
             <table>
               <thead>
                 <tr>
