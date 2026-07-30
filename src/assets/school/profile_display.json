@@ -1,0 +1,61 @@
+{
+  "institute_name_bn": null,
+  "institute_name_en": "SOFIR UDDIN HIGH SCHOOL AND COLLEGE",
+  "founder_name": "জনাব এম.এ কাহের",
+  "head_of_institute_name": "SITESH TALUKDAR",
+  "parliamentary_constituency": "Sylhet-1",
+  "establishment_date": "15/07/1991",
+  "income_total": 0,
+  "expense_total": 0,
+  "student_fee_amount": 0,
+  "address": {
+    "village_road_holding_no": "জাঙ্গাঁইল",
+    "union": null,
+    "mouza_name": "কসকালীকা",
+    "plot_dag_number": 571,
+    "post_office": "টুকের বাজার",
+    "post_code": 3100,
+    "upazila_thana": "SYLHET SADAR",
+    "district": "SYLHET",
+    "division_region": "SYLHET"
+  },
+  "contact": {
+    "institute_phone": 1309130430,
+    "head_of_institute_mobile": 1772673931,
+    "fax": null,
+    "institute_email": "suhscjune2017@gmail.com",
+    "website": null
+  },
+  "classification": {
+    "institute_type": "Higher Secondary",
+    "attached_technical_branch_type": "SSC(Vocational)",
+    "group": "Humanities, Business Study, Science",
+    "student_type": "সহশিক্ষা একত্রে",
+    "shift_count": "1 Shift",
+    "has_english_version": "না",
+    "management": "Non-Govt.",
+    "recognition_status": "Recognized",
+    "recognized_level": "Higher Secondary"
+  },
+  "identifiers": {
+    "geo_code": null,
+    "board_institute_code": "1044, 1033",
+    "technical_board_code": "61134",
+    "eiin": "130430",
+    "mpo_code": "13043031, 1510231301,",
+    "technical_branch_mpo_code": null,
+    "stipend_code": "1184611"
+  },
+  "mpo_status": {
+    "is_mpo_enrolled": "হ্যাঁ",
+    "technical_branch_mpo_status": "না"
+  },
+  "location_details": {
+    "nationalization_date": null,
+    "nearest_admin_unit": "Zilla Sadar",
+    "nearest_admin_unit_distance_km": 8,
+    "area_type": "Grameen",
+    "geographic_location": "Plain Land",
+    "is_enclave": "না"
+  }
+}

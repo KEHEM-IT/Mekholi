@@ -49,12 +49,12 @@ export const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/Institute_Setup/Index.vue'),
         beforeEnter: requireAuth,
       },
-      // {
-      //   path: 'institute-setup/profile',
-      //   name: 'institute-profile',
-      //   component: () => import('@/pages/Institute_Setup/InstituteProfileView.vue'),
-      //   beforeEnter: requireAuth,
-      // },
+      {
+        path: 'institute-setup/profile',
+        name: 'institute-profile',
+        component: () => import('@/pages/Institute_Setup/InstituteProfileView.vue'),
+        beforeEnter: requireAuth,
+      },
       { path: 'forbidden', name: 'forbidden', component: () => import('@/pages/ForbiddenView.vue') },
     ],
   },
