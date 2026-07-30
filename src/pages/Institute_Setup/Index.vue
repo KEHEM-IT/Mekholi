@@ -203,7 +203,12 @@ const {
             </template>
           </p>
 
-          <div class="isc-tabs">
+          <div
+            ref="tabsRef"
+            class="isc-tabs"
+            :class="{ 'is-drag-scrolling': isDraggingTabs }"
+            @mousedown="onTabsMouseDown"
+          >
             <button
               v-for="tab in TABLE_TABS"
               :key="tab.key"

@@ -305,6 +305,12 @@
   @include flex(row, center, flex-start, $space-2);
   flex-wrap: nowrap;
   overflow-x: auto;
+  cursor: grab;
+
+  &.is-drag-scrolling {
+    cursor: grabbing;
+    user-select: none;
+  }
 }
 
 .isc-tab {
