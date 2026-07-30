@@ -33,6 +33,12 @@ export function useDragScroll<T extends HTMLElement = HTMLElement>() {
     // Nothing to pan if the content doesn't actually overflow.
     if (el.scrollWidth <= el.clientWidth && el.scrollHeight <= el.clientHeight) return
 
+    // Stop the browser's own native text/cell-selection drag from starting -
+    // without this, the first move after mousedown can get hijacked into a
+    // native selection drag instead of our scroll, so panning only feels
+    // like it "kicks in" after an extra click.
+    e.preventDefault()
+
     isDragging.value = true
     startX = e.clientX
     startY = e.clientY
