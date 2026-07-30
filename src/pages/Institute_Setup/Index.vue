@@ -70,17 +70,12 @@ async function handleSave() {
   await saveAs(saveName.value)
 }
 
-// Click-and-drag panning for the tab strip and the (possibly wide/tall)
-// table preview beneath it - see useDragScroll for the shared logic.
+// Click-and-drag panning for the tab strip - see useDragScroll for the
+// shared logic.
 const {
   elRef: tabsRef,
   isDragging: isDraggingTabs,
   onMouseDown: onTabsMouseDown,
-} = useDragScroll<HTMLDivElement>()
-const {
-  elRef: tableWrapRef,
-  isDragging: isDragScrolling,
-  onMouseDown: startDragScroll,
 } = useDragScroll<HTMLDivElement>()
 </script>
 
@@ -222,12 +217,7 @@ const {
             </button>
           </div>
 
-          <div
-            ref="tableWrapRef"
-            class="isc-table-wrap"
-            :class="{ 'is-drag-scrolling': isDragScrolling }"
-            @mousedown="startDragScroll"
-          >
+          <div class="isc-table-wrap">
             <table>
               <thead>
                 <tr>
