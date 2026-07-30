@@ -41,3 +41,45 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+// ============================================================
+// Custom Scrollbar
+// ============================================================
+@mixin custom-scrollbar(
+  $size: 8px,
+  $thumb: $color-border-strong,
+  $thumb-hover: $color-primary,
+  $track: transparent
+) {
+  // Firefox
+  scrollbar-width: thin;
+  scrollbar-color: $thumb $track;
+
+  // Chromium, Edge, Safari
+  &::-webkit-scrollbar {
+    width: $size;
+    height: $size;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $track;
+    border-radius: 999px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $thumb;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background-color v.$transition-fast;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: $thumb-hover;
+    background-clip: padding-box;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}

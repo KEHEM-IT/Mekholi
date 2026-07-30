@@ -307,8 +307,20 @@
   overflow-x: auto;
 }
 
+.isc-tabs {
+  display: flex;
+  gap: $space-2;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: $space-1;
+
+  @include custom-scrollbar(6px, $color-border-strong, $color-primary, transparent);
+}
+
 .isc-tab {
   @include flex(row, center, flex-start, $space-2);
+
+  flex: 0 0 auto;
   padding: $space-2 $space-3;
   border-radius: $radius-md;
   border: 1px solid $color-border;
@@ -367,7 +379,7 @@
       white-space: nowrap;
       color: $color-text-muted;
       font-size: 0.8rem;
-      font-family: 'Consolas', 'Courier New', monospace;
+      font-family: "Consolas", "Courier New", monospace;
       background: $color-surface-alt;
       padding: $space-2 $space-3;
       text-align: left;
