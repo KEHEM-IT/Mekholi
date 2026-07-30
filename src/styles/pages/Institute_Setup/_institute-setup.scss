@@ -303,7 +303,7 @@
 
 .isc-tabs {
   @include flex(row, center, flex-start, $space-2);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   overflow-x: auto;
 }
 
