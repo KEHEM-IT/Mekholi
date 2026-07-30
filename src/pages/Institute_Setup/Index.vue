@@ -45,6 +45,22 @@ const checklistSteps = computed(
 const saveName = ref('')
 
 function tabRowCount(key: (typeof TABLE_TABS)[number]['key']) {
+  if (key === 'general_info') {
+    const info = school.value?.general_info
+    if (!info) return 0
+    let count = 0
+    const walk = (obj: Record<string, unknown>) => {
+      for (const v of Object.values(obj)) {
+        if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
+          walk(v as Record<string, unknown>)
+        } else {
+          count++
+        }
+      }
+    }
+    walk(info as unknown as Record<string, unknown>)
+    return count
+  }
   const rows = school.value?.[key]
   return Array.isArray(rows) ? rows.length : 0
 }
@@ -167,9 +183,9 @@ async function handleSave() {
             {{ isBn ? 'প্রতিষ্ঠান সংক্ষিপ্ত তথ্য' : 'Institute summary' }}
           </div>
           <p>
-            <strong>{{ isBn ? school.institute_name_bn : school.institute_name_en }}</strong>
-            <template v-if="school.classification.institute_type">
-              &mdash; {{ school.classification.institute_type }}
+            <strong>{{ isBn ? school.general_info.institute_name_bn : school.general_info.institute_name_en }}</strong>
+            <template v-if="school.general_info.classification.institute_type">
+              &mdash; {{ school.general_info.classification.institute_type }}
             </template>
           </p>
 

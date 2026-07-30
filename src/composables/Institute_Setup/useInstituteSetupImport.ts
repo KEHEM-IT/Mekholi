@@ -21,6 +21,7 @@ import {
 
 type TableTabKey = keyof Pick<
   SchoolDetails,
+  | "general_info"
   | "recognition_history"
   | "mpo_info"
   | "bank_accounts"
@@ -44,6 +45,7 @@ export interface TableTab {
 }
 
 export const TABLE_TABS: TableTab[] = [
+  { key: "general_info", label: "General Info", label_bn: "সাধারণ তথ্য" },
   { key: "recognition_history", label: "Recognition history", label_bn: "স্বীকৃতির ইতিহাস" },
   { key: "mpo_info", label: "MPO info", label_bn: "এমপিও তথ্য" },
   { key: "bank_accounts", label: "Bank accounts", label_bn: "ব্যাংক হিসাব" },
@@ -102,6 +104,29 @@ export function useInstituteSetupImport() {
   const activeTab = ref<TableTabKey>(TABLE_TABS[0]!.key);
 
   const activeRows = computed<Record<string, unknown>[]>(() => {
+    if (activeTab.value === 'general_info') {
+      const info = school.value?.general_info;
+      if (!info) return [];
+      const rows: { section: string; key: string; value: unknown }[] = [];
+      const pushNested = (obj: Record<string, unknown>, section: string) => {
+        for (const [k, v] of Object.entries(obj)) {
+          if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
+            pushNested(v as Record<string, unknown>, k);
+          } else {
+            rows.push({ section, key: k, value: v });
+          }
+        }
+      };
+      // Top-level scalars get section = ''
+      for (const [k, v] of Object.entries(info)) {
+        if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
+          pushNested(v as Record<string, unknown>, k);
+        } else {
+          rows.push({ section: '', key: k, value: v });
+        }
+      }
+      return rows;
+    }
     const rows = school.value?.[activeTab.value];
     return (rows ?? []) as unknown as Record<string, unknown>[];
   });
