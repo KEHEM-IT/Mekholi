@@ -12,7 +12,7 @@ const isBn = computed(() => preferences.uiLanguage === 'bn')
 
 // --- load static profile (will be replaced by API call later) ----------
 const profile = reactive<GeneralInfo>(profileJson as unknown as GeneralInfo)
-const isLoading = ref(false) // will become true during API call
+// const isLoading = ref(false) // will become true during API call
 const isSaving = ref(false)
 
 function handleSave() {
