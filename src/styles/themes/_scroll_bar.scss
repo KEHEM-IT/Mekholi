@@ -1,18 +1,23 @@
+@use '../abstracts/variables' as v;
 
-@use 'variables' as v;
 // ============================================================
 // Global Scrollbar
 // ============================================================
 
-html {
-  scrollbar-width: thin; // Firefox
-  scrollbar-color: v.$color-border-strong v.$color-surface;
+// Firefox
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+
+  &:hover {
+    scrollbar-color: v.$color-border-strong transparent;
+  }
 }
 
 // Chromium, Edge, Safari
 *::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 *::-webkit-scrollbar-track {
@@ -20,14 +25,16 @@ html {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: v.$color-border-strong;
+  background: transparent;
   border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
   transition: background-color v.$transition-fast;
 }
 
-*::-webkit-scrollbar-thumb:hover {
+*:hover::-webkit-scrollbar-thumb {
+  background: v.$color-border-strong;
+}
+
+*:hover::-webkit-scrollbar-thumb:hover {
   background: v.$color-primary;
 }
 
