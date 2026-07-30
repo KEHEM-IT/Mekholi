@@ -183,9 +183,9 @@ async function handleSave() {
             {{ isBn ? 'প্রতিষ্ঠান সংক্ষিপ্ত তথ্য' : 'Institute summary' }}
           </div>
           <p>
-            <strong>{{ isBn ? school.institute_name_bn : school.institute_name_en }}</strong>
-            <template v-if="school.classification.institute_type">
-              &mdash; {{ school.classification.institute_type }}
+            <strong>{{ isBn ? school.general_info.institute_name_bn : school.general_info.institute_name_en }}</strong>
+            <template v-if="school.general_info.classification.institute_type">
+              &mdash; {{ school.general_info.classification.institute_type }}
             </template>
           </p>
 

@@ -80,17 +80,6 @@ export interface StaffPosition {
   branch_post: number | null;
 }
 
-export interface StaffPositionsTotal {
-  currently_working_total: number | null;
-  currently_working_male: number | null;
-  currently_working_female: number | null;
-  mpo_total: number | null;
-  mpo_male: number | null;
-  mpo_female: number | null;
-  vacant_post: number | null;
-  branch_post: number | null;
-}
-
 export interface FormerCommitteeMember {
   serial_no: number | null;
   member_name: string | null;
@@ -135,37 +124,16 @@ export interface GeneralInfo {
 
 export interface SchoolDetails {
   general_info: GeneralInfo;
-  institute_name_bn: string | null;
-  institute_name_en: string | null;
-  address: SchoolAddress;
-  contact: SchoolContact;
-  founder_name: string | null;
-  head_of_institute_name: string | null;
-  parliamentary_constituency: string | null;
-  establishment_date: string | null;
-  classification: SchoolClassification;
   recognition_history: RecognitionHistory[];
   mpo_info: MpoInfo[];
   bank_accounts: BankAccount[];
   committee_members: CommitteeMember[];
   staff_positions: StaffPosition[];
-  staff_positions_total: StaffPositionsTotal;
   former_committee_members: FormerCommitteeMember[];
   development_projects: DevelopmentProject[];
-  identifiers: SchoolIdentifiers;
-  mpo_status: MpoStatus;
-  location_details: LocationDetails;
-  institute_photos: InstitutePhoto[];
-  institute_contacts: InstituteContact[];
   committee_formation_history: CommitteeFormationRecord[];
   committee_meetings: CommitteeMeeting[];
   facilities: Facility[];
-  inspection_visits: InspectionVisit[];
-  income_sources: IncomeSource[];
-  income_total: number | null;
-  expense_sources: ExpenseSource[];
-  expense_total: number | null;
-  student_fee_amount: number | null;
   disasters: DisasterRecord[];
   trainings: TrainingRecord[];
   academic_result_tables: AcademicResultTable[];
@@ -198,19 +166,6 @@ export interface LocationDetails {
   is_enclave: string | null;
 }
 
-export interface InstitutePhoto {
-  serial_no: number | null;
-  photo_name: string | null;
-}
-
-export interface InstituteContact {
-  serial_no: number | null;
-  name: string | null;
-  designation: string | null;
-  mobile: number | null;
-  email: string | null;
-}
-
 export interface CommitteeFormationRecord {
   serial_no: number | null;
   has_committee: string | null;
@@ -233,26 +188,6 @@ export interface Facility {
   serial_no: number | null;
   name: string | null;
   status: string | null;
-}
-
-export interface InspectionVisit {
-  serial_no: number | null;
-  inspector_name: string | null;
-  inspector_designation: string | null;
-  visits_last_5_years: number | null;
-  last_visit_date: string | null;
-}
-
-export interface IncomeSource {
-  serial_no: number | null;
-  source: string | null;
-  amount: number | null;
-}
-
-export interface ExpenseSource {
-  serial_no: number | null;
-  source: string | null;
-  amount: number | null;
 }
 
 export interface DisasterRecord {
@@ -490,32 +425,17 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
   const committee_members: CommitteeMember[] = [];
   const former_committee_members: FormerCommitteeMember[] = [];
   const staff_positions: StaffPosition[] = [];
-  let staff_positions_total: StaffPositionsTotal = {
-    currently_working_total: null,
-    currently_working_male: null,
-    currently_working_female: null,
-    mpo_total: null,
-    mpo_male: null,
-    mpo_female: null,
-    vacant_post: null,
-    branch_post: null
-  };
   const development_projects: DevelopmentProject[] = [];
-  const institute_photos: InstitutePhoto[] = [];
-  const institute_contacts: InstituteContact[] = [];
   const committee_formation_history: CommitteeFormationRecord[] = [];
   const committee_meetings: CommitteeMeeting[] = [];
   const facilities: Facility[] = [];
-  const inspection_visits: InspectionVisit[] = [];
-  const income_sources: IncomeSource[] = [];
-  let income_total: number | null = null;
-  const expense_sources: ExpenseSource[] = [];
-  let expense_total: number | null = null;
-  let student_fee_amount: number | null = null;
   const disasters: DisasterRecord[] = [];
   const trainings: TrainingRecord[] = [];
   const academic_result_tables: AcademicResultTable[] = [];
   const other_tables: RawDataTable[] = [];
+  let income_total: number | null = null;
+  let expense_total: number | null = null;
+  let student_fee_amount: number | null = null;
 
   for (const table of tables) {
     const headerStr = table.header.join(' ').normalize('NFC');
@@ -604,31 +524,19 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
       for (const row of table.rows) {
         if (row.length >= 9) {
           const isTotal = row[0]?.includes('মোট') || row[0]?.includes('Total');
-          if (isTotal) {
-            staff_positions_total = {
-              currently_working_total: parseIntVal(row[1]),
-              currently_working_male: parseIntVal(row[2]),
-              currently_working_female: parseIntVal(row[3]),
-              mpo_total: parseIntVal(row[4]),
-              mpo_male: parseIntVal(row[5]),
-              mpo_female: parseIntVal(row[6]),
-              vacant_post: parseIntVal(row[7]),
-              branch_post: parseIntVal(row[8])
-            };
-          } else {
-            staff_positions.push({
-              serial_no: parseIntVal(row[0]),
-              designation: parseString(row[1]),
-              currently_working_total: parseIntVal(row[2]),
-              currently_working_male: parseIntVal(row[3]),
-              currently_working_female: parseIntVal(row[4]),
-              mpo_total: parseIntVal(row[5]),
-              mpo_male: parseIntVal(row[6]),
-              mpo_female: parseIntVal(row[7]),
-              vacant_post: parseIntVal(row[8]),
-              branch_post: parseIntVal(row[9])
-            });
-          }
+          if (isTotal) continue; // total row captured in general_info via other_tables
+          staff_positions.push({
+            serial_no: parseIntVal(row[0]),
+            designation: parseString(row[1]),
+            currently_working_total: parseIntVal(row[2]),
+            currently_working_male: parseIntVal(row[3]),
+            currently_working_female: parseIntVal(row[4]),
+            mpo_total: parseIntVal(row[5]),
+            mpo_male: parseIntVal(row[6]),
+            mpo_female: parseIntVal(row[7]),
+            vacant_post: parseIntVal(row[8]),
+            branch_post: parseIntVal(row[9])
+          });
         }
       }
     }
@@ -651,31 +559,7 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
         }
       }
     }
-    // 8. Institute photo list ("চিত্রের নাম")
-    else if (table.header.length === 2 && table.header[1] === 'চিত্রের নাম') {
-      for (const row of table.rows) {
-        institute_photos.push({
-          serial_no: parseIntVal(row[0]),
-          photo_name: parseString(row[1])
-        });
-      }
-    }
-    // 9. Institute contact person(s) - distinct from committee_members: this
-    // one has "মোবাইল নম্বর"/"ই-মেইল" columns, committee_members doesn't.
-    else if (headerStr.includes('মোবাইল নম্বর') && headerStr.includes('ই-মেইল')) {
-      for (const row of table.rows) {
-        if (row.length >= 2) {
-          institute_contacts.push({
-            serial_no: parseIntVal(row[0]),
-            name: parseString(row[1]),
-            designation: parseString(row[2]),
-            mobile: parseIntVal(row[3]),
-            email: parseString(row[4])
-          });
-        }
-      }
-    }
-    // 10. Committee formation history (separate from the member roster)
+    // 8. Committee formation history (separate from the member roster)
     else if (headerStr.includes('কমিটি আছে কি না')) {
       for (const row of table.rows) {
         if (row.length >= 2) {
@@ -691,7 +575,7 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
         }
       }
     }
-    // 11. Committee meeting minutes
+    // 9. Committee meeting minutes
     else if (headerStr.includes('সভার তারিখ') && headerStr.includes('আলোচ্যসূচি')) {
       for (const row of table.rows) {
         if (row.length >= 2) {
@@ -705,7 +589,7 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
         }
       }
     }
-    // 12. Facilities checklist (Play Ground, Electricity, ...)
+    // 10. Facilities checklist (Play Ground, Electricity, ...)
     else if (table.header.length === 3 && table.header[1] === 'নাম' && table.header[2] === 'অবস্থা') {
       for (const row of table.rows) {
         facilities.push({
@@ -715,55 +599,25 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
         });
       }
     }
-    // 13. Government inspection visits
-    else if (headerStr.includes('পরিদর্শকের নাম')) {
-      for (const row of table.rows) {
-        if (row.length >= 2) {
-          inspection_visits.push({
-            serial_no: parseIntVal(row[0]),
-            inspector_name: parseString(row[1]),
-            inspector_designation: parseString(row[2]),
-            visits_last_5_years: parseIntVal(row[3]),
-            last_visit_date: formatTemplateDate(row[4])
-          });
-        }
-      }
-    }
-    // 14. Student fee/session charge (single value, header IS the label)
+    // 11. Student fee/session charge (single value, header IS the label)
     else if (table.header[0]?.includes('বেতন ও সেশনচার্জ')) {
       if (table.rows[0]) {
         student_fee_amount = parseIntVal(table.rows[0][1] ?? table.rows[0][0]);
       }
     }
-    // 15. Income sources (+ its "মোট" total row)
+    // 12. Income sources (+ totals, detail rows fall to other_tables)
     else if (headerStr.includes('আয়ের উৎস')) {
       for (const row of table.rows) {
-        if (row[0]?.includes('মোট')) {
-          income_total = parseIntVal(row[1]);
-        } else if (row.length >= 2) {
-          income_sources.push({
-            serial_no: parseIntVal(row[0]),
-            source: parseString(row[1]),
-            amount: parseIntVal(row[2])
-          });
-        }
+        if (row[0]?.includes('মোট')) income_total = parseIntVal(row[1]);
       }
     }
-    // 16. Expense sources (+ its "মোট" total row)
+    // 13. Expense sources (+ totals, detail rows fall to other_tables)
     else if (headerStr.includes('ব্যয়ের উৎস')) {
       for (const row of table.rows) {
-        if (row[0]?.includes('মোট')) {
-          expense_total = parseIntVal(row[1]);
-        } else if (row.length >= 2) {
-          expense_sources.push({
-            serial_no: parseIntVal(row[0]),
-            source: parseString(row[1]),
-            amount: parseIntVal(row[2])
-          });
-        }
+        if (row[0]?.includes('মোট')) expense_total = parseIntVal(row[1]);
       }
     }
-    // 17. Disasters/calamities. When a school has none on record, the export
+    // 14. Disasters/calamities. When a school has none on record, the export
     // repeats its own header text as a fake row instead of leaving it blank
     // (no serial number), so we skip anything that doesn't start with one.
     else if (headerStr.includes('দুর্যোগ শুরুর তারিখ')) {
@@ -782,7 +636,7 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
         });
       }
     }
-    // 18. Staff trainings. Same empty-template-echo quirk as disasters above.
+    // 15. Staff trainings. Same empty-template-echo quirk as disasters above.
     // The header has only 6 visible columns (serial, subject, then 4 role
     // columns), but the real data may carry trained/untrained pairs per role.
     // Rather than hardcode column indices that may shift, we zip the remaining
@@ -798,7 +652,7 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
         });
       }
     }
-    // 19. BANBEIS enrollment / exam-result tables (see AcademicResultTable
+    // 16. BANBEIS enrollment / exam-result tables (see AcademicResultTable
     // comment above for why these are keyed dynamically rather than fixed).
     else if (table.header[0] === 'বছর' || table.header[0] === 'Subject Code'
              || headerStr.includes('শ্রেণি') && headerStr.includes('শাখা কি অনুমোদিত')) {
@@ -819,7 +673,7 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
         academic_result_tables.push({ table_type, headers: table.header, rows });
       }
     }
-    // 20. Safety net - capture anything else so nothing is silently dropped.
+    // 17. Safety net - capture anything else so nothing is silently dropped.
     else if (!table.header[0]?.startsWith('Column_')) {
       other_tables.push({ headers: table.header, rows: table.rows });
     }
@@ -898,41 +752,20 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
 
   const school: SchoolDetails = {
     general_info,
-    institute_name_bn: parseString(kvMap['প্রতিষ্ঠানের নাম (বাংলায়)']),
-    institute_name_en: parseString(kvMap['ইংরেজীতে নাম (ব্লক লেটার)']),
-    address: addressObj,
-    contact: contactObj,
-    founder_name: parseString(kvMap['প্রতিষ্ঠাতা']),
-    head_of_institute_name: parseString(kvMap['প্রতিষ্ঠান প্রধানের নাম']),
-    parliamentary_constituency: parseString(kvMap['সংসদীয় আসন (নির্বাচনক্ষেত্র)']),
-    establishment_date: parseString(kvMap['প্রতিষ্ঠার তারিখ']),
-    classification: classificationObj,
     recognition_history,
     mpo_info,
     bank_accounts,
     committee_members,
     staff_positions,
-    staff_positions_total,
     former_committee_members,
     development_projects,
-    identifiers: identifiersObj,
-    mpo_status: mpoStatusObj,
-    location_details: locationObj,
-    institute_photos,
-    institute_contacts,
     committee_formation_history,
     committee_meetings,
     facilities,
-    inspection_visits,
-    income_sources,
-    income_total,
-    expense_sources,
-    expense_total,
-    student_fee_amount,
     disasters,
     trainings,
     academic_result_tables,
-    other_tables
+    other_tables,
   };
 
   return {
