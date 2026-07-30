@@ -46,9 +46,16 @@ const checklistSteps = computed(
   () => navigation.institute_admin?.find((m) => m.menu === 'Institute Setup')?.sub_menus.slice(1) ?? [],
 )
 
-// Map nav step names to Vue Router route names so completed pages are clickable.
+// Map nav step names to Vue Router route names + progress percentages.
 const STEP_ROUTES: Record<string, string> = {
   'Profile & EIIN': 'institute-profile',
+}
+
+/** Per-step progress pct — each step maps to its own data source.
+ *  Only Profile & EIIN has real data today; more will join as pages
+ *  get built and their JSON sources are registered here. */
+const STEP_PCTS: Record<string, () => number> = {
+  'Profile & EIIN': () => profileProgress.value.pct,
 }
 
 /** Count how many leaf values in a nested object are non-empty (filled). */
@@ -186,16 +193,14 @@ const {
           >
             <span class="isc-check-card__icon"><i :class="step.icon" /></span>
             <span class="isc-check-card__label">{{ isBn ? step.name_bn : step.name }}</span>
-            <span
-              v-if="stepHasRoute(step.name)"
-              class="isc-check-card__badge badge"
-              :class="profileProgress.pct >= 100 ? 'badge--success' : 'badge--warning'"
-            >
-              {{ profileProgress.pct }}%
-            </span>
-            <span v-else class="isc-check-card__badge badge badge--info">
-              {{ isBn ? 'শীঘ্রই আসছে' : 'Coming soon' }}
-            </span>
+            <span class="isc-check-card__pct">{{ (STEP_PCTS[step.name]?.() ?? 0) }}%</span>
+            <!-- Vertical progress bar on the right edge -->
+            <div class="isc-check-card__bar">
+              <div
+                class="isc-check-card__bar-fill"
+                :style="{ height: (STEP_PCTS[step.name]?.() ?? 0) + '%' }"
+              />
+            </div>
           </button>
         </div>
       </div>
