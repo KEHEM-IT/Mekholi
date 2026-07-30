@@ -111,9 +111,16 @@
 
 .isc-progress__bar {
   height: 100%;
-  background: linear-gradient(90deg, $color-primary, $color-primary-hover);
   border-radius: inherit;
   transition: width $transition-base;
+  // Color-transitional: red (empty) → amber (half) → green (full)
+  background: linear-gradient(
+    90deg,
+    $color-danger 0%,
+    $color-warning 40%,
+    $color-success 80%,
+    $color-success 100%
+  );
 }
 
 .isc-progress-wrap {
