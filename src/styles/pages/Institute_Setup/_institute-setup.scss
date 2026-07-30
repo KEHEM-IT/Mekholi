@@ -222,10 +222,14 @@
   font-weight: 700;
   color: $color-text-muted;
   flex-shrink: 0;
+  // Hidden by default — shown only on hover in place of the bar
+  opacity: 0;
+  transition: opacity $transition-fast;
 }
 
 // Vertical progress bar — sits on the right edge, full card height.
-// Dark background, lighter fill growing from the bottom.
+// Dark background, lighter fill growing from the bottom with a
+// skeleton shimmer animation.
 .isc-check-card__bar {
   position: absolute;
   top: 0;
@@ -233,6 +237,8 @@
   bottom: 0;
   width: 10px;
   background: $color-border;
+  // Fade out on hover so the percentage label shows through
+  transition: opacity $transition-fast;
 }
 
 .isc-check-card__bar-fill {
@@ -240,9 +246,29 @@
   right: 0;
   bottom: 0;
   width: 100%;
-  background: $color-primary;
+  background: linear-gradient(
+    90deg,
+    $color-primary 25%,
+    $color-primary-hover 37%,
+    $color-primary 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
   border-radius: 0 0 $radius-lg 0;
-  transition: height $transition-base;
+  transition: height $transition-base, opacity $transition-fast;
+}
+
+// Hover: hide the bar, show the percentage label on the bar spot
+.isc-check-card:hover .isc-check-card__bar {
+  opacity: 0;
+}
+
+.isc-check-card:hover .isc-check-card__bar-fill {
+  opacity: 0;
+}
+
+.isc-check-card:hover .isc-check-card__pct {
+  opacity: 1;
 }
 
 // --- Excel import: dropzone ---------------------------------------------------
