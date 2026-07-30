@@ -21,6 +21,7 @@ import {
 
 type TableTabKey = keyof Pick<
   SchoolDetails,
+  | "general_info"
   | "recognition_history"
   | "mpo_info"
   | "bank_accounts"
@@ -44,6 +45,7 @@ export interface TableTab {
 }
 
 export const TABLE_TABS: TableTab[] = [
+  { key: "general_info", label: "General Info", label_bn: "সাধারণ তথ্য" },
   { key: "recognition_history", label: "Recognition history", label_bn: "স্বীকৃতির ইতিহাস" },
   { key: "mpo_info", label: "MPO info", label_bn: "এমপিও তথ্য" },
   { key: "bank_accounts", label: "Bank accounts", label_bn: "ব্যাংক হিসাব" },
@@ -102,19 +104,16 @@ export function useInstituteSetupImport() {
   const activeTab = ref<TableTabKey>(TABLE_TABS[0]!.key);
 
   const activeRows = computed<Record<string, unknown>[]>(() => {
+    if (activeTab.value === 'general_info') {
+      const info = school.value?.general_info;
+      if (!info) return [];
+      return Object.entries(info).map(([key, value]) => ({ key, value }));
+    }
     const rows = school.value?.[activeTab.value];
     return (rows ?? []) as unknown as Record<string, unknown>[];
   });
 
   const activeColumns = computed(() => Object.keys(activeRows.value[0] ?? {}));
-
-  /** Flat key-value rows from the converter's `general_info` record so the
-   *  page can render a summary table without manual property lists. */
-  const generalInfoRows = computed<{ key: string; value: unknown }[]>(() => {
-    const info = school.value?.general_info;
-    if (!info) return [];
-    return Object.entries(info).map(([key, value]) => ({ key, value }));
-  });
 
   async function parseText(text: string, isJsonHint: boolean) {
     const isJson = isJsonHint || text.trim().startsWith("{");
@@ -216,7 +215,6 @@ export function useInstituteSetupImport() {
     activeTab,
     activeRows,
     activeColumns,
-    generalInfoRows,
     importFile,
     onDrop,
     onFileInputChange,

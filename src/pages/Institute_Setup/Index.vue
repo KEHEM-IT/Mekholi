@@ -28,7 +28,6 @@ const {
   activeTab,
   activeRows,
   activeColumns,
-  generalInfoRows,
   onDrop,
   onFileInputChange,
   clear,
@@ -46,6 +45,10 @@ const checklistSteps = computed(
 const saveName = ref('')
 
 function tabRowCount(key: (typeof TABLE_TABS)[number]['key']) {
+  if (key === 'general_info') {
+    const info = school.value?.general_info
+    return info ? Object.keys(info).length : 0
+  }
   const rows = school.value?.[key]
   return Array.isArray(rows) ? rows.length : 0
 }
@@ -173,23 +176,6 @@ async function handleSave() {
               &mdash; {{ school.classification.institute_type }}
             </template>
           </p>
-
-          <!-- General Info key-value table -->
-          <div class="isc-subhead">
-            {{ isBn ? 'সাধারণ তথ্য' : 'General Info' }}
-          </div>
-          <div class="isc-table-wrap isc-table-wrap--kv">
-            <table>
-              <tbody>
-                <tr v-for="row in generalInfoRows" :key="row.key">
-                  <th>{{ row.key }}</th>
-                  <td>{{ row.value ?? '—' }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="isc-divider" />
 
           <div class="isc-tabs">
             <button
