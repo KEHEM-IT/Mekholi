@@ -4,6 +4,7 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppPreferences } from '@/composables/useAppPreferences'
 import { useDragScroll } from '@/composables/useDragScroll'
+import profileJson from '@/assets/school/profile_display.json'
 import {
   TABLE_TABS,
   formatBytes,
@@ -50,38 +51,37 @@ const STEP_ROUTES: Record<string, string> = {
   'Profile & EIIN': 'institute-profile',
 }
 
-/** Count how many General Info leaf fields have a non-null non-empty value. */
-function countFilled(info: Record<string, unknown>): number {
-  let filled = 0
-  const walk = (obj: Record<string, unknown>) => {
-    for (const v of Object.values(obj)) {
-      if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
-        walk(v as Record<string, unknown>)
-      } else if (v !== null && v !== undefined && v !== '') {
-        filled++
-      }
-    }
+/** Count how many leaf values in a nested object are non-empty (filled). */
+function countFilled(obj: unknown): number {
+  if (obj === null || obj === undefined || obj === '') return 0
+  if (typeof obj === 'object' && !Array.isArray(obj)) {
+    return Object.values(obj as Record<string, unknown>).reduce(
+      (sum, v) => sum + countFilled(v),
+      0,
+    )
   }
-  walk(info as unknown as Record<string, unknown>)
-  return filled
+  return 1
 }
 
-const generalInfoProgress = computed(() => {
-  if (!school.value?.general_info) return { filled: 0, total: 1, pct: 0 }
-  const info = school.value.general_info as unknown as Record<string, unknown>
-  let total = 0
-  const countAll = (obj: Record<string, unknown>) => {
-    for (const v of Object.values(obj)) {
-      if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
-        countAll(v as Record<string, unknown>)
-      } else {
-        total++
-      }
-    }
+/** Count total leaf values in a nested object (filled + empty). */
+function countTotal(obj: unknown): number {
+  if (obj === null || obj === undefined) return 1
+  if (typeof obj === 'object' && !Array.isArray(obj)) {
+    return Object.values(obj as Record<string, unknown>).reduce(
+      (sum, v) => sum + countTotal(v),
+      0,
+    )
   }
-  countAll(info)
-  const filled = countFilled(info)
-  return { filled, total, pct: total > 0 ? Math.round((filled / total) * 100) : 0 }
+  return 1
+}
+
+/** Progress computed from the same profile_display.json that
+ *  InstituteProfileView reads — always available, no EMIS import needed. */
+const profileProgress = computed(() => {
+  const total = countTotal(profileJson)
+  const filled = countFilled(profileJson)
+  const empty = total - filled
+  return { filled, empty, total, pct: total > 0 ? Math.round((filled / total) * 100) : 0 }
 })
 
 function stepHasRoute(name: string) {
@@ -156,12 +156,16 @@ const {
             }}</span>
           </div>
         </div>
-        <div v-if="school" class="isc-progress-wrap">
+        <div class="isc-progress-wrap">
           <div class="isc-progress">
-            <div class="isc-progress__bar" :style="{ width: generalInfoProgress.pct + '%' }" />
+            <div class="isc-progress__bar" :style="{ width: profileProgress.pct + '%' }" />
           </div>
           <span class="isc-progress__label">
-            {{ generalInfoProgress.filled }} / {{ generalInfoProgress.total }} {{ isBn ? 'পূরণ হয়েছে' : 'filled' }}
+            {{ profileProgress.filled }} / {{ profileProgress.total }}
+            {{ isBn ? 'পূরণ হয়েছে' : 'filled' }}
+            <template v-if="profileProgress.empty">
+              &middot; {{ profileProgress.empty }} {{ isBn ? 'খালি' : 'empty' }}
+            </template>
           </span>
         </div>
       </div>
@@ -185,9 +189,9 @@ const {
             <span
               v-if="stepHasRoute(step.name)"
               class="isc-check-card__badge badge"
-              :class="generalInfoProgress.pct >= 100 ? 'badge--success' : 'badge--warning'"
+              :class="profileProgress.pct >= 100 ? 'badge--success' : 'badge--warning'"
             >
-              {{ generalInfoProgress.pct }}%
+              {{ profileProgress.pct }}%
             </span>
             <span v-else class="isc-check-card__badge badge badge--info">
               {{ isBn ? 'শীঘ্রই আসছে' : 'Coming soon' }}
