@@ -1,6 +1,7 @@
 <!-- D:\Web\ERP\Mekholi\src\pages\Institute_Setup\Index.vue -->
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAppPreferences } from '@/composables/useAppPreferences'
 import { useDragScroll } from '@/composables/useDragScroll'
 import {
@@ -15,6 +16,7 @@ import type { NavigationMap } from '@/types'
 // single-word "Index.vue" per pages/Institute_Setup/ convention).
 defineOptions({ name: 'InstituteDashboard' })
 
+const router = useRouter()
 const { preferences } = useAppPreferences()
 const isBn = computed(() => preferences.uiLanguage === 'bn')
 
@@ -42,6 +44,54 @@ const navigation = navigationJson.shikkha_erp_navigation as unknown as Navigatio
 const checklistSteps = computed(
   () => navigation.institute_admin?.find((m) => m.menu === 'Institute Setup')?.sub_menus.slice(1) ?? [],
 )
+
+// Map nav step names to Vue Router route names so completed pages are clickable.
+const STEP_ROUTES: Record<string, string> = {
+  'Profile & EIIN': 'institute-profile',
+}
+
+/** Count how many General Info leaf fields have a non-null non-empty value. */
+function countFilled(info: Record<string, unknown>): number {
+  let filled = 0
+  const walk = (obj: Record<string, unknown>) => {
+    for (const v of Object.values(obj)) {
+      if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
+        walk(v as Record<string, unknown>)
+      } else if (v !== null && v !== undefined && v !== '') {
+        filled++
+      }
+    }
+  }
+  walk(info as unknown as Record<string, unknown>)
+  return filled
+}
+
+const generalInfoProgress = computed(() => {
+  if (!school.value?.general_info) return { filled: 0, total: 1, pct: 0 }
+  const info = school.value.general_info as unknown as Record<string, unknown>
+  let total = 0
+  const countAll = (obj: Record<string, unknown>) => {
+    for (const v of Object.values(obj)) {
+      if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
+        countAll(v as Record<string, unknown>)
+      } else {
+        total++
+      }
+    }
+  }
+  countAll(info)
+  const filled = countFilled(info)
+  return { filled, total, pct: total > 0 ? Math.round((filled / total) * 100) : 0 }
+})
+
+function stepHasRoute(name: string) {
+  return STEP_ROUTES[name] != null
+}
+
+function goToStep(name: string) {
+  const route = STEP_ROUTES[name]
+  if (route) router.push({ name: route })
+}
 
 const saveName = ref('')
 
@@ -106,6 +156,14 @@ const {
             }}</span>
           </div>
         </div>
+        <div v-if="school" class="isc-progress-wrap">
+          <div class="isc-progress">
+            <div class="isc-progress__bar" :style="{ width: generalInfoProgress.pct + '%' }" />
+          </div>
+          <span class="isc-progress__label">
+            {{ generalInfoProgress.filled }} / {{ generalInfoProgress.total }} {{ isBn ? 'পূরণ হয়েছে' : 'filled' }}
+          </span>
+        </div>
       </div>
 
       <div class="isc-section__body">
@@ -114,12 +172,24 @@ const {
             v-for="step in checklistSteps"
             :key="step.name"
             type="button"
-            class="isc-check-card is-upcoming"
-            disabled
+            class="isc-check-card"
+            :class="{
+              'is-active': stepHasRoute(step.name),
+              'is-upcoming': !stepHasRoute(step.name),
+            }"
+            :disabled="!stepHasRoute(step.name)"
+            @click="goToStep(step.name)"
           >
             <span class="isc-check-card__icon"><i :class="step.icon" /></span>
             <span class="isc-check-card__label">{{ isBn ? step.name_bn : step.name }}</span>
-            <span class="isc-check-card__badge badge badge--info">
+            <span
+              v-if="stepHasRoute(step.name)"
+              class="isc-check-card__badge badge"
+              :class="generalInfoProgress.pct >= 100 ? 'badge--success' : 'badge--warning'"
+            >
+              {{ generalInfoProgress.pct }}%
+            </span>
+            <span v-else class="isc-check-card__badge badge badge--info">
               {{ isBn ? 'শীঘ্রই আসছে' : 'Coming soon' }}
             </span>
           </button>
