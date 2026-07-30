@@ -47,7 +47,19 @@ const saveName = ref('')
 function tabRowCount(key: (typeof TABLE_TABS)[number]['key']) {
   if (key === 'general_info') {
     const info = school.value?.general_info
-    return info ? Object.keys(info).length : 0
+    if (!info) return 0
+    let count = 0
+    const walk = (obj: Record<string, unknown>) => {
+      for (const v of Object.values(obj)) {
+        if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
+          walk(v as Record<string, unknown>)
+        } else {
+          count++
+        }
+      }
+    }
+    walk(info as unknown as Record<string, unknown>)
+    return count
   }
   const rows = school.value?.[key]
   return Array.isArray(rows) ? rows.length : 0

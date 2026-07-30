@@ -112,11 +112,29 @@ export interface DevelopmentProject {
   project_name: string | null;
 }
 
+/** Structured general information grouping every root-level scalar and
+ *  nested object (address, contact, classification, etc.) into a single
+ *  typed record the General Info tab can render with section-grouped rows. */
+export interface GeneralInfo {
+  institute_name_bn: string | null;
+  institute_name_en: string | null;
+  founder_name: string | null;
+  head_of_institute_name: string | null;
+  parliamentary_constituency: string | null;
+  establishment_date: string | null;
+  income_total: number | null;
+  expense_total: number | null;
+  student_fee_amount: number | null;
+  address: SchoolAddress;
+  contact: SchoolContact;
+  classification: SchoolClassification;
+  identifiers: SchoolIdentifiers;
+  mpo_status: MpoStatus;
+  location_details: LocationDetails;
+}
+
 export interface SchoolDetails {
-  /** Flat key-value map of every non-array field (nested objects
-   *  flattened with dot-notation keys) so the UI can render a
-   *  "General Info" summary table without duplicating property lists. */
-  general_info: Record<string, string | number | null>;
+  general_info: GeneralInfo;
   institute_name_bn: string | null;
   institute_name_en: string | null;
   address: SchoolAddress;
@@ -395,24 +413,6 @@ interface ParsedTable {
   header: string[];
   rows: string[][];
   hasSeparator: boolean;
-}
-
-/** Flatten a nested plain object into a flat Record with dot-notation keys
- *  so the UI can render a single key-value table without recursion. */
-function flattenObject(
-  obj: Record<string, unknown>,
-  prefix: string,
-): Record<string, string | number | null> {
-  const out: Record<string, string | number | null> = {};
-  for (const [k, v] of Object.entries(obj)) {
-    const fullKey = `${prefix}.${k}`;
-    if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
-      Object.assign(out, flattenObject(v as Record<string, unknown>, fullKey));
-    } else {
-      out[fullKey] = v as string | number | null;
-    }
-  }
-  return out;
 }
 
 export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrapper {
@@ -878,7 +878,7 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
     is_enclave: parseString(kvMap['প্রতিষ্ঠান ছিটমহলের অন্তর্ভুক্ত কিনা?']),
   };
 
-  const general_info: Record<string, string | number | null> = {
+  const general_info: GeneralInfo = {
     institute_name_bn: parseString(kvMap['প্রতিষ্ঠানের নাম (বাংলায়)']),
     institute_name_en: parseString(kvMap['ইংরেজীতে নাম (ব্লক লেটার)']),
     founder_name: parseString(kvMap['প্রতিষ্ঠাতা']),
@@ -888,12 +888,12 @@ export function convertMarkdownToSchoolJson(mdContent: string): SchoolDataWrappe
     income_total,
     expense_total,
     student_fee_amount,
-    ...flattenObject(addressObj as unknown as Record<string, unknown>, 'address'),
-    ...flattenObject(contactObj as unknown as Record<string, unknown>, 'contact'),
-    ...flattenObject(classificationObj as unknown as Record<string, unknown>, 'classification'),
-    ...flattenObject(identifiersObj as unknown as Record<string, unknown>, 'identifiers'),
-    ...flattenObject(mpoStatusObj as unknown as Record<string, unknown>, 'mpo_status'),
-    ...flattenObject(locationObj as unknown as Record<string, unknown>, 'location_details'),
+    address: addressObj,
+    contact: contactObj,
+    classification: classificationObj,
+    identifiers: identifiersObj,
+    mpo_status: mpoStatusObj,
+    location_details: locationObj,
   };
 
   const school: SchoolDetails = {

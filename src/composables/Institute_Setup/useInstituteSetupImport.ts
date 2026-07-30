@@ -107,7 +107,25 @@ export function useInstituteSetupImport() {
     if (activeTab.value === 'general_info') {
       const info = school.value?.general_info;
       if (!info) return [];
-      return Object.entries(info).map(([key, value]) => ({ key, value }));
+      const rows: { section: string; key: string; value: unknown }[] = [];
+      const pushNested = (obj: Record<string, unknown>, section: string) => {
+        for (const [k, v] of Object.entries(obj)) {
+          if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
+            pushNested(v as Record<string, unknown>, k);
+          } else {
+            rows.push({ section, key: k, value: v });
+          }
+        }
+      };
+      // Top-level scalars get section = ''
+      for (const [k, v] of Object.entries(info)) {
+        if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
+          pushNested(v as Record<string, unknown>, k);
+        } else {
+          rows.push({ section: '', key: k, value: v });
+        }
+      }
+      return rows;
     }
     const rows = school.value?.[activeTab.value];
     return (rows ?? []) as unknown as Record<string, unknown>[];
