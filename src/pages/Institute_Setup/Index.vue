@@ -91,6 +91,13 @@ const profileProgress = computed(() => {
   return { filled, empty, total, pct: total > 0 ? Math.round((filled / total) * 100) : 0 }
 })
 
+/** Pick a fill color for the vertical bar based on completion percentage. */
+function barColor(pct: number): string {
+  if (pct >= 67) return '#22c55e'
+  if (pct >= 34) return '#eab308'
+  return '#ef4444'
+}
+
 function stepHasRoute(name: string) {
   return STEP_ROUTES[name] != null
 }
@@ -198,7 +205,10 @@ const {
             <div class="isc-check-card__bar">
               <div
                 class="isc-check-card__bar-fill"
-                :style="{ height: (STEP_PCTS[step.name]?.() ?? 0) + '%' }"
+                :style="{
+                  height: (STEP_PCTS[step.name]?.() ?? 0) + '%',
+                  background: barColor(STEP_PCTS[step.name]?.() ?? 0),
+                }"
               />
             </div>
           </button>
