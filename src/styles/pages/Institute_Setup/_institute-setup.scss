@@ -225,6 +225,13 @@
   // Hidden by default — shown only on hover in place of the bar
   opacity: 0;
   transition: opacity $transition-fast;
+  white-space: nowrap;
+
+  &::after {
+    content: ' completed';
+    font-weight: 400;
+    opacity: 0.7;
+  }
 }
 
 // Vertical progress bar — sits on the right edge, full card height.
@@ -246,14 +253,7 @@
   right: 0;
   bottom: 0;
   width: 100%;
-  background: linear-gradient(
-    90deg,
-    $color-primary 25%,
-    $color-primary-hover 37%,
-    $color-primary 63%
-  );
-  background-size: 400% 100%;
-  animation: skeleton-shimmer 1.4s ease infinite;
+  background: $color-primary;
   border-radius: 0 0 $radius-lg 0;
   transition: height $transition-base, opacity $transition-fast;
 }
