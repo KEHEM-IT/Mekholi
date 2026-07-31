@@ -429,3 +429,20 @@
     min-width: 0;
   }
 }
+
+// --- Array item cards (bank accounts, committee members, etc.) ----------------
+
+.ipf-array-card {
+  padding: $space-3;
+  border-radius: $radius-md;
+  border: 1px solid $color-border;
+  background: $color-surface-alt;
+}
+
+.ipf-array-card__head {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: $color-text-muted;
+  text-transform: uppercase;
+  margin-bottom: $space-3;
+}
