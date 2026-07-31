@@ -4,7 +4,7 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppPreferences } from '@/composables/useAppPreferences'
 import { useDragScroll } from '@/composables/useDragScroll'
-import profileJson from '@/assets/school/profile_display.json'
+import suhscJson from '@/assets/school/suhsc_generated.json'
 import {
   TABLE_TABS,
   formatBytes,
@@ -48,14 +48,14 @@ const checklistSteps = computed(
 
 // Map nav step names to Vue Router route names + progress percentages.
 const STEP_ROUTES: Record<string, string> = {
-  'Profile & EIIN': 'institute-profile',
+  'Institute Profile': 'institute-profile',
 }
 
 /** Per-step progress pct — each step maps to its own data source.
- *  Only Profile & EIIN has real data today; more will join as pages
+ *  Only Institute Profile has real data today; more will join as pages
  *  get built and their JSON sources are registered here. */
 const STEP_PCTS: Record<string, () => number> = {
-  'Profile & EIIN': () => profileProgress.value.pct,
+  'Institute Profile': () => profileProgress.value.pct,
 }
 
 /** Count how many leaf values in a nested object are non-empty (filled). */
@@ -82,11 +82,33 @@ function countTotal(obj: unknown): number {
   return 1
 }
 
-/** Progress computed from the same profile_display.json that
- *  InstituteProfileView reads — always available, no EMIS import needed. */
+/** Progress computed from suhsc_generated.json — same source as
+ *  InstituteProfileView. Extracts the profile-relevant fields from the
+ *  old flat school_data[0] format (same keys used in the form page). */
+const profileData = computed(() => {
+  const d = (suhscJson as { school_data: Record<string, unknown>[] }).school_data[0]!
+  return {
+    institute_name_bn: d.institute_name_bn,
+    institute_name_en: d.institute_name_en,
+    founder_name: d.founder_name,
+    head_of_institute_name: d.head_of_institute_name,
+    parliamentary_constituency: d.parliamentary_constituency,
+    establishment_date: d.establishment_date,
+    address: d.address,
+    contact: d.contact,
+    classification: d.classification,
+    identifiers: d.identifiers,
+    mpo_status: d.mpo_status,
+    location_details: d.location_details,
+    income_total: d.income_total,
+    expense_total: d.expense_total,
+    student_fee_amount: d.student_fee_amount,
+  }
+})
+
 const profileProgress = computed(() => {
-  const total = countTotal(profileJson)
-  const filled = countFilled(profileJson)
+  const total = countTotal(profileData.value)
+  const filled = countFilled(profileData.value)
   const empty = total - filled
   return { filled, empty, total, pct: total > 0 ? Math.round((filled / total) * 100) : 0 }
 })
