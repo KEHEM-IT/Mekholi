@@ -59,6 +59,42 @@ export const instituteProfile = reactive({
 
 // ---- progress helpers --------------------------------------------------
 
+// Default empty records for each array type (all fields null)
+const NEW_RECORDS: Record<string, R> = {
+  recognition_history:          { level: null, first_recognition_date: null, latest_recognition_expiry_date: null },
+  mpo_info:                     { level: null, mpo_date: null, mpo_code: null },
+  bank_accounts:                { serial_no: null, bank_name: null, branch: null, account_type: null, account_holder_name: null, account_number: null, account_purpose: null },
+  committee_members:            { serial_no: null, member_name: null, joining_date: null, leaving_date: null, phone: null, trainings_received_count: null, gender: null, committee_position: null, education_qualification: null, occupation: null, left_committee: null, reason_for_leaving: null },
+  staff_positions:              { serial_no: null, designation: null, currently_working_total: null, currently_working_male: null, currently_working_female: null, mpo_total: null, mpo_male: null, mpo_female: null, vacant_post: null, branch_post: null },
+  former_committee_members:     { serial_no: null, member_name: null, gender: null, phone: null, reason_for_leaving: null },
+  development_projects:         { serial_no: null, work_type: null, description: null, progress: null, start_date: null, duration_months: null, end_date: null, total_allocated_cost_taka: null, funding_source: null, project_name: null },
+  committee_formation_history:  { serial_no: null, has_committee: null, committee_type: null, approval_date: null, expiry_date: null, election_date: null, remarks: null },
+  committee_meetings:           { serial_no: null, meeting_date: null, attendees_count: null, agenda: null, decision: null },
+  facilities:                   { serial_no: null, name: null, status: null },
+  inspection_visits:            { serial_no: null, inspector_name: null, inspector_designation: null, visits_last_5_years: null, last_visit_date: null },
+  income_sources:               { serial_no: null, source: null, amount: null },
+  expense_sources:              { serial_no: null, source: null, amount: null },
+  disasters:                    { serial_no: null, disaster_name: null, start_date: null, end_date: null, closed_days: null, damage_details: null, cause: null, remarks: null },
+  trainings:                    { serial_no: null, training_subject: null },
+  institute_photos:             { serial_no: null, photo_name: null },
+  institute_contacts:           { serial_no: null, name: null, designation: null, mobile: null, email: null },
+}
+
+/** Add a new empty record to any array section on the profile. */
+export function addProfileRecord(key: keyof typeof instituteProfile) {
+  const arr = instituteProfile[key]
+  if (!Array.isArray(arr)) return
+  const template = NEW_RECORDS[key] ?? {}
+  arr.push({ ...template })
+}
+
+/** Remove a record at the given index from an array section. */
+export function removeProfileRecord(key: keyof typeof instituteProfile, index: number) {
+  const arr = instituteProfile[key]
+  if (!Array.isArray(arr)) return
+  arr.splice(index, 1)
+}
+
 function countFilled(obj: unknown): number {
   if (obj === null || obj === undefined || obj === '') return 0
   if (typeof obj === 'object' && !Array.isArray(obj)) {

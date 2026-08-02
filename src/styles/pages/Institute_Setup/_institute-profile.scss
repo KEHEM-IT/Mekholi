@@ -445,4 +445,25 @@
   color: $color-text-muted;
   text-transform: uppercase;
   margin-bottom: $space-3;
+  @include flex(row, center, space-between, $space-2);
+}
+
+.ipf-array-card__remove {
+  background: none;
+  border: none;
+  color: $color-text-muted;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: $radius-sm;
+
+  &:hover {
+    color: $color-danger;
+    background: $color-danger-muted;
+  }
+}
+
+.ipf-add-btn {
+  flex-shrink: 0;
 }

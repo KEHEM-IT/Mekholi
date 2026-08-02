@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useAppPreferences } from '@/composables/useAppPreferences'
-import { instituteProfile } from '@/composables/useInstituteProfile'
+import { instituteProfile, addProfileRecord, removeProfileRecord } from '@/composables/useInstituteProfile'
 
 defineOptions({ name: 'InstituteProfile' })
 
@@ -187,11 +187,11 @@ function handleSave() {
         <!-- Recognition History -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-clock-rotate-left" /><div><h2>{{ isBn ? 'স্বীকৃতির ইতিহাস' : 'Recognition History' }}</h2><span>{{ profile.recognition_history.length }} {{ isBn ? 'রেকর্ড' : 'records' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-clock-rotate-left" /><div><h2>{{ isBn ? 'স্বীকৃতির ইতিহাস' : 'Recognition History' }}</h2><span>{{ profile.recognition_history.length }} {{ isBn ? 'রেকর্ড' : 'records' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;recognition_history&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.recognition_history" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;recognition_history&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field"><label>level</label><input v-model="profile.recognition_history[i].level" :name="`recognition_history.${i}.level`" type="text" /></div>
                 <div class="form-field"><label>first_recognition_date</label><input v-model="profile.recognition_history[i].first_recognition_date" :name="`recognition_history.${i}.first_recognition_date`" type="text" /></div>
@@ -204,11 +204,11 @@ function handleSave() {
         <!-- MPO Info -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-building-columns" /><div><h2>{{ isBn ? 'এমপিও তথ্য' : 'MPO Info' }}</h2><span>{{ profile.mpo_info.length }} {{ isBn ? 'রেকর্ড' : 'records' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-building-columns" /><div><h2>{{ isBn ? 'এমপিও তথ্য' : 'MPO Info' }}</h2><span>{{ profile.mpo_info.length }} {{ isBn ? 'রেকর্ড' : 'records' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;mpo_info&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.mpo_info" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;mpo_info&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field"><label>level</label><input v-model="profile.mpo_info[i].level" :name="`mpo_info.${i}.level`" type="text" /></div>
                 <div class="form-field"><label>mpo_date</label><input v-model="profile.mpo_info[i].mpo_date" :name="`mpo_info.${i}.mpo_date`" type="text" /></div>
@@ -221,11 +221,11 @@ function handleSave() {
         <!-- Bank Accounts -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-piggy-bank" /><div><h2>{{ isBn ? 'ব্যাংক হিসাব' : 'Bank Accounts' }}</h2><span>{{ profile.bank_accounts.length }} {{ isBn ? 'একাউন্ট' : 'accounts' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-piggy-bank" /><div><h2>{{ isBn ? 'ব্যাংক হিসাব' : 'Bank Accounts' }}</h2><span>{{ profile.bank_accounts.length }} {{ isBn ? 'একাউন্ট' : 'accounts' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;bank_accounts&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.bank_accounts" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;bank_accounts&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field"><label>serial_no</label><input v-model.number="profile.bank_accounts[i].serial_no" :name="`bank_accounts.${i}.serial_no`" type="number" /></div>
                 <div class="form-field"><label>bank_name</label><input v-model="profile.bank_accounts[i].bank_name" :name="`bank_accounts.${i}.bank_name`" type="text" /></div>
@@ -242,11 +242,11 @@ function handleSave() {
         <!-- Committee Members -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-users" /><div><h2>{{ isBn ? 'কমিটির সদস্য' : 'Committee Members' }}</h2><span>{{ profile.committee_members.length }} {{ isBn ? 'সদস্য' : 'members' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-users" /><div><h2>{{ isBn ? 'কমিটির সদস্য' : 'Committee Members' }}</h2><span>{{ profile.committee_members.length }} {{ isBn ? 'সদস্য' : 'members' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;committee_members&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.committee_members" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;committee_members&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field"><label>serial_no</label><input v-model.number="profile.committee_members[i].serial_no" :name="`committee_members.${i}.serial_no`" type="number" /></div>
                 <div class="form-field"><label>member_name</label><input v-model="profile.committee_members[i].member_name" :name="`committee_members.${i}.member_name`" type="text" /></div>
@@ -268,11 +268,11 @@ function handleSave() {
         <!-- Staff Positions -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-user-tie" /><div><h2>{{ isBn ? 'জনবল কাঠামো' : 'Staff Positions' }}</h2><span>{{ profile.staff_positions.length }} {{ isBn ? 'পদ' : 'positions' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-user-tie" /><div><h2>{{ isBn ? 'জনবল কাঠামো' : 'Staff Positions' }}</h2><span>{{ profile.staff_positions.length }} {{ isBn ? 'পদ' : 'positions' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;staff_positions&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.staff_positions" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;staff_positions&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field"><label>serial_no</label><input v-model.number="profile.staff_positions[i].serial_no" :name="`staff_positions.${i}.serial_no`" type="number" /></div>
                 <div class="form-field"><label>designation</label><input v-model="profile.staff_positions[i].designation" :name="`staff_positions.${i}.designation`" type="text" /></div>
@@ -292,11 +292,11 @@ function handleSave() {
         <!-- Former Committee Members -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-user-xmark" /><div><h2>{{ isBn ? 'সাবেক কমিটির সদস্য' : 'Former Committee Members' }}</h2><span>{{ profile.former_committee_members.length }} {{ isBn ? 'সদস্য' : 'members' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-user-xmark" /><div><h2>{{ isBn ? 'সাবেক কমিটির সদস্য' : 'Former Committee Members' }}</h2><span>{{ profile.former_committee_members.length }} {{ isBn ? 'সদস্য' : 'members' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;former_committee_members&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.former_committee_members" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;former_committee_members&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field"><label>serial_no</label><input v-model.number="profile.former_committee_members[i].serial_no" :name="`former_committee_members.${i}.serial_no`" type="number" /></div>
                 <div class="form-field"><label>member_name</label><input v-model="profile.former_committee_members[i].member_name" :name="`former_committee_members.${i}.member_name`" type="text" /></div>
@@ -311,11 +311,11 @@ function handleSave() {
         <!-- Development Projects -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-hard-hat" /><div><h2>{{ isBn ? 'উন্নয়ন প্রকল্প' : 'Development Projects' }}</h2><span>{{ profile.development_projects.length }} {{ isBn ? 'প্রকল্প' : 'projects' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-hard-hat" /><div><h2>{{ isBn ? 'উন্নয়ন প্রকল্প' : 'Development Projects' }}</h2><span>{{ profile.development_projects.length }} {{ isBn ? 'প্রকল্প' : 'projects' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;development_projects&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.development_projects" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;development_projects&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field"><label>serial_no</label><input v-model.number="profile.development_projects[i].serial_no" :name="`development_projects.${i}.serial_no`" type="number" /></div>
                 <div class="form-field"><label>work_type</label><input v-model="profile.development_projects[i].work_type" :name="`development_projects.${i}.work_type`" type="text" /></div>
@@ -335,11 +335,11 @@ function handleSave() {
         <!-- Committee Formation History -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-calendar-days" /><div><h2>{{ isBn ? 'কমিটি গঠন' : 'Committee Formation' }}</h2><span>{{ profile.committee_formation_history.length }} {{ isBn ? 'রেকর্ড' : 'records' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-calendar-days" /><div><h2>{{ isBn ? 'কমিটি গঠন' : 'Committee Formation' }}</h2><span>{{ profile.committee_formation_history.length }} {{ isBn ? 'রেকর্ড' : 'records' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;committee_formation_history&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.committee_formation_history" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;committee_formation_history&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field"><label>serial_no</label><input v-model.number="profile.committee_formation_history[i].serial_no" :name="`committee_formation_history.${i}.serial_no`" type="number" /></div>
                 <div class="form-field"><label>has_committee</label><input v-model="profile.committee_formation_history[i].has_committee" :name="`committee_formation_history.${i}.has_committee`" type="text" /></div>
@@ -356,11 +356,11 @@ function handleSave() {
         <!-- Committee Meetings -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-file-lines" /><div><h2>{{ isBn ? 'সভার বিবরণ' : 'Meeting Minutes' }}</h2><span>{{ profile.committee_meetings.length }} {{ isBn ? 'সভা' : 'meetings' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-file-lines" /><div><h2>{{ isBn ? 'সভার বিবরণ' : 'Meeting Minutes' }}</h2><span>{{ profile.committee_meetings.length }} {{ isBn ? 'সভা' : 'meetings' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;committee_meetings&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.committee_meetings" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;committee_meetings&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid">
                 <div class="form-field"><label>serial_no</label><input v-model.number="profile.committee_meetings[i].serial_no" :name="`committee_meetings.${i}.serial_no`" type="number" /></div>
                 <div class="form-field"><label>meeting_date</label><input v-model="profile.committee_meetings[i].meeting_date" :name="`committee_meetings.${i}.meeting_date`" type="text" /></div>
@@ -375,11 +375,11 @@ function handleSave() {
         <!-- Facilities -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-grid-2" /><div><h2>{{ isBn ? 'সুবিধাদি' : 'Facilities' }}</h2><span>{{ profile.facilities.length }} {{ isBn ? 'সুবিধা' : 'facilities' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-grid-2" /><div><h2>{{ isBn ? 'সুবিধাদি' : 'Facilities' }}</h2><span>{{ profile.facilities.length }} {{ isBn ? 'সুবিধা' : 'facilities' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;facilities&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.facilities" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;facilities&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field"><label>serial_no</label><input v-model.number="profile.facilities[i].serial_no" :name="`facilities.${i}.serial_no`" type="number" /></div>
                 <div class="form-field"><label>name</label><input v-model="profile.facilities[i].name" :name="`facilities.${i}.name`" type="text" /></div>
@@ -392,11 +392,11 @@ function handleSave() {
         <!-- Inspection Visits -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-magnifying-glass" /><div><h2>{{ isBn ? 'পরিদর্শন' : 'Inspection Visits' }}</h2><span>{{ profile.inspection_visits.length }} {{ isBn ? 'পরিদর্শন' : 'visits' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-magnifying-glass" /><div><h2>{{ isBn ? 'পরিদর্শন' : 'Inspection Visits' }}</h2><span>{{ profile.inspection_visits.length }} {{ isBn ? 'পরিদর্শন' : 'visits' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;inspection_visits&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.inspection_visits" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;inspection_visits&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid">
                 <div class="form-field"><label>serial_no</label><input v-model.number="profile.inspection_visits[i].serial_no" :name="`inspection_visits.${i}.serial_no`" type="number" /></div>
                 <div class="form-field"><label>inspector_name</label><input v-model="profile.inspection_visits[i].inspector_name" :name="`inspection_visits.${i}.inspector_name`" type="text" /></div>
@@ -411,11 +411,11 @@ function handleSave() {
         <!-- Income Sources -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-money-bill-trend-up" /><div><h2>{{ isBn ? 'আয়ের উৎস' : 'Income Sources' }}</h2><span>{{ profile.income_sources.length }} {{ isBn ? 'উৎস' : 'sources' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-money-bill-trend-up" /><div><h2>{{ isBn ? 'আয়ের উৎস' : 'Income Sources' }}</h2><span>{{ profile.income_sources.length }} {{ isBn ? 'উৎস' : 'sources' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;income_sources&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.income_sources" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;income_sources&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field"><label>serial_no</label><input v-model.number="profile.income_sources[i].serial_no" :name="`income_sources.${i}.serial_no`" type="number" /></div>
                 <div class="form-field"><label>source</label><input v-model="profile.income_sources[i].source" :name="`income_sources.${i}.source`" type="text" /></div>
@@ -428,11 +428,11 @@ function handleSave() {
         <!-- Expense Sources -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-money-bill-transfer" /><div><h2>{{ isBn ? 'ব্যয়ের উৎস' : 'Expense Sources' }}</h2><span>{{ profile.expense_sources.length }} {{ isBn ? 'উৎস' : 'sources' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-money-bill-transfer" /><div><h2>{{ isBn ? 'ব্যয়ের উৎস' : 'Expense Sources' }}</h2><span>{{ profile.expense_sources.length }} {{ isBn ? 'উৎস' : 'sources' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;expense_sources&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.expense_sources" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;expense_sources&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field"><label>serial_no</label><input v-model.number="profile.expense_sources[i].serial_no" :name="`expense_sources.${i}.serial_no`" type="number" /></div>
                 <div class="form-field"><label>source</label><input v-model="profile.expense_sources[i].source" :name="`expense_sources.${i}.source`" type="text" /></div>
@@ -445,11 +445,11 @@ function handleSave() {
         <!-- Disasters -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-cloud-bolt" /><div><h2>{{ isBn ? 'দুর্যোগ' : 'Disasters' }}</h2><span>{{ profile.disasters.length }} {{ isBn ? 'রেকর্ড' : 'records' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-cloud-bolt" /><div><h2>{{ isBn ? 'দুর্যোগ' : 'Disasters' }}</h2><span>{{ profile.disasters.length }} {{ isBn ? 'রেকর্ড' : 'records' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;disasters&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.disasters" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;disasters&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid ipf-grid--three">
                 <div class="form-field"><label>serial_no</label><input v-model.number="profile.disasters[i].serial_no" :name="`disasters.${i}.serial_no`" type="number" /></div>
                 <div class="form-field"><label>disaster_name</label><input v-model="profile.disasters[i].disaster_name" :name="`disasters.${i}.disaster_name`" type="text" /></div>
@@ -467,11 +467,11 @@ function handleSave() {
         <!-- Trainings -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-chalkboard-user" /><div><h2>{{ isBn ? 'প্রশিক্ষণ' : 'Trainings' }}</h2><span>{{ profile.trainings.length }} {{ isBn ? 'রেকর্ড' : 'records' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-chalkboard-user" /><div><h2>{{ isBn ? 'প্রশিক্ষণ' : 'Trainings' }}</h2><span>{{ profile.trainings.length }} {{ isBn ? 'রেকর্ড' : 'records' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;trainings&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.trainings" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;trainings&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid">
                 <div class="form-field"><label>serial_no</label><input v-model.number="profile.trainings[i].serial_no" :name="`trainings.${i}.serial_no`" type="number" /></div>
                 <div class="form-field"><label>training_subject</label><input v-model="profile.trainings[i].training_subject" :name="`trainings.${i}.training_subject`" type="text" /></div>
@@ -510,11 +510,11 @@ function handleSave() {
         <!-- Institute Photos -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-images" /><div><h2>{{ isBn ? 'ছবি' : 'Institute Photos' }}</h2><span>{{ profile.institute_photos.length }} {{ isBn ? 'ছবি' : 'photos' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-images" /><div><h2>{{ isBn ? 'ছবি' : 'Institute Photos' }}</h2><span>{{ profile.institute_photos.length }} {{ isBn ? 'ছবি' : 'photos' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;institute_photos&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.institute_photos" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;institute_photos&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid">
                 <div class="form-field"><label>serial_no</label><input v-model.number="profile.institute_photos[i].serial_no" :name="`institute_photos.${i}.serial_no`" type="number" /></div>
                 <div class="form-field"><label>photo_name</label><input v-model="profile.institute_photos[i].photo_name" :name="`institute_photos.${i}.photo_name`" type="text" /></div>
@@ -526,11 +526,11 @@ function handleSave() {
         <!-- Institute Contacts -->
         <div class="ipf-section">
           <div class="ipf-section__head">
-            <div class="ipf-section__title"><i class="fa-duotone fa-address-book" /><div><h2>{{ isBn ? 'যোগাযোগ ব্যক্তি' : 'Institute Contacts' }}</h2><span>{{ profile.institute_contacts.length }} {{ isBn ? 'ব্যক্তি' : 'contacts' }}</span></div></div>
+            <div class="ipf-section__title"><i class="fa-duotone fa-address-book" /><div><h2>{{ isBn ? 'যোগাযোগ ব্যক্তি' : 'Institute Contacts' }}</h2><span>{{ profile.institute_contacts.length }} {{ isBn ? 'ব্যক্তি' : 'contacts' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addProfileRecord(&#39;institute_contacts&#39;)">+ Add</button></div>
           </div>
           <div class="ipf-section__body">
             <div v-for="(item, i) in profile.institute_contacts" :key="i" class="ipf-array-card">
-              <div class="ipf-array-card__head">#{{ i + 1 }}</div>
+              <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeProfileRecord(&#39;institute_contacts&#39;, i)" title="Remove">&times;</button></div>
               <div class="ipf-grid">
                 <div class="form-field"><label>serial_no</label><input v-model.number="profile.institute_contacts[i].serial_no" :name="`institute_contacts.${i}.serial_no`" type="number" /></div>
                 <div class="form-field"><label>name</label><input v-model="profile.institute_contacts[i].name" :name="`institute_contacts.${i}.name`" type="text" /></div>
