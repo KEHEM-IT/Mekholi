@@ -48,7 +48,7 @@ export interface InstituteProfileType {
   institute_contacts: ProfileItem[]
 }
 
-const raw = (suhscJson as { school_data: ProfileItem[] }).school_data[0]
+const raw = (suhscJson as any).school_data[0] ?? {} as ProfileItem
 
 function cloneArr(key: string): ProfileItem[] {
   const arr = raw[key]
