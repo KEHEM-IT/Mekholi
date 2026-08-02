@@ -2,8 +2,13 @@
 // (edits the data) and Institute Dashboard Index (reads progress).
 // Module-level reactive() means both pages share the same object;
 // editing the profile page instantly updates dashboard bars.
+//
+// Data flow:
+//   Dev / no Netlify   → loads from static suhsc_generated.json (always works)
+//   Production (Vercel) → calls /api/profile to read/write Neon Postgres
+//   saveProfile()       → PUT /api/profile, persists to Neon
 
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import suhscJson from '@/assets/school/suhsc_generated.json'
 
 // ---- typed interface so vue-tsc strict null checks pass ----------------
@@ -157,3 +162,45 @@ export const profileProgress = computed(() => {
   const empty = total - filled
   return { filled, empty, total, pct: total > 0 ? Math.round((filled / total) * 100) : 0 }
 })
+
+// ---- API helpers (Neon Postgres via Vercel serverless) ----------------
+
+export const isSaving = ref(false)
+export const isLoadedFromApi = ref(false)
+
+/** Save current profile to Neon Postgres via /api/profile */
+export async function saveProfile(): Promise<boolean> {
+  isSaving.value = true
+  try {
+    const eiin = instituteProfile.identifiers.eiin || '130430'
+    const res = await fetch(`/api/profile?eiin=${eiin}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(instituteProfile),
+    })
+    if (!res.ok) throw new Error('Save failed')
+    return true
+  } catch (err) {
+    console.error('saveProfile:', err)
+    return false
+  } finally {
+    isSaving.value = false
+  }
+}
+
+/** Hydrate profile from Neon Postgres (call once at app startup).
+ *  In dev/static mode, the JSON import is the default. */
+export async function loadProfileFromApi(): Promise<void> {
+  try {
+    const eiin = instituteProfile.identifiers.eiin || '130430'
+    const res = await fetch(`/api/profile?eiin=${eiin}`)
+    if (!res.ok) return
+    const data = await res.json()
+    if (!data) return
+    // Merge API data into the reactive object (preserves array reactivity)
+    Object.assign(instituteProfile, data)
+    isLoadedFromApi.value = true
+  } catch {
+    // Static JSON fallback already loaded — silently ignore
+  }
+}

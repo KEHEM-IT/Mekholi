@@ -1,8 +1,8 @@
 <!-- Institute Setup > Institute Profile -->
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useAppPreferences } from '@/composables/useAppPreferences'
-import { instituteProfile, addProfileRecord, removeProfileRecord } from '@/composables/useInstituteProfile'
+import { instituteProfile, addProfileRecord, removeProfileRecord, saveProfile, loadProfileFromApi, isSaving } from '@/composables/useInstituteProfile'
 
 defineOptions({ name: 'InstituteProfile' })
 
@@ -10,11 +10,10 @@ const { preferences } = useAppPreferences()
 const isBn = computed(() => preferences.uiLanguage === 'bn')
 const profile = instituteProfile
 
-const isSaving = ref(false)
-function handleSave() {
-  isSaving.value = true
-  setTimeout(() => (isSaving.value = false), 500)
-}
+// Hydrate from API on mount (noop if API unavailable, falls back to static JSON)
+onMounted(() => { loadProfileFromApi() })
+
+function handleSave() { saveProfile() }
 </script>
 
 <template>
