@@ -6,10 +6,10 @@
 import { computed, reactive } from 'vue'
 import suhscJson from '@/assets/school/suhsc_generated.json'
 
-type R = Record<string, unknown>
+type R = Record<string, any>
 const raw = (suhscJson as { school_data: R[] }).school_data[0]!
 
-function cloneArr(key: string): unknown[] {
+function cloneArr(key: string): any[] {
   const arr = raw[key]
   if (!Array.isArray(arr)) return []
   return arr.map((item: unknown) => {
@@ -95,7 +95,7 @@ export function removeProfileRecord(key: keyof typeof instituteProfile, index: n
   arr.splice(index, 1)
 }
 
-function countFilled(obj: unknown): number {
+function countFilled(obj: any): number {
   if (obj === null || obj === undefined || obj === '') return 0
   if (typeof obj === 'object' && !Array.isArray(obj)) {
     return Object.values(obj as R).reduce((s, v) => s + countFilled(v), 0)
@@ -103,7 +103,7 @@ function countFilled(obj: unknown): number {
   return 1
 }
 
-function countTotal(obj: unknown): number {
+function countTotal(obj: any): number {
   if (obj === null || obj === undefined) return 1
   if (typeof obj === 'object' && !Array.isArray(obj)) {
     return Object.values(obj as R).reduce((s, v) => s + countTotal(v), 0)
