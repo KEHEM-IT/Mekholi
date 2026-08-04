@@ -7,7 +7,7 @@ import json, sqlite3, urllib.parse
 from pathlib import Path
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
-DB_PATH = Path(__file__).parent / "school.db"
+DB_PATH = Path(__file__).parent.parent / "school.db"
 
 def get_db():
     conn = sqlite3.connect(str(DB_PATH))
@@ -25,7 +25,7 @@ def init_db():
     """)
     count = conn.execute("SELECT COUNT(*) FROM institute_profiles").fetchone()[0]
     if count == 0:
-        suhsc_path = Path(__file__).parent / "src" / "assets" / "school" / "suhsc_generated.json"
+        suhsc_path = Path(__file__).parent.parent / "src" / "assets" / "school" / "suhsc_generated.json"
         if suhsc_path.exists():
             raw = json.loads(suhsc_path.read_text(encoding="utf-8"))["school_data"][0]
             keys = [
