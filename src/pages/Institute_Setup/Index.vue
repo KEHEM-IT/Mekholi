@@ -4,7 +4,7 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppPreferences } from '@/composables/useAppPreferences'
 import { useDragScroll } from '@/composables/useDragScroll'
-import suhscJson from '@/assets/school/suhsc_generated.json'
+import { instituteProfile, profileProgress } from '@/composables/useInstituteProfile'
 import {
   TABLE_TABS,
   formatBytes,
@@ -57,61 +57,6 @@ const STEP_ROUTES: Record<string, string> = {
 const STEP_PCTS: Record<string, () => number> = {
   'Institute Profile': () => profileProgress.value.pct,
 }
-
-/** Count how many leaf values in a nested object are non-empty (filled). */
-function countFilled(obj: unknown): number {
-  if (obj === null || obj === undefined || obj === '') return 0
-  if (typeof obj === 'object' && !Array.isArray(obj)) {
-    return Object.values(obj as Record<string, unknown>).reduce(
-      (sum, v) => sum + countFilled(v),
-      0,
-    )
-  }
-  return 1
-}
-
-/** Count total leaf values in a nested object (filled + empty). */
-function countTotal(obj: unknown): number {
-  if (obj === null || obj === undefined) return 1
-  if (typeof obj === 'object' && !Array.isArray(obj)) {
-    return Object.values(obj as Record<string, unknown>).reduce(
-      (sum, v) => sum + countTotal(v),
-      0,
-    )
-  }
-  return 1
-}
-
-/** Progress computed from suhsc_generated.json — same source as
- *  InstituteProfileView. Extracts the profile-relevant fields from the
- *  old flat school_data[0] format (same keys used in the form page). */
-const profileData = computed(() => {
-  const d = (suhscJson as { school_data: Record<string, unknown>[] }).school_data[0]!
-  return {
-    institute_name_bn: d.institute_name_bn,
-    institute_name_en: d.institute_name_en,
-    founder_name: d.founder_name,
-    head_of_institute_name: d.head_of_institute_name,
-    parliamentary_constituency: d.parliamentary_constituency,
-    establishment_date: d.establishment_date,
-    address: d.address,
-    contact: d.contact,
-    classification: d.classification,
-    identifiers: d.identifiers,
-    mpo_status: d.mpo_status,
-    location_details: d.location_details,
-    income_total: d.income_total,
-    expense_total: d.expense_total,
-    student_fee_amount: d.student_fee_amount,
-  }
-})
-
-const profileProgress = computed(() => {
-  const total = countTotal(profileData.value)
-  const filled = countFilled(profileData.value)
-  const empty = total - filled
-  return { filled, empty, total, pct: total > 0 ? Math.round((filled / total) * 100) : 0 }
-})
 
 /** Pick a fill color for the vertical bar based on completion percentage. */
 function barColor(pct: number): string {

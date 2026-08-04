@@ -429,3 +429,41 @@
     min-width: 0;
   }
 }
+
+// --- Array item cards (bank accounts, committee members, etc.) ----------------
+
+.ipf-array-card {
+  padding: $space-3;
+  border-radius: $radius-md;
+  border: 1px solid $color-border;
+  background: $color-surface-alt;
+}
+
+.ipf-array-card__head {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: $color-text-muted;
+  text-transform: uppercase;
+  margin-bottom: $space-3;
+  @include flex(row, center, space-between, $space-2);
+}
+
+.ipf-array-card__remove {
+  background: none;
+  border: none;
+  color: $color-text-muted;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: $radius-sm;
+
+  &:hover {
+    color: $color-danger;
+    background: $color-danger-muted;
+  }
+}
+
+.ipf-add-btn {
+  flex-shrink: 0;
+}
