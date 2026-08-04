@@ -4,9 +4,9 @@
 // editing the profile page instantly updates dashboard bars.
 //
 // Data flow:
-//   Dev / no Netlify   → loads from static suhsc_generated.json (always works)
-//   Production (Vercel) → calls /api/profile to read/write Neon Postgres
-//   saveProfile()       → PUT /api/profile, persists to Neon
+//   Dev (no server)  → loads from static suhsc_generated.json (always works)
+//   Dev (with server) → calls http://localhost:5000/api/profile (Flask + SQLite)
+//   Production        → static JSON only (no external API dependency)
 
 import { computed, reactive, ref } from 'vue'
 import suhscJson from '@/assets/school/suhsc_generated.json'
@@ -163,17 +163,21 @@ export const profileProgress = computed(() => {
   return { filled, empty, total, pct: total > 0 ? Math.round((filled / total) * 100) : 0 }
 })
 
-// ---- API helpers (Neon Postgres via Vercel serverless) ----------------
+// ---- Local Python API helpers -------------------------------------------
+// Calls http://localhost:5000/api/profile (Flask server in server.py).
+// Falls back to static JSON import if server is not running.
 
 export const isSaving = ref(false)
 export const isLoadedFromApi = ref(false)
 
-/** Save current profile to Neon Postgres via /api/profile */
+const API_BASE = 'http://localhost:5000'
+
+/** Save current profile to local SQLite via Python Flask API */
 export async function saveProfile(): Promise<boolean> {
   isSaving.value = true
   try {
     const eiin = instituteProfile.identifiers.eiin || '130430'
-    const res = await fetch(`/api/profile?eiin=${eiin}`, {
+    const res = await fetch(`${API_BASE}/api/profile?eiin=${eiin}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(instituteProfile),
@@ -181,26 +185,25 @@ export async function saveProfile(): Promise<boolean> {
     if (!res.ok) throw new Error('Save failed')
     return true
   } catch (err) {
-    console.error('saveProfile:', err)
+    console.warn('saveProfile failed (is server.py running?):', err)
     return false
   } finally {
     isSaving.value = false
   }
 }
 
-/** Hydrate profile from Neon Postgres (call once at app startup).
- *  In dev/static mode, the JSON import is the default. */
+/** Hydrate profile from local SQLite (call at app startup).
+ *  Falls back to static JSON if the Python server is not running. */
 export async function loadProfileFromApi(): Promise<void> {
   try {
     const eiin = instituteProfile.identifiers.eiin || '130430'
-    const res = await fetch(`/api/profile?eiin=${eiin}`)
+    const res = await fetch(`${API_BASE}/api/profile?eiin=${eiin}`)
     if (!res.ok) return
     const data = await res.json()
     if (!data) return
-    // Merge API data into the reactive object (preserves array reactivity)
     Object.assign(instituteProfile, data)
     isLoadedFromApi.value = true
   } catch {
-    // Static JSON fallback already loaded — silently ignore
+    // Python server not running — use static JSON fallback
   }
 }
