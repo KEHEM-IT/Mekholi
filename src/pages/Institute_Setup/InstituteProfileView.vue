@@ -174,9 +174,10 @@ const showHigherSecondaryMpo = computed(() => {
   return n.includes("college");
 });
 
-// Live total of all staff fields (updates as the user types)
+// Live total of staff — sum of the two "Currently Working" fields only
+// (Male + Female), not the MPO breakdown rows.
 const staffTotal = computed(() =>
-  [form.staff_male, form.staff_female, form.staff_mpo_male, form.staff_mpo_female, form.staff_nonmpo_male, form.staff_nonmpo_female].reduce<number>(
+  [form.staff_male, form.staff_female].reduce<number>(
     (sum, n) => sum + (Number(n) || 0),
     0,
   ),
@@ -873,10 +874,10 @@ function removeCommittee(i: number) {
               <h2>{{ isBn ? "জনবল" : "Staff" }}</h2>
             </div>
           </div>
-          <div class="ipf-staff-total" :title="isBn ? 'মোট কর্মচারী' : 'Total staff'">
+          <div class="ipf-staff-total" :title="isBn ? 'মোট কর্মচারী' : 'Total staffs'">
             <i class="fa-duotone fa-calculator" />
             <span>
-              {{ isBn ? "মোট" : "Total" }}:
+              {{ isBn ? "মোট কর্মচারী" : "Total Staffs" }}:
               <strong>{{ staffTotal }}</strong>
             </span>
           </div>
