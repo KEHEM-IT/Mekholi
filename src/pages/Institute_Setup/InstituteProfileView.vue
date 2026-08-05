@@ -274,8 +274,8 @@ onMounted(async () => {
     for (const key of keys) {
       if (key in data) {
         // Assign values from loaded partial data
-        // Use a safe any-cast to avoid excessive type narrowing issues
-        (form as any)[key] = (data as any)[key];
+        // Index via Record<..., unknown> to avoid any-casts
+        (form as Record<keyof typeof form, unknown>)[key] = data[key];
       }
     }
   }
