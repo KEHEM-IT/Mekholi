@@ -166,7 +166,9 @@ useShortcutKeySet([
   { key: 's', ctrl: true, handler: () => handleSave() },
 ])
 
-// ── Shortcuts ───────────────────────────────────────────────────────────── {
+// ── Committee add/remove ────────────────────────────────────────────────
+
+function addCommittee() {
   form.committee_members.push({ member_name: '', joining_date: '', phone: '', gender: '', committee_position: '', education_qualification: '', occupation: '', left_committee: false, reason_for_leaving: '' })
 }
 function removeCommittee(i: number) { form.committee_members.splice(i, 1) }
