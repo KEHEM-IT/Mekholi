@@ -138,6 +138,8 @@ def profile_to_dict(row: sqlite3.Row, conn: sqlite3.Connection) -> dict:
     return d
 
 class Handler(BaseHTTPRequestHandler):
+    protocol_version = 'HTTP/1.1'
+
     def _cors(self):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET,POST,PUT,OPTIONS")
