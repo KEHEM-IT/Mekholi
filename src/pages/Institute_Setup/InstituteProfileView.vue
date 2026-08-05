@@ -1,9 +1,11 @@
 <!-- Institute Setup > Institute Profile -->
 <script setup lang="ts">
-import { computed, nextTick, onMounted, reactive, watch } from "vue";
+import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
 import { useAppPreferences } from "@/composables/useAppPreferences";
 import { useShortcutKeySet } from "@/composables/shortcut_key_set";
 import { isSaving, saveProfile, loadProfile } from "@/composables/useInstituteProfile";
+import { useToast } from "@/composables/useToast";
+import { uploadToImgbb, validateLogoFile } from "@/composables/useImgbbUpload";
 import BaseCombobox from "@/components/ui/BaseCombobox.vue";
 import BaseDatePicker from "@/components/ui/BaseDatePicker.vue";
 import banksJson from "@/assets/jsons/banks.json";
@@ -45,6 +47,7 @@ const MAX3 = { maxlength: 3 };
 
 const form = reactive({
   // Identity
+  institute_logo: "" as string,
   institute_name_bn: "" as string,
   institute_name_en: "" as string,
   founder_name: "" as string,
@@ -238,6 +241,44 @@ const FACILITY_ICONS: Record<string, string> = {
 
 // ── Save ──────────────────────────────────────────────────────────────────
 
+// ── Institute Logo (ImgBB upload) ───────────────────────────────────────
+
+const toast = useToast();
+const isUploadingLogo = ref(false);
+const logoInput = ref<HTMLInputElement | null>(null);
+
+function triggerLogoPick() {
+  if (!isUploadingLogo.value) logoInput.value?.click();
+}
+
+async function onLogoFilePicked(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+  input.value = ""; // allow re-selecting the same file
+  if (!file) return;
+
+  const validationError = validateLogoFile(file);
+  if (validationError) {
+    toast.error(validationError);
+    return;
+  }
+
+  isUploadingLogo.value = true;
+  try {
+    const url = await uploadToImgbb(file);
+    form.institute_logo = url;
+    toast.success(isBn.value ? "লোগো আপলোড হয়েছে" : "Logo uploaded");
+  } catch (err) {
+    toast.error(err instanceof Error ? err.message : "Logo upload failed");
+  } finally {
+    isUploadingLogo.value = false;
+  }
+}
+
+function removeLogo() {
+  form.institute_logo = "";
+}
+
 // ── Save / Load ───────────────────────────────────────────────────────
 
 async function handleSave() {
@@ -311,6 +352,63 @@ function removeCommittee(i: number) {
           </div>
         </div>
         <div class="ipf-section__body">
+          <!-- Institute Logo -->
+          <div class="form-field">
+            <label>{{ isBn ? "প্রতিষ্ঠানের লোগো" : "Institute Logo" }}</label>
+            <div
+              class="ipf-logo"
+              :class="{ 'is-uploading': isUploadingLogo }"
+              @click="triggerLogoPick"
+              @keydown.enter="triggerLogoPick"
+              role="button"
+              tabindex="0"
+            >
+              <img
+                v-if="form.institute_logo && !isUploadingLogo"
+                :src="form.institute_logo"
+                alt="Institute logo"
+                class="ipf-logo__preview"
+              />
+              <i
+                v-else-if="isUploadingLogo"
+                class="fa-duotone fa-spinner fa-spin ipf-logo__icon"
+              />
+              <i v-else class="fa-duotone fa-cloud-arrow-up ipf-logo__icon" />
+              <div class="ipf-logo__text">
+                <template v-if="isUploadingLogo">
+                  {{ isBn ? "আপলোড হচ্ছে..." : "Uploading..." }}
+                </template>
+                <template v-else-if="form.institute_logo">
+                  {{ isBn ? "লোগো পরিবর্তন করতে ক্লিক করুন" : "Click to replace logo" }}
+                </template>
+                <template v-else>
+                  {{ isBn ? "লোগো আপলোড করতে ক্লিক করুন" : "Click to upload logo" }}
+                </template>
+                <small>{{
+                  isBn
+                    ? "PNG, JPG, WEBP বা GIF — সর্বোচ্চ ৫ MB"
+                    : "PNG, JPG, WEBP or GIF — max 5 MB"
+                }}</small>
+              </div>
+              <span
+                v-if="form.institute_logo && !isUploadingLogo"
+                class="ipf-logo__remove"
+                role="button"
+                tabindex="-1"
+                :aria-label="isBn ? 'লোগো মুছুন' : 'Remove logo'"
+                @click.stop="removeLogo"
+              >
+                &#10005;
+              </span>
+            </div>
+            <input
+              ref="logoInput"
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              class="ipf-logo__input"
+              @change="onLogoFilePicked"
+            />
+          </div>
           <div class="ipf-grid">
             <div class="form-field">
               <label>{{ isBn ? "প্রতিষ্ঠানের নাম (বাংলায়)" : "Institute Name (Bangla)" }}</label

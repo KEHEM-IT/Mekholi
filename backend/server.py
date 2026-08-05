@@ -22,6 +22,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             eiin TEXT UNIQUE NOT NULL,
             institute_name_bn TEXT DEFAULT '', institute_name_en TEXT DEFAULT '',
+            institute_logo TEXT DEFAULT '',
             founder_name TEXT DEFAULT '', establishment_date TEXT DEFAULT '',
             parliamentary_constituency TEXT DEFAULT '',
             division_id TEXT DEFAULT '', district_id TEXT DEFAULT '',
@@ -72,6 +73,11 @@ def init_db():
                      'gymnasium','audio_visual','television','boundary_wall','solar_panel']:
             conn.execute("INSERT INTO facilities (profile_id,facility_key,enabled) VALUES (?,?,0)",(pid,key))
         print("SQL: seeded blank profile (EIIN: 130430)")
+    # Lightweight migrations for older databases
+    cols = [r[1] for r in conn.execute("PRAGMA table_info(institute_profiles)").fetchall()]
+    if "institute_logo" not in cols:
+        conn.execute("ALTER TABLE institute_profiles ADD COLUMN institute_logo TEXT DEFAULT ''")
+        print("SQL: migrated institute_profiles — added institute_logo column")
     conn.commit()
     conn.close()
 
@@ -122,7 +128,7 @@ class Handler(BaseHTTPRequestHandler):
         body = json.loads(body_str) if body_str else {}
         conn = get_db()
         vals = {f: body.get(f, "") for f in [
-            "institute_name_bn","institute_name_en","founder_name",
+            "institute_name_bn","institute_name_en","institute_logo","founder_name",
             "establishment_date","parliamentary_constituency",
             "division_id","district_id","upazila_id","union_id",
             "village_road_holding_no","post_office","post_code",

@@ -567,3 +567,85 @@
     font-size: 0.75rem;
   }
 }
+
+// ── Institute Logo uploader ────────────────────────────────────────────
+
+.ipf-logo {
+  position: relative;
+  @include flex(row, center, center, $space-3);
+  padding: $space-4 $space-3;
+  border: 2px dashed $color-input-border;
+  border-radius: $radius-md;
+  background: $color-surface-alt;
+  cursor: pointer;
+  text-align: center;
+  transition:
+    border-color $transition-fast,
+    background $transition-fast;
+
+  &:hover {
+    border-color: $color-primary;
+    background: $color-surface-hover;
+  }
+
+  &.is-uploading {
+    cursor: progress;
+    opacity: 0.7;
+  }
+}
+
+.ipf-logo__preview {
+  width: 4.5rem;
+  height: 4.5rem;
+  object-fit: contain;
+  border-radius: $radius-md;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  flex-shrink: 0;
+}
+
+.ipf-logo__icon {
+  font-size: 2rem;
+  color: $color-text-muted;
+  flex-shrink: 0;
+}
+
+.ipf-logo__text {
+  @include flex(column, flex-start, center, $space-1);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $color-text-secondary;
+
+  small {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: $color-text-muted;
+  }
+}
+
+.ipf-logo__remove {
+  position: absolute;
+  top: $space-2;
+  right: $space-2;
+  @include flex(row, center, center);
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: $color-text-muted;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  transition:
+    background-color $transition-fast,
+    color $transition-fast;
+
+  &:hover {
+    background: $color-danger-muted;
+    color: $color-danger;
+  }
+}
+
+.ipf-logo__input {
+  display: none;
+}
