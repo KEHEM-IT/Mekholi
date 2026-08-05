@@ -1,0 +1,4 @@
+[
+  { "Id": 1, "Name": "Male", "NameInBangla": "পুরুষ", "LookupText": "Male - পুরুষ" },
+  { "Id": 2, "Name": "Female", "NameInBangla": "মহিলা", "LookupText": "Female - মহিলা" }
+]

@@ -6,6 +6,8 @@ import { useShortcutKeySet } from "@/composables/shortcut_key_set";
 import { isSaving, saveProfile, loadProfile } from "@/composables/useInstituteProfile";
 import BaseCombobox from "@/components/ui/BaseCombobox.vue";
 import banksJson from "@/assets/jsons/banks.json";
+import gendersJson from "@/assets/jsons/genders.json";
+import committeePositionsJson from "@/assets/jsons/committee_positions.json";
 import {
   BD_GEO_DIVISIONS,
   districtsByDivisionId,
@@ -92,20 +94,6 @@ const ACCOUNT_PURPOSES = [
   "Transection",
   "Other",
 ];
-
-const COMMITTEE_POSITIONS = [
-  "President",
-  "Member Secretary",
-  "Education",
-  "Parents",
-  "Donor",
-  "Teacher Representative",
-  "Reserved female teacher member",
-  "Reserved female guardian member",
-  "Founder member",
-];
-
-const GENDERS = ["পুরুষ", "মহিলা", "Male", "Female"];
 
 const DP_DIGITS = { maxlength: 10 };
 const MAX3 = { maxlength: 3 };
@@ -268,6 +256,12 @@ function comboOptions(items: string[]) {
 
 // Scheduled banks of Bangladesh (English + Bangla) from assets/jsons/banks.json
 const BANK_OPTIONS = banksJson;
+
+// Committee member gender options (English + Bangla)
+const GENDER_OPTIONS = gendersJson;
+
+// Committee member position options (English + Bangla), "Others" last
+const COMMITTEE_POSITION_OPTIONS = committeePositionsJson;
 
 // ── Save ──────────────────────────────────────────────────────────────────
 
@@ -819,7 +813,9 @@ function removeCommittee(i: number) {
                 <label>{{ isBn ? "লিঙ্গ" : "Gender" }}</label>
                 <BaseCombobox
                   v-model="form.committee_members[i].gender"
-                  :options="comboOptions(GENDERS)"
+                  :options="GENDER_OPTIONS"
+                  option-value="LookupText"
+                  option-label="LookupText"
                   :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
                 />
               </div>
@@ -827,7 +823,9 @@ function removeCommittee(i: number) {
                 <label>{{ isBn ? "কমিটিতে অবস্থান" : "Committee Position" }}</label>
                 <BaseCombobox
                   v-model="form.committee_members[i].committee_position"
-                  :options="comboOptions(COMMITTEE_POSITIONS)"
+                  :options="COMMITTEE_POSITION_OPTIONS"
+                  option-value="LookupText"
+                  option-label="LookupText"
                   :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
                 />
               </div>

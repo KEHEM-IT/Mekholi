@@ -1,0 +1,16 @@
+[
+  { "Id": 1,  "Name": "President", "NameInBangla": "সভাপতি", "LookupText": "President - সভাপতি" },
+  { "Id": 2,  "Name": "Vice President", "NameInBangla": "সহ-সভাপতি", "LookupText": "Vice President - সহ-সভাপতি" },
+  { "Id": 3,  "Name": "Member Secretary", "NameInBangla": "সদস্য সচিব", "LookupText": "Member Secretary - সদস্য সচিব" },
+  { "Id": 4,  "Name": "Joint Secretary", "NameInBangla": "যুগ্ম সম্পাদক", "LookupText": "Joint Secretary - যুগ্ম সম্পাদক" },
+  { "Id": 5,  "Name": "Treasurer", "NameInBangla": "কোষাধ্যক্ষ", "LookupText": "Treasurer - কোষাধ্যক্ষ" },
+  { "Id": 6,  "Name": "Education", "NameInBangla": "শিক্ষা", "LookupText": "Education - শিক্ষা" },
+  { "Id": 7,  "Name": "Parents", "NameInBangla": "অভিভাবক", "LookupText": "Parents - অভিভাবক" },
+  { "Id": 8,  "Name": "Donor", "NameInBangla": "দাতা", "LookupText": "Donor - দাতা" },
+  { "Id": 9,  "Name": "Teacher Representative", "NameInBangla": "শিক্ষক প্রতিনিধি", "LookupText": "Teacher Representative - শিক্ষক প্রতিনিধি" },
+  { "Id": 10, "Name": "Reserved Female Teacher Member", "NameInBangla": "সংরক্ষিত মহিলা শিক্ষক সদস্য", "LookupText": "Reserved Female Teacher Member - সংরক্ষিত মহিলা শিক্ষক সদস্য" },
+  { "Id": 11, "Name": "Reserved Female Guardian Member", "NameInBangla": "সংরক্ষিত মহিলা অভিভাবক সদস্য", "LookupText": "Reserved Female Guardian Member - সংরক্ষিত মহিলা অভিভাবক সদস্য" },
+  { "Id": 12, "Name": "Founder Member", "NameInBangla": "প্রতিষ্ঠাতা সদস্য", "LookupText": "Founder Member - প্রতিষ্ঠাতা সদস্য" },
+  { "Id": 13, "Name": "Member", "NameInBangla": "সদস্য", "LookupText": "Member - সদস্য" },
+  { "Id": 14, "Name": "Others", "NameInBangla": "অন্যান্য", "LookupText": "Others - অন্যান্য" }
+]
