@@ -243,6 +243,15 @@ const PARLIAMENTARY_SEAT_OPTIONS = parliamentarySeatsJson;
 
 // ── Institute Logo (ImgBB upload) ───────────────────────────────────────
 
+/** Keep only digits in numeric-only inputs (codes, phones, account numbers).
+ *  Fields stay type="text" so leading zeros are preserved in the stored
+ *  string, but anything non-numeric is stripped as the user types/pastes. */
+function onDigitsOnly(event: Event) {
+  const el = event.target as HTMLInputElement;
+  const digits = el.value.replace(/\D/g, "");
+  if (el.value !== digits) el.value = digits;
+}
+
 const toast = useToast();
 const isUploadingLogo = ref(false);
 const isDraggingLogo = ref(false);
@@ -291,8 +300,7 @@ function onLogoFilePicked(event: Event) {
   if (file) void uploadLogoFile(file);
 }
 
-function onLogoDragOver(event: DragEvent) {
-  if (isUploadingLogo.value) return;
+function onLogoDragOver(event: DragEvent) {  if (isUploadingLogo.value) return;
   event.preventDefault();
   if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
   isDraggingLogo.value = true;
@@ -634,7 +642,7 @@ function removeCommittee(i: number) {
           <div class="ipf-grid ipf-grid--three">
             <div class="form-field">
               <label>{{ isBn ? "প্রতিষ্ঠানের ফোন" : "Institute Phone" }}</label
-              ><input v-model="form.institute_phone" type="text"  :title="t('Contact phone number - e.g. 01712-345678', 'যোগাযোগের ফোন নম্বর লিখুন - যেমন: ০১৭১২-৩৪৫৬৭৮')"  :placeholder="t('Contact phone number - e.g. 01712-345678', 'যোগাযোগের ফোন নম্বর লিখুন - যেমন: ০১৭১২-৩৪৫৬৭৮')" />
+              ><input v-model="form.institute_phone" type="text"  :title="t('Contact phone number - e.g. 01712-345678', 'যোগাযোগের ফোন নম্বর লিখুন - যেমন: ০১৭১২-৩৪৫৬৭৮')"  :placeholder="t('Contact phone number - e.g. 01712-345678', 'যোগাযোগের ফোন নম্বর লিখুন - যেমন: ০১৭১২-৩৪৫৬৭৮')"  inputmode="numeric" @input="onDigitsOnly" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "ইমেইল" : "Email" }}</label
@@ -745,27 +753,27 @@ function removeCommittee(i: number) {
         <div class="ipf-section__body">
           <div class="ipf-grid ipf-grid--three">
             <div class="form-field">
-              <label>EIIN</label><input v-model="form.eiin" type="text" v-bind="DP_DIGITS"  :title="t('EIIN number (11 digits) - e.g. 130430', 'EIIN নম্বর লিখুন (১১ সংখ্যা) - যেমন: ১৩০৪৩০')"  :placeholder="t('EIIN number (11 digits) - e.g. 130430', 'EIIN নম্বর লিখুন (১১ সংখ্যা) - যেমন: ১৩০৪৩০')" />
+              <label>EIIN</label><input v-model="form.eiin" type="text" v-bind="DP_DIGITS"  :title="t('EIIN number (11 digits) - e.g. 130430', 'EIIN নম্বর লিখুন (১১ সংখ্যা) - যেমন: ১৩০৪৩০')"  :placeholder="t('EIIN number (11 digits) - e.g. 130430', 'EIIN নম্বর লিখুন (১১ সংখ্যা) - যেমন: ১৩০৪৩০')"  inputmode="numeric" @input="onDigitsOnly" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "বোর্ড কোড" : "Board Code" }}</label
-              ><input v-model="form.board_institute_code" type="text" v-bind="DP_DIGITS"  :title="t('Board institute code - e.g. 110123', 'বোর্ড ইনস্টিটিউট কোড লিখুন - যেমন: ১১০১২৩')"  :placeholder="t('Board institute code - e.g. 110123', 'বোর্ড ইনস্টিটিউট কোড লিখুন - যেমন: ১১০১২৩')" />
+              ><input v-model="form.board_institute_code" type="text" v-bind="DP_DIGITS"  :title="t('Board institute code - e.g. 110123', 'বোর্ড ইনস্টিটিউট কোড লিখুন - যেমন: ১১০১২৩')"  :placeholder="t('Board institute code - e.g. 110123', 'বোর্ড ইনস্টিটিউট কোড লিখুন - যেমন: ১১০১২৩')"  inputmode="numeric" @input="onDigitsOnly" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "কারিগরি বোর্ড কোড" : "Technical Board Code" }}</label
-              ><input v-model="form.technical_board_code" type="text" v-bind="DP_DIGITS"  :title="t('Technical board code - if applicable', 'টেকনিক্যাল বোর্ড কোড লিখুন - প্রযোজ্য হলে')"  :placeholder="t('Technical board code - if applicable', 'টেকনিক্যাল বোর্ড কোড লিখুন - প্রযোজ্য হলে')" />
+              ><input v-model="form.technical_board_code" type="text" v-bind="DP_DIGITS"  :title="t('Technical board code - if applicable', 'টেকনিক্যাল বোর্ড কোড লিখুন - প্রযোজ্য হলে')"  :placeholder="t('Technical board code - if applicable', 'টেকনিক্যাল বোর্ড কোড লিখুন - প্রযোজ্য হলে')"  inputmode="numeric" @input="onDigitsOnly" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "এমপিও কোড" : "MPO Code" }}</label
-              ><input v-model="form.mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('MPO code of the institute', 'প্রতিষ্ঠানের এমপিও কোড লিখুন')"  :placeholder="t('MPO code of the institute', 'প্রতিষ্ঠানের এমপিও কোড লিখুন')" />
+              ><input v-model="form.mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('MPO code of the institute', 'প্রতিষ্ঠানের এমপিও কোড লিখুন')"  :placeholder="t('MPO code of the institute', 'প্রতিষ্ঠানের এমপিও কোড লিখুন')"  inputmode="numeric" @input="onDigitsOnly" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "কারিগরি এমপিও কোড" : "Tech. Branch MPO Code" }}</label
-              ><input v-model="form.technical_branch_mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('MPO code of the technical branch', 'কারিগরি শাখার এমপিও কোড লিখুন')"  :placeholder="t('MPO code of the technical branch', 'কারিগরি শাখার এমপিও কোড লিখুন')" />
+              ><input v-model="form.technical_branch_mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('MPO code of the technical branch', 'কারিগরি শাখার এমপিও কোড লিখুন')"  :placeholder="t('MPO code of the technical branch', 'কারিগরি শাখার এমপিও কোড লিখুন')"  inputmode="numeric" @input="onDigitsOnly" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "উপবৃত্তি কোড" : "Stipend Code" }}</label
-              ><input v-model="form.stipend_code" type="text" v-bind="DP_DIGITS"  :title="t('Stipend code - if applicable', 'স্টাইপেন্ড কোড লিখুন - প্রযোজ্য হলে')"  :placeholder="t('Stipend code - if applicable', 'স্টাইপেন্ড কোড লিখুন - প্রযোজ্য হলে')" />
+              ><input v-model="form.stipend_code" type="text" v-bind="DP_DIGITS"  :title="t('Stipend code - if applicable', 'স্টাইপেন্ড কোড লিখুন - প্রযোজ্য হলে')"  :placeholder="t('Stipend code - if applicable', 'স্টাইপেন্ড কোড লিখুন - প্রযোজ্য হলে')"  inputmode="numeric" @input="onDigitsOnly" />
             </div>
           </div>
         </div>
@@ -797,7 +805,7 @@ function removeCommittee(i: number) {
                 type="text"
                 v-bind="DP_DIGITS"
                 style="margin-top: 0.5rem"
-               :title="t('General MPO code', 'সাধারণ এমপিও কোড লিখুন')"  :placeholder="t('General MPO code', 'সাধারণ এমপিও কোড লিখুন')" />
+               :title="t('General MPO code', 'সাধারণ এমপিও কোড লিখুন')"  :placeholder="t('General MPO code', 'সাধারণ এমপিও কোড লিখুন')"  inputmode="numeric" @input="onDigitsOnly" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "কারিগরি শাখা এমপিওভুক্ত?" : "Technical Branch MPO?" }}</label>
@@ -813,7 +821,7 @@ function removeCommittee(i: number) {
                 type="text"
                 v-bind="DP_DIGITS"
                 style="margin-top: 0.5rem"
-               :title="t('Technical MPO code', 'টেকনিক্যাল এমপিও কোড লিখুন')"  :placeholder="t('Technical MPO code', 'টেকনিক্যাল এমপিও কোড লিখুন')" />
+               :title="t('Technical MPO code', 'টেকনিক্যাল এমপিও কোড লিখুন')"  :placeholder="t('Technical MPO code', 'টেকনিক্যাল এমপিও কোড লিখুন')"  inputmode="numeric" @input="onDigitsOnly" />
             </div>
           </div>
         </div>
@@ -877,7 +885,7 @@ function removeCommittee(i: number) {
             </div>
             <div class="form-field">
               <label>{{ isBn ? "মাধ্যমিক এমপিও কোড" : "Secondary MPO Code" }}</label
-              ><input v-model="form.secondary_mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('Secondary MPO code', 'মাধ্যমিক এমপিও কোড লিখুন')"  :placeholder="t('Secondary MPO code', 'মাধ্যমিক এমপিও কোড লিখুন')" />
+              ><input v-model="form.secondary_mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('Secondary MPO code', 'মাধ্যমিক এমপিও কোড লিখুন')"  :placeholder="t('Secondary MPO code', 'মাধ্যমিক এমপিও কোড লিখুন')"  inputmode="numeric" @input="onDigitsOnly" />
             </div>
           </div>
           <div v-if="showHigherSecondaryMpo" class="ipf-grid" style="margin-top: 1rem">
@@ -887,7 +895,7 @@ function removeCommittee(i: number) {
             </div>
             <div class="form-field">
               <label>{{ isBn ? "উচ্চ মাধ্যমিক এমপিও কোড" : "Higher Secondary MPO Code" }}</label
-              ><input v-model="form.higher_secondary_mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('Higher secondary MPO code', 'উচ্চ মাধ্যমিক এমপিও কোড লিখুন')"  :placeholder="t('Higher secondary MPO code', 'উচ্চ মাধ্যমিক এমপিও কোড লিখুন')" />
+              ><input v-model="form.higher_secondary_mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('Higher secondary MPO code', 'উচ্চ মাধ্যমিক এমপিও কোড লিখুন')"  :placeholder="t('Higher secondary MPO code', 'উচ্চ মাধ্যমিক এমপিও কোড লিখুন')"  inputmode="numeric" @input="onDigitsOnly" />
             </div>
           </div>
         </div>
@@ -935,7 +943,7 @@ function removeCommittee(i: number) {
             </div>
             <div class="form-field">
               <label>{{ isBn ? "হিসাব নম্বর" : "Account Number" }}</label
-              ><input v-model="form.bank_account_number" type="text"  :title="t('Bank account number', 'ব্যাংক হিসাব নম্বর লিখুন')"  :placeholder="t('Bank account number', 'ব্যাংক হিসাব নম্বর লিখুন')" />
+              ><input v-model="form.bank_account_number" type="text"  :title="t('Bank account number', 'ব্যাংক হিসাব নম্বর লিখুন')"  :placeholder="t('Bank account number', 'ব্যাংক হিসাব নম্বর লিখুন')"  inputmode="numeric" @input="onDigitsOnly" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "হিসাবের উদ্দেশ্য" : "Account Purpose" }}</label>
@@ -989,7 +997,7 @@ function removeCommittee(i: number) {
               </div>
               <div class="form-field">
                 <label>{{ isBn ? "ফোন" : "Phone" }}</label
-                ><input v-model="form.committee_members[i].phone" type="text"  :title="t('Member contact number', 'সদস্যের ফোন নম্বর লিখুন')"  :placeholder="t('Member contact number', 'সদস্যের ফোন নম্বর লিখুন')" />
+                ><input v-model="form.committee_members[i].phone" type="text"  :title="t('Member contact number', 'সদস্যের ফোন নম্বর লিখুন')"  :placeholder="t('Member contact number', 'সদস্যের ফোন নম্বর লিখুন')"  inputmode="numeric" @input="onDigitsOnly" />
               </div>
               <div class="form-field">
                 <label>{{ isBn ? "লিঙ্গ" : "Gender" }}</label>
