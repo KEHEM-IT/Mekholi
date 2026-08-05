@@ -6,16 +6,9 @@ import { useShortcutKeySet } from '@/composables/shortcut_key_set'
 import BaseCombobox from '@/components/ui/BaseCombobox.vue'
 import {
   BD_GEO_DIVISIONS,
-  BD_GEO_DISTRICTS,
-  BD_GEO_UPAZILAS,
-  BD_GEO_UNIONS,
   districtsByDivisionId,
   upazilasByDistrictId,
   unionsByUpazilaId,
-  type BdDivision,
-  type BdDistrict,
-  type BdUpazila,
-  type BdUnion,
 } from '@/utils/bdGeo'
 
 defineOptions({ name: 'InstituteProfile' })
@@ -149,7 +142,7 @@ const showHigherSecondaryMpo = computed(() => {
 // ── Combobox-as-array helpers ─────────────────────────────────────────────
 
 function comboOptions(items: string[]) {
-  return items.map((v, i) => ({ Id: v, LookupText: v }))
+  return items.map((v) => ({ Id: v, LookupText: v }))
 }
 
 // ── Save ──────────────────────────────────────────────────────────────────

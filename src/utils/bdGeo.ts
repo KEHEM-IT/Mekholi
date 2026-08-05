@@ -9,7 +9,7 @@ import unionsRaw    from '@/assets/geolocations/unions.json'
 
 function extractData(wrapper: Array<Record<string, unknown>>) {
   for (const item of wrapper) {
-    if ((item as any).type === 'table') return ((item as any).data ?? []) as Record<string, unknown>[]
+    if ((item).type === 'table') return ((item).data ?? []) as Record<string, unknown>[]
   }
   return [] as Record<string, unknown>[]
 }
