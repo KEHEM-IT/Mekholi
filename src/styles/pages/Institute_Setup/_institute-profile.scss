@@ -507,6 +507,21 @@
   }
 }
 
+.ipf-toggle-btn__name {
+  @include flex(row, center, flex-start, $space-2);
+  min-width: 0;
+
+  i {
+    font-size: 0.95rem;
+    color: $color-text-secondary;
+    transition: color $transition-fast;
+  }
+
+  .ipf-toggle-btn.is-active & i {
+    color: $color-success;
+  }
+}
+
 .ipf-toggle-btn__label {
   font-size: 0.85rem;
   font-weight: 600;

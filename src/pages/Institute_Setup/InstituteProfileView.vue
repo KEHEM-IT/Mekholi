@@ -263,6 +263,25 @@ const GENDER_OPTIONS = gendersJson;
 // Committee member position options (English + Bangla), "Others" last
 const COMMITTEE_POSITION_OPTIONS = committeePositionsJson;
 
+// Font Awesome 6 Pro icon for each facility toggle
+const FACILITY_ICONS: Record<string, string> = {
+  play_ground: "fa-futbol",
+  electricity: "fa-bolt",
+  tubewell: "fa-faucet-drip",
+  tap: "fa-faucet",
+  transport: "fa-bus-school",
+  auditorium: "fa-people-roof",
+  gas: "fa-fire",
+  canteen: "fa-utensils",
+  audio_sound: "fa-volume-high",
+  health_aid: "fa-kit-medical",
+  gymnasium: "fa-dumbbell",
+  audio_visual: "fa-projector",
+  television: "fa-tv",
+  boundary_wall: "fa-brick-wall",
+  solar_panel: "fa-solar-panel",
+};
+
 // ── Save ──────────────────────────────────────────────────────────────────
 
 // ── Save / Load ───────────────────────────────────────────────────────
@@ -884,9 +903,12 @@ function removeCommittee(i: number) {
               :class="{ 'is-active': val }"
               @click="form.facilities[key] = !val"
             >
-              <span class="ipf-toggle-btn__label">{{
-                key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
-              }}</span>
+              <span class="ipf-toggle-btn__name">
+                <i :class="['fa-duotone', FACILITY_ICONS[key] ?? 'fa-circle']" />
+                <span class="ipf-toggle-btn__label">{{
+                  key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+                }}</span>
+              </span>
               <span class="ipf-toggle-btn__state">{{
                 val ? (isBn ? "হ্যাঁ" : "Yes") : isBn ? "না" : "No"
               }}</span>
