@@ -5,6 +5,7 @@ Run: python backend/server.py
 import json, sqlite3, urllib.parse, threading
 from pathlib import Path
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from socketserver import ThreadingMixIn
 
 DB_PATH = Path(__file__).parent.parent / "school.db"
 
@@ -174,10 +175,8 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
         print(f"  {args[0]}")
 
-class ThreadedServer(HTTPServer):
-    def process_request(self, request, client_address):
-        threading.Thread(target=self.process_request_thread,
-                         args=(request, client_address)).start()
+class ThreadedServer(ThreadingMixIn, HTTPServer):
+    daemon_threads = True
 
 if __name__ == "__main__":
     init_db()
