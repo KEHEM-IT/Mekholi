@@ -47,7 +47,7 @@ export function useFormDirtyGuard<T extends object>(form: T, options: FormDirtyG
       const dirty = hasChanges()
       if (dirty !== isDirty.value) {
         isDirty.value = dirty
-        if (dirty) toast.info(options.dirtyToast ?? 'You have unsaved changes')
+        if (dirty) toast.warning(options.dirtyToast ?? 'You have unsaved changes')
       }
     },
     { deep: true },

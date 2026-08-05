@@ -11,6 +11,7 @@ const { toasts } = useToast()
 const TYPE_ICONS: Record<string, string> = {
   success: 'fa-circle-check',
   error: 'fa-circle-exclamation',
+  warning: 'fa-triangle-exclamation',
   info: 'fa-circle-info',
 }
 </script>

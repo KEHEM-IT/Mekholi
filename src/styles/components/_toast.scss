@@ -2,13 +2,13 @@
 
 // Global toast notifications — see components/ui/ToastViewport.vue.
 // Markup:
-//   .toast-viewport (fixed, top-right)
-//     .toast.toast--success|--error|--info (TransitionGroup "toast")
+//   .toast-viewport (fixed, bottom-right)
+//     .toast.toast--success|--error|--info|--warning (TransitionGroup "toast")
 //       .toast__icon + .toast__message
 
 .toast-viewport {
   position: fixed;
-  top: $space-4;
+  bottom: $space-4;
   right: $space-4;
   z-index: 200;
   display: flex;
@@ -23,36 +23,66 @@
   padding: $space-3 $space-4;
   border-radius: $radius-md;
   border: 1px solid $color-border-strong;
-  border-left-width: 4px;
-  background: $color-surface-alt;
-  box-shadow: $shadow-card;
   font-size: 0.85rem;
   font-weight: 600;
   color: $color-text;
   pointer-events: auto;
+  // Colored border + tinted background + glow per type, set below.
+  border-left-width: 4px;
 }
 
 .toast__icon {
-  font-size: 1rem;
+  font-size: 1.1rem;
   flex-shrink: 0;
 }
 
+// ── Type highlights ─────────────────────────────────────────────────────
+
 .toast--success {
-  border-left-color: $color-success;
-  .toast__icon { color: $color-success; }
+  border-color: $color-success;
+  background: $color-success-muted;
+  color: #bbf7d0;
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.28);
+
+  .toast__icon {
+    color: $color-success;
+  }
 }
 
 .toast--error {
-  border-left-color: $color-danger;
-  .toast__icon { color: $color-danger; }
+  border-color: $color-danger;
+  background: $color-danger-muted;
+  color: #fecaca;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.28);
+
+  .toast__icon {
+    color: $color-danger;
+  }
 }
 
 .toast--info {
-  border-left-color: $color-info;
-  .toast__icon { color: $color-info; }
+  border-color: $color-info;
+  background: $color-info-muted;
+  color: #bae6fd;
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.28);
+
+  .toast__icon {
+    color: $color-info;
+  }
 }
 
-// Slide/fade in from the right, fade out on removal.
+.toast--warning {
+  border-color: $color-warning;
+  background: $color-warning-muted;
+  color: #fde68a;
+  box-shadow: 0 4px 16px rgba(234, 179, 8, 0.28);
+
+  .toast__icon {
+    color: $color-warning;
+  }
+}
+
+// Slide/fade in from the right (bottom corner), fade out on removal.
 .toast-enter-active,
 .toast-leave-active {
   transition:
