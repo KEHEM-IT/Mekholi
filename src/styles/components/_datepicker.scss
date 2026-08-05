@@ -1,0 +1,254 @@
+@use '../abstracts' as *;
+
+// Calendar date picker — see components/ui/BaseDatePicker.vue.
+// Markup:
+//   .datepicker[.is-open][.is-disabled]
+//     .datepicker__control (button)
+//       i.fa-calendar + .datepicker__value[.is-placeholder]
+//       .datepicker__actions > .datepicker__clear + .datepicker__caret
+//     .datepicker__panel
+//       .datepicker__header > .datepicker__nav*4 + .datepicker__title
+//       .datepicker__weekdays > .datepicker__weekday
+//       .datepicker__grid > .datepicker__cell[.is-empty|.is-selected|.is-today|.is-disabled]
+//       .datepicker__footer > .datepicker__today + .datepicker__clearbtn
+
+.datepicker {
+  position: relative;
+  width: 100%;
+}
+
+.datepicker__control {
+  @include flex(row, center, space-between, $space-2);
+  width: 100%;
+  background: $color-input-bg;
+  border: 1px solid $color-input-border;
+  border-radius: $radius-md;
+  padding: $space-2 $space-3;
+  color: $color-text;
+  font-family: var(--font-family-base);
+  font-size: $font-size-base;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color $transition-fast,
+    background-color $transition-fast;
+
+  > i {
+    font-size: 0.95rem;
+    color: $color-text-muted;
+    flex-shrink: 0;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: $color-border-strong;
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: $color-input-border-focus;
+  }
+
+  &:disabled {
+    background: $color-input-disabled-bg;
+    color: $color-text-disabled;
+    cursor: not-allowed;
+  }
+}
+
+.datepicker.is-open .datepicker__control {
+  border-color: $color-input-border-focus;
+}
+
+.datepicker__value {
+  @include truncate;
+  flex: 1 1 auto;
+  min-width: 0;
+
+  &.is-placeholder {
+    color: $color-input-placeholder;
+  }
+}
+
+.datepicker__actions {
+  @include flex(row, center, flex-end, $space-2);
+  flex-shrink: 0;
+}
+
+.datepicker__clear {
+  @include flex(row, center, center);
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  line-height: 1;
+  color: $color-text-muted;
+  transition:
+    background-color $transition-fast,
+    color $transition-fast;
+
+  &:hover {
+    background: $color-surface-hover;
+    color: $color-text;
+  }
+}
+
+.datepicker__caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid $color-text-muted;
+  transition: transform $transition-fast;
+}
+
+.datepicker.is-open .datepicker__caret {
+  transform: rotate(180deg);
+}
+
+// Dropdown panel — same elevated surface + shadow as the combobox popover.
+.datepicker__panel {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + #{$space-1});
+  left: 0;
+  width: 18rem;
+  max-width: calc(100vw - #{$space-6});
+  background: $color-surface-alt;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+  padding: $space-3;
+}
+
+.datepicker__header {
+  @include flex(row, center, space-between, $space-1);
+  margin-bottom: $space-2;
+}
+
+.datepicker__title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: $color-text;
+  text-transform: capitalize;
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.datepicker__nav {
+  @include flex(row, center, center);
+  width: 1.75rem;
+  height: 1.75rem;
+  border: none;
+  border-radius: $radius-sm;
+  background: transparent;
+  color: $color-text-muted;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition:
+    background-color $transition-fast,
+    color $transition-fast;
+
+  &:hover {
+    background: $color-surface-hover;
+    color: $color-text;
+  }
+}
+
+.datepicker__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: $space-1;
+}
+
+.datepicker__weekday {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: $color-text-muted;
+  padding: $space-1 0;
+}
+
+.datepicker__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.datepicker__cell {
+  @include flex(row, center, center);
+  height: 2.1rem;
+  border-radius: $radius-sm;
+  font-size: 0.85rem;
+  color: $color-text;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color $transition-fast,
+    color $transition-fast;
+
+  &:hover:not(.is-empty):not(.is-disabled) {
+    background: $color-surface-hover;
+  }
+
+  &.is-empty {
+    pointer-events: none;
+  }
+
+  &.is-today {
+    box-shadow: inset 0 0 0 1px $color-primary;
+    color: $color-primary;
+  }
+
+  &.is-selected {
+    background: $color-primary;
+    color: $color-text-inverse;
+    font-weight: 700;
+
+    &.is-today {
+      box-shadow: none;
+    }
+  }
+
+  &.is-disabled {
+    color: $color-text-disabled;
+    cursor: not-allowed;
+  }
+}
+
+.datepicker__footer {
+  @include flex(row, center, space-between, $space-2);
+  margin-top: $space-2;
+  padding-top: $space-2;
+  border-top: 1px solid $color-border;
+}
+
+.datepicker__today,
+.datepicker__clearbtn {
+  border: none;
+  background: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: $space-1 $space-2;
+  border-radius: $radius-sm;
+  transition:
+    background-color $transition-fast,
+    color $transition-fast;
+}
+
+.datepicker__today {
+  color: $color-primary;
+
+  &:hover {
+    background: $color-primary-muted;
+  }
+}
+
+.datepicker__clearbtn {
+  color: $color-danger;
+
+  &:hover {
+    background: $color-danger-muted;
+  }
+}
