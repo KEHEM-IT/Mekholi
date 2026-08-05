@@ -1,0 +1,20 @@
+[
+  { "Id": 1,  "Name": "Primary", "NameInBangla": "প্রাথমিক", "LookupText": "Primary - প্রাথমিক" },
+  { "Id": 2,  "Name": "Secondary", "NameInBangla": "মাধ্যমিক", "LookupText": "Secondary - মাধ্যমিক" },
+  { "Id": 3,  "Name": "Higher Secondary", "NameInBangla": "উচ্চ মাধ্যমিক", "LookupText": "Higher Secondary - উচ্চ মাধ্যমিক" },
+  { "Id": 4,  "Name": "School & College", "NameInBangla": "স্কুল এন্ড কলেজ", "LookupText": "School & College - স্কুল এন্ড কলেজ" },
+  { "Id": 5,  "Name": "Dakhil", "NameInBangla": "দাখিল", "LookupText": "Dakhil - দাখিল" },
+  { "Id": 6,  "Name": "Alim", "NameInBangla": "আলিম", "LookupText": "Alim - আলিম" },
+  { "Id": 7,  "Name": "Fazil", "NameInBangla": "ফাজিল", "LookupText": "Fazil - ফাজিল" },
+  { "Id": 8,  "Name": "Kamil", "NameInBangla": "কামিল", "LookupText": "Kamil - কামিল" },
+  { "Id": 9,  "Name": "SSC (Vocational)", "NameInBangla": "এসএসসি (ভোকেশনাল)", "LookupText": "SSC (Vocational) - এসএসসি (ভোকেশনাল)" },
+  { "Id": 10, "Name": "HSC (Vocational)", "NameInBangla": "এইচএসসি (ভোকেশনাল)", "LookupText": "HSC (Vocational) - এইচএসসি (ভোকেশনাল)" },
+  { "Id": 11, "Name": "Polytechnic Institute", "NameInBangla": "পলিটেকনিক ইনস্টিটিউট", "LookupText": "Polytechnic Institute - পলিটেকনিক ইনস্টিটিউট" },
+  { "Id": 12, "Name": "Technical School & College (TSC)", "NameInBangla": "টেকনিক্যাল স্কুল এন্ড কলেজ (টিএসসি)", "LookupText": "Technical School & College (TSC) - টেকনিক্যাল স্কুল এন্ড কলেজ (টিএসসি)" },
+  { "Id": 13, "Name": "Agricultural Diploma Institute", "NameInBangla": "কৃষি ডিপ্লোমা ইনস্টিটিউট", "LookupText": "Agricultural Diploma Institute - কৃষি ডিপ্লোমা ইনস্টিটিউট" },
+  { "Id": 14, "Name": "Nursing Institute", "NameInBangla": "নার্সিং ইনস্টিটিউট", "LookupText": "Nursing Institute - নার্সিং ইনস্টিটিউট" },
+  { "Id": 15, "Name": "Medical College", "NameInBangla": "মেডিকেল কলেজ", "LookupText": "Medical College - মেডিকেল কলেজ" },
+  { "Id": 16, "Name": "University", "NameInBangla": "বিশ্ববিদ্যালয়", "LookupText": "University - বিশ্ববিদ্যালয়" },
+  { "Id": 17, "Name": "College (Degree/Honours)", "NameInBangla": "কলেজ (ডিগ্রি/অনার্স)", "LookupText": "College (Degree/Honours) - কলেজ (ডিগ্রি/অনার্স)" },
+  { "Id": 18, "Name": "Teachers' Training College", "NameInBangla": "টিচার্স ট্রেনিং কলেজ", "LookupText": "Teachers' Training College - টিচার্স ট্রেনিং কলেজ" }
+]

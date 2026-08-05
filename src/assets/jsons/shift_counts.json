@@ -1,0 +1,6 @@
+[
+  { "Id": 1, "Name": "Day", "NameInBangla": "দিন", "LookupText": "Day - দিন" },
+  { "Id": 2, "Name": "Morning", "NameInBangla": "সকাল", "LookupText": "Morning - সকাল" },
+  { "Id": 3, "Name": "Evening", "NameInBangla": "বিকাল", "LookupText": "Evening - বিকাল" },
+  { "Id": 4, "Name": "Night", "NameInBangla": "রাত", "LookupText": "Night - রাত" }
+]

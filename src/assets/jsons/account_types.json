@@ -1,0 +1,6 @@
+[
+  { "Id": 1, "Name": "Savings", "NameInBangla": "সঞ্চয়", "LookupText": "Savings - সঞ্চয়" },
+  { "Id": 2, "Name": "Current", "NameInBangla": "চলতি", "LookupText": "Current - চলতি" },
+  { "Id": 3, "Name": "FD", "NameInBangla": "মেয়াদি", "LookupText": "FD - মেয়াদি" },
+  { "Id": 4, "Name": "Other", "NameInBangla": "অন্যান্য", "LookupText": "Other - অন্যান্য" }
+]

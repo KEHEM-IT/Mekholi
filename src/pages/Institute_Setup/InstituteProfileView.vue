@@ -8,6 +8,12 @@ import BaseCombobox from "@/components/ui/BaseCombobox.vue";
 import banksJson from "@/assets/jsons/banks.json";
 import gendersJson from "@/assets/jsons/genders.json";
 import committeePositionsJson from "@/assets/jsons/committee_positions.json";
+import instituteTypesJson from "@/assets/jsons/institute_types.json";
+import groupsJson from "@/assets/jsons/groups.json";
+import studentTypesJson from "@/assets/jsons/student_types.json";
+import shiftCountsJson from "@/assets/jsons/shift_counts.json";
+import accountTypesJson from "@/assets/jsons/account_types.json";
+import accountPurposesJson from "@/assets/jsons/account_purposes.json";
 import {
   BD_GEO_DIVISIONS,
   districtsByDivisionId,
@@ -22,77 +28,12 @@ const isBn = computed(() => preferences.uiLanguage === "bn");
 
 // ── Constants / Option lists ──────────────────────────────────────────────
 
-const INSTITUTE_TYPES = [
-  "Primary",
-  "Secondary",
-  "Higher Secondary",
-  "School & College",
-  "Dakhil",
-  "Alim",
-  "Fazil",
-  "Kamil",
-  "SSC (Vocational)",
-  "HSC (Vocational)",
-  "Polytechnic Institute",
-  "Technical School & College (TSC)",
-  "Agricultural Diploma Institute",
-  "Nursing Institute",
-  "Medical College",
-  "University",
-  "College (Degree/Honours)",
-  "Teachers' Training College",
-];
-
-const GROUPS = [
-  "Science",
-  "Business Studies",
-  "Humanities",
-  "General",
-  "Vocational",
-  "Agriculture",
-  "Home Economics",
-  "Madrasah",
-  "Arts",
-  "Commerce",
-];
-
-const STUDENT_TYPES = ["সহশিক্ষা (Co-Education)", "বালক (Boys)", "বালিকা (Girls)"];
-
-const SHIFT_COUNTS = ["Day", "Morning", "Evening", "Night"];
-
 const MANAGEMENTS = [
   "Autonomous - স্বায়িত্বশাসিত",
   "Govt. - সরকারি",
   "Local Govt. - স্থানীয় সরকার",
   "Non-Govt. - বেসরকারি",
   "Others - অন্যান্য",
-];
-
-const ACCOUNT_TYPES = ["Savings", "Current", "FD", "Other"];
-const ACCOUNT_PURPOSES = [
-  "বিদ্যালয়ের পরিচালনা",
-  "বিদ্যালয় পরিচালনা",
-  "Saving Account",
-  "খেলা তহবিল",
-  "স্কাউট তহবিল",
-  "দরিদ্র তহবিল",
-  "কমন রুম তহবিল",
-  "বৃক্ষ তহবিল",
-  "ম্যাগাজিন তহবিল",
-  "সেবা তহবিল",
-  "মসজিদ তহবিল",
-  "মিলাদ তহবিল",
-  "পূজা তহবিল",
-  "বিবিধ তহবিল",
-  "পরীক্ষা তহবিল",
-  "পরিস্কার তহবিল",
-  "কম্পিউটার তহবিল",
-  "সংস্কৃতি তহবিল",
-  "রেড ক্রিসেন্ট তহবিল",
-  "নৈশ প্রহরী তহবিল",
-  "নবীন বরণ তহবিল",
-  "Transection",
-  "Other",
 ];
 
 const DP_DIGITS = { maxlength: 10 };
@@ -256,6 +197,14 @@ function comboOptions(items: string[]) {
 
 // Scheduled banks of Bangladesh (English + Bangla) from assets/jsons/banks.json
 const BANK_OPTIONS = banksJson;
+
+// Bilingual option lists (English + Bangla) from assets/jsons
+const INSTITUTE_TYPE_OPTIONS = instituteTypesJson;
+const GROUP_OPTIONS = groupsJson;
+const STUDENT_TYPE_OPTIONS = studentTypesJson;
+const SHIFT_COUNT_OPTIONS = shiftCountsJson;
+const ACCOUNT_TYPE_OPTIONS = accountTypesJson;
+const ACCOUNT_PURPOSE_OPTIONS = accountPurposesJson;
 
 // Committee member gender options (English + Bangla)
 const GENDER_OPTIONS = gendersJson;
@@ -513,7 +462,9 @@ function removeCommittee(i: number) {
               <label>{{ isBn ? "প্রতিষ্ঠানের প্রকার" : "Institute Type" }}</label>
               <BaseCombobox
                 v-model="form.institute_type"
-                :options="comboOptions(INSTITUTE_TYPES)"
+                :options="INSTITUTE_TYPE_OPTIONS"
+                option-value="LookupText"
+                option-label="LookupText"
                 :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
               />
             </div>
@@ -521,7 +472,9 @@ function removeCommittee(i: number) {
               <label>{{ isBn ? "সংযুক্ত কারিগরি শাখা" : "Attached Tech. Branch" }}</label>
               <BaseCombobox
                 v-model="form.attached_technical_branch_type"
-                :options="comboOptions(INSTITUTE_TYPES)"
+                :options="INSTITUTE_TYPE_OPTIONS"
+                option-value="LookupText"
+                option-label="LookupText"
                 :placeholder="isBn ? 'প্রযোজ্য নয়' : 'N/A'"
                 :clearable="false"
               />
@@ -530,7 +483,9 @@ function removeCommittee(i: number) {
               <label>{{ isBn ? "গ্রুপ" : "Group" }}</label>
               <BaseCombobox
                 v-model="form.group"
-                :options="comboOptions(GROUPS)"
+                :options="GROUP_OPTIONS"
+                option-value="LookupText"
+                option-label="LookupText"
                 :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
               />
             </div>
@@ -538,7 +493,9 @@ function removeCommittee(i: number) {
               <label>{{ isBn ? "কাদের জন্য" : "Student Type" }}</label>
               <BaseCombobox
                 v-model="form.student_type"
-                :options="comboOptions(STUDENT_TYPES)"
+                :options="STUDENT_TYPE_OPTIONS"
+                option-value="LookupText"
+                option-label="LookupText"
                 :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
               />
             </div>
@@ -546,7 +503,9 @@ function removeCommittee(i: number) {
               <label>{{ isBn ? "শিফট সংখ্যা" : "Shift Count" }}</label>
               <BaseCombobox
                 v-model="form.shift_count"
-                :options="comboOptions(SHIFT_COUNTS)"
+                :options="SHIFT_COUNT_OPTIONS"
+                option-value="LookupText"
+                option-label="LookupText"
                 :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
               />
             </div>
@@ -764,7 +723,9 @@ function removeCommittee(i: number) {
               <label>{{ isBn ? "হিসাবের ধরন" : "Account Type" }}</label>
               <BaseCombobox
                 v-model="form.bank_account_type"
-                :options="comboOptions(ACCOUNT_TYPES)"
+                :options="ACCOUNT_TYPE_OPTIONS"
+                option-value="LookupText"
+                option-label="LookupText"
                 :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
               />
             </div>
@@ -780,7 +741,9 @@ function removeCommittee(i: number) {
               <label>{{ isBn ? "হিসাবের উদ্দেশ্য" : "Account Purpose" }}</label>
               <BaseCombobox
                 v-model="form.bank_account_purpose"
-                :options="comboOptions(ACCOUNT_PURPOSES)"
+                :options="ACCOUNT_PURPOSE_OPTIONS"
+                option-value="LookupText"
+                option-label="LookupText"
                 :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
               />
             </div>

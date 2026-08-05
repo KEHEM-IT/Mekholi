@@ -1,0 +1,12 @@
+[
+  { "Id": 1,  "Name": "Science", "NameInBangla": "বিজ্ঞান", "LookupText": "Science - বিজ্ঞান" },
+  { "Id": 2,  "Name": "Business Studies", "NameInBangla": "ব্যবসায় শিক্ষা", "LookupText": "Business Studies - ব্যবসায় শিক্ষা" },
+  { "Id": 3,  "Name": "Humanities", "NameInBangla": "মানবিক", "LookupText": "Humanities - মানবিক" },
+  { "Id": 4,  "Name": "General", "NameInBangla": "সাধারণ", "LookupText": "General - সাধারণ" },
+  { "Id": 5,  "Name": "Vocational", "NameInBangla": "ভোকেশনাল", "LookupText": "Vocational - ভোকেশনাল" },
+  { "Id": 6,  "Name": "Agriculture", "NameInBangla": "কৃষি", "LookupText": "Agriculture - কৃষি" },
+  { "Id": 7,  "Name": "Home Economics", "NameInBangla": "গার্হস্থ্য অর্থনীতি", "LookupText": "Home Economics - গার্হস্থ্য অর্থনীতি" },
+  { "Id": 8,  "Name": "Madrasah", "NameInBangla": "মাদ্রাসা", "LookupText": "Madrasah - মাদ্রাসা" },
+  { "Id": 9,  "Name": "Arts", "NameInBangla": "কলা", "LookupText": "Arts - কলা" },
+  { "Id": 10, "Name": "Commerce", "NameInBangla": "বাণিজ্য", "LookupText": "Commerce - বাণিজ্য" }
+]

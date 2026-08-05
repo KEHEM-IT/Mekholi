@@ -1,0 +1,5 @@
+[
+  { "Id": 1, "Name": "Co-Education", "NameInBangla": "সহশিক্ষা", "LookupText": "Co-Education - সহশিক্ষা" },
+  { "Id": 2, "Name": "Boys", "NameInBangla": "বালক", "LookupText": "Boys - বালক" },
+  { "Id": 3, "Name": "Girls", "NameInBangla": "বালিকা", "LookupText": "Girls - বালিকা" }
+]
