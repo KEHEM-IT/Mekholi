@@ -263,7 +263,18 @@ async function uploadLogoFile(file: File) {
   try {
     const url = await uploadToImgbb(file);
     form.institute_logo = url;
-    toast.success(isBn.value ? "লোগো আপলোড হয়েছে" : "Logo uploaded");
+    // Persist right away so the logo survives a page reload without
+    // requiring the user to press Ctrl+S afterwards.
+    const saved = await saveProfile({ ...form });
+    if (saved) {
+      toast.success(isBn.value ? "লোগো আপলোড ও সংরক্ষিত হয়েছে" : "Logo uploaded & saved");
+    } else {
+      toast.error(
+        isBn.value
+          ? "লোগো আপলোড হয়েছে কিন্তু সংরক্ষণ ব্যর্থ — server.py চালু আছে কি?"
+          : "Logo uploaded but could not save — is server.py running?",
+      );
+    }
   } catch (err) {
     toast.error(err instanceof Error ? err.message : "Logo upload failed");
   } finally {
@@ -305,7 +316,16 @@ function removeLogo() {
 // ── Save / Load ───────────────────────────────────────────────────────
 
 async function handleSave() {
-  await saveProfile({ ...form });
+  const saved = await saveProfile({ ...form });
+  if (saved) {
+    toast.success(isBn.value ? "সংরক্ষিত হয়েছে" : "Saved");
+  } else {
+    toast.error(
+      isBn.value
+        ? "সংরক্ষণ ব্যর্থ হয়েছে — server.py চালু আছে কি?"
+        : "Save failed — is server.py running?",
+    );
+  }
 }
 
 // Try loading from SQLite on mount; stays empty if server not running
