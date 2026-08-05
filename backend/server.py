@@ -170,10 +170,16 @@ class Handler(BaseHTTPRequestHandler):
                 cm.get("committee_position",""), cm.get("education_qualification",""),
                 cm.get("occupation",""), 1 if cm.get("left_committee") else 0,
                 cm.get("reason_for_leaving","")))
-        conn.execute("DELETE FROM facilities WHERE profile_id=?", (pid,))
-        for key, val in (body.get("facilities") or {}).items():
-            conn.execute("INSERT INTO facilities (profile_id,facility_key,enabled) VALUES (?,?,?)",
-                         (pid, key, 1 if val else 0))
+        # Facilities: replace the saved set, but only when the client actually
+        # sent one. A missing/empty `facilities` key means an older client that
+        # doesn't manage facilities yet — wiping the table then would silently
+        # destroy existing data (delete-all + insert-nothing).
+        facilities_body = body.get("facilities")
+        if isinstance(facilities_body, dict) and facilities_body:
+            conn.execute("DELETE FROM facilities WHERE profile_id=?", (pid,))
+            for key, val in facilities_body.items():
+                conn.execute("INSERT INTO facilities (profile_id,facility_key,enabled) VALUES (?,?,?)",
+                             (pid, key, 1 if val else 0))
         conn.commit()
         conn.close()
         self._reply(200, {"ok": True})

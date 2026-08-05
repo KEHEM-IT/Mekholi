@@ -358,6 +358,14 @@ onMounted(async () => {
     const keys = Object.keys(form) as (keyof typeof form)[];
     for (const key of keys) {
       if (key in data) {
+        // Facilities: merge over the form's default 15 keys instead of
+        // replacing the whole object — the API may return a partial/empty
+        // set (older client saved without facilities) and we must keep
+        // all toggles available.
+        if (key === "facilities" && typeof data[key] === "object" && data[key] !== null) {
+          Object.assign(form.facilities, data[key]);
+          continue;
+        }
         // Assign values from loaded partial data
         // Index via Record<..., unknown> to avoid any-casts
         (form as Record<keyof typeof form, unknown>)[key] = data[key];

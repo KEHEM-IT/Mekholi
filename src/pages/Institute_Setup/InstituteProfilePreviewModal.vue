@@ -4,7 +4,7 @@
 import { computed } from 'vue'
 import { useAppPreferences } from '@/composables/useAppPreferences'
 import { BD_GEO_DIVISIONS, BD_GEO_DISTRICTS, BD_GEO_UPAZILAS, BD_GEO_UNIONS } from '@/utils/bdGeo'
-import { FACILITY_ICONS, FACILITY_LABELS } from '@/pages/Institute_Setup/facilityMeta'
+import { FACILITY_ICONS, FACILITY_KEYS, FACILITY_LABELS } from '@/pages/Institute_Setup/facilityMeta'
 
 const props = defineProps<{
   form: Record<string, unknown>
@@ -141,7 +141,7 @@ const hasAnyValue = computed(() => {
     ...identityFields, ...addressFields, ...contactFields, ...classFields,
     ...idFields, ...mpoFields, ...staffFields, ...bankFields,
   ]
-  return keys.some((x) => show(f.value[x.key]) !== '—') || Object.keys(facilities.value).length > 0 || committee.value.length > 0
+  return keys.some((x) => show(f.value[x.key]) !== '—') || Object.values(facilities.value).some(Boolean) || committee.value.length > 0
 })
 </script>
 
@@ -256,18 +256,18 @@ const hasAnyValue = computed(() => {
         </div>
       </div>
 
-      <div class="ipfp-section" v-if="Object.keys(facilities).length">
+      <div class="ipfp-section">
         <h4 class="ipfp-section__title"><i class="fa-duotone fa-grid-2" /> {{ L('Facilities', 'সুবিধাদি') }}</h4>
         <div class="ipfp-facilities">
           <span
-            v-for="(enabled, key) in facilities"
+            v-for="key in FACILITY_KEYS"
             :key="key"
             class="ipfp-facility"
-            :class="{ 'is-on': enabled, 'is-off': !enabled }"
+            :class="{ 'is-on': facilities[key], 'is-off': !facilities[key] }"
           >
             <i class="fa-duotone" :class="FACILITY_ICONS[key] ?? 'fa-circle'" />
             {{ isBn ? (FACILITY_LABELS[key]?.bn ?? key) : (FACILITY_LABELS[key]?.en ?? key) }}
-            <i class="fa-solid ipfp-facility__mark" :class="enabled ? 'fa-check' : 'fa-xmark'" />
+            <i class="fa-solid ipfp-facility__mark" :class="facilities[key] ? 'fa-check' : 'fa-xmark'" />
           </span>
         </div>
       </div>
