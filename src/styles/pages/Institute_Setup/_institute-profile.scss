@@ -10,7 +10,15 @@
 }
 
 .ipf-header {
-  @include flex(column, flex-start, flex-start, $space-1);
+  @include flex(row, flex-start, space-between, $space-3);
+  flex-wrap: wrap;
+  gap: $space-3;
+
+  &__titles {
+    @include flex(column, flex-start, flex-start, $space-1);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
 
   h1 {
     font-size: 1.5rem;
@@ -20,6 +28,10 @@
   p {
     color: $color-text-secondary;
     max-width: 100%;
+  }
+
+  &__view {
+    flex-shrink: 0;
   }
 }
 
@@ -662,4 +674,281 @@
 
 .ipf-logo__input {
   display: none;
+}
+
+// ── Institute Profile Preview (modal) ──────────────────────────────────
+
+.ipfp-hero {
+  @include flex(row, center, flex-start, $space-4);
+  margin: -$space-6 -$space-6 $space-6;
+  padding: $space-6 $space-6;
+  background:
+    radial-gradient(120% 160% at 0% 0%, $color-primary-muted 0%, transparent 55%),
+    linear-gradient(135deg, $color-surface-alt, $color-surface);
+  border-bottom: 1px solid $color-border;
+  flex-wrap: wrap;
+
+  &__logo {
+    @include flex(row, center, center);
+    width: 5rem;
+    height: 5rem;
+    flex-shrink: 0;
+    border-radius: $radius-lg;
+    background: $color-surface;
+    border: 1px solid $color-border-strong;
+    overflow: hidden;
+    box-shadow: $shadow-sm;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    span {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: $color-primary;
+    }
+  }
+
+  &__titles {
+    @include flex(column, flex-start, center, $space-1);
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  &__name-en {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: $color-text;
+  }
+
+  &__name-bn {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $color-text-secondary;
+  }
+
+  &__chips {
+    @include flex(row, center, flex-start, $space-2);
+    flex-wrap: wrap;
+    margin-top: $space-2;
+  }
+}
+
+.ipfp-chip {
+  @include flex(row, center, center, $space-1);
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  color: $color-text-secondary;
+
+  i {
+    color: $color-primary;
+    font-size: 0.7rem;
+  }
+
+  &--eiin {
+    color: $color-text;
+    border-color: $color-primary;
+    background: $color-primary-muted;
+
+    i {
+      color: $color-primary;
+    }
+  }
+}
+
+.ipfp-body {
+  @include flex(column, stretch, flex-start, $space-6);
+}
+
+.ipfp-section {
+  &__title {
+    @include flex(row, center, flex-start, $space-2);
+    margin: 0 0 $space-3;
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $color-text-muted;
+    padding-bottom: $space-2;
+    border-bottom: 1px solid $color-border;
+
+    i {
+      color: $color-primary;
+    }
+  }
+
+  &__count {
+    @include flex(row, center, center);
+    min-width: 1.4rem;
+    height: 1.4rem;
+    padding: 0 6px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    background: $color-primary-muted;
+    color: $color-primary;
+  }
+}
+
+.ipfp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr));
+  gap: $space-3 $space-4;
+}
+
+.ipfp-field {
+  @include flex(column, flex-start, flex-start, 2px);
+  min-width: 0;
+
+  &__label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: $color-text-muted;
+  }
+
+  &__value {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: $color-text;
+    word-break: break-word;
+  }
+
+  &--total .ipfp-field__value {
+    color: $color-primary;
+    font-weight: 800;
+  }
+}
+
+// Facilities chips
+.ipfp-facilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2;
+}
+
+.ipfp-facility {
+  @include flex(row, center, center, $space-2);
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid $color-border;
+  background: $color-surface-alt;
+  color: $color-text-muted;
+
+  i:first-child {
+    font-size: 0.9rem;
+    color: $color-text-muted;
+  }
+
+  &__mark {
+    font-size: 0.65rem;
+  }
+
+  &.is-on {
+    border-color: $color-success;
+    background: $color-success-muted;
+    color: #bbf7d0;
+
+    i:first-child {
+      color: $color-success;
+    }
+
+    .ipfp-facility__mark {
+      color: $color-success;
+    }
+  }
+
+  &.is-off {
+    opacity: 0.55;
+
+    .ipfp-facility__mark {
+      color: $color-danger;
+    }
+  }
+}
+
+// Committee members
+.ipfp-committee {
+  @include flex(column, stretch, flex-start, $space-2);
+}
+
+.ipfp-member {
+  @include flex(row, center, flex-start, $space-3);
+  padding: $space-3;
+  border-radius: $radius-md;
+  border: 1px solid $color-border;
+  background: $color-surface-alt;
+
+  &__avatar {
+    @include flex(row, center, center);
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: $color-primary-muted;
+    color: $color-primary;
+    font-weight: 800;
+    font-size: 1rem;
+  }
+
+  &__main {
+    @include flex(column, flex-start, center, 2px);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__name {
+    font-weight: 700;
+    color: $color-text;
+    @include truncate;
+  }
+
+  &__meta {
+    font-size: 0.78rem;
+    color: $color-text-secondary;
+    @include truncate;
+  }
+
+  &__side {
+    @include flex(column, flex-end, center, 4px);
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    color: $color-text-secondary;
+    text-align: right;
+
+    i {
+      margin-right: 2px;
+      color: $color-text-muted;
+    }
+  }
+
+  &__left {
+    color: $color-danger;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+  }
+}
+
+.ipfp-empty {
+  @include flex(column, center, center, $space-2);
+  padding: $space-8;
+  color: $color-text-muted;
+  font-weight: 600;
+
+  i {
+    font-size: 2rem;
+    opacity: 0.5;
+  }
 }

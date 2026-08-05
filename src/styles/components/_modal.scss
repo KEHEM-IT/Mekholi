@@ -1,0 +1,101 @@
+@use '../abstracts' as *;
+
+// Modal shell — see components/ui/BaseModal.vue.
+// Markup:
+//   .modal-overlay (fixed, dims the page)
+//     .modal-panel[.modal-panel--wide]
+//       .modal-panel__head > .modal-panel__title + .modal-panel__close
+//       .modal-panel__body
+//       .modal-panel__foot
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-4;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  animation: modal-fade-in 0.18s ease;
+}
+
+.modal-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(34rem, 100%);
+  max-height: min(88vh, 56rem);
+  background: $color-surface;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  overflow: hidden;
+  animation: modal-pop-in 0.2s ease;
+
+  &--wide {
+    width: min(56rem, 100%);
+  }
+}
+
+.modal-panel__head {
+  @include flex(row, center, space-between, $space-2);
+  flex-shrink: 0;
+  padding: $space-4 $space-6;
+  border-bottom: 1px solid $color-border;
+  background: $color-surface-alt;
+}
+
+.modal-panel__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: $color-text;
+  @include truncate;
+}
+
+.modal-panel__close {
+  @include flex(row, center, center);
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border: none;
+  border-radius: $radius-sm;
+  background: transparent;
+  color: $color-text-muted;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    background-color $transition-fast,
+    color $transition-fast;
+
+  &:hover {
+    background: $color-surface-hover;
+    color: $color-text;
+  }
+}
+
+.modal-panel__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: $space-6;
+}
+
+.modal-panel__foot {
+  @include flex(row, center, flex-end, $space-2);
+  flex-shrink: 0;
+  padding: $space-3 $space-6;
+  border-top: 1px solid $color-border;
+  background: $color-surface-alt;
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-pop-in {
+  from { opacity: 0; transform: translateY(0.75rem) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}

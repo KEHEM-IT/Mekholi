@@ -83,4 +83,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  server: {
+    // Allow any preview host (sandbox/cloud preview domains) in dev.
+    allowedHosts: true,
+  },
 })
