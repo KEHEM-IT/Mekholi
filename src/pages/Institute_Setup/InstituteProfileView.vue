@@ -163,8 +163,13 @@ async function handleSave() {
 onMounted(async () => {
   const data = await loadProfile()
   if (data) {
-    for (const key of Object.keys(form)) {
-      if (key in data) (form)[key] = data[key]
+    // Object.keys returns string[]; narrow to keys of form to satisfy TypeScript
+    const keys = Object.keys(form) as (keyof typeof form)[]
+    for (const key of keys) {
+      if (key in data) {
+        // Assign with proper casting since data comes from external source
+        ;(form)[key] = (dataform)[key]
+      }
     }
   }
 })
