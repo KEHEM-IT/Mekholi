@@ -677,21 +677,28 @@
 }
 
 // ── Institute Profile Preview (modal) ──────────────────────────────────
+// Clean card layout: every block is its own rounded surface with clear
+// spacing — no negative margins, no stacked border lines.
 
+.ipfp {
+  @include flex(column, stretch, flex-start, $space-4);
+}
+
+// Hero card — logo + institute names + chips
 .ipfp-hero {
   @include flex(row, center, flex-start, $space-4);
-  margin: -$space-6 -$space-6 $space-6;
-  padding: $space-6 $space-6;
+  flex-wrap: wrap;
+  padding: $space-6;
+  border-radius: $radius-lg;
+  border: 1px solid $color-border;
   background:
     radial-gradient(120% 160% at 0% 0%, $color-primary-muted 0%, transparent 55%),
     linear-gradient(135deg, $color-surface-alt, $color-surface);
-  border-bottom: 1px solid $color-border;
-  flex-wrap: wrap;
 
   &__logo {
     @include flex(row, center, center);
-    width: 5rem;
-    height: 5rem;
+    width: 4.5rem;
+    height: 4.5rem;
     flex-shrink: 0;
     border-radius: $radius-lg;
     background: $color-surface;
@@ -706,30 +713,32 @@
     }
 
     span {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 800;
       color: $color-primary;
     }
   }
 
   &__titles {
-    @include flex(column, flex-start, center, $space-1);
-    min-width: 0;
+    @include flex(column, flex-start, center, 2px);
     flex: 1 1 auto;
+    min-width: 0;
   }
 
   &__name-en {
     margin: 0;
-    font-size: 1.35rem;
+    font-size: 1.25rem;
     font-weight: 800;
     color: $color-text;
+    @include truncate;
   }
 
   &__name-bn {
     margin: 0;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     color: $color-text-secondary;
+    @include truncate;
   }
 
   &__chips {
@@ -765,21 +774,21 @@
   }
 }
 
-.ipfp-body {
-  @include flex(column, stretch, flex-start, $space-6);
-}
-
+// Section cards
 .ipfp-section {
+  background: $color-surface-alt;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $space-4;
+
   &__title {
     @include flex(row, center, flex-start, $space-2);
     margin: 0 0 $space-3;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     color: $color-text-muted;
-    padding-bottom: $space-2;
-    border-bottom: 1px solid $color-border;
 
     i {
       color: $color-primary;
@@ -800,7 +809,7 @@
 
 .ipfp-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
   gap: $space-3 $space-4;
 }
 
@@ -809,10 +818,10 @@
   min-width: 0;
 
   &__label {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
     color: $color-text-muted;
   }
 
@@ -843,7 +852,7 @@
   font-size: 0.82rem;
   font-weight: 600;
   border: 1px solid $color-border;
-  background: $color-surface-alt;
+  background: $color-surface;
   color: $color-text-muted;
 
   i:first-child {
@@ -885,10 +894,11 @@
 
 .ipfp-member {
   @include flex(row, center, flex-start, $space-3);
+  flex-wrap: wrap;
   padding: $space-3;
   border-radius: $radius-md;
   border: 1px solid $color-border;
-  background: $color-surface-alt;
+  background: $color-surface;
 
   &__avatar {
     @include flex(row, center, center);

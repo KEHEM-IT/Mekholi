@@ -43,12 +43,17 @@
   flex-shrink: 0;
   padding: $space-4 $space-6;
   border-bottom: 1px solid $color-border;
-  background: $color-surface-alt;
+  background: $color-surface;
 }
 
 .modal-panel__title {
   margin: 0;
   font-size: 1.05rem;
+  @include flex(row, center, flex-start, $space-2);
+
+  i {
+    color: $color-primary;
+  }
   font-weight: 700;
   color: $color-text;
   @include truncate;
