@@ -5,7 +5,11 @@
 // keeps working unchanged.
 //
 // - Click the field to open the calendar; click a day to pick it
-// - ‹ › steps months, « » steps years
+// - Header shows clickable Month / Year fields (no arrow buttons):
+//     • click the month name → month grid to pick a month
+//     • click the year number → scrollable year grid to pick a year
+//     • picking a year returns to the month grid; picking a month returns
+//       to the day grid
 // - Today / Clear footer actions; × clear button on the control
 // - Click-outside and Esc close the panel; min/max bound selectable days
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
@@ -44,6 +48,7 @@ const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 const root = ref<HTMLElement | null>(null)
 const isOpen = ref(false)
+const mode = ref<'day' | 'month' | 'year'>('day')
 const viewYear = ref(new Date().getFullYear())
 const viewMonth = ref(new Date().getMonth())
 
@@ -86,6 +91,17 @@ const dayCells = computed<(number | null)[]>(() => {
   return cells
 })
 
+// Year grid range: honours min/max bounds, otherwise a sensible 1900–current+1.
+const yearOptions = computed<number[]>(() => {
+  const minY = props.min ? (parseIso(props.min)?.y ?? 1900) : 1900
+  const maxY = props.max
+    ? (parseIso(props.max)?.y ?? new Date().getFullYear() + 1)
+    : new Date().getFullYear() + 1
+  const years: number[] = []
+  for (let y = minY; y <= maxY; y++) years.push(y)
+  return years
+})
+
 function isDisabledDay(day: number): boolean {
   const iso = isoOf(viewYear.value, viewMonth.value, day)
   if (props.min && iso < props.min) return true
@@ -114,6 +130,7 @@ function open() {
   const anchor = s ?? { y: new Date().getFullYear(), m: new Date().getMonth() }
   viewYear.value = anchor.y
   viewMonth.value = anchor.m
+  mode.value = 'day'
   isOpen.value = true
 }
 
@@ -131,6 +148,17 @@ function selectDay(day: number) {
   close()
 }
 
+function selectMonth(m: number) {
+  viewMonth.value = m
+  mode.value = 'day'
+}
+
+function selectYear(y: number) {
+  viewYear.value = y
+  // Back to the month grid so the user can then choose a month.
+  mode.value = 'month'
+}
+
 function selectToday() {
   const t = new Date()
   emit('update:modelValue', isoOf(t.getFullYear(), t.getMonth(), t.getDate()))
@@ -141,30 +169,6 @@ function clearDate(event: Event) {
   event.stopPropagation()
   emit('update:modelValue', '')
   close()
-}
-
-function prevMonth() {
-  viewMonth.value--
-  if (viewMonth.value < 0) {
-    viewMonth.value = 11
-    viewYear.value--
-  }
-}
-
-function nextMonth() {
-  viewMonth.value++
-  if (viewMonth.value > 11) {
-    viewMonth.value = 0
-    viewYear.value++
-  }
-}
-
-function prevYear() {
-  viewYear.value--
-}
-
-function nextYear() {
-  viewYear.value++
 }
 
 function onControlKeydown(event: KeyboardEvent) {
@@ -218,46 +222,80 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
     </button>
 
     <div v-if="isOpen" class="datepicker__panel" role="dialog" @keydown="onPanelKeydown">
+      <!-- Header: clickable month + year fields (no arrows) -->
       <div class="datepicker__header">
-        <button type="button" class="datepicker__nav" aria-label="Previous year" @click="prevYear">
-          <i class="fa-duotone fa-angles-left" />
-        </button>
-        <button type="button" class="datepicker__nav" aria-label="Previous month" @click="prevMonth">
-          <i class="fa-duotone fa-chevron-left" />
-        </button>
-        <span class="datepicker__title">{{ MONTHS[viewMonth] }} {{ viewYear }}</span>
-        <button type="button" class="datepicker__nav" aria-label="Next month" @click="nextMonth">
-          <i class="fa-duotone fa-chevron-right" />
-        </button>
-        <button type="button" class="datepicker__nav" aria-label="Next year" @click="nextYear">
-          <i class="fa-duotone fa-angles-right" />
-        </button>
-      </div>
-
-      <div class="datepicker__weekdays">
-        <span v-for="wd in WEEKDAYS" :key="wd" class="datepicker__weekday">{{ wd }}</span>
-      </div>
-
-      <div class="datepicker__grid">
-        <span
-          v-for="(day, i) in dayCells"
-          :key="i"
-          class="datepicker__cell"
-          :class="{
-            'is-empty': !day,
-            'is-selected': !!day && isSelectedDay(day),
-            'is-today': !!day && isToday(day),
-            'is-disabled': !!day && isDisabledDay(day),
-          }"
-          role="button"
-          tabindex="0"
-          @click="day && selectDay(day)"
-          @keydown.enter="day && selectDay(day)"
-          @keydown.space.prevent="day && selectDay(day)"
+        <button
+          type="button"
+          class="datepicker__header-btn"
+          :class="{ 'is-active': mode === 'month' }"
+          @click="mode = mode === 'month' ? 'day' : 'month'"
         >
-          {{ day ?? '' }}
-        </span>
+          {{ MONTHS[viewMonth] }}
+        </button>
+        <button
+          type="button"
+          class="datepicker__header-btn"
+          :class="{ 'is-active': mode === 'year' }"
+          @click="mode = mode === 'year' ? 'day' : 'year'"
+        >
+          {{ viewYear }}
+        </button>
       </div>
+
+      <!-- Month selection grid -->
+      <div v-if="mode === 'month'" class="datepicker__monthgrid">
+        <button
+          v-for="(m, i) in MONTHS"
+          :key="m"
+          type="button"
+          class="datepicker__monthcell"
+          :class="{ 'is-active': i === viewMonth }"
+          @click="selectMonth(i)"
+        >
+          {{ m.slice(0, 3) }}
+        </button>
+      </div>
+
+      <!-- Year selection grid (scrollable) -->
+      <div v-else-if="mode === 'year'" class="datepicker__yeargrid">
+        <button
+          v-for="y in yearOptions"
+          :key="y"
+          type="button"
+          class="datepicker__yearcell"
+          :class="{ 'is-active': y === viewYear }"
+          @click="selectYear(y)"
+        >
+          {{ y }}
+        </button>
+      </div>
+
+      <!-- Day grid -->
+      <template v-else>
+        <div class="datepicker__weekdays">
+          <span v-for="wd in WEEKDAYS" :key="wd" class="datepicker__weekday">{{ wd }}</span>
+        </div>
+        <div class="datepicker__grid">
+          <span
+            v-for="(day, i) in dayCells"
+            :key="i"
+            class="datepicker__cell"
+            :class="{
+              'is-empty': !day,
+              'is-selected': !!day && isSelectedDay(day),
+              'is-today': !!day && isToday(day),
+              'is-disabled': !!day && isDisabledDay(day),
+            }"
+            role="button"
+            tabindex="0"
+            @click="day && selectDay(day)"
+            @keydown.enter="day && selectDay(day)"
+            @keydown.space.prevent="day && selectDay(day)"
+          >
+            {{ day ?? '' }}
+          </span>
+        </div>
+      </template>
 
       <div class="datepicker__footer">
         <button type="button" class="datepicker__today" @click="selectToday">
