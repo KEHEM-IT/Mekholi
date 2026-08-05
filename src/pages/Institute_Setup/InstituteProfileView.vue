@@ -436,15 +436,9 @@ function removeCommittee(i: number) { form.committee_members.splice(i, 1) }
         </div>
         <div class="ipf-section__body">
           <div class="ipf-toggle-grid">
-            <div v-for="(val, key) in form.facilities" :key="key" class="ipf-toggle-row">
-              <span class="ipf-toggle-row__label">
-                <i class="fa-duotone" :class="val ? 'fa-square-check' : 'fa-square'" />
-                {{ key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) }}
-              </span>
-              <input :id="`fac-${key}`" v-model="form.facilities[key]" type="checkbox" style="display:none" />
-              <label :for="`fac-${key}`" class="form-field__check-label" style="cursor:pointer">
-                {{ val ? (isBn ? 'হ্যাঁ' : 'Yes') : (isBn ? 'না' : 'No') }}
-              </label>
+            <div v-for="(val, key) in form.facilities" :key="key" class="ipf-toggle-btn" :class="{ 'is-active': val }" @click="form.facilities[key] = !val">
+              <span class="ipf-toggle-btn__label">{{ key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) }}</span>
+              <span class="ipf-toggle-btn__state">{{ val ? (isBn ? 'হ্যাঁ' : 'Yes') : (isBn ? 'না' : 'No') }}</span>
             </div>
           </div>
         </div>

@@ -486,6 +486,47 @@
   user-select: none;
 }
 
+// ── Facilities toggle buttons ──────────────────────────────────────────
+
+.ipf-toggle-btn {
+  @include flex(row, center, space-between, $space-2);
+  padding: $space-3 $space-3;
+  border-radius: $radius-md;
+  border: 1px solid $color-border;
+  background: $color-surface-alt;
+  cursor: pointer;
+  transition: border-color $transition-fast, background $transition-fast;
+
+  &:hover {
+    border-color: $color-primary;
+  }
+
+  &.is-active {
+    border-color: $color-success;
+    background: $color-success-muted;
+  }
+}
+
+.ipf-toggle-btn__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $color-text;
+}
+
+.ipf-toggle-btn__state {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: $radius-sm;
+  border: 1px solid $color-danger;
+  color: $color-danger;
+
+  .ipf-toggle-btn.is-active & {
+    border-color: $color-success;
+    color: $color-success;
+  }
+}
+
 // ── Add button ────────────────────────────────────────────────────────
 
 .ipf-add-btn {
