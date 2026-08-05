@@ -399,6 +399,10 @@
   border: 1px solid $color-border;
   background: $color-surface-alt;
 
+  // Red (unchecked) by default — green when input is checked
+  .form-field__check-label { color: $color-danger; }
+  &:has(input:checked) .form-field__check-label { color: $color-success; }
+
   &__label {
     @include flex(row, center, flex-start, $space-2);
     font-size: 0.88rem;
@@ -469,12 +473,15 @@
 .form-field__check {
   @include flex(row, center, flex-start, $space-2);
   padding: $space-2 0;
+
+  // Red (unchecked) by default — green when input is checked
+  .form-field__check-label { color: $color-danger; }
+  &:has(input:checked) .form-field__check-label { color: $color-success; }
 }
 
 .form-field__check-label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: $color-text;
   cursor: pointer;
   user-select: none;
 }
