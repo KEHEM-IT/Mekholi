@@ -525,11 +525,11 @@ function removeCommittee(i: number) {
           <div class="ipf-grid">
             <div class="form-field">
               <label>{{ isBn ? "প্রতিষ্ঠানের নাম (বাংলায়)" : "Institute Name (Bangla)" }}</label
-              ><input v-model="form.institute_name_bn" type="text"  :title="t('Institute name in Bangla - e.g. Sofir Uddin High School and College', 'প্রতিষ্ঠানের নাম বাংলায় লিখুন - যেমন: সোফির উদ্দিন উচ্চ বিদ্যালয় এন্ড কলেজ')" />
+              ><input v-model="form.institute_name_bn" type="text"  :title="t('Institute name in Bangla - e.g. Sofir Uddin High School and College', 'প্রতিষ্ঠানের নাম বাংলায় লিখুন - যেমন: সোফির উদ্দিন উচ্চ বিদ্যালয় এন্ড কলেজ')"  :placeholder="t('Institute name in Bangla - e.g. Sofir Uddin High School and College', 'প্রতিষ্ঠানের নাম বাংলায় লিখুন - যেমন: সোফির উদ্দিন উচ্চ বিদ্যালয় এন্ড কলেজ')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "প্রতিষ্ঠানের নাম (ইংরেজি)" : "Institute Name (English)" }}</label
-              ><input v-model="form.institute_name_en" type="text"  :title="t('Institute name in English - e.g. Sofir Uddin High School and College', 'প্রতিষ্ঠানের নাম ইংরেজিতে লিখুন - যেমন: সোফির উদ্দিন উচ্চ বিদ্যালয় এন্ড কলেজ')" />
+              ><input v-model="form.institute_name_en" type="text"  :title="t('Institute name in English - e.g. Sofir Uddin High School and College', 'প্রতিষ্ঠানের নাম ইংরেজিতে লিখুন - যেমন: সোফির উদ্দিন উচ্চ বিদ্যালয় এন্ড কলেজ')"  :placeholder="t('Institute name in English - e.g. Sofir Uddin High School and College', 'প্রতিষ্ঠানের নাম ইংরেজিতে লিখুন - যেমন: সোফির উদ্দিন উচ্চ বিদ্যালয় এন্ড কলেজ')" />
             </div>
           </div>
         </div>
@@ -549,11 +549,11 @@ function removeCommittee(i: number) {
           <div class="ipf-grid ipf-grid--three">
             <div class="form-field">
               <label>{{ isBn ? "প্রতিষ্ঠাতা" : "Founder" }}</label
-              ><input v-model="form.founder_name" type="text"  :title="t('Founder full name', 'প্রতিষ্ঠাতার পূর্ণ নাম লিখুন')" />
+              ><input v-model="form.founder_name" type="text"  :title="t('Founder full name', 'প্রতিষ্ঠাতার পূর্ণ নাম লিখুন')"  :placeholder="t('Founder full name', 'প্রতিষ্ঠাতার পূর্ণ নাম লিখুন')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "প্রতিষ্ঠার তারিখ" : "Est. Date" }}</label>
-              <BaseDatePicker v-model="form.establishment_date"  :title="t('Select the date the institute was established (DD/MM/YYYY)', 'প্রতিষ্ঠার তারিখ নির্বাচন করুন (DD/MM/YYYY)')" />
+              <BaseDatePicker v-model="form.establishment_date"  :title="t('Select the date the institute was established (DD/MM/YYYY)', 'প্রতিষ্ঠার তারিখ নির্বাচন করুন (DD/MM/YYYY)')"  :placeholder="t('Select the date the institute was established (DD/MM/YYYY)', 'প্রতিষ্ঠার তারিখ নির্বাচন করুন (DD/MM/YYYY)')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "সংসদীয় আসন" : "Parliamentary Constituency" }}</label>
@@ -562,7 +562,7 @@ function removeCommittee(i: number) {
                 :options="PARLIAMENTARY_SEAT_OPTIONS"
                 option-value="LookupText"
                 option-label="LookupText"
-                :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+                :placeholder="t('Select the parliamentary constituency of the institute area', 'প্রতিষ্ঠানের এলাকার সংসদীয় আসন নির্বাচন করুন')"
                :title="t('Select the parliamentary constituency of the institute area', 'প্রতিষ্ঠানের এলাকার সংসদীয় আসন নির্বাচন করুন')" />
             </div>
           </div>
@@ -588,7 +588,7 @@ function removeCommittee(i: number) {
                 option-value="id"
                 :options="geoDivisionOptions"
                 option-label="LookupText"
-                :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+                :placeholder="t('Select the division / region', 'বিভাগ / অঞ্চল নির্বাচন করুন')"
                :title="t('Select the division / region', 'বিভাগ / অঞ্চল নির্বাচন করুন')" />
             </div>
             <div class="form-field">
@@ -598,7 +598,7 @@ function removeCommittee(i: number) {
                 option-value="id"
                 :options="geoDistrictOptions"
                 option-label="LookupText"
-                :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+                :placeholder="t('Select the district', 'জেলা নির্বাচন করুন')"
                 :disabled="!form.division_id"
                :title="t('Select the district', 'জেলা নির্বাচন করুন')" />
             </div>
@@ -609,7 +609,7 @@ function removeCommittee(i: number) {
                 option-value="id"
                 :options="geoUpazilaOptions"
                 option-label="LookupText"
-                :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+                :placeholder="t('Select the upazila / thana', 'উপজেলা / থানা নির্বাচন করুন')"
                 :disabled="!form.district_id"
                :title="t('Select the upazila / thana', 'উপজেলা / থানা নির্বাচন করুন')" />
             </div>
@@ -620,21 +620,21 @@ function removeCommittee(i: number) {
                 option-value="id"
                 :options="geoUnionOptions"
                 option-label="LookupText"
-                :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+                :placeholder="t('Select the union', 'ইউনিয়ন নির্বাচন করুন')"
                 :disabled="!form.upazila_id"
                :title="t('Select the union', 'ইউনিয়ন নির্বাচন করুন')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "গ্রাম/হোল্ডিং/রোড" : "Village / Road" }}</label
-              ><input v-model="form.village_road_holding_no" type="text"  :title="t('Village / road / holding number - e.g. 12, Uttar Para', 'গ্রাম / রোড / হোল্ডিং নম্বর লিখুন - যেমন: ১২, উত্তর পাড়া')" />
+              ><input v-model="form.village_road_holding_no" type="text"  :title="t('Village / road / holding number - e.g. 12, Uttar Para', 'গ্রাম / রোড / হোল্ডিং নম্বর লিখুন - যেমন: ১২, উত্তর পাড়া')"  :placeholder="t('Village / road / holding number - e.g. 12, Uttar Para', 'গ্রাম / রোড / হোল্ডিং নম্বর লিখুন - যেমন: ১২, উত্তর পাড়া')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "ডাকঘর" : "Post Office" }}</label
-              ><input v-model="form.post_office" type="text"  :title="t('Nearest post office name', 'নিকটবর্তী ডাকঘরের নাম লিখুন')" />
+              ><input v-model="form.post_office" type="text"  :title="t('Nearest post office name', 'নিকটবর্তী ডাকঘরের নাম লিখুন')"  :placeholder="t('Nearest post office name', 'নিকটবর্তী ডাকঘরের নাম লিখুন')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "পোস্ট কোড" : "Post Code" }}</label
-              ><input v-model.number="form.post_code" type="number"  :title="t('Postal code - e.g. 3100', 'পোস্ট কোড লিখুন - যেমন: ৩১০০')" />
+              ><input v-model.number="form.post_code" type="number"  :title="t('Postal code - e.g. 3100', 'পোস্ট কোড লিখুন - যেমন: ৩১০০')"  :placeholder="t('Postal code - e.g. 3100', 'পোস্ট কোড লিখুন - যেমন: ৩১০০')" />
             </div>
           </div>
         </div>
@@ -654,15 +654,15 @@ function removeCommittee(i: number) {
           <div class="ipf-grid ipf-grid--three">
             <div class="form-field">
               <label>{{ isBn ? "প্রতিষ্ঠানের ফোন" : "Institute Phone" }}</label
-              ><input v-model="form.institute_phone" type="text"  :title="t('Contact phone number - e.g. 01712-345678', 'যোগাযোগের ফোন নম্বর লিখুন - যেমন: ০১৭১২-৩৪৫৬৭৮')" />
+              ><input v-model="form.institute_phone" type="text"  :title="t('Contact phone number - e.g. 01712-345678', 'যোগাযোগের ফোন নম্বর লিখুন - যেমন: ০১৭১২-৩৪৫৬৭৮')"  :placeholder="t('Contact phone number - e.g. 01712-345678', 'যোগাযোগের ফোন নম্বর লিখুন - যেমন: ০১৭১২-৩৪৫৬৭৮')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "ইমেইল" : "Email" }}</label
-              ><input v-model="form.institute_email" type="email"  :title="t('Official email address - e.g. info@school.edu.bd', 'অফিসিয়াল ইমেইল ঠিকানা লিখুন - যেমন: info@school.edu.bd')" />
+              ><input v-model="form.institute_email" type="email"  :title="t('Official email address - e.g. info@school.edu.bd', 'অফিসিয়াল ইমেইল ঠিকানা লিখুন - যেমন: info@school.edu.bd')"  :placeholder="t('Official email address - e.g. info@school.edu.bd', 'অফিসিয়াল ইমেইল ঠিকানা লিখুন - যেমন: info@school.edu.bd')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "ওয়েবসাইট" : "Website" }}</label
-              ><input v-model="form.website" type="text"  :title="t('Institute website URL - e.g. https://example.com', 'প্রতিষ্ঠানের ওয়েবসাইট লিখুন - যেমন: https://example.com')" />
+              ><input v-model="form.website" type="text"  :title="t('Institute website URL - e.g. https://example.com', 'প্রতিষ্ঠানের ওয়েবসাইট লিখুন - যেমন: https://example.com')"  :placeholder="t('Institute website URL - e.g. https://example.com', 'প্রতিষ্ঠানের ওয়েবসাইট লিখুন - যেমন: https://example.com')" />
             </div>
           </div>
         </div>
@@ -687,7 +687,7 @@ function removeCommittee(i: number) {
                 :options="INSTITUTE_TYPE_OPTIONS"
                 option-value="LookupText"
                 option-label="LookupText"
-                :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+                :placeholder="t('Select the institute type - e.g. School & College', 'প্রতিষ্ঠানের ধরন নির্বাচন করুন - যেমন: স্কুল এন্ড কলেজ')"
                :title="t('Select the institute type - e.g. School & College', 'প্রতিষ্ঠানের ধরন নির্বাচন করুন - যেমন: স্কুল এন্ড কলেজ')" />
             </div>
             <div class="form-field">
@@ -697,7 +697,7 @@ function removeCommittee(i: number) {
                 :options="INSTITUTE_TYPE_OPTIONS"
                 option-value="LookupText"
                 option-label="LookupText"
-                :placeholder="isBn ? 'প্রযোজ্য নয়' : 'N/A'"
+                :placeholder="t('Select the attached technical branch type - leave blank if not applicable', 'সংযুক্ত কারিগরি শাখার ধরন নির্বাচন করুন - প্রযোজ্য না হলে ফাঁকা রাখুন')"
                 :clearable="false"
                :title="t('Select the attached technical branch type - leave blank if not applicable', 'সংযুক্ত কারিগরি শাখার ধরন নির্বাচন করুন - প্রযোজ্য না হলে ফাঁকা রাখুন')" />
             </div>
@@ -708,7 +708,7 @@ function removeCommittee(i: number) {
                 :options="GROUP_OPTIONS"
                 option-value="LookupText"
                 option-label="LookupText"
-                :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+                :placeholder="t('Select the education group - e.g. Science', 'শিক্ষা গ্রুপ নির্বাচন করুন - যেমন: বিজ্ঞান')"
                :title="t('Select the education group - e.g. Science', 'শিক্ষা গ্রুপ নির্বাচন করুন - যেমন: বিজ্ঞান')" />
             </div>
             <div class="form-field">
@@ -718,7 +718,7 @@ function removeCommittee(i: number) {
                 :options="STUDENT_TYPE_OPTIONS"
                 option-value="LookupText"
                 option-label="LookupText"
-                :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+                :placeholder="t('Select the student type - Co-Education / Boys / Girls', 'শিক্ষার্থীর ধরন নির্বাচন করুন - সহশিক্ষা / বালক / বালিকা')"
                :title="t('Select the student type - Co-Education / Boys / Girls', 'শিক্ষার্থীর ধরন নির্বাচন করুন - সহশিক্ষা / বালক / বালিকা')" />
             </div>
             <div class="form-field">
@@ -728,7 +728,7 @@ function removeCommittee(i: number) {
                 :options="SHIFT_COUNT_OPTIONS"
                 option-value="LookupText"
                 option-label="LookupText"
-                :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+                :placeholder="t('Select the shift - Day / Morning / Evening / Night', 'শিফট নির্বাচন করুন - দিন / সকাল / বিকাল / রাত')"
                :title="t('Select the shift - Day / Morning / Evening / Night', 'শিফট নির্বাচন করুন - দিন / সকাল / বিকাল / রাত')" />
             </div>
             <div class="form-field">
@@ -745,7 +745,7 @@ function removeCommittee(i: number) {
               <BaseCombobox
                 v-model="form.management"
                 :options="comboOptions(MANAGEMENTS)"
-                :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+                :placeholder="t('Select the management type - Govt. / Non-Govt. etc.', 'ব্যবস্থাপনার ধরন নির্বাচন করুন - সরকারি / বেসরকারি ইত্যাদি')"
                :title="t('Select the management type - Govt. / Non-Govt. etc.', 'ব্যবস্থাপনার ধরন নির্বাচন করুন - সরকারি / বেসরকারি ইত্যাদি')" />
             </div>
           </div>
@@ -765,27 +765,27 @@ function removeCommittee(i: number) {
         <div class="ipf-section__body">
           <div class="ipf-grid ipf-grid--three">
             <div class="form-field">
-              <label>EIIN</label><input v-model="form.eiin" type="text" v-bind="DP_DIGITS"  :title="t('EIIN number (11 digits) - e.g. 130430', 'EIIN নম্বর লিখুন (১১ সংখ্যা) - যেমন: ১৩০৪৩০')" />
+              <label>EIIN</label><input v-model="form.eiin" type="text" v-bind="DP_DIGITS"  :title="t('EIIN number (11 digits) - e.g. 130430', 'EIIN নম্বর লিখুন (১১ সংখ্যা) - যেমন: ১৩০৪৩০')"  :placeholder="t('EIIN number (11 digits) - e.g. 130430', 'EIIN নম্বর লিখুন (১১ সংখ্যা) - যেমন: ১৩০৪৩০')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "বোর্ড কোড" : "Board Code" }}</label
-              ><input v-model="form.board_institute_code" type="text" v-bind="DP_DIGITS"  :title="t('Board institute code - e.g. 110123', 'বোর্ড ইনস্টিটিউট কোড লিখুন - যেমন: ১১০১২৩')" />
+              ><input v-model="form.board_institute_code" type="text" v-bind="DP_DIGITS"  :title="t('Board institute code - e.g. 110123', 'বোর্ড ইনস্টিটিউট কোড লিখুন - যেমন: ১১০১২৩')"  :placeholder="t('Board institute code - e.g. 110123', 'বোর্ড ইনস্টিটিউট কোড লিখুন - যেমন: ১১০১২৩')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "কারিগরি বোর্ড কোড" : "Technical Board Code" }}</label
-              ><input v-model="form.technical_board_code" type="text" v-bind="DP_DIGITS"  :title="t('Technical board code - if applicable', 'টেকনিক্যাল বোর্ড কোড লিখুন - প্রযোজ্য হলে')" />
+              ><input v-model="form.technical_board_code" type="text" v-bind="DP_DIGITS"  :title="t('Technical board code - if applicable', 'টেকনিক্যাল বোর্ড কোড লিখুন - প্রযোজ্য হলে')"  :placeholder="t('Technical board code - if applicable', 'টেকনিক্যাল বোর্ড কোড লিখুন - প্রযোজ্য হলে')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "এমপিও কোড" : "MPO Code" }}</label
-              ><input v-model="form.mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('MPO code of the institute', 'প্রতিষ্ঠানের এমপিও কোড লিখুন')" />
+              ><input v-model="form.mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('MPO code of the institute', 'প্রতিষ্ঠানের এমপিও কোড লিখুন')"  :placeholder="t('MPO code of the institute', 'প্রতিষ্ঠানের এমপিও কোড লিখুন')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "কারিগরি এমপিও কোড" : "Tech. Branch MPO Code" }}</label
-              ><input v-model="form.technical_branch_mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('MPO code of the technical branch', 'কারিগরি শাখার এমপিও কোড লিখুন')" />
+              ><input v-model="form.technical_branch_mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('MPO code of the technical branch', 'কারিগরি শাখার এমপিও কোড লিখুন')"  :placeholder="t('MPO code of the technical branch', 'কারিগরি শাখার এমপিও কোড লিখুন')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "উপবৃত্তি কোড" : "Stipend Code" }}</label
-              ><input v-model="form.stipend_code" type="text" v-bind="DP_DIGITS"  :title="t('Stipend code - if applicable', 'স্টাইপেন্ড কোড লিখুন - প্রযোজ্য হলে')" />
+              ><input v-model="form.stipend_code" type="text" v-bind="DP_DIGITS"  :title="t('Stipend code - if applicable', 'স্টাইপেন্ড কোড লিখুন - প্রযোজ্য হলে')"  :placeholder="t('Stipend code - if applicable', 'স্টাইপেন্ড কোড লিখুন - প্রযোজ্য হলে')" />
             </div>
           </div>
         </div>
@@ -816,9 +816,8 @@ function removeCommittee(i: number) {
                 v-model="form.general_mpo_code"
                 type="text"
                 v-bind="DP_DIGITS"
-                :placeholder="isBn ? 'এমপিও কোড' : 'MPO Code'"
                 style="margin-top: 0.5rem"
-               :title="t('General MPO code', 'সাধারণ এমপিও কোড লিখুন')" />
+               :title="t('General MPO code', 'সাধারণ এমপিও কোড লিখুন')"  :placeholder="t('General MPO code', 'সাধারণ এমপিও কোড লিখুন')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "কারিগরি শাখা এমপিওভুক্ত?" : "Technical Branch MPO?" }}</label>
@@ -833,9 +832,8 @@ function removeCommittee(i: number) {
                 v-model="form.tech_mpo_code"
                 type="text"
                 v-bind="DP_DIGITS"
-                :placeholder="isBn ? 'এমপিও কোড' : 'MPO Code'"
                 style="margin-top: 0.5rem"
-               :title="t('Technical MPO code', 'টেকনিক্যাল এমপিও কোড লিখুন')" />
+               :title="t('Technical MPO code', 'টেকনিক্যাল এমপিও কোড লিখুন')"  :placeholder="t('Technical MPO code', 'টেকনিক্যাল এমপিও কোড লিখুন')" />
             </div>
           </div>
         </div>
@@ -855,27 +853,27 @@ function removeCommittee(i: number) {
           <div class="ipf-grid ipf-grid--three">
             <div class="form-field">
               <label>{{ isBn ? "বর্তমানে কর্মরত (পুরুষ)" : "Currently Working (Male)" }}</label
-              ><input v-model.number="form.staff_male" type="number" v-bind="MAX3"  :title="t('Number of male staff members', 'পুরুষ কর্মচারীর সংখ্যা লিখুন')" />
+              ><input v-model.number="form.staff_male" type="number" v-bind="MAX3"  :title="t('Number of male staff members', 'পুরুষ কর্মচারীর সংখ্যা লিখুন')"  :placeholder="t('Number of male staff members', 'পুরুষ কর্মচারীর সংখ্যা লিখুন')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "বর্তমানে কর্মরত (মহিলা)" : "Currently Working (Female)" }}</label
-              ><input v-model.number="form.staff_female" type="number" v-bind="MAX3"  :title="t('Number of female staff members', 'মহিলা কর্মচারীর সংখ্যা লিখুন')" />
+              ><input v-model.number="form.staff_female" type="number" v-bind="MAX3"  :title="t('Number of female staff members', 'মহিলা কর্মচারীর সংখ্যা লিখুন')"  :placeholder="t('Number of female staff members', 'মহিলা কর্মচারীর সংখ্যা লিখুন')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "এমপিও (পুরুষ)" : "MPO Staff (Male)" }}</label
-              ><input v-model.number="form.staff_mpo_male" type="number" v-bind="MAX3"  :title="t('Male staff under MPO', 'এমপিওভুক্ত পুরুষ কর্মচারীর সংখ্যা')" />
+              ><input v-model.number="form.staff_mpo_male" type="number" v-bind="MAX3"  :title="t('Male staff under MPO', 'এমপিওভুক্ত পুরুষ কর্মচারীর সংখ্যা')"  :placeholder="t('Male staff under MPO', 'এমপিওভুক্ত পুরুষ কর্মচারীর সংখ্যা')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "এমপিও (মহিলা)" : "MPO Staff (Female)" }}</label
-              ><input v-model.number="form.staff_mpo_female" type="number" v-bind="MAX3"  :title="t('Female staff under MPO', 'এমপিওভুক্ত মহিলা কর্মচারীর সংখ্যা')" />
+              ><input v-model.number="form.staff_mpo_female" type="number" v-bind="MAX3"  :title="t('Female staff under MPO', 'এমপিওভুক্ত মহিলা কর্মচারীর সংখ্যা')"  :placeholder="t('Female staff under MPO', 'এমপিওভুক্ত মহিলা কর্মচারীর সংখ্যা')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "অ-এমপিও (পুরুষ)" : "Non-MPO Staff (Male)" }}</label
-              ><input v-model.number="form.staff_nonmpo_male" type="number" v-bind="MAX3"  :title="t('Male staff not under MPO', 'অ-এমপিওভুক্ত পুরুষ কর্মচারীর সংখ্যা')" />
+              ><input v-model.number="form.staff_nonmpo_male" type="number" v-bind="MAX3"  :title="t('Male staff not under MPO', 'অ-এমপিওভুক্ত পুরুষ কর্মচারীর সংখ্যা')"  :placeholder="t('Male staff not under MPO', 'অ-এমপিওভুক্ত পুরুষ কর্মচারীর সংখ্যা')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "অ-এমপিও (মহিলা)" : "Non-MPO Staff (Female)" }}</label
-              ><input v-model.number="form.staff_nonmpo_female" type="number" v-bind="MAX3"  :title="t('Female staff not under MPO', 'অ-এমপিওভুক্ত মহিলা কর্মচারীর সংখ্যা')" />
+              ><input v-model.number="form.staff_nonmpo_female" type="number" v-bind="MAX3"  :title="t('Female staff not under MPO', 'অ-এমপিওভুক্ত মহিলা কর্মচারীর সংখ্যা')"  :placeholder="t('Female staff not under MPO', 'অ-এমপিওভুক্ত মহিলা কর্মচারীর সংখ্যা')" />
             </div>
           </div>
         </div>
@@ -895,21 +893,21 @@ function removeCommittee(i: number) {
           <div class="ipf-grid">
             <div class="form-field">
               <label>{{ isBn ? "মাধ্যমিক এমপিও তারিখ" : "Secondary MPO Date" }}</label>
-              <BaseDatePicker v-model="form.secondary_mpo_date"  :title="t('Select the date of secondary MPO approval', 'মাধ্যমিক এমপিও অনুমোদনের তারিখ নির্বাচন করুন')" />
+              <BaseDatePicker v-model="form.secondary_mpo_date"  :title="t('Select the date of secondary MPO approval', 'মাধ্যমিক এমপিও অনুমোদনের তারিখ নির্বাচন করুন')"  :placeholder="t('Select the date of secondary MPO approval', 'মাধ্যমিক এমপিও অনুমোদনের তারিখ নির্বাচন করুন')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "মাধ্যমিক এমপিও কোড" : "Secondary MPO Code" }}</label
-              ><input v-model="form.secondary_mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('Secondary MPO code', 'মাধ্যমিক এমপিও কোড লিখুন')" />
+              ><input v-model="form.secondary_mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('Secondary MPO code', 'মাধ্যমিক এমপিও কোড লিখুন')"  :placeholder="t('Secondary MPO code', 'মাধ্যমিক এমপিও কোড লিখুন')" />
             </div>
           </div>
           <div v-if="showHigherSecondaryMpo" class="ipf-grid" style="margin-top: 1rem">
             <div class="form-field">
               <label>{{ isBn ? "উচ্চ মাধ্যমিক এমপিও তারিখ" : "Higher Secondary MPO Date" }}</label>
-              <BaseDatePicker v-model="form.higher_secondary_mpo_date"  :title="t('Select the date of higher secondary MPO approval', 'উচ্চ মাধ্যমিক এমপিও অনুমোদনের তারিখ নির্বাচন করুন')" />
+              <BaseDatePicker v-model="form.higher_secondary_mpo_date"  :title="t('Select the date of higher secondary MPO approval', 'উচ্চ মাধ্যমিক এমপিও অনুমোদনের তারিখ নির্বাচন করুন')"  :placeholder="t('Select the date of higher secondary MPO approval', 'উচ্চ মাধ্যমিক এমপিও অনুমোদনের তারিখ নির্বাচন করুন')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "উচ্চ মাধ্যমিক এমপিও কোড" : "Higher Secondary MPO Code" }}</label
-              ><input v-model="form.higher_secondary_mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('Higher secondary MPO code', 'উচ্চ মাধ্যমিক এমপিও কোড লিখুন')" />
+              ><input v-model="form.higher_secondary_mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('Higher secondary MPO code', 'উচ্চ মাধ্যমিক এমপিও কোড লিখুন')"  :placeholder="t('Higher secondary MPO code', 'উচ্চ মাধ্যমিক এমপিও কোড লিখুন')" />
             </div>
           </div>
         </div>
@@ -934,12 +932,12 @@ function removeCommittee(i: number) {
                 :options="BANK_OPTIONS"
                 option-value="LookupText"
                 option-label="LookupText"
-                :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+                :placeholder="t('Select the bank name', 'ব্যাংকের নাম নির্বাচন করুন')"
                :title="t('Select the bank name', 'ব্যাংকের নাম নির্বাচন করুন')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "শাখা" : "Branch" }}</label
-              ><input v-model="form.bank_branch" type="text"  :title="t('Bank branch name - e.g. Sylhet Main Branch', 'ব্যাংক শাখার নাম লিখুন - যেমন: সিলেট প্রধান শাখা')" />
+              ><input v-model="form.bank_branch" type="text"  :title="t('Bank branch name - e.g. Sylhet Main Branch', 'ব্যাংক শাখার নাম লিখুন - যেমন: সিলেট প্রধান শাখা')"  :placeholder="t('Bank branch name - e.g. Sylhet Main Branch', 'ব্যাংক শাখার নাম লিখুন - যেমন: সিলেট প্রধান শাখা')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "হিসাবের ধরন" : "Account Type" }}</label>
@@ -948,16 +946,16 @@ function removeCommittee(i: number) {
                 :options="ACCOUNT_TYPE_OPTIONS"
                 option-value="LookupText"
                 option-label="LookupText"
-                :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+                :placeholder="t('Select the account type - Savings / Current / FD', 'হিসাবের ধরন নির্বাচন করুন - সঞ্চয় / চলতি / মেয়াদি')"
                :title="t('Select the account type - Savings / Current / FD', 'হিসাবের ধরন নির্বাচন করুন - সঞ্চয় / চলতি / মেয়াদি')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "একাউন্ট হোল্ডার" : "Account Holder" }}</label
-              ><input v-model="form.bank_account_holder" type="text"  :title="t('Name of the account holder', 'হিসাবের মালিকের নাম লিখুন')" />
+              ><input v-model="form.bank_account_holder" type="text"  :title="t('Name of the account holder', 'হিসাবের মালিকের নাম লিখুন')"  :placeholder="t('Name of the account holder', 'হিসাবের মালিকের নাম লিখুন')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "হিসাব নম্বর" : "Account Number" }}</label
-              ><input v-model="form.bank_account_number" type="text"  :title="t('Bank account number', 'ব্যাংক হিসাব নম্বর লিখুন')" />
+              ><input v-model="form.bank_account_number" type="text"  :title="t('Bank account number', 'ব্যাংক হিসাব নম্বর লিখুন')"  :placeholder="t('Bank account number', 'ব্যাংক হিসাব নম্বর লিখুন')" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "হিসাবের উদ্দেশ্য" : "Account Purpose" }}</label>
@@ -966,7 +964,7 @@ function removeCommittee(i: number) {
                 :options="ACCOUNT_PURPOSE_OPTIONS"
                 option-value="LookupText"
                 option-label="LookupText"
-                :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+                :placeholder="t('Select the purpose of the account', 'হিসাবের উদ্দেশ্য নির্বাচন করুন')"
                :title="t('Select the purpose of the account', 'হিসাবের উদ্দেশ্য নির্বাচন করুন')" />
             </div>
           </div>
@@ -1003,15 +1001,15 @@ function removeCommittee(i: number) {
             <div class="ipf-grid ipf-grid--three">
               <div class="form-field">
                 <label>{{ isBn ? "সদস্যের নাম" : "Member Name" }}</label
-                ><input v-model="form.committee_members[i].member_name" type="text"  :title="t('Member full name', 'সদস্যের পূর্ণ নাম লিখুন')" />
+                ><input v-model="form.committee_members[i].member_name" type="text"  :title="t('Member full name', 'সদস্যের পূর্ণ নাম লিখুন')"  :placeholder="t('Member full name', 'সদস্যের পূর্ণ নাম লিখুন')" />
               </div>
               <div class="form-field">
                 <label>{{ isBn ? "যোগদানের তারিখ" : "Joining Date" }}</label>
-                <BaseDatePicker v-model="form.committee_members[i].joining_date"  :title="t('Select the date the member joined the committee', 'কমিটিতে যোগদানের তারিখ নির্বাচন করুন')" />
+                <BaseDatePicker v-model="form.committee_members[i].joining_date"  :title="t('Select the date the member joined the committee', 'কমিটিতে যোগদানের তারিখ নির্বাচন করুন')"  :placeholder="t('Select the date the member joined the committee', 'কমিটিতে যোগদানের তারিখ নির্বাচন করুন')" />
               </div>
               <div class="form-field">
                 <label>{{ isBn ? "ফোন" : "Phone" }}</label
-                ><input v-model="form.committee_members[i].phone" type="text"  :title="t('Member contact number', 'সদস্যের ফোন নম্বর লিখুন')" />
+                ><input v-model="form.committee_members[i].phone" type="text"  :title="t('Member contact number', 'সদস্যের ফোন নম্বর লিখুন')"  :placeholder="t('Member contact number', 'সদস্যের ফোন নম্বর লিখুন')" />
               </div>
               <div class="form-field">
                 <label>{{ isBn ? "লিঙ্গ" : "Gender" }}</label>
@@ -1020,7 +1018,7 @@ function removeCommittee(i: number) {
                   :options="GENDER_OPTIONS"
                   option-value="LookupText"
                   option-label="LookupText"
-                  :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+                  :placeholder="t('Select the gender', 'লিঙ্গ নির্বাচন করুন')"
                  :title="t('Select the gender', 'লিঙ্গ নির্বাচন করুন')" />
               </div>
               <div class="form-field">
@@ -1030,16 +1028,16 @@ function removeCommittee(i: number) {
                   :options="COMMITTEE_POSITION_OPTIONS"
                   option-value="LookupText"
                   option-label="LookupText"
-                  :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+                  :placeholder="t('Select the position in the committee', 'কমিটিতে অবস্থান নির্বাচন করুন')"
                  :title="t('Select the position in the committee', 'কমিটিতে অবস্থান নির্বাচন করুন')" />
               </div>
               <div class="form-field">
                 <label>{{ isBn ? "শিক্ষাগত যোগ্যতা" : "Education" }}</label
-                ><input v-model="form.committee_members[i].education_qualification" type="text"  :title="t('Highest education qualification', 'সর্বোচ্চ শিক্ষাগত যোগ্যতা লিখুন')" />
+                ><input v-model="form.committee_members[i].education_qualification" type="text"  :title="t('Highest education qualification', 'সর্বোচ্চ শিক্ষাগত যোগ্যতা লিখুন')"  :placeholder="t('Highest education qualification', 'সর্বোচ্চ শিক্ষাগত যোগ্যতা লিখুন')" />
               </div>
               <div class="form-field">
                 <label>{{ isBn ? "পেশা" : "Occupation" }}</label
-                ><input v-model="form.committee_members[i].occupation" type="text"  :title="t('Current occupation', 'বর্তমান পেশা লিখুন')" />
+                ><input v-model="form.committee_members[i].occupation" type="text"  :title="t('Current occupation', 'বর্তমান পেশা লিখুন')"  :placeholder="t('Current occupation', 'বর্তমান পেশা লিখুন')" />
               </div>
               <div class="form-field">
                 <label>{{ isBn ? "কমিটি ত্যাগ" : "Left Committee" }}</label>
@@ -1062,7 +1060,7 @@ function removeCommittee(i: number) {
               </div>
               <div v-if="form.committee_members[i].left_committee" class="form-field">
                 <label>{{ isBn ? "ত্যাগের কারণ" : "Reason for Leaving" }}</label
-                ><input v-model="form.committee_members[i].reason_for_leaving" type="text"  :title="t('Reason for leaving the committee', 'কমিটি ছাড়ার কারণ লিখুন')" />
+                ><input v-model="form.committee_members[i].reason_for_leaving" type="text"  :title="t('Reason for leaving the committee', 'কমিটি ছাড়ার কারণ লিখুন')"  :placeholder="t('Reason for leaving the committee', 'কমিটি ছাড়ার কারণ লিখুন')" />
               </div>
             </div>
           </div>
