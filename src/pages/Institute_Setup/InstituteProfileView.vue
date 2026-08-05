@@ -164,7 +164,7 @@ onMounted(async () => {
   const data = await loadProfile()
   if (data) {
     for (const key of Object.keys(form)) {
-      if (key in data) (form as any)[key] = data[key]
+      if (key in data) (form)[key] = data[key]
     }
   }
 })
