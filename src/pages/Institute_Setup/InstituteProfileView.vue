@@ -5,6 +5,7 @@ import { useAppPreferences } from "@/composables/useAppPreferences";
 import { useShortcutKeySet } from "@/composables/shortcut_key_set";
 import { isSaving, saveProfile, loadProfile } from "@/composables/useInstituteProfile";
 import BaseCombobox from "@/components/ui/BaseCombobox.vue";
+import banksJson from "@/assets/jsons/banks.json";
 import {
   BD_GEO_DIVISIONS,
   districtsByDivisionId,
@@ -264,6 +265,9 @@ watch(
 function comboOptions(items: string[]) {
   return items.map((v) => ({ Id: v, LookupText: v }));
 }
+
+// Scheduled banks of Bangladesh (English + Bangla) from assets/jsons/banks.json
+const BANK_OPTIONS = banksJson;
 
 // ── Save ──────────────────────────────────────────────────────────────────
 
@@ -730,8 +734,14 @@ function removeCommittee(i: number) {
         <div class="ipf-section__body">
           <div class="ipf-grid ipf-grid--three">
             <div class="form-field">
-              <label>{{ isBn ? "ব্যাংকের নাম" : "Bank Name" }}</label
-              ><input v-model="form.bank_name" type="text" />
+              <label>{{ isBn ? "ব্যাংকের নাম" : "Bank Name" }}</label>
+              <BaseCombobox
+                v-model="form.bank_name"
+                :options="BANK_OPTIONS"
+                option-value="LookupText"
+                option-label="LookupText"
+                :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+              />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "শাখা" : "Branch" }}</label

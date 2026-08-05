@@ -4,7 +4,7 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppPreferences } from '@/composables/useAppPreferences'
 import { useDragScroll } from '@/composables/useDragScroll'
-import { instituteProfile, profileProgress } from '@/composables/useInstituteProfile'
+import { profileProgress } from '@/composables/useInstituteProfile'
 import {
   TABLE_TABS,
   formatBytes,
