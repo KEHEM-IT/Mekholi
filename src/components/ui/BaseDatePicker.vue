@@ -165,6 +165,30 @@ function selectToday() {
   close()
 }
 
+function prevMonth() {
+  viewMonth.value--
+  if (viewMonth.value < 0) {
+    viewMonth.value = 11
+    viewYear.value--
+  }
+}
+
+function nextMonth() {
+  viewMonth.value++
+  if (viewMonth.value > 11) {
+    viewMonth.value = 0
+    viewYear.value++
+  }
+}
+
+function prevYear() {
+  viewYear.value--
+}
+
+function nextYear() {
+  viewYear.value++
+}
+
 function clearDate(event: Event) {
   event.stopPropagation()
   emit('update:modelValue', '')
@@ -222,24 +246,40 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
     </button>
 
     <div v-if="isOpen" class="datepicker__panel" role="dialog" @keydown="onPanelKeydown">
-      <!-- Header: clickable month + year fields (no arrows) -->
+      <!-- Header: arrows + clickable month/year fields -->
       <div class="datepicker__header">
-        <button
-          type="button"
-          class="datepicker__header-btn"
-          :class="{ 'is-active': mode === 'month' }"
-          @click="mode = mode === 'month' ? 'day' : 'month'"
-        >
-          {{ MONTHS[viewMonth] }}
-        </button>
-        <button
-          type="button"
-          class="datepicker__header-btn"
-          :class="{ 'is-active': mode === 'year' }"
-          @click="mode = mode === 'year' ? 'day' : 'year'"
-        >
-          {{ viewYear }}
-        </button>
+        <div class="datepicker__seg">
+          <button type="button" class="datepicker__nav" aria-label="Previous month" @click="prevMonth">
+            <i class="fa-duotone fa-chevron-left" />
+          </button>
+          <button
+            type="button"
+            class="datepicker__header-btn"
+            :class="{ 'is-active': mode === 'month' }"
+            @click="mode = mode === 'month' ? 'day' : 'month'"
+          >
+            {{ MONTHS[viewMonth] }}
+          </button>
+          <button type="button" class="datepicker__nav" aria-label="Next month" @click="nextMonth">
+            <i class="fa-duotone fa-chevron-right" />
+          </button>
+        </div>
+        <div class="datepicker__seg">
+          <button type="button" class="datepicker__nav" aria-label="Previous year" @click="prevYear">
+            <i class="fa-duotone fa-chevron-left" />
+          </button>
+          <button
+            type="button"
+            class="datepicker__header-btn"
+            :class="{ 'is-active': mode === 'year' }"
+            @click="mode = mode === 'year' ? 'day' : 'year'"
+          >
+            {{ viewYear }}
+          </button>
+          <button type="button" class="datepicker__nav" aria-label="Next year" @click="nextYear">
+            <i class="fa-duotone fa-chevron-right" />
+          </button>
+        </div>
       </div>
 
       <!-- Month selection grid -->

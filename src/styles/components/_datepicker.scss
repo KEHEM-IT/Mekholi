@@ -7,7 +7,7 @@
 //       i.fa-calendar + .datepicker__value[.is-placeholder]
 //       .datepicker__actions > .datepicker__clear + .datepicker__caret
 //     .datepicker__panel
-//       .datepicker__header > .datepicker__header-btn (month) + (year)
+//       .datepicker__header > .datepicker__seg (nav + header-btn month + nav) + (year)
 //       [.datepicker__monthgrid > .datepicker__monthcell]
 //       [.datepicker__yeargrid  > .datepicker__yearcell]
 //       .datepicker__weekdays > .datepicker__weekday
@@ -127,8 +127,37 @@
   margin-bottom: $space-2;
 }
 
+// Month / year segment: [‹  Month  ›]  [‹  Year  ›]
+.datepicker__seg {
+  @include flex(row, center, center, 2px);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.datepicker__nav {
+  @include flex(row, center, center);
+  width: 1.6rem;
+  height: 1.6rem;
+  flex-shrink: 0;
+  border: none;
+  border-radius: $radius-sm;
+  background: transparent;
+  color: $color-text-muted;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition:
+    background-color $transition-fast,
+    color $transition-fast;
+
+  &:hover {
+    background: $color-surface-hover;
+    color: $color-text;
+  }
+}
+
 .datepicker__header-btn {
   flex: 1 1 auto;
+  min-width: 0;
   padding: $space-1 $space-2;
   border: none;
   border-radius: $radius-sm;
@@ -138,6 +167,7 @@
   font-weight: 700;
   text-transform: capitalize;
   cursor: pointer;
+  @include truncate;
   transition:
     background-color $transition-fast,
     color $transition-fast;
