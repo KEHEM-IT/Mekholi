@@ -5,6 +5,7 @@ import { useAppPreferences } from "@/composables/useAppPreferences";
 import { useShortcutKeySet } from "@/composables/shortcut_key_set";
 import { isSaving, saveProfile, loadProfile } from "@/composables/useInstituteProfile";
 import BaseCombobox from "@/components/ui/BaseCombobox.vue";
+import BaseDateInput from "@/components/ui/BaseDateInput.vue";
 import banksJson from "@/assets/jsons/banks.json";
 import gendersJson from "@/assets/jsons/genders.json";
 import committeePositionsJson from "@/assets/jsons/committee_positions.json";
@@ -336,8 +337,8 @@ function removeCommittee(i: number) {
               ><input v-model="form.founder_name" type="text" />
             </div>
             <div class="form-field">
-              <label>{{ isBn ? "প্রতিষ্ঠার তারিখ" : "Est. Date" }}</label
-              ><input v-model="form.establishment_date" type="date" />
+              <label>{{ isBn ? "প্রতিষ্ঠার তারিখ" : "Est. Date" }}</label>
+              <BaseDateInput v-model="form.establishment_date" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "সংসদীয় আসন" : "Parliamentary Constituency" }}</label
@@ -672,8 +673,8 @@ function removeCommittee(i: number) {
         <div class="ipf-section__body">
           <div class="ipf-grid">
             <div class="form-field">
-              <label>{{ isBn ? "মাধ্যমিক এমপিও তারিখ" : "Secondary MPO Date" }}</label
-              ><input v-model="form.secondary_mpo_date" type="date" />
+              <label>{{ isBn ? "মাধ্যমিক এমপিও তারিখ" : "Secondary MPO Date" }}</label>
+              <BaseDateInput v-model="form.secondary_mpo_date" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "মাধ্যমিক এমপিও কোড" : "Secondary MPO Code" }}</label
@@ -682,8 +683,8 @@ function removeCommittee(i: number) {
           </div>
           <div v-if="showHigherSecondaryMpo" class="ipf-grid" style="margin-top: 1rem">
             <div class="form-field">
-              <label>{{ isBn ? "উচ্চ মাধ্যমিক এমপিও তারিখ" : "Higher Secondary MPO Date" }}</label
-              ><input v-model="form.higher_secondary_mpo_date" type="date" />
+              <label>{{ isBn ? "উচ্চ মাধ্যমিক এমপিও তারিখ" : "Higher Secondary MPO Date" }}</label>
+              <BaseDateInput v-model="form.higher_secondary_mpo_date" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "উচ্চ মাধ্যমিক এমপিও কোড" : "Higher Secondary MPO Code" }}</label
@@ -784,8 +785,8 @@ function removeCommittee(i: number) {
                 ><input v-model="form.committee_members[i].member_name" type="text" />
               </div>
               <div class="form-field">
-                <label>{{ isBn ? "যোগদানের তারিখ" : "Joining Date" }}</label
-                ><input v-model="form.committee_members[i].joining_date" type="date" />
+                <label>{{ isBn ? "যোগদানের তারিখ" : "Joining Date" }}</label>
+                <BaseDateInput v-model="form.committee_members[i].joining_date" />
               </div>
               <div class="form-field">
                 <label>{{ isBn ? "ফোন" : "Phone" }}</label
