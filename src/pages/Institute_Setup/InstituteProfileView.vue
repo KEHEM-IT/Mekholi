@@ -245,18 +245,14 @@ const FACILITY_ICONS: Record<string, string> = {
 
 const toast = useToast();
 const isUploadingLogo = ref(false);
+const isDraggingLogo = ref(false);
 const logoInput = ref<HTMLInputElement | null>(null);
 
 function triggerLogoPick() {
   if (!isUploadingLogo.value) logoInput.value?.click();
 }
 
-async function onLogoFilePicked(event: Event) {
-  const input = event.target as HTMLInputElement;
-  const file = input.files?.[0];
-  input.value = ""; // allow re-selecting the same file
-  if (!file) return;
-
+async function uploadLogoFile(file: File) {
   const validationError = validateLogoFile(file);
   if (validationError) {
     toast.error(validationError);
@@ -273,6 +269,33 @@ async function onLogoFilePicked(event: Event) {
   } finally {
     isUploadingLogo.value = false;
   }
+}
+
+function onLogoFilePicked(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+  input.value = ""; // allow re-selecting the same file
+  if (file) void uploadLogoFile(file);
+}
+
+function onLogoDragOver(event: DragEvent) {
+  if (isUploadingLogo.value) return;
+  event.preventDefault();
+  if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
+  isDraggingLogo.value = true;
+}
+
+function onLogoDragLeave(event: DragEvent) {
+  // Ignore leave events fired while moving between child elements.
+  if (!event.currentTarget || event.relatedTarget === event.currentTarget) return;
+  isDraggingLogo.value = false;
+}
+
+function onLogoDrop(event: DragEvent) {
+  event.preventDefault();
+  isDraggingLogo.value = false;
+  const file = event.dataTransfer?.files?.[0];
+  if (file) void uploadLogoFile(file);
 }
 
 function removeLogo() {
@@ -357,14 +380,21 @@ function removeCommittee(i: number) {
             <label>{{ isBn ? "প্রতিষ্ঠানের লোগো" : "Institute Logo" }}</label>
             <div
               class="ipf-logo"
-              :class="{ 'is-uploading': isUploadingLogo }"
+              :class="{
+                'is-uploading': isUploadingLogo,
+                'is-dragging': isDraggingLogo && !isUploadingLogo,
+              }"
               @click="triggerLogoPick"
               @keydown.enter="triggerLogoPick"
+              @dragover.prevent="onLogoDragOver"
+              @dragenter.prevent="isDraggingLogo = true"
+              @dragleave="onLogoDragLeave"
+              @drop.prevent="onLogoDrop"
               role="button"
               tabindex="0"
             >
               <img
-                v-if="form.institute_logo && !isUploadingLogo"
+                v-if="form.institute_logo && !isUploadingLogo && !isDraggingLogo"
                 :src="form.institute_logo"
                 alt="Institute logo"
                 class="ipf-logo__preview"
@@ -373,16 +403,20 @@ function removeCommittee(i: number) {
                 v-else-if="isUploadingLogo"
                 class="fa-duotone fa-spinner fa-spin ipf-logo__icon"
               />
+              <i v-else-if="isDraggingLogo" class="fa-duotone fa-down-to-bracket ipf-logo__icon" />
               <i v-else class="fa-duotone fa-cloud-arrow-up ipf-logo__icon" />
               <div class="ipf-logo__text">
                 <template v-if="isUploadingLogo">
                   {{ isBn ? "আপলোড হচ্ছে..." : "Uploading..." }}
                 </template>
+                <template v-else-if="isDraggingLogo">
+                  {{ isBn ? "লোগো এখানে ছেড়ে দিন" : "Drop the image here" }}
+                </template>
                 <template v-else-if="form.institute_logo">
-                  {{ isBn ? "লোগো পরিবর্তন করতে ক্লিক করুন" : "Click to replace logo" }}
+                  {{ isBn ? "লোগো পরিবর্তন করতে ক্লিক বা ড্র্যাগ করুন" : "Click or drag to replace logo" }}
                 </template>
                 <template v-else>
-                  {{ isBn ? "লোগো আপলোড করতে ক্লিক করুন" : "Click to upload logo" }}
+                  {{ isBn ? "ক্লিক করুন অথবা ছবি এখানে ড্র্যাগ করুন" : "Click or drag & drop an image here" }}
                 </template>
                 <small>{{
                   isBn
@@ -391,7 +425,7 @@ function removeCommittee(i: number) {
                 }}</small>
               </div>
               <span
-                v-if="form.institute_logo && !isUploadingLogo"
+                v-if="form.institute_logo && !isUploadingLogo && !isDraggingLogo"
                 class="ipf-logo__remove"
                 role="button"
                 tabindex="-1"

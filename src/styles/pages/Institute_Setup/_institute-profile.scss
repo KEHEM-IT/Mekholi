@@ -592,6 +592,20 @@
     cursor: progress;
     opacity: 0.7;
   }
+
+  &.is-dragging {
+    border-color: $color-primary;
+    border-style: solid;
+    background: $color-primary-muted;
+
+    .ipf-logo__icon {
+      color: $color-primary;
+    }
+
+    .ipf-logo__text {
+      color: $color-primary;
+    }
+  }
 }
 
 .ipf-logo__preview {
