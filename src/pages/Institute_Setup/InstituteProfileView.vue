@@ -10,6 +10,9 @@ import { uploadToImgbb, validateLogoFile } from "@/composables/useImgbbUpload";
 import { useFormDirtyGuard } from "@/composables/useFormDirtyGuard";
 import BaseCombobox from "@/components/ui/BaseCombobox.vue";
 import BaseDatePicker from "@/components/ui/BaseDatePicker.vue";
+import BaseModal from "@/components/ui/BaseModal.vue";
+import InstituteProfilePreviewModal from "./InstituteProfilePreviewModal.vue";
+import { FACILITY_ICONS, FACILITY_HELP } from "./facilityMeta";
 import banksJson from "@/assets/jsons/banks.json";
 import gendersJson from "@/assets/jsons/genders.json";
 import committeePositionsJson from "@/assets/jsons/committee_positions.json";
@@ -236,44 +239,6 @@ const COMMITTEE_POSITION_OPTIONS = committeePositionsJson;
 // Parliamentary constituencies of Bangladesh (300 seats, English + Bangla)
 const PARLIAMENTARY_SEAT_OPTIONS = parliamentarySeatsJson;
 
-// Font Awesome 6 Pro icon for each facility toggle
-const FACILITY_ICONS: Record<string, string> = {
-  play_ground: "fa-futbol",
-  electricity: "fa-bolt",
-  tubewell: "fa-faucet-drip",
-  tap: "fa-faucet",
-  transport: "fa-bus-school",
-  auditorium: "fa-people-roof",
-  gas: "fa-fire",
-  canteen: "fa-utensils",
-  audio_sound: "fa-volume-high",
-  health_aid: "fa-kit-medical",
-  gymnasium: "fa-dumbbell",
-  audio_visual: "fa-projector",
-  television: "fa-tv",
-  boundary_wall: "fa-bricks",
-  solar_panel: "fa-solar-panel",
-};
-
-// Bilingual tooltip for each facility toggle
-const FACILITY_HELP: Record<string, { en: string; bn: string }> = {
-  play_ground: { en: "Toggle play ground facility", bn: "খেলার মাঠ সুবিধা চালু/বন্ধ করুন" },
-  electricity: { en: "Toggle electricity connection", bn: "বিদ্যুৎ সংযোগ চালু/বন্ধ করুন" },
-  tubewell: { en: "Toggle tubewell / safe water", bn: "টিউবওয়েল / নিরাপদ পানি চালু/বন্ধ করুন" },
-  tap: { en: "Toggle tap water supply", bn: "পানির কল চালু/বন্ধ করুন" },
-  transport: { en: "Toggle transport facility", bn: "পরিবহন সুবিধা চালু/বন্ধ করুন" },
-  auditorium: { en: "Toggle auditorium", bn: "অডিটোরিয়াম চালু/বন্ধ করুন" },
-  gas: { en: "Toggle gas connection", bn: "গ্যাস সংযোগ চালু/বন্ধ করুন" },
-  canteen: { en: "Toggle canteen", bn: "ক্যান্টিন চালু/বন্ধ করুন" },
-  audio_sound: { en: "Toggle audio / sound system", bn: "অডিও / সাউন্ড সিস্টেম চালু/বন্ধ করুন" },
-  health_aid: { en: "Toggle health aid / first-aid", bn: "স্বাস্থ্য সহায়তা চালু/বন্ধ করুন" },
-  gymnasium: { en: "Toggle gymnasium", bn: "জিমনেশিয়াম চালু/বন্ধ করুন" },
-  audio_visual: { en: "Toggle audio-visual equipment", bn: "অডিও-ভিজ্যুয়াল সরঞ্জাম চালু/বন্ধ করুন" },
-  television: { en: "Toggle television", bn: "টেলিভিশন চালু/বন্ধ করুন" },
-  boundary_wall: { en: "Toggle boundary wall", bn: "প্রাচীর / সীমানা চালু/বন্ধ করুন" },
-  solar_panel: { en: "Toggle solar panel", bn: "সোলার প্যানেল চালু/বন্ধ করুন" },
-};
-
 // ── Save ──────────────────────────────────────────────────────────────────
 
 // ── Institute Logo (ImgBB upload) ───────────────────────────────────────
@@ -282,6 +247,7 @@ const toast = useToast();
 const isUploadingLogo = ref(false);
 const isDraggingLogo = ref(false);
 const logoInput = ref<HTMLInputElement | null>(null);
+const showPreview = ref(false);
 
 function triggerLogoPick() {
   if (!isUploadingLogo.value) logoInput.value?.click();
@@ -432,10 +398,16 @@ function removeCommittee(i: number) {
 <template>
   <section class="ipf">
     <header class="ipf-header">
-      <h1>{{ isBn ? "ইনস্টিটিউট প্রোফাইল" : "Institute Profile" }}</h1>
-      <p>
-        {{ isBn ? "আপনার প্রতিষ্ঠানের তথ্য সম্পাদনা করুন।" : "Edit your institute information." }}
-      </p>
+      <div class="ipf-header__titles">
+        <h1>{{ isBn ? "ইনস্টিটিউট প্রোফাইল" : "Institute Profile" }}</h1>
+        <p>
+          {{ isBn ? "আপনার প্রতিষ্ঠানের তথ্য সম্পাদনা করুন।" : "Edit your institute information." }}
+        </p>
+      </div>
+      <button type="button" class="btn btn--primary ipf-header__view" @click="showPreview = true">
+        <i class="fa-duotone fa-eye" />
+        {{ isBn ? "দেখুন" : "View" }}
+      </button>
     </header>
 
     <div class="ipf-main">
@@ -1123,5 +1095,20 @@ function removeCommittee(i: number) {
         </button>
       </div>
     </div>
+
+    <!-- ── Profile preview modal ─────────────────────── -->
+    <BaseModal
+      v-if="showPreview"
+      :title="isBn ? 'প্রতিষ্ঠানের প্রোফাইল' : 'Institute Profile'"
+      wide
+      @close="showPreview = false"
+    >
+      <InstituteProfilePreviewModal :form="form as unknown as Record<string, unknown>" />
+      <template #footer>
+        <button type="button" class="btn btn--primary" @click="showPreview = false">
+          <i class="fa-duotone fa-xmark" /> {{ isBn ? "বন্ধ করুন" : "Close" }}
+        </button>
+      </template>
+    </BaseModal>
   </section>
 </template>
