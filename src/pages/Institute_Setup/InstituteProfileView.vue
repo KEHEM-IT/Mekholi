@@ -408,7 +408,10 @@ function removeCommittee(i: number) { form.committee_members.splice(i, 1) }
       <!-- ── 11. Committee Members ────────────────────── -->
       <div class="ipf-section">
         <div class="ipf-section__head">
-          <div class="ipf-section__title"><i class="fa-duotone fa-users" /><div><h2>{{ isBn ? 'কমিটির সদস্য' : 'Committee Members' }}</h2><span>{{ form.committee_members.length }} {{ isBn ? 'সদস্য' : 'members' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addCommittee">+ Add</button></div>
+          <div class="ipf-section__title"><i class="fa-duotone fa-users" /><div><h2>{{ isBn ? 'কমিটির সদস্য' : 'Committee Members' }}</h2><span>{{ form.committee_members.length }} {{ isBn ? 'সদস্য' : 'members' }}</span></div></div>
+          <button type="button" class="ipf-add-btn" @click="addCommittee" :title="isBn ? 'সদস্য যোগ করুন' : 'Add member'">
+            <i class="fa-duotone fa-plus" /> {{ isBn ? 'যোগ করুন' : 'Add' }}
+          </button>
         </div>
         <div class="ipf-section__body">
           <div v-for="(m, i) in form.committee_members" :key="i" class="ipf-array-card">

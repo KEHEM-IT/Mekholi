@@ -527,8 +527,28 @@
   }
 }
 
-// ── Add button ────────────────────────────────────────────────────────
+// ── Add button (stacked beside section title on the right) ────────────
 
 .ipf-add-btn {
+  @include flex(row, center, center, $space-2);
   flex-shrink: 0;
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+  border: 1px solid $color-border;
+  background: $color-surface;
+  color: $color-text-secondary;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color $transition-fast, color $transition-fast, background $transition-fast;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+    background: $color-primary-muted;
+  }
+
+  i {
+    font-size: 0.75rem;
+  }
 }
