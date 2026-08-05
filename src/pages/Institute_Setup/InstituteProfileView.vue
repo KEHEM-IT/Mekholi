@@ -105,8 +105,13 @@ const form = reactive({
   higher_secondary_mpo_date: '' as string,
   higher_secondary_mpo_code: '' as string,
 
-  // Bank Accounts
-  bank_accounts: [] as { bank_name: string; branch: string; account_type: string; account_holder_name: string; account_number: string; account_purpose: string }[],
+  // Bank Account (single)
+  bank_name: '' as string,
+  bank_branch: '' as string,
+  bank_account_type: '' as string,
+  bank_account_holder: '' as string,
+  bank_account_number: '' as string,
+  bank_account_purpose: '' as string,
 
   // Committee Members
   committee_members: [] as { member_name: string; joining_date: string; phone: string; gender: string; committee_position: string; education_qualification: string; occupation: string; left_committee: boolean; reason_for_leaving: string }[],
@@ -161,14 +166,7 @@ useShortcutKeySet([
   { key: 's', ctrl: true, handler: () => handleSave() },
 ])
 
-// ── Bank / Committee add/remove ───────────────────────────────────────────
-
-function addBank() {
-  form.bank_accounts.push({ bank_name: '', branch: '', account_type: '', account_holder_name: '', account_number: '', account_purpose: '' })
-}
-function removeBank(i: number) { form.bank_accounts.splice(i, 1) }
-
-function addCommittee() {
+// ── Shortcuts ───────────────────────────────────────────────────────────── {
   form.committee_members.push({ member_name: '', joining_date: '', phone: '', gender: '', committee_position: '', education_qualification: '', occupation: '', left_committee: false, reason_for_leaving: '' })
 }
 function removeCommittee(i: number) { form.committee_members.splice(i, 1) }
@@ -373,27 +371,24 @@ function removeCommittee(i: number) { form.committee_members.splice(i, 1) }
         </div>
       </div>
 
-      <!-- ── 10. Bank Accounts ────────────────────────── -->
+      <!-- ── 10. Bank Account ────────────────────────── -->
       <div class="ipf-section">
         <div class="ipf-section__head">
-          <div class="ipf-section__title"><i class="fa-duotone fa-piggy-bank" /><div><h2>{{ isBn ? 'ব্যাংক হিসাব' : 'Bank Accounts' }}</h2><span>{{ form.bank_accounts.length }} {{ isBn ? 'একাউন্ট' : 'accounts' }}</span></div><button type="button" class="btn btn--sm ipf-add-btn" @click="addBank">+ Add</button></div>
+          <div class="ipf-section__title"><i class="fa-duotone fa-piggy-bank" /><div><h2>{{ isBn ? 'ব্যাংক হিসাব' : 'Bank Account' }}</h2></div></div>
         </div>
         <div class="ipf-section__body">
-          <div v-for="(b, i) in form.bank_accounts" :key="i" class="ipf-array-card">
-            <div class="ipf-array-card__head">#{{ i + 1 }} <button type="button" class="ipf-array-card__remove" @click="removeBank(i)">&times;</button></div>
-            <div class="ipf-grid ipf-grid--three">
-              <div class="form-field"><label>{{ isBn ? 'ব্যাংকের নাম' : 'Bank Name' }}</label><input v-model="form.bank_accounts[i].bank_name" type="text" /></div>
-              <div class="form-field"><label>{{ isBn ? 'শাখা' : 'Branch' }}</label><input v-model="form.bank_accounts[i].branch" type="text" /></div>
-              <div class="form-field">
-                <label>{{ isBn ? 'হিসাবের ধরন' : 'Account Type' }}</label>
-                <BaseCombobox v-model="form.bank_accounts[i].account_type" :options="comboOptions(ACCOUNT_TYPES)" :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'" />
-              </div>
-              <div class="form-field"><label>{{ isBn ? 'একাউন্ট হোল্ডার' : 'Account Holder' }}</label><input v-model="form.bank_accounts[i].account_holder_name" type="text" /></div>
-              <div class="form-field"><label>{{ isBn ? 'হিসাব নম্বর' : 'Account Number' }}</label><input v-model="form.bank_accounts[i].account_number" type="text" /></div>
-              <div class="form-field">
-                <label>{{ isBn ? 'হিসাবের উদ্দেশ্য' : 'Account Purpose' }}</label>
-                <BaseCombobox v-model="form.bank_accounts[i].account_purpose" :options="comboOptions(ACCOUNT_PURPOSES)" :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'" />
-              </div>
+          <div class="ipf-grid ipf-grid--three">
+            <div class="form-field"><label>{{ isBn ? 'ব্যাংকের নাম' : 'Bank Name' }}</label><input v-model="form.bank_name" type="text" /></div>
+            <div class="form-field"><label>{{ isBn ? 'শাখা' : 'Branch' }}</label><input v-model="form.bank_branch" type="text" /></div>
+            <div class="form-field">
+              <label>{{ isBn ? 'হিসাবের ধরন' : 'Account Type' }}</label>
+              <BaseCombobox v-model="form.bank_account_type" :options="comboOptions(ACCOUNT_TYPES)" :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'" />
+            </div>
+            <div class="form-field"><label>{{ isBn ? 'একাউন্ট হোল্ডার' : 'Account Holder' }}</label><input v-model="form.bank_account_holder" type="text" /></div>
+            <div class="form-field"><label>{{ isBn ? 'হিসাব নম্বর' : 'Account Number' }}</label><input v-model="form.bank_account_number" type="text" /></div>
+            <div class="form-field">
+              <label>{{ isBn ? 'হিসাবের উদ্দেশ্য' : 'Account Purpose' }}</label>
+              <BaseCombobox v-model="form.bank_account_purpose" :options="comboOptions(ACCOUNT_PURPOSES)" :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'" />
             </div>
           </div>
         </div>
