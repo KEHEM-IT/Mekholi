@@ -1,6 +1,6 @@
 <!-- Institute Setup > Institute Profile -->
 <script setup lang="ts">
-import { computed, onMounted, reactive, watch } from "vue";
+import { computed, nextTick, onMounted, reactive, watch } from "vue";
 import { useAppPreferences } from "@/composables/useAppPreferences";
 import { useShortcutKeySet } from "@/composables/shortcut_key_set";
 import { isSaving, saveProfile, loadProfile } from "@/composables/useInstituteProfile";
@@ -222,9 +222,22 @@ const geoUpazilaOptions = computed(() =>
 );
 const geoUnionOptions = computed(() => (form.upazila_id ? unionsByUpazilaId(form.upazila_id) : []));
 
+// ── Conditional MPO info ──────────────────────────────────────────────────
+
+const showHigherSecondaryMpo = computed(() => {
+  const n = (form.institute_name_en + form.institute_name_bn).toLowerCase();
+  return n.includes("college");
+});
+
+// While restoring a saved profile we must NOT run the geo cascade resets —
+// the watchers below would otherwise clear the loaded child selections
+// (district / upazila / union) the moment division_id is assigned.
+let isRestoringProfile = false;
+
 watch(
   () => form.division_id,
   () => {
+    if (isRestoringProfile) return;
     form.district_id = "";
     form.upazila_id = "";
     form.union_id = "";
@@ -233,6 +246,7 @@ watch(
 watch(
   () => form.district_id,
   () => {
+    if (isRestoringProfile) return;
     form.upazila_id = "";
     form.union_id = "";
   },
@@ -240,16 +254,10 @@ watch(
 watch(
   () => form.upazila_id,
   () => {
+    if (isRestoringProfile) return;
     form.union_id = "";
   },
 );
-
-// ── Conditional MPO info ──────────────────────────────────────────────────
-
-const showHigherSecondaryMpo = computed(() => {
-  const n = (form.institute_name_en + form.institute_name_bn).toLowerCase();
-  return n.includes("college");
-});
 
 // ── Combobox-as-array helpers ─────────────────────────────────────────────
 
@@ -269,6 +277,9 @@ async function handleSave() {
 onMounted(async () => {
   const data = (await loadProfile()) as Partial<typeof form> | null;
   if (data) {
+    // Suppress the geo cascade watchers while restoring — otherwise the
+    // division change would wipe the loaded district / upazila / union.
+    isRestoringProfile = true;
     // Object.keys returns string[]; narrow to keys of form to satisfy TypeScript
     const keys = Object.keys(form) as (keyof typeof form)[];
     for (const key of keys) {
@@ -278,6 +289,9 @@ onMounted(async () => {
         (form as Record<keyof typeof form, unknown>)[key] = data[key];
       }
     }
+    // Let queued watchers run (they no-op via the flag), then restore behavior
+    await nextTick();
+    isRestoringProfile = false;
   }
 });
 
