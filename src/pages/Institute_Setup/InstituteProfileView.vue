@@ -227,7 +227,7 @@ const FACILITY_ICONS: Record<string, string> = {
   gymnasium: "fa-dumbbell",
   audio_visual: "fa-projector",
   television: "fa-tv",
-  boundary_wall: "fa-brick-wall",
+  boundary_wall: "fa-bricks",
   solar_panel: "fa-solar-panel",
 };
 
