@@ -1,8 +1,9 @@
 <!-- Institute Setup > Institute Profile -->
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, watch } from 'vue'
 import { useAppPreferences } from '@/composables/useAppPreferences'
 import { useShortcutKeySet } from '@/composables/shortcut_key_set'
+import { isSaving, saveProfile, loadProfile } from '@/composables/useInstituteProfile'
 import BaseCombobox from '@/components/ui/BaseCombobox.vue'
 import {
   BD_GEO_DIVISIONS,
@@ -152,13 +153,21 @@ function comboOptions(items: string[]) {
 
 // ── Save ──────────────────────────────────────────────────────────────────
 
-const isSaving = ref(false)
-function handleSave() {
-  isSaving.value = true
-  console.log('Profile saved:', JSON.parse(JSON.stringify(form)))
-  // TODO: API call
-  setTimeout(() => (isSaving.value = false), 400)
+// ── Save / Load ───────────────────────────────────────────────────────
+
+async function handleSave() {
+  await saveProfile({ ...form })
 }
+
+// Try loading from SQLite on mount; stays empty if server not running
+onMounted(async () => {
+  const data = await loadProfile()
+  if (data) {
+    for (const key of Object.keys(form)) {
+      if (key in data) (form as any)[key] = data[key]
+    }
+  }
+})
 
 // ── Shortcuts ─────────────────────────────────────────────────────────────
 
