@@ -132,7 +132,9 @@ const bankFields: Field[] = [
 ]
 
 const staffTotal = computed(() => {
-  const nums = [f.value.staff_male, f.value.staff_female, f.value.staff_mpo_male, f.value.staff_mpo_female, f.value.staff_nonmpo_male, f.value.staff_nonmpo_female]
+  // Same rule as the profile editor: Total Staffs = Currently Working
+  // (Male) + Currently Working (Female) only — not the MPO breakdown rows.
+  const nums = [f.value.staff_male, f.value.staff_female]
   return nums.reduce((acc: number, n) => acc + (Number(n) || 0), 0)
 })
 
@@ -240,7 +242,7 @@ const hasAnyValue = computed(() => {
             <span class="ipfp-field__value">{{ x.fmt ? x.fmt(f[x.key]) : show(f[x.key]) }}</span>
           </div>
           <div v-if="staffTotal > 0" class="ipfp-field ipfp-field--total">
-            <span class="ipfp-field__label">{{ L('Total Staff', 'মোট কর্মচারী') }}</span>
+            <span class="ipfp-field__label">{{ L('Total Staffs', 'মোট কর্মচারী') }}</span>
             <span class="ipfp-field__value">{{ staffTotal }}</span>
           </div>
         </div>
