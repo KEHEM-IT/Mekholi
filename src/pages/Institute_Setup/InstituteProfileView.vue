@@ -168,7 +168,7 @@ onMounted(async () => {
     for (const key of keys) {
       if (key in data) {
         // Assign with proper casting since data comes from external source
-        ;(form)[key] = (dataform)[key]
+        ;(form as any)[key] = (data as any)[key]
       }
     }
   }
