@@ -64,7 +64,11 @@ export const BD_GEO_UNIONS: BdUnion[] = (unionsData as RawUnion[]).map((u) => ({
 
 export function districtsByDivisionId(divisionId: number | string): BdDistrict[] {
   const id = Number(divisionId);
-  return BD_GEO_DISTRICTS.filter((d) => d.DivisionId === id);
+  // NOTE: The source data has both ZoneId (correct, post-2015 division
+  // reorganization) and DivisionId (stale legacy values). 43 of 64
+  // districts have DivisionId != ZoneId — e.g. Sylhet districts have
+  // DivisionId=6 but ZoneId=9. We filter on ZoneId.
+  return BD_GEO_DISTRICTS.filter((d) => d.ZoneId === id);
 }
 
 export function upazilasByDistrictId(districtId: number | string): BdUpazila[] {
