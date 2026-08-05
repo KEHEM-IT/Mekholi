@@ -464,6 +464,23 @@
   }
 }
 
+// ── Checkbox label (inline next to checkbox) ─────────────────────────
+
+.form-field__check {
+  @include flex(row, center, flex-start, $space-2);
+  padding: $space-2 0;
+}
+
+.form-field__check-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $color-text;
+  cursor: pointer;
+  user-select: none;
+}
+
+// ── Add button ────────────────────────────────────────────────────────
+
 .ipf-add-btn {
   flex-shrink: 0;
 }
