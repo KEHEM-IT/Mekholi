@@ -62,10 +62,10 @@ const form = reactive({
   parliamentary_constituency: '' as string,
 
   // Address
-  division_id: null as number | null,
-  district_id: null as number | null,
-  upazila_id: null as number | null,
-  union_id: null as number | null,
+  division_id: '' as string,
+  district_id: '' as string,
+  upazila_id: '' as string,
+  union_id: '' as string,
   village_road_holding_no: '' as string,
   post_office: '' as string,
   post_code: null as number | null,
@@ -135,9 +135,9 @@ const geoDistrictOptions = computed(() => form.division_id ? districtsByDivision
 const geoUpazilaOptions = computed(() => form.district_id ? upazilasByDistrictId(form.district_id) : [])
 const geoUnionOptions = computed(() => form.upazila_id ? unionsByUpazilaId(form.upazila_id) : [])
 
-watch(() => form.division_id, () => { form.district_id = null; form.upazila_id = null; form.union_id = null })
-watch(() => form.district_id, () => { form.upazila_id = null; form.union_id = null })
-watch(() => form.upazila_id, () => { form.union_id = null })
+watch(() => form.division_id, () => { form.district_id = ''; form.upazila_id = ''; form.union_id = '' })
+watch(() => form.district_id, () => { form.upazila_id = ''; form.union_id = '' })
+watch(() => form.upazila_id, () => { form.union_id = '' })
 
 // ── Conditional MPO info ──────────────────────────────────────────────────
 
@@ -225,19 +225,19 @@ function removeCommittee(i: number) { form.committee_members.splice(i, 1) }
           <div class="ipf-grid ipf-grid--three">
             <div class="form-field">
               <label>{{ isBn ? 'বিভাগ / অঞ্চল' : 'Division / Region' }}</label>
-              <BaseCombobox v-model="form.division_id" :options="geoDivisionOptions" option-label="LookupText" :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'" />
+              <BaseCombobox v-model="form.division_id" option-value="id" :options="geoDivisionOptions" option-label="LookupText" :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? 'জেলা' : 'District' }}</label>
-              <BaseCombobox v-model="form.district_id" :options="geoDistrictOptions" option-label="LookupText" :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'" :disabled="!form.division_id" />
+              <BaseCombobox v-model="form.district_id" option-value="id" :options="geoDistrictOptions" option-label="LookupText" :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'" :disabled="!form.division_id" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? 'উপজেলা/থানা' : 'Upazila / Thana' }}</label>
-              <BaseCombobox v-model="form.upazila_id" :options="geoUpazilaOptions" option-label="LookupText" :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'" :disabled="!form.district_id" />
+              <BaseCombobox v-model="form.upazila_id" option-value="id" :options="geoUpazilaOptions" option-label="LookupText" :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'" :disabled="!form.district_id" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? 'ইউনিয়ন' : 'Union' }}</label>
-              <BaseCombobox v-model="form.union_id" :options="geoUnionOptions" option-label="LookupText" :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'" :disabled="!form.upazila_id" />
+              <BaseCombobox v-model="form.union_id" option-value="id" :options="geoUnionOptions" option-label="LookupText" :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'" :disabled="!form.upazila_id" />
             </div>
             <div class="form-field"><label>{{ isBn ? 'গ্রাম/হোল্ডিং/রোড' : 'Village / Road' }}</label><input v-model="form.village_road_holding_no" type="text" /></div>
             <div class="form-field"><label>{{ isBn ? 'ডাকঘর' : 'Post Office' }}</label><input v-model="form.post_office" type="text" /></div>

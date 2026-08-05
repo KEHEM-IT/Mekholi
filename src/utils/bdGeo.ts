@@ -1,102 +1,112 @@
-// Bangladesh administrative geolocation lookups (Division -> District ->
-// Upazila -> Union), backed by the flat JSON exports living in
-// src/assets/geolocation. Each file is a plain array of rows (Id +
-// name fields + a parent foreign key), so the JSON imports are used
-// directly — no unwrapping needed.
-import divisionsData from "@/assets/geolocation/divisions.json";
-import districtsData from "@/assets/geolocation/districts.json";
-import upazilasData from "@/assets/geolocation/upazilas.json";
-import unionsData from "@/assets/geolocation/unions.json";
+// Bangladesh administrative geolocation lookups (Division → District →
+// Upazila → Union), backed by the flat JSON exports in
+// src/assets/geolocations. Each file is a phpMyAdmin export where the
+// actual data is nested under `data` inside a table descriptor object.
+import divisionsRaw from '@/assets/geolocations/divisions.json'
+import districtsRaw from '@/assets/geolocations/districts.json'
+import upazilasRaw  from '@/assets/geolocations/upazilas.json'
+import unionsRaw    from '@/assets/geolocations/unions.json'
 
-// Each row also carries an index signature so these interfaces satisfy
-// BaseCombobox's generic `ComboboxOption = Record<string, unknown>` options
-// prop - without it TS rejects passing e.g. BdDistrict[] where
-// Record<string, unknown>[] is expected, even though every named field
-// already fits `unknown`.
+function extractData(wrapper: Array<Record<string, unknown>>) {
+  for (const item of wrapper) {
+    if ((item as any).type === 'table') return ((item as any).data ?? []) as Record<string, unknown>[]
+  }
+  return [] as Record<string, unknown>[]
+}
+
+// ── Interfaces ──────────────────────────────────────────────────────────
+
 export interface BdDivision {
-  [key: string]: unknown;
-  Id: number;
-  ZoneName: string;
-  Zone_Bn: string;
-  LookupText: string;
+  [key: string]: unknown
+  id: string
+  name: string
+  bn_name: string
+  LookupText: string
 }
 
 export interface BdDistrict {
-  [key: string]: unknown;
-  Id: number;
-  Name: string;
-  NameBn: string;
-  DivisionId: number;
-  ZoneId: number;
-  LookupText: string;
+  [key: string]: unknown
+  id: string
+  division_id: string
+  name: string
+  bn_name: string
+  LookupText: string
 }
 
 export interface BdUpazila {
-  [key: string]: unknown;
-  Id: number;
-  Name: string;
-  NameBn: string;
-  DistrictId: number;
-  LookupText: string;
+  [key: string]: unknown
+  id: string
+  district_id: string
+  name: string
+  bn_name: string
+  LookupText: string
 }
 
 export interface BdUnion {
-  [key: string]: unknown;
-  Id: number;
-  Name: string;
-  NameBn: string;
-  SubDistrictId: number;
-  /** Not present in the source dump — built once at load time below so
-   *  unions can be dropped straight into BaseCombobox like every other
-   *  level (which all carry a real LookupText column). */
-  LookupText: string;
+  [key: string]: unknown
+  id: string
+  upazilla_id: string
+  name: string
+  bn_name: string
+  LookupText: string
 }
 
-export const BD_GEO_DIVISIONS = divisionsData as BdDivision[];
-export const BD_GEO_DISTRICTS = districtsData as BdDistrict[];
-export const BD_GEO_UPAZILAS = upazilasData as BdUpazila[];
+// ── Build lookup arrays (add LookupText) ─────────────────────────────────
 
-type RawUnion = Omit<BdUnion, "LookupText">;
-export const BD_GEO_UNIONS: BdUnion[] = (unionsData as RawUnion[]).map((u) => ({
-  ...u,
-  LookupText: u.Name === u.NameBn ? u.Name : `${u.Name} - ${u.NameBn}`,
-})) as BdUnion[];
+const _rawDivisions = extractData(divisionsRaw)
+const _rawDistricts = extractData(districtsRaw)
+const _rawUpazilas  = extractData(upazilasRaw)
+const _rawUnions    = extractData(unionsRaw)
+
+const addLookup = (d: Record<string, unknown>) => ({
+  ...d,
+  LookupText: `${d.name} - ${d.bn_name}`,
+})
+
+export const BD_GEO_DIVISIONS = _rawDivisions.map(addLookup) as unknown as BdDivision[]
+export const BD_GEO_DISTRICTS = _rawDistricts.map(addLookup) as unknown as BdDistrict[]
+export const BD_GEO_UPAZILAS  = _rawUpazilas.map(addLookup) as unknown as BdUpazila[]
+export const BD_GEO_UNIONS    = _rawUnions.map(addLookup) as unknown as BdUnion[]
+
+// ── Cascading filters ────────────────────────────────────────────────────
 
 export function districtsByDivisionId(divisionId: number | string): BdDistrict[] {
-  const id = Number(divisionId);
-  // NOTE: The source data has both ZoneId (correct, post-2015 division
-  // reorganization) and DivisionId (stale legacy values). 43 of 64
-  // districts have DivisionId != ZoneId — e.g. Sylhet districts have
-  // DivisionId=6 but ZoneId=9. We filter on ZoneId.
-  return BD_GEO_DISTRICTS.filter((d) => d.ZoneId === id);
+  const id = String(divisionId)
+  return BD_GEO_DISTRICTS.filter((d) => d.division_id === id)
 }
 
 export function upazilasByDistrictId(districtId: number | string): BdUpazila[] {
-  const id = Number(districtId);
-  return BD_GEO_UPAZILAS.filter((u) => u.DistrictId === id);
+  const id = String(districtId)
+  return BD_GEO_UPAZILAS.filter((u) => u.district_id === id)
 }
 
 export function unionsByUpazilaId(upazilaId: number | string): BdUnion[] {
-  const id = Number(upazilaId);
-  return BD_GEO_UNIONS.filter((u) => u.SubDistrictId === id);
+  const id = String(upazilaId)
+  return BD_GEO_UNIONS.filter((u) => u.upazilla_id === id)
 }
 
+// ── Name lookups (case-insensitive) ──────────────────────────────────────
+
 export function findDivisionByName(name?: string): BdDivision | undefined {
-  if (!name) return undefined;
-  return BD_GEO_DIVISIONS.find((d) => d.ZoneName === name);
+  if (!name) return undefined
+  const lower = name.toLowerCase()
+  return BD_GEO_DIVISIONS.find((d) => d.name.toLowerCase() === lower)
 }
 
 export function findDistrictByName(name?: string): BdDistrict | undefined {
-  if (!name) return undefined;
-  return BD_GEO_DISTRICTS.find((d) => d.Name === name);
+  if (!name) return undefined
+  const lower = name.toLowerCase()
+  return BD_GEO_DISTRICTS.find((d) => d.name.toLowerCase() === lower)
 }
 
 export function findUpazilaByName(name?: string): BdUpazila | undefined {
-  if (!name) return undefined;
-  return BD_GEO_UPAZILAS.find((u) => u.Name === name);
+  if (!name) return undefined
+  const lower = name.toLowerCase()
+  return BD_GEO_UPAZILAS.find((u) => u.name.toLowerCase() === lower)
 }
 
 export function findUnionByName(name?: string): BdUnion | undefined {
-  if (!name) return undefined;
-  return BD_GEO_UNIONS.find((u) => u.Name === name);
+  if (!name) return undefined
+  const lower = name.toLowerCase()
+  return BD_GEO_UNIONS.find((u) => u.name.toLowerCase() === lower)
 }
