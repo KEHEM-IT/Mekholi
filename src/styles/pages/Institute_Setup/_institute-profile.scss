@@ -962,3 +962,28 @@
     opacity: 0.5;
   }
 }
+
+// ── Staff total badge (section head, right side) ────────────────────────
+
+.ipf-staff-total {
+  @include flex(row, center, center, $space-2);
+  flex-shrink: 0;
+  padding: $space-1 $space-3;
+  border-radius: 999px;
+  border: 1px solid $color-primary;
+  background: $color-primary-muted;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: $color-text-secondary;
+
+  i {
+    color: $color-primary;
+    font-size: 0.85rem;
+  }
+
+  strong {
+    color: $color-primary;
+    font-size: 1rem;
+    font-weight: 800;
+  }
+}

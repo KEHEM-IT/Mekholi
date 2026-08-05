@@ -174,6 +174,14 @@ const showHigherSecondaryMpo = computed(() => {
   return n.includes("college");
 });
 
+// Live total of all staff fields (updates as the user types)
+const staffTotal = computed(() =>
+  [form.staff_male, form.staff_female, form.staff_mpo_male, form.staff_mpo_female, form.staff_nonmpo_male, form.staff_nonmpo_female].reduce<number>(
+    (sum, n) => sum + (Number(n) || 0),
+    0,
+  ),
+);
+
 // While restoring a saved profile we must NOT run the geo cascade resets —
 // the watchers below would otherwise clear the loaded child selections
 // (district / upazila / union) the moment division_id is assigned.
@@ -835,6 +843,13 @@ function removeCommittee(i: number) {
             <div>
               <h2>{{ isBn ? "জনবল" : "Staff" }}</h2>
             </div>
+          </div>
+          <div class="ipf-staff-total" :title="isBn ? 'মোট কর্মচারী' : 'Total staff'">
+            <i class="fa-duotone fa-calculator" />
+            <span>
+              {{ isBn ? "মোট" : "Total" }}:
+              <strong>{{ staffTotal }}</strong>
+            </span>
           </div>
         </div>
         <div class="ipf-section__body">
