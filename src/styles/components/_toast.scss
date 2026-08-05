@@ -1,0 +1,71 @@
+@use '../abstracts' as *;
+
+// Global toast notifications — see components/ui/ToastViewport.vue.
+// Markup:
+//   .toast-viewport (fixed, top-right)
+//     .toast.toast--success|--error|--info (TransitionGroup "toast")
+//       .toast__icon + .toast__message
+
+.toast-viewport {
+  position: fixed;
+  top: $space-4;
+  right: $space-4;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  max-width: min(22rem, calc(100vw - #{$space-6}));
+  pointer-events: none;
+}
+
+.toast {
+  @include flex(row, center, flex-start, $space-2);
+  padding: $space-3 $space-4;
+  border-radius: $radius-md;
+  border: 1px solid $color-border-strong;
+  border-left-width: 4px;
+  background: $color-surface-alt;
+  box-shadow: $shadow-card;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $color-text;
+  pointer-events: auto;
+}
+
+.toast__icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.toast--success {
+  border-left-color: $color-success;
+  .toast__icon { color: $color-success; }
+}
+
+.toast--error {
+  border-left-color: $color-danger;
+  .toast__icon { color: $color-danger; }
+}
+
+.toast--info {
+  border-left-color: $color-info;
+  .toast__icon { color: $color-info; }
+}
+
+// Slide/fade in from the right, fade out on removal.
+.toast-enter-active,
+.toast-leave-active {
+  transition:
+    transform 0.22s ease,
+    opacity 0.22s ease;
+}
+
+.toast-enter-from {
+  transform: translateX(1.25rem);
+  opacity: 0;
+}
+
+.toast-leave-to {
+  transform: translateX(1.25rem);
+  opacity: 0;
+}

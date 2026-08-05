@@ -32,6 +32,9 @@ export function useFormDirtyGuard<T extends object>(form: T, options: FormDirtyG
     isDirty.value = false
   }
 
+  // Baseline = the form's state at setup (before any user edits).
+  markClean()
+
   /** True when the form currently differs from the last saved/restored state. */
   function hasChanges(): boolean {
     return takeSnapshot() !== savedSnapshot
