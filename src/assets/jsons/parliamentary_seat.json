@@ -2,1501 +2,2101 @@
   {
     "Id": 95,
     "DistrictId": 1,
-    "LookupText": "Bagerhat-1 (95)"
+    "Name": "Bagerhat-1 (95)",
+    "NameInBangla": "বাগেরহাট-১ (৯৫)",
+    "LookupText": "Bagerhat-1 (95) - বাগেরহাট-১ (৯৫)"
   },
   {
     "Id": 96,
     "DistrictId": 1,
-    "LookupText": "Bagerhat-2 (96)"
+    "Name": "Bagerhat-2 (96)",
+    "NameInBangla": "বাগেরহাট-২ (৯৬)",
+    "LookupText": "Bagerhat-2 (96) - বাগেরহাট-২ (৯৬)"
   },
   {
     "Id": 97,
     "DistrictId": 1,
-    "LookupText": "Bagerhat-3 (97)"
+    "Name": "Bagerhat-3 (97)",
+    "NameInBangla": "বাগেরহাট-৩ (৯৭)",
+    "LookupText": "Bagerhat-3 (97) - বাগেরহাট-৩ (৯৭)"
   },
   {
     "Id": 98,
     "DistrictId": 1,
-    "LookupText": "Bagerhat-4 (98)"
+    "Name": "Bagerhat-4 (98)",
+    "NameInBangla": "বাগেরহাট-৪ (৯৮)",
+    "LookupText": "Bagerhat-4 (98) - বাগেরহাট-৪ (৯৮)"
   },
   {
     "Id": 109,
     "DistrictId": 3,
-    "LookupText": "Barguna-1 (109)"
+    "Name": "Barguna-1 (109)",
+    "NameInBangla": "বরগুনা-১ (১০৯)",
+    "LookupText": "Barguna-1 (109) - বরগুনা-১ (১০৯)"
   },
   {
     "Id": 110,
     "DistrictId": 3,
-    "LookupText": "Barguna-2 (110)"
+    "Name": "Barguna-2 (110)",
+    "NameInBangla": "বরগুনা-২ (১১০)",
+    "LookupText": "Barguna-2 (110) - বরগুনা-২ (১১০)"
   },
   {
     "Id": 119,
     "DistrictId": 4,
-    "LookupText": "Barisal-1 (119)"
+    "Name": "Barisal-1 (119)",
+    "NameInBangla": "বরিশাল-১ (১১৯)",
+    "LookupText": "Barisal-1 (119) - বরিশাল-১ (১১৯)"
   },
   {
     "Id": 120,
     "DistrictId": 4,
-    "LookupText": "Barisal-2 (120)"
+    "Name": "Barisal-2 (120)",
+    "NameInBangla": "বরিশাল-২ (১২০)",
+    "LookupText": "Barisal-2 (120) - বরিশাল-২ (১২০)"
   },
   {
     "Id": 121,
     "DistrictId": 4,
-    "LookupText": "Barisal-3 (121)"
+    "Name": "Barisal-3 (121)",
+    "NameInBangla": "বরিশাল-৩ (১২১)",
+    "LookupText": "Barisal-3 (121) - বরিশাল-৩ (১২১)"
   },
   {
     "Id": 122,
     "DistrictId": 4,
-    "LookupText": "Barisal-4 (122)"
+    "Name": "Barisal-4 (122)",
+    "NameInBangla": "বরিশাল-৪ (১২২)",
+    "LookupText": "Barisal-4 (122) - বরিশাল-৪ (১২২)"
   },
   {
     "Id": 123,
     "DistrictId": 4,
-    "LookupText": "Barisal-5 (123)"
+    "Name": "Barisal-5 (123)",
+    "NameInBangla": "বরিশাল-৫ (১২৩)",
+    "LookupText": "Barisal-5 (123) - বরিশাল-৫ (১২৩)"
   },
   {
     "Id": 124,
     "DistrictId": 4,
-    "LookupText": "Barisal-6 (124)"
+    "Name": "Barisal-6 (124)",
+    "NameInBangla": "বরিশাল-৬ (১২৪)",
+    "LookupText": "Barisal-6 (124) - বরিশাল-৬ (১২৪)"
   },
   {
     "Id": 115,
     "DistrictId": 4,
-    "LookupText": "Bhola-1 (115)"
+    "Name": "Bhola-1 (115)",
+    "NameInBangla": "ভোলা-১ (১১৫)",
+    "LookupText": "Bhola-1 (115) - ভোলা-১ (১১৫)"
   },
   {
     "Id": 116,
     "DistrictId": 4,
-    "LookupText": "Bhola-2 (116)"
+    "Name": "Bhola-2 (116)",
+    "NameInBangla": "ভোলা-২ (১১৬)",
+    "LookupText": "Bhola-2 (116) - ভোলা-২ (১১৬)"
   },
   {
     "Id": 117,
     "DistrictId": 4,
-    "LookupText": "Bhola-3 (117)"
+    "Name": "Bhola-3 (117)",
+    "NameInBangla": "ভোলা-৩ (১১৭)",
+    "LookupText": "Bhola-3 (117) - ভোলা-৩ (১১৭)"
   },
   {
     "Id": 118,
     "DistrictId": 4,
-    "LookupText": "Bhola-4 (118)"
+    "Name": "Bhola-4 (118)",
+    "NameInBangla": "ভোলা-৪ (১১৮)",
+    "LookupText": "Bhola-4 (118) - ভোলা-৪ (১১৮)"
   },
   {
     "Id": 36,
     "DistrictId": 6,
-    "LookupText": "Bogra-1 (36)"
+    "Name": "Bogra-1 (36)",
+    "NameInBangla": "বগুড়া-১ (৩৬)",
+    "LookupText": "Bogra-1 (36) - বগুড়া-১ (৩৬)"
   },
   {
     "Id": 37,
     "DistrictId": 6,
-    "LookupText": "Bogra-2 (37)"
+    "Name": "Bogra-2 (37)",
+    "NameInBangla": "বগুড়া-২ (৩৭)",
+    "LookupText": "Bogra-2 (37) - বগুড়া-২ (৩৭)"
   },
   {
     "Id": 38,
     "DistrictId": 6,
-    "LookupText": "Bogra-3 (38)"
+    "Name": "Bogra-3 (38)",
+    "NameInBangla": "বগুড়া-৩ (৩৮)",
+    "LookupText": "Bogra-3 (38) - বগুড়া-৩ (৩৮)"
   },
   {
     "Id": 39,
     "DistrictId": 6,
-    "LookupText": "Bogra-4 (39)"
+    "Name": "Bogra-4 (39)",
+    "NameInBangla": "বগুড়া-৪ (৩৯)",
+    "LookupText": "Bogra-4 (39) - বগুড়া-৪ (৩৯)"
   },
   {
     "Id": 40,
     "DistrictId": 6,
-    "LookupText": "Bogra-5 (40)"
+    "Name": "Bogra-5 (40)",
+    "NameInBangla": "বগুড়া-৫ (৪০)",
+    "LookupText": "Bogra-5 (40) - বগুড়া-৫ (৪০)"
   },
   {
     "Id": 41,
     "DistrictId": 6,
-    "LookupText": "Bogra-6 (41)"
+    "Name": "Bogra-6 (41)",
+    "NameInBangla": "বগুড়া-৬ (৪১)",
+    "LookupText": "Bogra-6 (41) - বগুড়া-৬ (৪১)"
   },
   {
     "Id": 42,
     "DistrictId": 6,
-    "LookupText": "Bogra-7 (42)"
+    "Name": "Bogra-7 (42)",
+    "NameInBangla": "বগুড়া-৭ (৪২)",
+    "LookupText": "Bogra-7 (42) - বগুড়া-৭ (৪২)"
   },
   {
     "Id": 243,
     "DistrictId": 7,
-    "LookupText": "Brahmanbaria-1 (243)"
+    "Name": "Brahmanbaria-1 (243)",
+    "NameInBangla": "ব্রাহ্মণবাড়িয়া-১ (২৪৩)",
+    "LookupText": "Brahmanbaria-1 (243) - ব্রাহ্মণবাড়িয়া-১ (২৪৩)"
   },
   {
     "Id": 244,
     "DistrictId": 7,
-    "LookupText": "Brahmanbaria-2 (244)"
+    "Name": "Brahmanbaria-2 (244)",
+    "NameInBangla": "ব্রাহ্মণবাড়িয়া-২ (২৪৪)",
+    "LookupText": "Brahmanbaria-2 (244) - ব্রাহ্মণবাড়িয়া-২ (২৪৪)"
   },
   {
     "Id": 245,
     "DistrictId": 7,
-    "LookupText": "Brahmanbaria-3 (245)"
+    "Name": "Brahmanbaria-3 (245)",
+    "NameInBangla": "ব্রাহ্মণবাড়িয়া-৩ (২৪৫)",
+    "LookupText": "Brahmanbaria-3 (245) - ব্রাহ্মণবাড়িয়া-৩ (২৪৫)"
   },
   {
     "Id": 246,
     "DistrictId": 7,
-    "LookupText": "Brahmanbaria-4 (246)"
+    "Name": "Brahmanbaria-4 (246)",
+    "NameInBangla": "ব্রাহ্মণবাড়িয়া-৪ (২৪৬)",
+    "LookupText": "Brahmanbaria-4 (246) - ব্রাহ্মণবাড়িয়া-৪ (২৪৬)"
   },
   {
     "Id": 247,
     "DistrictId": 7,
-    "LookupText": "Brahmanbaria-5 (247)"
+    "Name": "Brahmanbaria-5 (247)",
+    "NameInBangla": "ব্রাহ্মণবাড়িয়া-৫ (২৪৭)",
+    "LookupText": "Brahmanbaria-5 (247) - ব্রাহ্মণবাড়িয়া-৫ (২৪৭)"
   },
   {
     "Id": 248,
     "DistrictId": 7,
-    "LookupText": "Brahmanbaria-6 (248)"
+    "Name": "Brahmanbaria-6 (248)",
+    "NameInBangla": "ব্রাহ্মণবাড়িয়া-৬ (২৪৮)",
+    "LookupText": "Brahmanbaria-6 (248) - ব্রাহ্মণবাড়িয়া-৬ (২৪৮)"
   },
   {
     "Id": 260,
     "DistrictId": 8,
-    "LookupText": "Chandpur-1 (260)"
+    "Name": "Chandpur-1 (260)",
+    "NameInBangla": "চাঁদপুর-১ (২৬০)",
+    "LookupText": "Chandpur-1 (260) - চাঁদপুর-১ (২৬০)"
   },
   {
     "Id": 261,
     "DistrictId": 8,
-    "LookupText": "Chandpur-2 (261)"
+    "Name": "Chandpur-2 (261)",
+    "NameInBangla": "চাঁদপুর-২ (২৬১)",
+    "LookupText": "Chandpur-2 (261) - চাঁদপুর-২ (২৬১)"
   },
   {
     "Id": 262,
     "DistrictId": 8,
-    "LookupText": "Chandpur-3 (262)"
+    "Name": "Chandpur-3 (262)",
+    "NameInBangla": "চাঁদপুর-৩ (২৬২)",
+    "LookupText": "Chandpur-3 (262) - চাঁদপুর-৩ (২৬২)"
   },
   {
     "Id": 263,
     "DistrictId": 8,
-    "LookupText": "Chandpur-4 (263)"
+    "Name": "Chandpur-4 (263)",
+    "NameInBangla": "চাঁদপুর-৪ (২৬৩)",
+    "LookupText": "Chandpur-4 (263) - চাঁদপুর-৪ (২৬৩)"
   },
   {
     "Id": 264,
     "DistrictId": 8,
-    "LookupText": "Chandpur-5 (264)"
+    "Name": "Chandpur-5 (264)",
+    "NameInBangla": "চাঁদপুর-৫ (২৬৪)",
+    "LookupText": "Chandpur-5 (264) - চাঁদপুর-৫ (২৬৪)"
   },
   {
     "Id": 43,
     "DistrictId": 45,
-    "LookupText": "Chapai Nawabganj-1 (43)"
+    "Name": "Chapai Nawabganj-1 (43)",
+    "NameInBangla": "চাঁপাইনবাবগঞ্জ-১ (৪৩)",
+    "LookupText": "Chapai Nawabganj-1 (43) - চাঁপাইনবাবগঞ্জ-১ (৪৩)"
   },
   {
     "Id": 44,
     "DistrictId": 45,
-    "LookupText": "Chapai Nawabganj-2 (44)"
+    "Name": "Chapai Nawabganj-2 (44)",
+    "NameInBangla": "চাঁপাইনবাবগঞ্জ-২ (৪৪)",
+    "LookupText": "Chapai Nawabganj-2 (44) - চাঁপাইনবাবগঞ্জ-২ (৪৪)"
   },
   {
     "Id": 45,
     "DistrictId": 45,
-    "LookupText": "Chapai Nawabganj-3 (45)"
+    "Name": "Chapai Nawabganj-3 (45)",
+    "NameInBangla": "চাঁপাইনবাবগঞ্জ-৩ (৪৫)",
+    "LookupText": "Chapai Nawabganj-3 (45) - চাঁপাইনবাবগঞ্জ-৩ (৪৫)"
   },
   {
     "Id": 278,
     "DistrictId": 9,
-    "LookupText": "Chittagong-1 (278)"
+    "Name": "Chittagong-1 (278)",
+    "NameInBangla": "চট্টগ্রাম-১ (২৭৮)",
+    "LookupText": "Chittagong-1 (278) - চট্টগ্রাম-১ (২৭৮)"
   },
   {
     "Id": 287,
     "DistrictId": 9,
-    "LookupText": "Chittagong-10 (287)"
+    "Name": "Chittagong-10 (287)",
+    "NameInBangla": "চট্টগ্রাম-১০ (২৮৭)",
+    "LookupText": "Chittagong-10 (287) - চট্টগ্রাম-১০ (২৮৭)"
   },
   {
     "Id": 288,
     "DistrictId": 9,
-    "LookupText": "Chittagong-11 (288)"
+    "Name": "Chittagong-11 (288)",
+    "NameInBangla": "চট্টগ্রাম-১১ (২৮৮)",
+    "LookupText": "Chittagong-11 (288) - চট্টগ্রাম-১১ (২৮৮)"
   },
   {
     "Id": 289,
     "DistrictId": 9,
-    "LookupText": "Chittagong-12 (289)"
+    "Name": "Chittagong-12 (289)",
+    "NameInBangla": "চট্টগ্রাম-১২ (২৮৯)",
+    "LookupText": "Chittagong-12 (289) - চট্টগ্রাম-১২ (২৮৯)"
   },
   {
     "Id": 290,
     "DistrictId": 9,
-    "LookupText": "Chittagong-13 (290)"
+    "Name": "Chittagong-13 (290)",
+    "NameInBangla": "চট্টগ্রাম-১৩ (২৯০)",
+    "LookupText": "Chittagong-13 (290) - চট্টগ্রাম-১৩ (২৯০)"
   },
   {
     "Id": 291,
     "DistrictId": 9,
-    "LookupText": "Chittagong-14 (291)"
+    "Name": "Chittagong-14 (291)",
+    "NameInBangla": "চট্টগ্রাম-১৪ (২৯১)",
+    "LookupText": "Chittagong-14 (291) - চট্টগ্রাম-১৪ (২৯১)"
   },
   {
     "Id": 292,
     "DistrictId": 9,
-    "LookupText": "Chittagong-15 (292)"
+    "Name": "Chittagong-15 (292)",
+    "NameInBangla": "চট্টগ্রাম-১৫ (২৯২)",
+    "LookupText": "Chittagong-15 (292) - চট্টগ্রাম-১৫ (২৯২)"
   },
   {
     "Id": 293,
     "DistrictId": 9,
-    "LookupText": "Chittagong-16 (293)"
+    "Name": "Chittagong-16 (293)",
+    "NameInBangla": "চট্টগ্রাম-১৬ (২৯৩)",
+    "LookupText": "Chittagong-16 (293) - চট্টগ্রাম-১৬ (২৯৩)"
   },
   {
     "Id": 279,
     "DistrictId": 9,
-    "LookupText": "Chittagong-2 (279)"
+    "Name": "Chittagong-2 (279)",
+    "NameInBangla": "চট্টগ্রাম-২ (২৭৯)",
+    "LookupText": "Chittagong-2 (279) - চট্টগ্রাম-২ (২৭৯)"
   },
   {
     "Id": 280,
     "DistrictId": 9,
-    "LookupText": "Chittagong-3 (280)"
+    "Name": "Chittagong-3 (280)",
+    "NameInBangla": "চট্টগ্রাম-৩ (২৮০)",
+    "LookupText": "Chittagong-3 (280) - চট্টগ্রাম-৩ (২৮০)"
   },
   {
     "Id": 281,
     "DistrictId": 9,
-    "LookupText": "Chittagong-4 (281)"
+    "Name": "Chittagong-4 (281)",
+    "NameInBangla": "চট্টগ্রাম-৪ (২৮১)",
+    "LookupText": "Chittagong-4 (281) - চট্টগ্রাম-৪ (২৮১)"
   },
   {
     "Id": 282,
     "DistrictId": 9,
-    "LookupText": "Chittagong-5 (282)"
+    "Name": "Chittagong-5 (282)",
+    "NameInBangla": "চট্টগ্রাম-৫ (২৮২)",
+    "LookupText": "Chittagong-5 (282) - চট্টগ্রাম-৫ (২৮২)"
   },
   {
     "Id": 283,
     "DistrictId": 9,
-    "LookupText": "Chittagong-6 (283)"
+    "Name": "Chittagong-6 (283)",
+    "NameInBangla": "চট্টগ্রাম-৬ (২৮৩)",
+    "LookupText": "Chittagong-6 (283) - চট্টগ্রাম-৬ (২৮৩)"
   },
   {
     "Id": 284,
     "DistrictId": 9,
-    "LookupText": "Chittagong-7 (284)"
+    "Name": "Chittagong-7 (284)",
+    "NameInBangla": "চট্টগ্রাম-৭ (২৮৪)",
+    "LookupText": "Chittagong-7 (284) - চট্টগ্রাম-৭ (২৮৪)"
   },
   {
     "Id": 285,
     "DistrictId": 9,
-    "LookupText": "Chittagong-8 (285)"
+    "Name": "Chittagong-8 (285)",
+    "NameInBangla": "চট্টগ্রাম-৮ (২৮৫)",
+    "LookupText": "Chittagong-8 (285) - চট্টগ্রাম-৮ (২৮৫)"
   },
   {
     "Id": 286,
     "DistrictId": 9,
-    "LookupText": "Chittagong-9 (286)"
+    "Name": "Chittagong-9 (286)",
+    "NameInBangla": "চট্টগ্রাম-৯ (২৮৬)",
+    "LookupText": "Chittagong-9 (286) - চট্টগ্রাম-৯ (২৮৬)"
   },
   {
     "Id": 79,
     "DistrictId": 10,
-    "LookupText": "Chuadanga-1 (79)"
+    "Name": "Chuadanga-1 (79)",
+    "NameInBangla": "চুয়াডাঙ্গা-১ (৭৯)",
+    "LookupText": "Chuadanga-1 (79) - চুয়াডাঙ্গা-১ (৭৯)"
   },
   {
     "Id": 80,
     "DistrictId": 10,
-    "LookupText": "Chuadanga-2 (80)"
+    "Name": "Chuadanga-2 (80)",
+    "NameInBangla": "চুয়াডাঙ্গা-২ (৮০)",
+    "LookupText": "Chuadanga-2 (80) - চুয়াডাঙ্গা-২ (৮০)"
   },
   {
     "Id": 249,
     "DistrictId": 11,
-    "LookupText": "Comilla-1 (249)"
+    "Name": "Comilla-1 (249)",
+    "NameInBangla": "কুমিল্লা-১ (২৪৯)",
+    "LookupText": "Comilla-1 (249) - কুমিল্লা-১ (২৪৯)"
   },
   {
     "Id": 258,
     "DistrictId": 11,
-    "LookupText": "Comilla-10 (258)"
+    "Name": "Comilla-10 (258)",
+    "NameInBangla": "কুমিল্লা-১০ (২৫৮)",
+    "LookupText": "Comilla-10 (258) - কুমিল্লা-১০ (২৫৮)"
   },
   {
     "Id": 259,
     "DistrictId": 11,
-    "LookupText": "Comilla-11 (259)"
+    "Name": "Comilla-11 (259)",
+    "NameInBangla": "কুমিল্লা-১১ (২৫৯)",
+    "LookupText": "Comilla-11 (259) - কুমিল্লা-১১ (২৫৯)"
   },
   {
     "Id": 250,
     "DistrictId": 11,
-    "LookupText": "Comilla-2 (250)"
+    "Name": "Comilla-2 (250)",
+    "NameInBangla": "কুমিল্লা-২ (২৫০)",
+    "LookupText": "Comilla-2 (250) - কুমিল্লা-২ (২৫০)"
   },
   {
     "Id": 251,
     "DistrictId": 11,
-    "LookupText": "Comilla-3 (251)"
+    "Name": "Comilla-3 (251)",
+    "NameInBangla": "কুমিল্লা-৩ (২৫১)",
+    "LookupText": "Comilla-3 (251) - কুমিল্লা-৩ (২৫১)"
   },
   {
     "Id": 252,
     "DistrictId": 11,
-    "LookupText": "Comilla-4 (252)"
+    "Name": "Comilla-4 (252)",
+    "NameInBangla": "কুমিল্লা-৪ (২৫২)",
+    "LookupText": "Comilla-4 (252) - কুমিল্লা-৪ (২৫২)"
   },
   {
     "Id": 253,
     "DistrictId": 11,
-    "LookupText": "Comilla-5 (253)"
+    "Name": "Comilla-5 (253)",
+    "NameInBangla": "কুমিল্লা-৫ (২৫৩)",
+    "LookupText": "Comilla-5 (253) - কুমিল্লা-৫ (২৫৩)"
   },
   {
     "Id": 254,
     "DistrictId": 11,
-    "LookupText": "Comilla-6 (254)"
+    "Name": "Comilla-6 (254)",
+    "NameInBangla": "কুমিল্লা-৬ (২৫৪)",
+    "LookupText": "Comilla-6 (254) - কুমিল্লা-৬ (২৫৪)"
   },
   {
     "Id": 255,
     "DistrictId": 11,
-    "LookupText": "Comilla-7 (255)"
+    "Name": "Comilla-7 (255)",
+    "NameInBangla": "কুমিল্লা-৭ (২৫৫)",
+    "LookupText": "Comilla-7 (255) - কুমিল্লা-৭ (২৫৫)"
   },
   {
     "Id": 256,
     "DistrictId": 11,
-    "LookupText": "Comilla-8 (256)"
+    "Name": "Comilla-8 (256)",
+    "NameInBangla": "কুমিল্লা-৮ (২৫৬)",
+    "LookupText": "Comilla-8 (256) - কুমিল্লা-৮ (২৫৬)"
   },
   {
     "Id": 257,
     "DistrictId": 11,
-    "LookupText": "Comilla-9 (257)"
+    "Name": "Comilla-9 (257)",
+    "NameInBangla": "কুমিল্লা-৯ (২৫৭)",
+    "LookupText": "Comilla-9 (257) - কুমিল্লা-৯ (২৫৭)"
   },
   {
     "Id": 294,
     "DistrictId": 12,
-    "LookupText": "Cox's Bazar-1 (294)"
+    "Name": "Cox's Bazar-1 (294)",
+    "NameInBangla": "কক্সবাজার-১ (২৯৪)",
+    "LookupText": "Cox's Bazar-1 (294) - কক্সবাজার-১ (২৯৪)"
   },
   {
     "Id": 295,
     "DistrictId": 12,
-    "LookupText": "Cox's Bazar-2 (295)"
+    "Name": "Cox's Bazar-2 (295)",
+    "NameInBangla": "কক্সবাজার-২ (২৯৫)",
+    "LookupText": "Cox's Bazar-2 (295) - কক্সবাজার-২ (২৯৫)"
   },
   {
     "Id": 296,
     "DistrictId": 12,
-    "LookupText": "Cox's Bazar-3 (296)"
+    "Name": "Cox's Bazar-3 (296)",
+    "NameInBangla": "কক্সবাজার-৩ (২৯৬)",
+    "LookupText": "Cox's Bazar-3 (296) - কক্সবাজার-৩ (২৯৬)"
   },
   {
     "Id": 297,
     "DistrictId": 12,
-    "LookupText": "Cox's Bazar-4 (297)"
+    "Name": "Cox's Bazar-4 (297)",
+    "NameInBangla": "কক্সবাজার-৪ (২৯৭)",
+    "LookupText": "Cox's Bazar-4 (297) - কক্সবাজার-৪ (২৯৭)"
   },
   {
     "Id": 174,
     "DistrictId": 13,
-    "LookupText": "Dhaka-1 (174)"
+    "Name": "Dhaka-1 (174)",
+    "NameInBangla": "ঢাকা-১ (১৭৪)",
+    "LookupText": "Dhaka-1 (174) - ঢাকা-১ (১৭৪)"
   },
   {
     "Id": 183,
     "DistrictId": 13,
-    "LookupText": "Dhaka-10 (183)"
+    "Name": "Dhaka-10 (183)",
+    "NameInBangla": "ঢাকা-১০ (১৮৩)",
+    "LookupText": "Dhaka-10 (183) - ঢাকা-১০ (১৮৩)"
   },
   {
     "Id": 184,
     "DistrictId": 13,
-    "LookupText": "Dhaka-11 (184)"
+    "Name": "Dhaka-11 (184)",
+    "NameInBangla": "ঢাকা-১১ (১৮৪)",
+    "LookupText": "Dhaka-11 (184) - ঢাকা-১১ (১৮৪)"
   },
   {
     "Id": 185,
     "DistrictId": 13,
-    "LookupText": "Dhaka-12 (185)"
+    "Name": "Dhaka-12 (185)",
+    "NameInBangla": "ঢাকা-১২ (১৮৫)",
+    "LookupText": "Dhaka-12 (185) - ঢাকা-১২ (১৮৫)"
   },
   {
     "Id": 186,
     "DistrictId": 13,
-    "LookupText": "Dhaka-13 (186)"
+    "Name": "Dhaka-13 (186)",
+    "NameInBangla": "ঢাকা-১৩ (১৮৬)",
+    "LookupText": "Dhaka-13 (186) - ঢাকা-১৩ (১৮৬)"
   },
   {
     "Id": 187,
     "DistrictId": 13,
-    "LookupText": "Dhaka-14 (187)"
+    "Name": "Dhaka-14 (187)",
+    "NameInBangla": "ঢাকা-১৪ (১৮৭)",
+    "LookupText": "Dhaka-14 (187) - ঢাকা-১৪ (১৮৭)"
   },
   {
     "Id": 188,
     "DistrictId": 13,
-    "LookupText": "Dhaka-15 (188)"
+    "Name": "Dhaka-15 (188)",
+    "NameInBangla": "ঢাকা-১৫ (১৮৮)",
+    "LookupText": "Dhaka-15 (188) - ঢাকা-১৫ (১৮৮)"
   },
   {
     "Id": 189,
     "DistrictId": 13,
-    "LookupText": "Dhaka-16 (189)"
+    "Name": "Dhaka-16 (189)",
+    "NameInBangla": "ঢাকা-১৬ (১৮৯)",
+    "LookupText": "Dhaka-16 (189) - ঢাকা-১৬ (১৮৯)"
   },
   {
     "Id": 190,
     "DistrictId": 13,
-    "LookupText": "Dhaka-17 (190)"
+    "Name": "Dhaka-17 (190)",
+    "NameInBangla": "ঢাকা-১৭ (১৯০)",
+    "LookupText": "Dhaka-17 (190) - ঢাকা-১৭ (১৯০)"
   },
   {
     "Id": 191,
     "DistrictId": 13,
-    "LookupText": "Dhaka-18 (191)"
+    "Name": "Dhaka-18 (191)",
+    "NameInBangla": "ঢাকা-১৮ (১৯১)",
+    "LookupText": "Dhaka-18 (191) - ঢাকা-১৮ (১৯১)"
   },
   {
     "Id": 192,
     "DistrictId": 13,
-    "LookupText": "Dhaka-19 (192)"
+    "Name": "Dhaka-19 (192)",
+    "NameInBangla": "ঢাকা-১৯ (১৯২)",
+    "LookupText": "Dhaka-19 (192) - ঢাকা-১৯ (১৯২)"
   },
   {
     "Id": 175,
     "DistrictId": 13,
-    "LookupText": "Dhaka-2 (175)"
+    "Name": "Dhaka-2 (175)",
+    "NameInBangla": "ঢাকা-২ (১৭৫)",
+    "LookupText": "Dhaka-2 (175) - ঢাকা-২ (১৭৫)"
   },
   {
     "Id": 193,
     "DistrictId": 13,
-    "LookupText": "Dhaka-20 (193)"
+    "Name": "Dhaka-20 (193)",
+    "NameInBangla": "ঢাকা-২০ (১৯৩)",
+    "LookupText": "Dhaka-20 (193) - ঢাকা-২০ (১৯৩)"
   },
   {
     "Id": 176,
     "DistrictId": 13,
-    "LookupText": "Dhaka-3 (176)"
+    "Name": "Dhaka-3 (176)",
+    "NameInBangla": "ঢাকা-৩ (১৭৬)",
+    "LookupText": "Dhaka-3 (176) - ঢাকা-৩ (১৭৬)"
   },
   {
     "Id": 177,
     "DistrictId": 13,
-    "LookupText": "Dhaka-4 (177)"
+    "Name": "Dhaka-4 (177)",
+    "NameInBangla": "ঢাকা-৪ (১৭৭)",
+    "LookupText": "Dhaka-4 (177) - ঢাকা-৪ (১৭৭)"
   },
   {
     "Id": 178,
     "DistrictId": 13,
-    "LookupText": "Dhaka-5 (178)"
+    "Name": "Dhaka-5 (178)",
+    "NameInBangla": "ঢাকা-৫ (১৭৮)",
+    "LookupText": "Dhaka-5 (178) - ঢাকা-৫ (১৭৮)"
   },
   {
     "Id": 179,
     "DistrictId": 13,
-    "LookupText": "Dhaka-6 (179)"
+    "Name": "Dhaka-6 (179)",
+    "NameInBangla": "ঢাকা-৬ (১৭৯)",
+    "LookupText": "Dhaka-6 (179) - ঢাকা-৬ (১৭৯)"
   },
   {
     "Id": 180,
     "DistrictId": 13,
-    "LookupText": "Dhaka-7 (180)"
+    "Name": "Dhaka-7 (180)",
+    "NameInBangla": "ঢাকা-৭ (১৮০)",
+    "LookupText": "Dhaka-7 (180) - ঢাকা-৭ (১৮০)"
   },
   {
     "Id": 181,
     "DistrictId": 13,
-    "LookupText": "Dhaka-8 (181)"
+    "Name": "Dhaka-8 (181)",
+    "NameInBangla": "ঢাকা-৮ (১৮১)",
+    "LookupText": "Dhaka-8 (181) - ঢাকা-৮ (১৮১)"
   },
   {
     "Id": 182,
     "DistrictId": 13,
-    "LookupText": "Dhaka-9 (182)"
+    "Name": "Dhaka-9 (182)",
+    "NameInBangla": "ঢাকা-৯ (১৮২)",
+    "LookupText": "Dhaka-9 (182) - ঢাকা-৯ (১৮২)"
   },
   {
     "Id": 6,
     "DistrictId": 14,
-    "LookupText": "Dinajpur-1 (6)"
+    "Name": "Dinajpur-1 (6)",
+    "NameInBangla": "দিনাজপুর-১ (৬)",
+    "LookupText": "Dinajpur-1 (6) - দিনাজপুর-১ (৬)"
   },
   {
     "Id": 7,
     "DistrictId": 14,
-    "LookupText": "Dinajpur-2 (7)"
+    "Name": "Dinajpur-2 (7)",
+    "NameInBangla": "দিনাজপুর-২ (৭)",
+    "LookupText": "Dinajpur-2 (7) - দিনাজপুর-২ (৭)"
   },
   {
     "Id": 8,
     "DistrictId": 14,
-    "LookupText": "Dinajpur-3 (8)"
+    "Name": "Dinajpur-3 (8)",
+    "NameInBangla": "দিনাজপুর-৩ (৮)",
+    "LookupText": "Dinajpur-3 (8) - দিনাজপুর-৩ (৮)"
   },
   {
     "Id": 9,
     "DistrictId": 14,
-    "LookupText": "Dinajpur-4 (9)"
+    "Name": "Dinajpur-4 (9)",
+    "NameInBangla": "দিনাজপুর-৪ (৯)",
+    "LookupText": "Dinajpur-4 (9) - দিনাজপুর-৪ (৯)"
   },
   {
     "Id": 10,
     "DistrictId": 14,
-    "LookupText": "Dinajpur-5 (10)"
+    "Name": "Dinajpur-5 (10)",
+    "NameInBangla": "দিনাজপুর-৫ (১০)",
+    "LookupText": "Dinajpur-5 (10) - দিনাজপুর-৫ (১০)"
   },
   {
     "Id": 11,
     "DistrictId": 14,
-    "LookupText": "Dinajpur-6 (11)"
+    "Name": "Dinajpur-6 (11)",
+    "NameInBangla": "দিনাজপুর-৬ (১১)",
+    "LookupText": "Dinajpur-6 (11) - দিনাজপুর-৬ (১১)"
   },
   {
     "Id": 211,
     "DistrictId": 15,
-    "LookupText": "Faridpur-1 (211)"
+    "Name": "Faridpur-1 (211)",
+    "NameInBangla": "ফরিদপুর-১ (২১১)",
+    "LookupText": "Faridpur-1 (211) - ফরিদপুর-১ (২১১)"
   },
   {
     "Id": 212,
     "DistrictId": 15,
-    "LookupText": "Faridpur-2 (212)"
+    "Name": "Faridpur-2 (212)",
+    "NameInBangla": "ফরিদপুর-২ (২১২)",
+    "LookupText": "Faridpur-2 (212) - ফরিদপুর-২ (২১২)"
   },
   {
     "Id": 213,
     "DistrictId": 15,
-    "LookupText": "Faridpur-3 (213)"
+    "Name": "Faridpur-3 (213)",
+    "NameInBangla": "ফরিদপুর-৩ (২১৩)",
+    "LookupText": "Faridpur-3 (213) - ফরিদপুর-৩ (২১৩)"
   },
   {
     "Id": 214,
     "DistrictId": 15,
-    "LookupText": "Faridpur-4 (214)"
+    "Name": "Faridpur-4 (214)",
+    "NameInBangla": "ফরিদপুর-৪ (২১৪)",
+    "LookupText": "Faridpur-4 (214) - ফরিদপুর-৪ (২১৪)"
   },
   {
     "Id": 265,
     "DistrictId": 16,
-    "LookupText": "Feni-1 (265)"
+    "Name": "Feni-1 (265)",
+    "NameInBangla": "ফেনী-১ (২৬৫)",
+    "LookupText": "Feni-1 (265) - ফেনী-১ (২৬৫)"
   },
   {
     "Id": 266,
     "DistrictId": 16,
-    "LookupText": "Feni-2 (266)"
+    "Name": "Feni-2 (266)",
+    "NameInBangla": "ফেনী-২ (২৬৬)",
+    "LookupText": "Feni-2 (266) - ফেনী-২ (২৬৬)"
   },
   {
     "Id": 267,
     "DistrictId": 16,
-    "LookupText": "Feni-3 (267)"
+    "Name": "Feni-3 (267)",
+    "NameInBangla": "ফেনী-৩ (২৬৭)",
+    "LookupText": "Feni-3 (267) - ফেনী-৩ (২৬৭)"
   },
   {
     "Id": 29,
     "DistrictId": 17,
-    "LookupText": "Gaibandha-1 (29)"
+    "Name": "Gaibandha-1 (29)",
+    "NameInBangla": "গাইবান্ধা-১ (২৯)",
+    "LookupText": "Gaibandha-1 (29) - গাইবান্ধা-১ (২৯)"
   },
   {
     "Id": 30,
     "DistrictId": 17,
-    "LookupText": "Gaibandha-2 (30)"
+    "Name": "Gaibandha-2 (30)",
+    "NameInBangla": "গাইবান্ধা-২ (৩০)",
+    "LookupText": "Gaibandha-2 (30) - গাইবান্ধা-২ (৩০)"
   },
   {
     "Id": 31,
     "DistrictId": 17,
-    "LookupText": "Gaibandha-3 (31)"
+    "Name": "Gaibandha-3 (31)",
+    "NameInBangla": "গাইবান্ধা-৩ (৩১)",
+    "LookupText": "Gaibandha-3 (31) - গাইবান্ধা-৩ (৩১)"
   },
   {
     "Id": 32,
     "DistrictId": 17,
-    "LookupText": "Gaibandha-4 (32)"
+    "Name": "Gaibandha-4 (32)",
+    "NameInBangla": "গাইবান্ধা-৪ (৩২)",
+    "LookupText": "Gaibandha-4 (32) - গাইবান্ধা-৪ (৩২)"
   },
   {
     "Id": 33,
     "DistrictId": 17,
-    "LookupText": "Gaibandha-5 (33)"
+    "Name": "Gaibandha-5 (33)",
+    "NameInBangla": "গাইবান্ধা-৫ (৩৩)",
+    "LookupText": "Gaibandha-5 (33) - গাইবান্ধা-৫ (৩৩)"
   },
   {
     "Id": 194,
     "DistrictId": 18,
-    "LookupText": "Gazipur-1 (194)"
+    "Name": "Gazipur-1 (194)",
+    "NameInBangla": "গাজীপুর-১ (১৯৪)",
+    "LookupText": "Gazipur-1 (194) - গাজীপুর-১ (১৯৪)"
   },
   {
     "Id": 195,
     "DistrictId": 18,
-    "LookupText": "Gazipur-2 (195)"
+    "Name": "Gazipur-2 (195)",
+    "NameInBangla": "গাজীপুর-২ (১৯৫)",
+    "LookupText": "Gazipur-2 (195) - গাজীপুর-২ (১৯৫)"
   },
   {
     "Id": 196,
     "DistrictId": 18,
-    "LookupText": "Gazipur-3 (196)"
+    "Name": "Gazipur-3 (196)",
+    "NameInBangla": "গাজীপুর-৩ (১৯৬)",
+    "LookupText": "Gazipur-3 (196) - গাজীপুর-৩ (১৯৬)"
   },
   {
     "Id": 197,
     "DistrictId": 18,
-    "LookupText": "Gazipur-4 (197)"
+    "Name": "Gazipur-4 (197)",
+    "NameInBangla": "গাজীপুর-৪ (১৯৭)",
+    "LookupText": "Gazipur-4 (197) - গাজীপুর-৪ (১৯৭)"
   },
   {
     "Id": 198,
     "DistrictId": 18,
-    "LookupText": "Gazipur-5 (198)"
+    "Name": "Gazipur-5 (198)",
+    "NameInBangla": "গাজীপুর-৫ (১৯৮)",
+    "LookupText": "Gazipur-5 (198) - গাজীপুর-৫ (১৯৮)"
   },
   {
     "Id": 215,
     "DistrictId": 19,
-    "LookupText": "Gopalganj-1 (215)"
+    "Name": "Gopalganj-1 (215)",
+    "NameInBangla": "গোপালগঞ্জ-১ (২১৫)",
+    "LookupText": "Gopalganj-1 (215) - গোপালগঞ্জ-১ (২১৫)"
   },
   {
     "Id": 216,
     "DistrictId": 19,
-    "LookupText": "Gopalganj-2 (216)"
+    "Name": "Gopalganj-2 (216)",
+    "NameInBangla": "গোপালগঞ্জ-২ (২১৬)",
+    "LookupText": "Gopalganj-2 (216) - গোপালগঞ্জ-২ (২১৬)"
   },
   {
     "Id": 217,
     "DistrictId": 19,
-    "LookupText": "Gopalganj-3 (217)"
+    "Name": "Gopalganj-3 (217)",
+    "NameInBangla": "গোপালগঞ্জ-৩ (২১৭)",
+    "LookupText": "Gopalganj-3 (217) - গোপালগঞ্জ-৩ (২১৭)"
   },
   {
     "Id": 239,
     "DistrictId": 20,
-    "LookupText": "Habiganj-1 (239)"
+    "Name": "Habiganj-1 (239)",
+    "NameInBangla": "হবিগঞ্জ-১ (২৩৯)",
+    "LookupText": "Habiganj-1 (239) - হবিগঞ্জ-১ (২৩৯)"
   },
   {
     "Id": 240,
     "DistrictId": 20,
-    "LookupText": "Habiganj-2 (240)"
+    "Name": "Habiganj-2 (240)",
+    "NameInBangla": "হবিগঞ্জ-২ (২৪০)",
+    "LookupText": "Habiganj-2 (240) - হবিগঞ্জ-২ (২৪০)"
   },
   {
     "Id": 241,
     "DistrictId": 20,
-    "LookupText": "Habiganj-3 (241)"
+    "Name": "Habiganj-3 (241)",
+    "NameInBangla": "হবিগঞ্জ-৩ (২৪১)",
+    "LookupText": "Habiganj-3 (241) - হবিগঞ্জ-৩ (২৪১)"
   },
   {
     "Id": 242,
     "DistrictId": 20,
-    "LookupText": "Habiganj-4 (242)"
+    "Name": "Habiganj-4 (242)",
+    "NameInBangla": "হবিগঞ্জ-৪ (২৪২)",
+    "LookupText": "Habiganj-4 (242) - হবিগঞ্জ-৪ (২৪২)"
   },
   {
     "Id": 138,
     "DistrictId": 21,
-    "LookupText": "Jamalpur-1 (138)"
+    "Name": "Jamalpur-1 (138)",
+    "NameInBangla": "জামালপুর-১ (১৩৮)",
+    "LookupText": "Jamalpur-1 (138) - জামালপুর-১ (১৩৮)"
   },
   {
     "Id": 139,
     "DistrictId": 21,
-    "LookupText": "Jamalpur-2 (139)"
+    "Name": "Jamalpur-2 (139)",
+    "NameInBangla": "জামালপুর-২ (১৩৯)",
+    "LookupText": "Jamalpur-2 (139) - জামালপুর-২ (১৩৯)"
   },
   {
     "Id": 140,
     "DistrictId": 21,
-    "LookupText": "Jamalpur-3 (140)"
+    "Name": "Jamalpur-3 (140)",
+    "NameInBangla": "জামালপুর-৩ (১৪০)",
+    "LookupText": "Jamalpur-3 (140) - জামালপুর-৩ (১৪০)"
   },
   {
     "Id": 141,
     "DistrictId": 21,
-    "LookupText": "Jamalpur-4 (141)"
+    "Name": "Jamalpur-4 (141)",
+    "NameInBangla": "জামালপুর-৪ (১৪১)",
+    "LookupText": "Jamalpur-4 (141) - জামালপুর-৪ (১৪১)"
   },
   {
     "Id": 142,
     "DistrictId": 21,
-    "LookupText": "Jamalpur-5 (142)"
+    "Name": "Jamalpur-5 (142)",
+    "NameInBangla": "জামালপুর-৫ (১৪২)",
+    "LookupText": "Jamalpur-5 (142) - জামালপুর-৫ (১৪২)"
   },
   {
     "Id": 85,
     "DistrictId": 22,
-    "LookupText": "Jessore-1 (85)"
+    "Name": "Jessore-1 (85)",
+    "NameInBangla": "যশোর-১ (৮৫)",
+    "LookupText": "Jessore-1 (85) - যশোর-১ (৮৫)"
   },
   {
     "Id": 86,
     "DistrictId": 22,
-    "LookupText": "Jessore-2 (86)"
+    "Name": "Jessore-2 (86)",
+    "NameInBangla": "যশোর-২ (৮৬)",
+    "LookupText": "Jessore-2 (86) - যশোর-২ (৮৬)"
   },
   {
     "Id": 87,
     "DistrictId": 22,
-    "LookupText": "Jessore-3 (87)"
+    "Name": "Jessore-3 (87)",
+    "NameInBangla": "যশোর-৩ (৮৭)",
+    "LookupText": "Jessore-3 (87) - যশোর-৩ (৮৭)"
   },
   {
     "Id": 88,
     "DistrictId": 22,
-    "LookupText": "Jessore-4 (88)"
+    "Name": "Jessore-4 (88)",
+    "NameInBangla": "যশোর-৪ (৮৮)",
+    "LookupText": "Jessore-4 (88) - যশোর-৪ (৮৮)"
   },
   {
     "Id": 89,
     "DistrictId": 22,
-    "LookupText": "Jessore-5 (89)"
+    "Name": "Jessore-5 (89)",
+    "NameInBangla": "যশোর-৫ (৮৯)",
+    "LookupText": "Jessore-5 (89) - যশোর-৫ (৮৯)"
   },
   {
     "Id": 90,
     "DistrictId": 22,
-    "LookupText": "Jessore-6 (90)"
+    "Name": "Jessore-6 (90)",
+    "NameInBangla": "যশোর-৬ (৯০)",
+    "LookupText": "Jessore-6 (90) - যশোর-৬ (৯০)"
   },
   {
     "Id": 125,
     "DistrictId": 23,
-    "LookupText": "Jhalokati-1 (125)"
+    "Name": "Jhalokati-1 (125)",
+    "NameInBangla": "ঝালকাঠি-১ (১২৫)",
+    "LookupText": "Jhalokati-1 (125) - ঝালকাঠি-১ (১২৫)"
   },
   {
     "Id": 126,
     "DistrictId": 23,
-    "LookupText": "Jhalokati-2 (126)"
+    "Name": "Jhalokati-2 (126)",
+    "NameInBangla": "ঝালকাঠি-২ (১২৬)",
+    "LookupText": "Jhalokati-2 (126) - ঝালকাঠি-২ (১২৬)"
   },
   {
     "Id": 81,
     "DistrictId": 24,
-    "LookupText": "Jhenaidah-1 (81)"
+    "Name": "Jhenaidah-1 (81)",
+    "NameInBangla": "ঝিনাইদহ-১ (৮১)",
+    "LookupText": "Jhenaidah-1 (81) - ঝিনাইদহ-১ (৮১)"
   },
   {
     "Id": 82,
     "DistrictId": 24,
-    "LookupText": "Jhenaidah-2 (82)"
+    "Name": "Jhenaidah-2 (82)",
+    "NameInBangla": "ঝিনাইদহ-২ (৮২)",
+    "LookupText": "Jhenaidah-2 (82) - ঝিনাইদহ-২ (৮২)"
   },
   {
     "Id": 83,
     "DistrictId": 24,
-    "LookupText": "Jhenaidah-3 (83)"
+    "Name": "Jhenaidah-3 (83)",
+    "NameInBangla": "ঝিনাইদহ-৩ (৮৩)",
+    "LookupText": "Jhenaidah-3 (83) - ঝিনাইদহ-৩ (৮৩)"
   },
   {
     "Id": 84,
     "DistrictId": 24,
-    "LookupText": "Jhenaidah-4 (84)"
+    "Name": "Jhenaidah-4 (84)",
+    "NameInBangla": "ঝিনাইদহ-৪ (৮৪)",
+    "LookupText": "Jhenaidah-4 (84) - ঝিনাইদহ-৪ (৮৪)"
   },
   {
     "Id": 34,
     "DistrictId": 25,
-    "LookupText": "Joypurhat-1 (34)"
+    "Name": "Joypurhat-1 (34)",
+    "NameInBangla": "জয়পুরহাট-১ (৩৪)",
+    "LookupText": "Joypurhat-1 (34) - জয়পুরহাট-১ (৩৪)"
   },
   {
     "Id": 35,
     "DistrictId": 25,
-    "LookupText": "Joypurhat-2 (35)"
+    "Name": "Joypurhat-2 (35)",
+    "NameInBangla": "জয়পুরহাট-২ (৩৫)",
+    "LookupText": "Joypurhat-2 (35) - জয়পুরহাট-২ (৩৫)"
   },
   {
     "Id": 99,
     "DistrictId": 27,
-    "LookupText": "Khulna-1 (99)"
+    "Name": "Khulna-1 (99)",
+    "NameInBangla": "খুলনা-১ (৯৯)",
+    "LookupText": "Khulna-1 (99) - খুলনা-১ (৯৯)"
   },
   {
     "Id": 100,
     "DistrictId": 27,
-    "LookupText": "Khulna-2 (100)"
+    "Name": "Khulna-2 (100)",
+    "NameInBangla": "খুলনা-২ (১০০)",
+    "LookupText": "Khulna-2 (100) - খুলনা-২ (১০০)"
   },
   {
     "Id": 101,
     "DistrictId": 27,
-    "LookupText": "Khulna-3 (101)"
+    "Name": "Khulna-3 (101)",
+    "NameInBangla": "খুলনা-৩ (১০১)",
+    "LookupText": "Khulna-3 (101) - খুলনা-৩ (১০১)"
   },
   {
     "Id": 102,
     "DistrictId": 27,
-    "LookupText": "Khulna-4 (102)"
+    "Name": "Khulna-4 (102)",
+    "NameInBangla": "খুলনা-৪ (১০২)",
+    "LookupText": "Khulna-4 (102) - খুলনা-৪ (১০২)"
   },
   {
     "Id": 103,
     "DistrictId": 27,
-    "LookupText": "Khulna-5 (103)"
+    "Name": "Khulna-5 (103)",
+    "NameInBangla": "খুলনা-৫ (১০৩)",
+    "LookupText": "Khulna-5 (103) - খুলনা-৫ (১০৩)"
   },
   {
     "Id": 104,
     "DistrictId": 27,
-    "LookupText": "Khulna-6 (104)"
+    "Name": "Khulna-6 (104)",
+    "NameInBangla": "খুলনা-৬ (১০৪)",
+    "LookupText": "Khulna-6 (104) - খুলনা-৬ (১০৪)"
   },
   {
     "Id": 162,
     "DistrictId": 28,
-    "LookupText": "Kishoreganj-1 (162)"
+    "Name": "Kishoreganj-1 (162)",
+    "NameInBangla": "কিশোরগঞ্জ-১ (১৬২)",
+    "LookupText": "Kishoreganj-1 (162) - কিশোরগঞ্জ-১ (১৬২)"
   },
   {
     "Id": 163,
     "DistrictId": 28,
-    "LookupText": "Kishoreganj-2 (163)"
+    "Name": "Kishoreganj-2 (163)",
+    "NameInBangla": "কিশোরগঞ্জ-২ (১৬৩)",
+    "LookupText": "Kishoreganj-2 (163) - কিশোরগঞ্জ-২ (১৬৩)"
   },
   {
     "Id": 164,
     "DistrictId": 28,
-    "LookupText": "Kishoreganj-3 (164)"
+    "Name": "Kishoreganj-3 (164)",
+    "NameInBangla": "কিশোরগঞ্জ-৩ (১৬৪)",
+    "LookupText": "Kishoreganj-3 (164) - কিশোরগঞ্জ-৩ (১৬৪)"
   },
   {
     "Id": 165,
     "DistrictId": 28,
-    "LookupText": "Kishoreganj-4 (165)"
+    "Name": "Kishoreganj-4 (165)",
+    "NameInBangla": "কিশোরগঞ্জ-৪ (১৬৫)",
+    "LookupText": "Kishoreganj-4 (165) - কিশোরগঞ্জ-৪ (১৬৫)"
   },
   {
     "Id": 166,
     "DistrictId": 28,
-    "LookupText": "Kishoreganj-5 (166)"
+    "Name": "Kishoreganj-5 (166)",
+    "NameInBangla": "কিশোরগঞ্জ-৫ (১৬৬)",
+    "LookupText": "Kishoreganj-5 (166) - কিশোরগঞ্জ-৫ (১৬৬)"
   },
   {
     "Id": 167,
     "DistrictId": 28,
-    "LookupText": "Kishoreganj-6 (167)"
+    "Name": "Kishoreganj-6 (167)",
+    "NameInBangla": "কিশোরগঞ্জ-৬ (১৬৭)",
+    "LookupText": "Kishoreganj-6 (167) - কিশোরগঞ্জ-৬ (১৬৭)"
   },
   {
     "Id": 25,
     "DistrictId": 29,
-    "LookupText": "Kurigram-1 (25)"
+    "Name": "Kurigram-1 (25)",
+    "NameInBangla": "কুড়িগ্রাম-১ (২৫)",
+    "LookupText": "Kurigram-1 (25) - কুড়িগ্রাম-১ (২৫)"
   },
   {
     "Id": 26,
     "DistrictId": 29,
-    "LookupText": "Kurigram-2 (26)"
+    "Name": "Kurigram-2 (26)",
+    "NameInBangla": "কুড়িগ্রাম-২ (২৬)",
+    "LookupText": "Kurigram-2 (26) - কুড়িগ্রাম-২ (২৬)"
   },
   {
     "Id": 27,
     "DistrictId": 29,
-    "LookupText": "Kurigram-3 (27)"
+    "Name": "Kurigram-3 (27)",
+    "NameInBangla": "কুড়িগ্রাম-৩ (২৭)",
+    "LookupText": "Kurigram-3 (27) - কুড়িগ্রাম-৩ (২৭)"
   },
   {
     "Id": 28,
     "DistrictId": 29,
-    "LookupText": "Kurigram-4 (28)"
+    "Name": "Kurigram-4 (28)",
+    "NameInBangla": "কুড়িগ্রাম-৪ (২৮)",
+    "LookupText": "Kurigram-4 (28) - কুড়িগ্রাম-৪ (২৮)"
   },
   {
     "Id": 75,
     "DistrictId": 30,
-    "LookupText": "Kushtia-1 (75)"
+    "Name": "Kushtia-1 (75)",
+    "NameInBangla": "কুষ্টিয়া-১ (৭৫)",
+    "LookupText": "Kushtia-1 (75) - কুষ্টিয়া-১ (৭৫)"
   },
   {
     "Id": 76,
     "DistrictId": 30,
-    "LookupText": "Kushtia-2 (76)"
+    "Name": "Kushtia-2 (76)",
+    "NameInBangla": "কুষ্টিয়া-২ (৭৬)",
+    "LookupText": "Kushtia-2 (76) - কুষ্টিয়া-২ (৭৬)"
   },
   {
     "Id": 77,
     "DistrictId": 30,
-    "LookupText": "Kushtia-3 (77)"
+    "Name": "Kushtia-3 (77)",
+    "NameInBangla": "কুষ্টিয়া-৩ (৭৭)",
+    "LookupText": "Kushtia-3 (77) - কুষ্টিয়া-৩ (৭৭)"
   },
   {
     "Id": 78,
     "DistrictId": 30,
-    "LookupText": "Kushtia-4 (78)"
+    "Name": "Kushtia-4 (78)",
+    "NameInBangla": "কুষ্টিয়া-৪ (৭৮)",
+    "LookupText": "Kushtia-4 (78) - কুষ্টিয়া-৪ (৭৮)"
   },
   {
     "Id": 274,
     "DistrictId": 32,
-    "LookupText": "Lakshmipur-1 (274)"
+    "Name": "Lakshmipur-1 (274)",
+    "NameInBangla": "লক্ষ্মীপুর-১ (২৭৪)",
+    "LookupText": "Lakshmipur-1 (274) - লক্ষ্মীপুর-১ (২৭৪)"
   },
   {
     "Id": 275,
     "DistrictId": 32,
-    "LookupText": "Lakshmipur-2 (275)"
+    "Name": "Lakshmipur-2 (275)",
+    "NameInBangla": "লক্ষ্মীপুর-২ (২৭৫)",
+    "LookupText": "Lakshmipur-2 (275) - লক্ষ্মীপুর-২ (২৭৫)"
   },
   {
     "Id": 276,
     "DistrictId": 32,
-    "LookupText": "Lakshmipur-3 (276)"
+    "Name": "Lakshmipur-3 (276)",
+    "NameInBangla": "লক্ষ্মীপুর-৩ (২৭৬)",
+    "LookupText": "Lakshmipur-3 (276) - লক্ষ্মীপুর-৩ (২৭৬)"
   },
   {
     "Id": 277,
     "DistrictId": 32,
-    "LookupText": "Lakshmipur-4 (277)"
+    "Name": "Lakshmipur-4 (277)",
+    "NameInBangla": "লক্ষ্মীপুর-৪ (২৭৭)",
+    "LookupText": "Lakshmipur-4 (277) - লক্ষ্মীপুর-৪ (২৭৭)"
   },
   {
     "Id": 16,
     "DistrictId": 31,
-    "LookupText": "Lalmonirhat-1 (16)"
+    "Name": "Lalmonirhat-1 (16)",
+    "NameInBangla": "লালমনিরহাট-১ (১৬)",
+    "LookupText": "Lalmonirhat-1 (16) - লালমনিরহাট-১ (১৬)"
   },
   {
     "Id": 17,
     "DistrictId": 31,
-    "LookupText": "Lalmonirhat-2 (17)"
+    "Name": "Lalmonirhat-2 (17)",
+    "NameInBangla": "লালমনিরহাট-২ (১৭)",
+    "LookupText": "Lalmonirhat-2 (17) - লালমনিরহাট-২ (১৭)"
   },
   {
     "Id": 18,
     "DistrictId": 31,
-    "LookupText": "Lalmonirhat-3 (18)"
+    "Name": "Lalmonirhat-3 (18)",
+    "NameInBangla": "লালমনিরহাট-৩ (১৮)",
+    "LookupText": "Lalmonirhat-3 (18) - লালমনিরহাট-৩ (১৮)"
   },
   {
     "Id": 218,
     "DistrictId": 33,
-    "LookupText": "Madaripur-1 (218)"
+    "Name": "Madaripur-1 (218)",
+    "NameInBangla": "মাদারীপুর-১ (২১৮)",
+    "LookupText": "Madaripur-1 (218) - মাদারীপুর-১ (২১৮)"
   },
   {
     "Id": 219,
     "DistrictId": 33,
-    "LookupText": "Madaripur-2 (219)"
+    "Name": "Madaripur-2 (219)",
+    "NameInBangla": "মাদারীপুর-২ (২১৯)",
+    "LookupText": "Madaripur-2 (219) - মাদারীপুর-২ (২১৯)"
   },
   {
     "Id": 220,
     "DistrictId": 33,
-    "LookupText": "Madaripur-3 (220)"
+    "Name": "Madaripur-3 (220)",
+    "NameInBangla": "মাদারীপুর-৩ (২২০)",
+    "LookupText": "Madaripur-3 (220) - মাদারীপুর-৩ (২২০)"
   },
   {
     "Id": 91,
     "DistrictId": 34,
-    "LookupText": "Magura-1 (91)"
+    "Name": "Magura-1 (91)",
+    "NameInBangla": "মাগুরা-১ (৯১)",
+    "LookupText": "Magura-1 (91) - মাগুরা-১ (৯১)"
   },
   {
     "Id": 92,
     "DistrictId": 34,
-    "LookupText": "Magura-2 (92)"
+    "Name": "Magura-2 (92)",
+    "NameInBangla": "মাগুরা-২ (৯২)",
+    "LookupText": "Magura-2 (92) - মাগুরা-২ (৯২)"
   },
   {
     "Id": 168,
     "DistrictId": 35,
-    "LookupText": "Manikganj-1 (168)"
+    "Name": "Manikganj-1 (168)",
+    "NameInBangla": "মানিকগঞ্জ-১ (১৬৮)",
+    "LookupText": "Manikganj-1 (168) - মানিকগঞ্জ-১ (১৬৮)"
   },
   {
     "Id": 169,
     "DistrictId": 35,
-    "LookupText": "Manikganj-2 (169)"
+    "Name": "Manikganj-2 (169)",
+    "NameInBangla": "মানিকগঞ্জ-২ (১৬৯)",
+    "LookupText": "Manikganj-2 (169) - মানিকগঞ্জ-২ (১৬৯)"
   },
   {
     "Id": 170,
     "DistrictId": 35,
-    "LookupText": "Manikganj-3 (170)"
+    "Name": "Manikganj-3 (170)",
+    "NameInBangla": "মানিকগঞ্জ-৩ (১৭০)",
+    "LookupText": "Manikganj-3 (170) - মানিকগঞ্জ-৩ (১৭০)"
   },
   {
     "Id": 235,
     "DistrictId": 37,
-    "LookupText": "Maulvibazar-1 (235)"
+    "Name": "Maulvibazar-1 (235)",
+    "NameInBangla": "মৌলভীবাজার-১ (২৩৫)",
+    "LookupText": "Maulvibazar-1 (235) - মৌলভীবাজার-১ (২৩৫)"
   },
   {
     "Id": 236,
     "DistrictId": 37,
-    "LookupText": "Maulvibazar-2 (236)"
+    "Name": "Maulvibazar-2 (236)",
+    "NameInBangla": "মৌলভীবাজার-২ (২৩৬)",
+    "LookupText": "Maulvibazar-2 (236) - মৌলভীবাজার-২ (২৩৬)"
   },
   {
     "Id": 237,
     "DistrictId": 37,
-    "LookupText": "Maulvibazar-3 (237)"
+    "Name": "Maulvibazar-3 (237)",
+    "NameInBangla": "মৌলভীবাজার-৩ (২৩৭)",
+    "LookupText": "Maulvibazar-3 (237) - মৌলভীবাজার-৩ (২৩৭)"
   },
   {
     "Id": 238,
     "DistrictId": 37,
-    "LookupText": "Maulvibazar-4 (238)"
+    "Name": "Maulvibazar-4 (238)",
+    "NameInBangla": "মৌলভীবাজার-৪ (২৩৮)",
+    "LookupText": "Maulvibazar-4 (238) - মৌলভীবাজার-৪ (২৩৮)"
   },
   {
     "Id": 73,
     "DistrictId": 36,
-    "LookupText": "Meherpur-1 (73)"
+    "Name": "Meherpur-1 (73)",
+    "NameInBangla": "মেহেরপুর-১ (৭৩)",
+    "LookupText": "Meherpur-1 (73) - মেহেরপুর-১ (৭৩)"
   },
   {
     "Id": 74,
     "DistrictId": 36,
-    "LookupText": "Meherpur-2 (74)"
+    "Name": "Meherpur-2 (74)",
+    "NameInBangla": "মেহেরপুর-২ (৭৪)",
+    "LookupText": "Meherpur-2 (74) - মেহেরপুর-২ (৭৪)"
   },
   {
     "Id": 171,
     "DistrictId": 38,
-    "LookupText": "Munshiganj-1 (171)"
+    "Name": "Munshiganj-1 (171)",
+    "NameInBangla": "মুন্সীগঞ্জ-১ (১৭১)",
+    "LookupText": "Munshiganj-1 (171) - মুন্সীগঞ্জ-১ (১৭১)"
   },
   {
     "Id": 172,
     "DistrictId": 38,
-    "LookupText": "Munshiganj-2 (172)"
+    "Name": "Munshiganj-2 (172)",
+    "NameInBangla": "মুন্সীগঞ্জ-২ (১৭২)",
+    "LookupText": "Munshiganj-2 (172) - মুন্সীগঞ্জ-২ (১৭২)"
   },
   {
     "Id": 173,
     "DistrictId": 38,
-    "LookupText": "Munshiganj-3 (173)"
+    "Name": "Munshiganj-3 (173)",
+    "NameInBangla": "মুন্সীগঞ্জ-৩ (১৭৩)",
+    "LookupText": "Munshiganj-3 (173) - মুন্সীগঞ্জ-৩ (১৭৩)"
   },
   {
     "Id": 146,
     "DistrictId": 39,
-    "LookupText": "Mymensingh-1 (146)"
+    "Name": "Mymensingh-1 (146)",
+    "NameInBangla": "ময়মনসিংহ-১ (১৪৬)",
+    "LookupText": "Mymensingh-1 (146) - ময়মনসিংহ-১ (১৪৬)"
   },
   {
     "Id": 155,
     "DistrictId": 39,
-    "LookupText": "Mymensingh-10 (155)"
+    "Name": "Mymensingh-10 (155)",
+    "NameInBangla": "ময়মনসিংহ-১০ (১৫৫)",
+    "LookupText": "Mymensingh-10 (155) - ময়মনসিংহ-১০ (১৫৫)"
   },
   {
     "Id": 156,
     "DistrictId": 39,
-    "LookupText": "Mymensingh-11 (156)"
+    "Name": "Mymensingh-11 (156)",
+    "NameInBangla": "ময়মনসিংহ-১১ (১৫৬)",
+    "LookupText": "Mymensingh-11 (156) - ময়মনসিংহ-১১ (১৫৬)"
   },
   {
     "Id": 147,
     "DistrictId": 39,
-    "LookupText": "Mymensingh-2 (147)"
+    "Name": "Mymensingh-2 (147)",
+    "NameInBangla": "ময়মনসিংহ-২ (১৪৭)",
+    "LookupText": "Mymensingh-2 (147) - ময়মনসিংহ-২ (১৪৭)"
   },
   {
     "Id": 148,
     "DistrictId": 39,
-    "LookupText": "Mymensingh-3 (148)"
+    "Name": "Mymensingh-3 (148)",
+    "NameInBangla": "ময়মনসিংহ-৩ (১৪৮)",
+    "LookupText": "Mymensingh-3 (148) - ময়মনসিংহ-৩ (১৪৮)"
   },
   {
     "Id": 149,
     "DistrictId": 39,
-    "LookupText": "Mymensingh-4 (149)"
+    "Name": "Mymensingh-4 (149)",
+    "NameInBangla": "ময়মনসিংহ-৪ (১৪৯)",
+    "LookupText": "Mymensingh-4 (149) - ময়মনসিংহ-৪ (১৪৯)"
   },
   {
     "Id": 150,
     "DistrictId": 39,
-    "LookupText": "Mymensingh-5 (150)"
+    "Name": "Mymensingh-5 (150)",
+    "NameInBangla": "ময়মনসিংহ-৫ (১৫০)",
+    "LookupText": "Mymensingh-5 (150) - ময়মনসিংহ-৫ (১৫০)"
   },
   {
     "Id": 151,
     "DistrictId": 39,
-    "LookupText": "Mymensingh-6 (151)"
+    "Name": "Mymensingh-6 (151)",
+    "NameInBangla": "ময়মনসিংহ-৬ (১৫১)",
+    "LookupText": "Mymensingh-6 (151) - ময়মনসিংহ-৬ (১৫১)"
   },
   {
     "Id": 152,
     "DistrictId": 39,
-    "LookupText": "Mymensingh-7 (152)"
+    "Name": "Mymensingh-7 (152)",
+    "NameInBangla": "ময়মনসিংহ-৭ (১৫২)",
+    "LookupText": "Mymensingh-7 (152) - ময়মনসিংহ-৭ (১৫২)"
   },
   {
     "Id": 153,
     "DistrictId": 39,
-    "LookupText": "Mymensingh-8 (153)"
+    "Name": "Mymensingh-8 (153)",
+    "NameInBangla": "ময়মনসিংহ-৮ (১৫৩)",
+    "LookupText": "Mymensingh-8 (153) - ময়মনসিংহ-৮ (১৫৩)"
   },
   {
     "Id": 154,
     "DistrictId": 39,
-    "LookupText": "Mymensingh-9 (154)"
+    "Name": "Mymensingh-9 (154)",
+    "NameInBangla": "ময়মনসিংহ-৯ (১৫৪)",
+    "LookupText": "Mymensingh-9 (154) - ময়মনসিংহ-৯ (১৫৪)"
   },
   {
     "Id": 46,
     "DistrictId": 40,
-    "LookupText": "Naogaon-1 (46)"
+    "Name": "Naogaon-1 (46)",
+    "NameInBangla": "নওগাঁ-১ (৪৬)",
+    "LookupText": "Naogaon-1 (46) - নওগাঁ-১ (৪৬)"
   },
   {
     "Id": 47,
     "DistrictId": 40,
-    "LookupText": "Naogaon-2 (47)"
+    "Name": "Naogaon-2 (47)",
+    "NameInBangla": "নওগাঁ-২ (৪৭)",
+    "LookupText": "Naogaon-2 (47) - নওগাঁ-২ (৪৭)"
   },
   {
     "Id": 48,
     "DistrictId": 40,
-    "LookupText": "Naogaon-3 (48)"
+    "Name": "Naogaon-3 (48)",
+    "NameInBangla": "নওগাঁ-৩ (৪৮)",
+    "LookupText": "Naogaon-3 (48) - নওগাঁ-৩ (৪৮)"
   },
   {
     "Id": 49,
     "DistrictId": 40,
-    "LookupText": "Naogaon-4 (49)"
+    "Name": "Naogaon-4 (49)",
+    "NameInBangla": "নওগাঁ-৪ (৪৯)",
+    "LookupText": "Naogaon-4 (49) - নওগাঁ-৪ (৪৯)"
   },
   {
     "Id": 50,
     "DistrictId": 40,
-    "LookupText": "Naogaon-5 (50)"
+    "Name": "Naogaon-5 (50)",
+    "NameInBangla": "নওগাঁ-৫ (৫০)",
+    "LookupText": "Naogaon-5 (50) - নওগাঁ-৫ (৫০)"
   },
   {
     "Id": 51,
     "DistrictId": 40,
-    "LookupText": "Naogaon-6 (51)"
+    "Name": "Naogaon-6 (51)",
+    "NameInBangla": "নওগাঁ-৬ (৫১)",
+    "LookupText": "Naogaon-6 (51) - নওগাঁ-৬ (৫১)"
   },
   {
     "Id": 93,
     "DistrictId": 41,
-    "LookupText": "Narail-1 (93)"
+    "Name": "Narail-1 (93)",
+    "NameInBangla": "নড়াইল-১ (৯৩)",
+    "LookupText": "Narail-1 (93) - নড়াইল-১ (৯৩)"
   },
   {
     "Id": 94,
     "DistrictId": 41,
-    "LookupText": "Narail-2 (94)"
+    "Name": "Narail-2 (94)",
+    "NameInBangla": "নড়াইল-২ (৯৪)",
+    "LookupText": "Narail-2 (94) - নড়াইল-২ (৯৪)"
   },
   {
     "Id": 204,
     "DistrictId": 42,
-    "LookupText": "Narayanganj-1 (204)"
+    "Name": "Narayanganj-1 (204)",
+    "NameInBangla": "নারায়ণগঞ্জ-১ (২০৪)",
+    "LookupText": "Narayanganj-1 (204) - নারায়ণগঞ্জ-১ (২০৪)"
   },
   {
     "Id": 205,
     "DistrictId": 42,
-    "LookupText": "Narayanganj-2 (205)"
+    "Name": "Narayanganj-2 (205)",
+    "NameInBangla": "নারায়ণগঞ্জ-২ (২০৫)",
+    "LookupText": "Narayanganj-2 (205) - নারায়ণগঞ্জ-২ (২০৫)"
   },
   {
     "Id": 206,
     "DistrictId": 42,
-    "LookupText": "Narayanganj-3 (206)"
+    "Name": "Narayanganj-3 (206)",
+    "NameInBangla": "নারায়ণগঞ্জ-৩ (২০৬)",
+    "LookupText": "Narayanganj-3 (206) - নারায়ণগঞ্জ-৩ (২০৬)"
   },
   {
     "Id": 207,
     "DistrictId": 42,
-    "LookupText": "Narayanganj-4 (207)"
+    "Name": "Narayanganj-4 (207)",
+    "NameInBangla": "নারায়ণগঞ্জ-৪ (২০৭)",
+    "LookupText": "Narayanganj-4 (207) - নারায়ণগঞ্জ-৪ (২০৭)"
   },
   {
     "Id": 208,
     "DistrictId": 42,
-    "LookupText": "Narayanganj-5 (208)"
+    "Name": "Narayanganj-5 (208)",
+    "NameInBangla": "নারায়ণগঞ্জ-৫ (২০৮)",
+    "LookupText": "Narayanganj-5 (208) - নারায়ণগঞ্জ-৫ (২০৮)"
   },
   {
     "Id": 199,
     "DistrictId": 43,
-    "LookupText": "Narsingdi-1 (199)"
+    "Name": "Narsingdi-1 (199)",
+    "NameInBangla": "নরসিংদী-১ (১৯৯)",
+    "LookupText": "Narsingdi-1 (199) - নরসিংদী-১ (১৯৯)"
   },
   {
     "Id": 200,
     "DistrictId": 43,
-    "LookupText": "Narsingdi-2 (200)"
+    "Name": "Narsingdi-2 (200)",
+    "NameInBangla": "নরসিংদী-২ (২০০)",
+    "LookupText": "Narsingdi-2 (200) - নরসিংদী-২ (২০০)"
   },
   {
     "Id": 201,
     "DistrictId": 43,
-    "LookupText": "Narsingdi-3 (201)"
+    "Name": "Narsingdi-3 (201)",
+    "NameInBangla": "নরসিংদী-৩ (২০১)",
+    "LookupText": "Narsingdi-3 (201) - নরসিংদী-৩ (২০১)"
   },
   {
     "Id": 202,
     "DistrictId": 43,
-    "LookupText": "Narsingdi-4 (202)"
+    "Name": "Narsingdi-4 (202)",
+    "NameInBangla": "নরসিংদী-৪ (২০২)",
+    "LookupText": "Narsingdi-4 (202) - নরসিংদী-৪ (২০২)"
   },
   {
     "Id": 203,
     "DistrictId": 43,
-    "LookupText": "Narsingdi-5 (203)"
+    "Name": "Narsingdi-5 (203)",
+    "NameInBangla": "নরসিংদী-৫ (২০৩)",
+    "LookupText": "Narsingdi-5 (203) - নরসিংদী-৫ (২০৩)"
   },
   {
     "Id": 58,
     "DistrictId": 44,
-    "LookupText": "Natore-1 (58)"
+    "Name": "Natore-1 (58)",
+    "NameInBangla": "নাটোর-১ (৫৮)",
+    "LookupText": "Natore-1 (58) - নাটোর-১ (৫৮)"
   },
   {
     "Id": 59,
     "DistrictId": 44,
-    "LookupText": "Natore-2 (59)"
+    "Name": "Natore-2 (59)",
+    "NameInBangla": "নাটোর-২ (৫৯)",
+    "LookupText": "Natore-2 (59) - নাটোর-২ (৫৯)"
   },
   {
     "Id": 60,
     "DistrictId": 44,
-    "LookupText": "Natore-3 (60)"
+    "Name": "Natore-3 (60)",
+    "NameInBangla": "নাটোর-৩ (৬০)",
+    "LookupText": "Natore-3 (60) - নাটোর-৩ (৬০)"
   },
   {
     "Id": 61,
     "DistrictId": 44,
-    "LookupText": "Natore-4 (61)"
+    "Name": "Natore-4 (61)",
+    "NameInBangla": "নাটোর-৪ (৬১)",
+    "LookupText": "Natore-4 (61) - নাটোর-৪ (৬১)"
   },
   {
     "Id": 157,
     "DistrictId": 46,
-    "LookupText": "Netrokona-1 (157)"
+    "Name": "Netrokona-1 (157)",
+    "NameInBangla": "নেত্রকোনা-১ (১৫৭)",
+    "LookupText": "Netrokona-1 (157) - নেত্রকোনা-১ (১৫৭)"
   },
   {
     "Id": 158,
     "DistrictId": 46,
-    "LookupText": "Netrokona-2 (158)"
+    "Name": "Netrokona-2 (158)",
+    "NameInBangla": "নেত্রকোনা-২ (১৫৮)",
+    "LookupText": "Netrokona-2 (158) - নেত্রকোনা-২ (১৫৮)"
   },
   {
     "Id": 159,
     "DistrictId": 46,
-    "LookupText": "Netrokona-3 (159)"
+    "Name": "Netrokona-3 (159)",
+    "NameInBangla": "নেত্রকোনা-৩ (১৫৯)",
+    "LookupText": "Netrokona-3 (159) - নেত্রকোনা-৩ (১৫৯)"
   },
   {
     "Id": 160,
     "DistrictId": 46,
-    "LookupText": "Netrokona-4 (160)"
+    "Name": "Netrokona-4 (160)",
+    "NameInBangla": "নেত্রকোনা-৪ (১৬০)",
+    "LookupText": "Netrokona-4 (160) - নেত্রকোনা-৪ (১৬০)"
   },
   {
     "Id": 161,
     "DistrictId": 46,
-    "LookupText": "Netrokona-5 (161)"
+    "Name": "Netrokona-5 (161)",
+    "NameInBangla": "নেত্রকোনা-৫ (১৬১)",
+    "LookupText": "Netrokona-5 (161) - নেত্রকোনা-৫ (১৬১)"
   },
   {
     "Id": 12,
     "DistrictId": 47,
-    "LookupText": "Nilphamari-1 (12)"
+    "Name": "Nilphamari-1 (12)",
+    "NameInBangla": "নীলফামারী-১ (১২)",
+    "LookupText": "Nilphamari-1 (12) - নীলফামারী-১ (১২)"
   },
   {
     "Id": 13,
     "DistrictId": 47,
-    "LookupText": "Nilphamari-2 (13)"
+    "Name": "Nilphamari-2 (13)",
+    "NameInBangla": "নীলফামারী-২ (১৩)",
+    "LookupText": "Nilphamari-2 (13) - নীলফামারী-২ (১৩)"
   },
   {
     "Id": 14,
     "DistrictId": 47,
-    "LookupText": "Nilphamari-3 (14)"
+    "Name": "Nilphamari-3 (14)",
+    "NameInBangla": "নীলফামারী-৩ (১৪)",
+    "LookupText": "Nilphamari-3 (14) - নীলফামারী-৩ (১৪)"
   },
   {
     "Id": 15,
     "DistrictId": 47,
-    "LookupText": "Nilphamari-4 (15)"
+    "Name": "Nilphamari-4 (15)",
+    "NameInBangla": "নীলফামারী-৪ (১৫)",
+    "LookupText": "Nilphamari-4 (15) - নীলফামারী-৪ (১৫)"
   },
   {
     "Id": 268,
     "DistrictId": 48,
-    "LookupText": "Noakhali-1 (268)"
+    "Name": "Noakhali-1 (268)",
+    "NameInBangla": "নোয়াখালী-১ (২৬৮)",
+    "LookupText": "Noakhali-1 (268) - নোয়াখালী-১ (২৬৮)"
   },
   {
     "Id": 269,
     "DistrictId": 48,
-    "LookupText": "Noakhali-2 (269)"
+    "Name": "Noakhali-2 (269)",
+    "NameInBangla": "নোয়াখালী-২ (২৬৯)",
+    "LookupText": "Noakhali-2 (269) - নোয়াখালী-২ (২৬৯)"
   },
   {
     "Id": 270,
     "DistrictId": 48,
-    "LookupText": "Noakhali-3 (270)"
+    "Name": "Noakhali-3 (270)",
+    "NameInBangla": "নোয়াখালী-৩ (২৭০)",
+    "LookupText": "Noakhali-3 (270) - নোয়াখালী-৩ (২৭০)"
   },
   {
     "Id": 271,
     "DistrictId": 48,
-    "LookupText": "Noakhali-4 (271)"
+    "Name": "Noakhali-4 (271)",
+    "NameInBangla": "নোয়াখালী-৪ (২৭১)",
+    "LookupText": "Noakhali-4 (271) - নোয়াখালী-৪ (২৭১)"
   },
   {
     "Id": 272,
     "DistrictId": 48,
-    "LookupText": "Noakhali-5 (272)"
+    "Name": "Noakhali-5 (272)",
+    "NameInBangla": "নোয়াখালী-৫ (২৭২)",
+    "LookupText": "Noakhali-5 (272) - নোয়াখালী-৫ (২৭২)"
   },
   {
     "Id": 273,
     "DistrictId": 48,
-    "LookupText": "Noakhali-6 (273)"
+    "Name": "Noakhali-6 (273)",
+    "NameInBangla": "নোয়াখালী-৬ (২৭৩)",
+    "LookupText": "Noakhali-6 (273) - নোয়াখালী-৬ (২৭৩)"
   },
   {
     "Id": 68,
     "DistrictId": 49,
-    "LookupText": "Pabna-1 (68)"
+    "Name": "Pabna-1 (68)",
+    "NameInBangla": "পাবনা-১ (৬৮)",
+    "LookupText": "Pabna-1 (68) - পাবনা-১ (৬৮)"
   },
   {
     "Id": 69,
     "DistrictId": 49,
-    "LookupText": "Pabna-2 (69)"
+    "Name": "Pabna-2 (69)",
+    "NameInBangla": "পাবনা-২ (৬৯)",
+    "LookupText": "Pabna-2 (69) - পাবনা-২ (৬৯)"
   },
   {
     "Id": 70,
     "DistrictId": 49,
-    "LookupText": "Pabna-3 (70)"
+    "Name": "Pabna-3 (70)",
+    "NameInBangla": "পাবনা-৩ (৭০)",
+    "LookupText": "Pabna-3 (70) - পাবনা-৩ (৭০)"
   },
   {
     "Id": 71,
     "DistrictId": 49,
-    "LookupText": "Pabna-4 (71)"
+    "Name": "Pabna-4 (71)",
+    "NameInBangla": "পাবনা-৪ (৭১)",
+    "LookupText": "Pabna-4 (71) - পাবনা-৪ (৭১)"
   },
   {
     "Id": 72,
     "DistrictId": 49,
-    "LookupText": "Pabna-5 (72)"
+    "Name": "Pabna-5 (72)",
+    "NameInBangla": "পাবনা-৫ (৭২)",
+    "LookupText": "Pabna-5 (72) - পাবনা-৫ (৭২)"
   },
   {
     "Id": 1,
     "DistrictId": 50,
-    "LookupText": "Panchagarh-1 (1)"
+    "Name": "Panchagarh-1 (1)",
+    "NameInBangla": "পঞ্চগড়-১ (১)",
+    "LookupText": "Panchagarh-1 (1) - পঞ্চগড়-১ (১)"
   },
   {
     "Id": 2,
     "DistrictId": 50,
-    "LookupText": "Panchagarh-2 (2)"
+    "Name": "Panchagarh-2 (2)",
+    "NameInBangla": "পঞ্চগড়-২ (২)",
+    "LookupText": "Panchagarh-2 (2) - পঞ্চগড়-২ (২)"
   },
   {
     "Id": 300,
     "DistrictId": 2,
-    "LookupText": "Parbatya Bandarban (300)"
+    "Name": "Parbatya Bandarban (300)",
+    "NameInBangla": "পার্বত্য বান্দরবান (৩০০)",
+    "LookupText": "Parbatya Bandarban (300) - পার্বত্য বান্দরবান (৩০০)"
   },
   {
     "Id": 298,
     "DistrictId": 26,
-    "LookupText": "Parbatya Khagrachari (298)"
+    "Name": "Parbatya Khagrachari (298)",
+    "NameInBangla": "পার্বত্য খাগড়াছড়ি (২৯৮)",
+    "LookupText": "Parbatya Khagrachari (298) - পার্বত্য খাগড়াছড়ি (২৯৮)"
   },
   {
     "Id": 299,
     "DistrictId": 55,
-    "LookupText": "Parbatya Rangamati (299)"
+    "Name": "Parbatya Rangamati (299)",
+    "NameInBangla": "পার্বত্য রাঙ্গামাটি (২৯৯)",
+    "LookupText": "Parbatya Rangamati (299) - পার্বত্য রাঙ্গামাটি (২৯৯)"
   },
   {
     "Id": 111,
     "DistrictId": 51,
-    "LookupText": "Patuakhali-1 (111)"
+    "Name": "Patuakhali-1 (111)",
+    "NameInBangla": "পটুয়াখালী-১ (১১১)",
+    "LookupText": "Patuakhali-1 (111) - পটুয়াখালী-১ (১১১)"
   },
   {
     "Id": 112,
     "DistrictId": 51,
-    "LookupText": "Patuakhali-2 (112)"
+    "Name": "Patuakhali-2 (112)",
+    "NameInBangla": "পটুয়াখালী-২ (১১২)",
+    "LookupText": "Patuakhali-2 (112) - পটুয়াখালী-২ (১১২)"
   },
   {
     "Id": 113,
     "DistrictId": 51,
-    "LookupText": "Patuakhali-3 (113)"
+    "Name": "Patuakhali-3 (113)",
+    "NameInBangla": "পটুয়াখালী-৩ (১১৩)",
+    "LookupText": "Patuakhali-3 (113) - পটুয়াখালী-৩ (১১৩)"
   },
   {
     "Id": 114,
     "DistrictId": 51,
-    "LookupText": "Patuakhali-4 (114)"
+    "Name": "Patuakhali-4 (114)",
+    "NameInBangla": "পটুয়াখালী-৪ (১১৪)",
+    "LookupText": "Patuakhali-4 (114) - পটুয়াখালী-৪ (১১৪)"
   },
   {
     "Id": 127,
     "DistrictId": 52,
-    "LookupText": "Pirojpur-1 (127)"
+    "Name": "Pirojpur-1 (127)",
+    "NameInBangla": "পিরোজপুর-১ (১২৭)",
+    "LookupText": "Pirojpur-1 (127) - পিরোজপুর-১ (১২৭)"
   },
   {
     "Id": 128,
     "DistrictId": 52,
-    "LookupText": "Pirojpur-2 (128)"
+    "Name": "Pirojpur-2 (128)",
+    "NameInBangla": "পিরোজপুর-২ (১২৮)",
+    "LookupText": "Pirojpur-2 (128) - পিরোজপুর-২ (১২৮)"
   },
   {
     "Id": 129,
     "DistrictId": 52,
-    "LookupText": "Pirojpur-3 (129)"
+    "Name": "Pirojpur-3 (129)",
+    "NameInBangla": "পিরোজপুর-৩ (১২৯)",
+    "LookupText": "Pirojpur-3 (129) - পিরোজপুর-৩ (১২৯)"
   },
   {
     "Id": 209,
     "DistrictId": 53,
-    "LookupText": "Rajbari-1 (209)"
+    "Name": "Rajbari-1 (209)",
+    "NameInBangla": "রাজবাড়ী-১ (২০৯)",
+    "LookupText": "Rajbari-1 (209) - রাজবাড়ী-১ (২০৯)"
   },
   {
     "Id": 210,
     "DistrictId": 53,
-    "LookupText": "Rajbari-2 (210)"
+    "Name": "Rajbari-2 (210)",
+    "NameInBangla": "রাজবাড়ী-২ (২১০)",
+    "LookupText": "Rajbari-2 (210) - রাজবাড়ী-২ (২১০)"
   },
   {
     "Id": 52,
     "DistrictId": 54,
-    "LookupText": "Rajshahi-1 (52)"
+    "Name": "Rajshahi-1 (52)",
+    "NameInBangla": "রাজশাহী-১ (৫২)",
+    "LookupText": "Rajshahi-1 (52) - রাজশাহী-১ (৫২)"
   },
   {
     "Id": 53,
     "DistrictId": 54,
-    "LookupText": "Rajshahi-2 (53)"
+    "Name": "Rajshahi-2 (53)",
+    "NameInBangla": "রাজশাহী-২ (৫৩)",
+    "LookupText": "Rajshahi-2 (53) - রাজশাহী-২ (৫৩)"
   },
   {
     "Id": 54,
     "DistrictId": 54,
-    "LookupText": "Rajshahi-3 (54)"
+    "Name": "Rajshahi-3 (54)",
+    "NameInBangla": "রাজশাহী-৩ (৫৪)",
+    "LookupText": "Rajshahi-3 (54) - রাজশাহী-৩ (৫৪)"
   },
   {
     "Id": 55,
     "DistrictId": 54,
-    "LookupText": "Rajshahi-4 (55)"
+    "Name": "Rajshahi-4 (55)",
+    "NameInBangla": "রাজশাহী-৪ (৫৫)",
+    "LookupText": "Rajshahi-4 (55) - রাজশাহী-৪ (৫৫)"
   },
   {
     "Id": 56,
     "DistrictId": 54,
-    "LookupText": "Rajshahi-5 (56)"
+    "Name": "Rajshahi-5 (56)",
+    "NameInBangla": "রাজশাহী-৫ (৫৬)",
+    "LookupText": "Rajshahi-5 (56) - রাজশাহী-৫ (৫৬)"
   },
   {
     "Id": 57,
     "DistrictId": 54,
-    "LookupText": "Rajshahi-6 (57)"
+    "Name": "Rajshahi-6 (57)",
+    "NameInBangla": "রাজশাহী-৬ (৫৭)",
+    "LookupText": "Rajshahi-6 (57) - রাজশাহী-৬ (৫৭)"
   },
   {
     "Id": 19,
     "DistrictId": 56,
-    "LookupText": "Rangpur-1 (19)"
+    "Name": "Rangpur-1 (19)",
+    "NameInBangla": "রংপুর-১ (১৯)",
+    "LookupText": "Rangpur-1 (19) - রংপুর-১ (১৯)"
   },
   {
     "Id": 20,
     "DistrictId": 56,
-    "LookupText": "Rangpur-2 (20)"
+    "Name": "Rangpur-2 (20)",
+    "NameInBangla": "রংপুর-২ (২০)",
+    "LookupText": "Rangpur-2 (20) - রংপুর-২ (২০)"
   },
   {
     "Id": 21,
     "DistrictId": 56,
-    "LookupText": "Rangpur-3 (21)"
+    "Name": "Rangpur-3 (21)",
+    "NameInBangla": "রংপুর-৩ (২১)",
+    "LookupText": "Rangpur-3 (21) - রংপুর-৩ (২১)"
   },
   {
     "Id": 22,
     "DistrictId": 56,
-    "LookupText": "Rangpur-4 (22)"
+    "Name": "Rangpur-4 (22)",
+    "NameInBangla": "রংপুর-৪ (২২)",
+    "LookupText": "Rangpur-4 (22) - রংপুর-৪ (২২)"
   },
   {
     "Id": 23,
     "DistrictId": 56,
-    "LookupText": "Rangpur-5 (23)"
+    "Name": "Rangpur-5 (23)",
+    "NameInBangla": "রংপুর-৫ (২৩)",
+    "LookupText": "Rangpur-5 (23) - রংপুর-৫ (২৩)"
   },
   {
     "Id": 24,
     "DistrictId": 56,
-    "LookupText": "Rangpur-6 (24)"
+    "Name": "Rangpur-6 (24)",
+    "NameInBangla": "রংপুর-৬ (২৪)",
+    "LookupText": "Rangpur-6 (24) - রংপুর-৬ (২৪)"
   },
   {
     "Id": 105,
     "DistrictId": 57,
-    "LookupText": "Satkhira-1 (105)"
+    "Name": "Satkhira-1 (105)",
+    "NameInBangla": "সাতক্ষীরা-১ (১০৫)",
+    "LookupText": "Satkhira-1 (105) - সাতক্ষীরা-১ (১০৫)"
   },
   {
     "Id": 106,
     "DistrictId": 57,
-    "LookupText": "Satkhira-2 (106)"
+    "Name": "Satkhira-2 (106)",
+    "NameInBangla": "সাতক্ষীরা-২ (১০৬)",
+    "LookupText": "Satkhira-2 (106) - সাতক্ষীরা-২ (১০৬)"
   },
   {
     "Id": 107,
     "DistrictId": 57,
-    "LookupText": "Satkhira-3 (107)"
+    "Name": "Satkhira-3 (107)",
+    "NameInBangla": "সাতক্ষীরা-৩ (১০৭)",
+    "LookupText": "Satkhira-3 (107) - সাতক্ষীরা-৩ (১০৭)"
   },
   {
     "Id": 108,
     "DistrictId": 57,
-    "LookupText": "Satkhira-4 (108)"
+    "Name": "Satkhira-4 (108)",
+    "NameInBangla": "সাতক্ষীরা-৪ (১০৮)",
+    "LookupText": "Satkhira-4 (108) - সাতক্ষীরা-৪ (১০৮)"
   },
   {
     "Id": 221,
     "DistrictId": 59,
-    "LookupText": "Shariatpur-1 (221)"
+    "Name": "Shariatpur-1 (221)",
+    "NameInBangla": "শরীয়তপুর-১ (২২১)",
+    "LookupText": "Shariatpur-1 (221) - শরীয়তপুর-১ (২২১)"
   },
   {
     "Id": 222,
     "DistrictId": 59,
-    "LookupText": "Shariatpur-2 (222)"
+    "Name": "Shariatpur-2 (222)",
+    "NameInBangla": "শরীয়তপুর-২ (২২২)",
+    "LookupText": "Shariatpur-2 (222) - শরীয়তপুর-২ (২২২)"
   },
   {
     "Id": 223,
     "DistrictId": 59,
-    "LookupText": "Shariatpur-3 (223)"
+    "Name": "Shariatpur-3 (223)",
+    "NameInBangla": "শরীয়তপুর-৩ (২২৩)",
+    "LookupText": "Shariatpur-3 (223) - শরীয়তপুর-৩ (২২৩)"
   },
   {
     "Id": 143,
     "DistrictId": 60,
-    "LookupText": "Sherpur-1 (143)"
+    "Name": "Sherpur-1 (143)",
+    "NameInBangla": "শেরপুর-১ (১৪৩)",
+    "LookupText": "Sherpur-1 (143) - শেরপুর-১ (১৪৩)"
   },
   {
     "Id": 144,
     "DistrictId": 60,
-    "LookupText": "Sherpur-2 (144)"
+    "Name": "Sherpur-2 (144)",
+    "NameInBangla": "শেরপুর-২ (১৪৪)",
+    "LookupText": "Sherpur-2 (144) - শেরপুর-২ (১৪৪)"
   },
   {
     "Id": 145,
     "DistrictId": 60,
-    "LookupText": "Sherpur-3 (145)"
+    "Name": "Sherpur-3 (145)",
+    "NameInBangla": "শেরপুর-৩ (১৪৫)",
+    "LookupText": "Sherpur-3 (145) - শেরপুর-৩ (১৪৫)"
   },
   {
     "Id": 62,
     "DistrictId": 58,
-    "LookupText": "Sirajganj-1 (62)"
+    "Name": "Sirajganj-1 (62)",
+    "NameInBangla": "সিরাজগঞ্জ-১ (৬২)",
+    "LookupText": "Sirajganj-1 (62) - সিরাজগঞ্জ-১ (৬২)"
   },
   {
     "Id": 63,
     "DistrictId": 58,
-    "LookupText": "Sirajganj-2 (63)"
+    "Name": "Sirajganj-2 (63)",
+    "NameInBangla": "সিরাজগঞ্জ-২ (৬৩)",
+    "LookupText": "Sirajganj-2 (63) - সিরাজগঞ্জ-২ (৬৩)"
   },
   {
     "Id": 64,
     "DistrictId": 58,
-    "LookupText": "Sirajganj-3 (64)"
+    "Name": "Sirajganj-3 (64)",
+    "NameInBangla": "সিরাজগঞ্জ-৩ (৬৪)",
+    "LookupText": "Sirajganj-3 (64) - সিরাজগঞ্জ-৩ (৬৪)"
   },
   {
     "Id": 65,
     "DistrictId": 58,
-    "LookupText": "Sirajganj-4 (65)"
+    "Name": "Sirajganj-4 (65)",
+    "NameInBangla": "সিরাজগঞ্জ-৪ (৬৫)",
+    "LookupText": "Sirajganj-4 (65) - সিরাজগঞ্জ-৪ (৬৫)"
   },
   {
     "Id": 66,
     "DistrictId": 58,
-    "LookupText": "Sirajganj-5 (66)"
+    "Name": "Sirajganj-5 (66)",
+    "NameInBangla": "সিরাজগঞ্জ-৫ (৬৬)",
+    "LookupText": "Sirajganj-5 (66) - সিরাজগঞ্জ-৫ (৬৬)"
   },
   {
     "Id": 67,
     "DistrictId": 58,
-    "LookupText": "Sirajganj-6 (67)"
+    "Name": "Sirajganj-6 (67)",
+    "NameInBangla": "সিরাজগঞ্জ-৬ (৬৭)",
+    "LookupText": "Sirajganj-6 (67) - সিরাজগঞ্জ-৬ (৬৭)"
   },
   {
     "Id": 224,
     "DistrictId": 61,
-    "LookupText": "Sunamganj-1 (224)"
+    "Name": "Sunamganj-1 (224)",
+    "NameInBangla": "সুনামগঞ্জ-১ (২২৪)",
+    "LookupText": "Sunamganj-1 (224) - সুনামগঞ্জ-১ (২২৪)"
   },
   {
     "Id": 225,
     "DistrictId": 61,
-    "LookupText": "Sunamganj-2 (225)"
+    "Name": "Sunamganj-2 (225)",
+    "NameInBangla": "সুনামগঞ্জ-২ (২২৫)",
+    "LookupText": "Sunamganj-2 (225) - সুনামগঞ্জ-২ (২২৫)"
   },
   {
     "Id": 226,
     "DistrictId": 61,
-    "LookupText": "Sunamganj-3 (226)"
+    "Name": "Sunamganj-3 (226)",
+    "NameInBangla": "সুনামগঞ্জ-৩ (২২৬)",
+    "LookupText": "Sunamganj-3 (226) - সুনামগঞ্জ-৩ (২২৬)"
   },
   {
     "Id": 227,
     "DistrictId": 61,
-    "LookupText": "Sunamganj-4 (227)"
+    "Name": "Sunamganj-4 (227)",
+    "NameInBangla": "সুনামগঞ্জ-৪ (২২৭)",
+    "LookupText": "Sunamganj-4 (227) - সুনামগঞ্জ-৪ (২২৭)"
   },
   {
     "Id": 228,
     "DistrictId": 61,
-    "LookupText": "Sunamganj-5 (228)"
+    "Name": "Sunamganj-5 (228)",
+    "NameInBangla": "সুনামগঞ্জ-৫ (২২৮)",
+    "LookupText": "Sunamganj-5 (228) - সুনামগঞ্জ-৫ (২২৮)"
   },
   {
     "Id": 229,
     "DistrictId": 62,
-    "LookupText": "Sylhet-1 (229)"
+    "Name": "Sylhet-1 (229)",
+    "NameInBangla": "সিলেট-১ (২২৯)",
+    "LookupText": "Sylhet-1 (229) - সিলেট-১ (২২৯)"
   },
   {
     "Id": 230,
     "DistrictId": 62,
-    "LookupText": "Sylhet-2 (230)"
+    "Name": "Sylhet-2 (230)",
+    "NameInBangla": "সিলেট-২ (২৩০)",
+    "LookupText": "Sylhet-2 (230) - সিলেট-২ (২৩০)"
   },
   {
     "Id": 231,
     "DistrictId": 62,
-    "LookupText": "Sylhet-3 (231)"
+    "Name": "Sylhet-3 (231)",
+    "NameInBangla": "সিলেট-৩ (২৩১)",
+    "LookupText": "Sylhet-3 (231) - সিলেট-৩ (২৩১)"
   },
   {
     "Id": 232,
     "DistrictId": 62,
-    "LookupText": "Sylhet-4 (232)"
+    "Name": "Sylhet-4 (232)",
+    "NameInBangla": "সিলেট-৪ (২৩২)",
+    "LookupText": "Sylhet-4 (232) - সিলেট-৪ (২৩২)"
   },
   {
     "Id": 233,
     "DistrictId": 62,
-    "LookupText": "Sylhet-5 (233)"
+    "Name": "Sylhet-5 (233)",
+    "NameInBangla": "সিলেট-৫ (২৩৩)",
+    "LookupText": "Sylhet-5 (233) - সিলেট-৫ (২৩৩)"
   },
   {
     "Id": 234,
     "DistrictId": 62,
-    "LookupText": "Sylhet-6 (234)"
+    "Name": "Sylhet-6 (234)",
+    "NameInBangla": "সিলেট-৬ (২৩৪)",
+    "LookupText": "Sylhet-6 (234) - সিলেট-৬ (২৩৪)"
   },
   {
     "Id": 130,
     "DistrictId": 63,
-    "LookupText": "Tangail-1 (130)"
+    "Name": "Tangail-1 (130)",
+    "NameInBangla": "টাঙ্গাইল-১ (১৩০)",
+    "LookupText": "Tangail-1 (130) - টাঙ্গাইল-১ (১৩০)"
   },
   {
     "Id": 131,
     "DistrictId": 63,
-    "LookupText": "Tangail-2 (131)"
+    "Name": "Tangail-2 (131)",
+    "NameInBangla": "টাঙ্গাইল-২ (১৩১)",
+    "LookupText": "Tangail-2 (131) - টাঙ্গাইল-২ (১৩১)"
   },
   {
     "Id": 132,
     "DistrictId": 63,
-    "LookupText": "Tangail-3 (132)"
+    "Name": "Tangail-3 (132)",
+    "NameInBangla": "টাঙ্গাইল-৩ (১৩২)",
+    "LookupText": "Tangail-3 (132) - টাঙ্গাইল-৩ (১৩২)"
   },
   {
     "Id": 133,
     "DistrictId": 63,
-    "LookupText": "Tangail-4 (133)"
+    "Name": "Tangail-4 (133)",
+    "NameInBangla": "টাঙ্গাইল-৪ (১৩৩)",
+    "LookupText": "Tangail-4 (133) - টাঙ্গাইল-৪ (১৩৩)"
   },
   {
     "Id": 134,
     "DistrictId": 63,
-    "LookupText": "Tangail-5 (134)"
+    "Name": "Tangail-5 (134)",
+    "NameInBangla": "টাঙ্গাইল-৫ (১৩৪)",
+    "LookupText": "Tangail-5 (134) - টাঙ্গাইল-৫ (১৩৪)"
   },
   {
     "Id": 135,
     "DistrictId": 63,
-    "LookupText": "Tangail-6 (135)"
+    "Name": "Tangail-6 (135)",
+    "NameInBangla": "টাঙ্গাইল-৬ (১৩৫)",
+    "LookupText": "Tangail-6 (135) - টাঙ্গাইল-৬ (১৩৫)"
   },
   {
     "Id": 136,
     "DistrictId": 63,
-    "LookupText": "Tangail-7 (136)"
+    "Name": "Tangail-7 (136)",
+    "NameInBangla": "টাঙ্গাইল-৭ (১৩৬)",
+    "LookupText": "Tangail-7 (136) - টাঙ্গাইল-৭ (১৩৬)"
   },
   {
     "Id": 137,
     "DistrictId": 63,
-    "LookupText": "Tangail-8 (137)"
+    "Name": "Tangail-8 (137)",
+    "NameInBangla": "টাঙ্গাইল-৮ (১৩৭)",
+    "LookupText": "Tangail-8 (137) - টাঙ্গাইল-৮ (১৩৭)"
   },
   {
     "Id": 3,
     "DistrictId": 64,
-    "LookupText": "Thakurgaon-1 (3)"
+    "Name": "Thakurgaon-1 (3)",
+    "NameInBangla": "ঠাকুরগাঁও-১ (৩)",
+    "LookupText": "Thakurgaon-1 (3) - ঠাকুরগাঁও-১ (৩)"
   },
   {
     "Id": 4,
     "DistrictId": 64,
-    "LookupText": "Thakurgaon-2 (4)"
+    "Name": "Thakurgaon-2 (4)",
+    "NameInBangla": "ঠাকুরগাঁও-২ (৪)",
+    "LookupText": "Thakurgaon-2 (4) - ঠাকুরগাঁও-২ (৪)"
   },
   {
     "Id": 5,
     "DistrictId": 64,
-    "LookupText": "Thakurgaon-3 (5)"
+    "Name": "Thakurgaon-3 (5)",
+    "NameInBangla": "ঠাকুরগাঁও-৩ (৫)",
+    "LookupText": "Thakurgaon-3 (5) - ঠাকুরগাঁও-৩ (৫)"
   }
 ]

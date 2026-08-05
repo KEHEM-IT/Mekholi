@@ -9,6 +9,7 @@ import BaseDatePicker from "@/components/ui/BaseDatePicker.vue";
 import banksJson from "@/assets/jsons/banks.json";
 import gendersJson from "@/assets/jsons/genders.json";
 import committeePositionsJson from "@/assets/jsons/committee_positions.json";
+import parliamentarySeatsJson from "@/assets/jsons/parliamentary_seat.json";
 import instituteTypesJson from "@/assets/jsons/institute_types.json";
 import groupsJson from "@/assets/jsons/groups.json";
 import studentTypesJson from "@/assets/jsons/student_types.json";
@@ -213,6 +214,9 @@ const GENDER_OPTIONS = gendersJson;
 // Committee member position options (English + Bangla), "Others" last
 const COMMITTEE_POSITION_OPTIONS = committeePositionsJson;
 
+// Parliamentary constituencies of Bangladesh (300 seats, English + Bangla)
+const PARLIAMENTARY_SEAT_OPTIONS = parliamentarySeatsJson;
+
 // Font Awesome 6 Pro icon for each facility toggle
 const FACILITY_ICONS: Record<string, string> = {
   play_ground: "fa-futbol",
@@ -341,8 +345,14 @@ function removeCommittee(i: number) {
               <BaseDatePicker v-model="form.establishment_date" />
             </div>
             <div class="form-field">
-              <label>{{ isBn ? "সংসদীয় আসন" : "Parliamentary Constituency" }}</label
-              ><input v-model="form.parliamentary_constituency" type="text" />
+              <label>{{ isBn ? "সংসদীয় আসন" : "Parliamentary Constituency" }}</label>
+              <BaseCombobox
+                v-model="form.parliamentary_constituency"
+                :options="PARLIAMENTARY_SEAT_OPTIONS"
+                option-value="LookupText"
+                option-label="LookupText"
+                :placeholder="isBn ? 'নির্বাচন করুন' : 'Select'"
+              />
             </div>
           </div>
         </div>
