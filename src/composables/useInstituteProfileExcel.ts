@@ -127,6 +127,11 @@ export function toIsoDate(v: unknown): string {
   return ''
 }
 
+/** Collapse whitespace runs to single spaces and trim the ends. */
+function normalizeText(s: string): string {
+  return s.replace(/\s+/g, ' ').trim()
+}
+
 /** Parse a Yes/No style cell into a boolean. */
 export function parseBool(v: unknown): boolean {
   const s = String(v ?? '').trim().toLowerCase()
@@ -297,7 +302,7 @@ export async function importProfileFromExcel(file: File): Promise<ImportedProfil
     else if (meta.type === 'number') profile[meta.key] = parseNumber(value)
     else if (meta.type === 'bool') profile[meta.key] = parseBool(value)
     else if (meta.type === 'geo') profile[meta.key] = resolveGeoId(meta.key, value)
-    else profile[meta.key] = String(value).trim()
+    else profile[meta.key] = normalizeText(String(value))
   }
 
   // Legacy dedicated Facilities sheet — only fills facilities that were NOT
@@ -324,13 +329,13 @@ export async function importProfileFromExcel(file: File): Promise<ImportedProfil
       committee.push({
         member_name: name,
         joining_date: toIsoDate(row['Joining Date']),
-        phone: String(row['Phone'] ?? '').trim(),
-        gender: String(row['Gender'] ?? '').trim(),
-        committee_position: String(row['Committee Position'] ?? '').trim(),
-        education_qualification: String(row['Education Qualification'] ?? '').trim(),
-        occupation: String(row['Occupation'] ?? '').trim(),
+        phone: normalizeText(String(row['Phone'] ?? '')),
+        gender: normalizeText(String(row['Gender'] ?? '')),
+        committee_position: normalizeText(String(row['Committee Position'] ?? '')),
+        education_qualification: normalizeText(String(row['Education Qualification'] ?? '')),
+        occupation: normalizeText(String(row['Occupation'] ?? '')),
         left_committee: parseBool(row['Left Committee (Yes/No)']),
-        reason_for_leaving: String(row['Reason for Leaving'] ?? '').trim(),
+        reason_for_leaving: normalizeText(String(row['Reason for Leaving'] ?? '')),
       })
     }
   }
