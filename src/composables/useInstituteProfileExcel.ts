@@ -52,9 +52,6 @@ export const SCALAR_FIELDS: FieldMeta[] = [
   { key: 'institute_email', label: 'Email', labelBn: 'ইমেইল', type: 'text' },
   { key: 'website', label: 'Website', labelBn: 'ওয়েবসাইট', type: 'text' },
   // Classification
-  { key: 'institute_type', label: 'Institute Type', labelBn: 'প্রতিষ্ঠানের ধরন', type: 'text' },
-  { key: 'attached_technical_branch_type', label: 'Attached Tech. Branch', labelBn: 'সংযুক্ত কারিগরি শাখা', type: 'text' },
-  { key: 'group', label: 'Group', labelBn: 'গ্রুপ', type: 'text' },
   { key: 'student_type', label: 'Student Type', labelBn: 'শিক্ষার্থীর ধরন', type: 'text' },
   { key: 'shift_count', label: 'Shift Count', labelBn: 'শিফট সংখ্যা', type: 'text' },
   { key: 'has_english_version', label: 'English Version (Yes/No)', labelBn: 'ইংরেজি ভার্সন (হ্যাঁ/না)', type: 'bool' },
@@ -67,14 +64,6 @@ export const SCALAR_FIELDS: FieldMeta[] = [
   { key: 'technical_branch_mpo_code', label: 'Technical Branch MPO Code', labelBn: 'কারিগরি শাখার এমপিও কোড', type: 'text' },
   { key: 'stipend_code', label: 'Stipend Code', labelBn: 'স্টাইপেন্ড কোড', type: 'text' },
   // MPO status
-  { key: 'general_mpo', label: 'General MPO (Yes/No)', labelBn: 'সাধারণ এমপিও (হ্যাঁ/না)', type: 'bool' },
-  { key: 'general_mpo_code', label: 'General MPO Code', labelBn: 'সাধারণ এমপিও কোড', type: 'text' },
-  { key: 'tech_mpo', label: 'Technical MPO (Yes/No)', labelBn: 'টেকনিক্যাল এমপিও (হ্যাঁ/না)', type: 'bool' },
-  { key: 'tech_mpo_code', label: 'Technical MPO Code', labelBn: 'টেকনিক্যাল এমপিও কোড', type: 'text' },
-  { key: 'secondary_mpo_date', label: 'Secondary MPO Date', labelBn: 'মাধ্যমিক এমপিও তারিখ', type: 'date' },
-  { key: 'secondary_mpo_code', label: 'Secondary MPO Code', labelBn: 'মাধ্যমিক এমপিও কোড', type: 'text' },
-  { key: 'higher_secondary_mpo_date', label: 'Higher Secondary MPO Date', labelBn: 'উচ্চ মাধ্যমিক এমপিও তারিখ', type: 'date' },
-  { key: 'higher_secondary_mpo_code', label: 'Higher Secondary MPO Code', labelBn: 'উচ্চ মাধ্যমিক এমপিও কোড', type: 'text' },
   // Staff
   { key: 'staff_male', label: 'Currently Working (Male)', labelBn: 'বর্তমানে কর্মরত (পুরুষ)', type: 'number' },
   { key: 'staff_female', label: 'Currently Working (Female)', labelBn: 'বর্তমানে কর্মরত (মহিলা)', type: 'number' },
@@ -101,6 +90,14 @@ export const COMMITTEE_HEADERS = [
   'Occupation',
   'Left Committee (Yes/No)',
   'Reason for Leaving',
+]
+
+export const CLASSIFICATION_HEADERS = [
+  'Institute Type',
+  'Groups (comma separated)',
+  'MPO Status (Yes/No)',
+  'MPO Code',
+  'MPO Date',
 ]
 
 // ── value helpers ───────────────────────────────────────────────────────
@@ -190,6 +187,13 @@ export interface ExportableProfile {
   [key: string]: unknown
   facilities?: Record<string, boolean>
   committee_members?: Array<Record<string, unknown>>
+  classifications?: Array<{
+    institute_type?: string
+    groups?: string[] | string
+    mpo_status?: boolean
+    mpo_code?: string
+    mpo_date?: string
+  }>
 }
 
 /** Build and download the Institute Profile Excel workbook. */
@@ -241,9 +245,25 @@ export function exportProfileToExcel(form: ExportableProfile): void {
   const wsCm = XLSX.utils.aoa_to_sheet(cmRows)
   wsCm['!cols'] = [{ wch: 22 }, { wch: 14 }, { wch: 14 }, { wch: 16 }, { wch: 26 }, { wch: 22 }, { wch: 18 }, { wch: 18 }, { wch: 22 }]
 
+  // ── Sheet 3: Classifications (per-row institute type / groups / MPO) ───
+  const clRows: (string | number)[][] = [CLASSIFICATION_HEADERS]
+  for (const c of form.classifications ?? []) {
+    const groups = Array.isArray(c.groups) ? c.groups.join(', ') : String(c.groups ?? '')
+    clRows.push([
+      String(c.institute_type ?? ''),
+      groups,
+      c.mpo_status ? 'Yes' : 'No',
+      String(c.mpo_code ?? ''),
+      toIsoDate(c.mpo_date),
+    ])
+  }
+  const wsCl = XLSX.utils.aoa_to_sheet(clRows)
+  wsCl['!cols'] = [{ wch: 30 }, { wch: 34 }, { wch: 16 }, { wch: 14 }, { wch: 14 }]
+
   const book = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(book, ws, 'Profile')
   XLSX.utils.book_append_sheet(book, wsCm, 'Committee Members')
+  XLSX.utils.book_append_sheet(book, wsCl, 'Classifications')
 
   const eiin = String(form.eiin || 'institute')
   XLSX.writeFile(book, `InstituteProfile_${eiin}.xlsx`)
@@ -255,6 +275,7 @@ export interface ImportedProfile {
   profile: Record<string, unknown>
   facilities: Record<string, boolean>
   committee_members: Array<Record<string, unknown>>
+  classifications: Array<Record<string, unknown>>
   skipped: string[]
 }
 
@@ -340,5 +361,28 @@ export async function importProfileFromExcel(file: File): Promise<ImportedProfil
     }
   }
 
-  return { profile, facilities, committee_members: committee, skipped }
+  // Classifications sheet
+  const classifications: Array<Record<string, unknown>> = []
+  const clSheet = book.Sheets['Classifications']
+  if (clSheet) {
+    const clRows = XLSX.utils.sheet_to_json<Record<string, unknown>>(clSheet, { defval: '' })
+    for (const row of clRows) {
+      const type = normalizeText(String(row['Institute Type'] ?? ''))
+      if (!type) continue
+      const groupsRaw = String(row['Groups (comma separated)'] ?? '')
+      const groups = groupsRaw
+        .split(',')
+        .map((g) => normalizeText(g))
+        .filter(Boolean)
+      classifications.push({
+        institute_type: type,
+        groups,
+        mpo_status: parseBool(row['MPO Status (Yes/No)']),
+        mpo_code: normalizeText(String(row['MPO Code'] ?? '')),
+        mpo_date: toIsoDate(row['MPO Date']),
+      })
+    }
+  }
+
+  return { profile, facilities, committee_members: committee, classifications, skipped }
 }

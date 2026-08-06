@@ -4,13 +4,17 @@
 // District / Upazila / Union, each ~50-500 rows and shown via their
 // LookupText column) but written against plain `optionValue`/`optionLabel`
 // keys so any array of records can be dropped in.
+//
+// `multiple` switches to multi-select: modelValue becomes an array, the
+// control shows selected items as removable chips, and clicking an option
+// toggles it while keeping the panel open.
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from 'vue'
 
 type ComboboxOption = Record<string, unknown>
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: string | number | null
+    modelValue?: string | number | null | Array<string | number>
     options?: ComboboxOption[]
     optionValue?: string
     optionLabel?: string
@@ -19,6 +23,7 @@ const props = withDefaults(
     disabled?: boolean
     clearable?: boolean
     emptyText?: string
+    multiple?: boolean
   }>(),
   {
     modelValue: null,
@@ -30,11 +35,12 @@ const props = withDefaults(
     disabled: false,
     clearable: true,
     emptyText: 'No results found',
+    multiple: false,
   },
 )
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string | number | null]
+  'update:modelValue': [value: string | number | null | Array<string | number>]
   change: [option: ComboboxOption | null]
 }>()
 
@@ -47,9 +53,21 @@ const isOpen = ref(false)
 const query = ref('')
 const activeIndex = ref(-1)
 
-const selectedOption = computed<ComboboxOption | null>(
-  () => props.options.find((opt) => opt[props.optionValue] === props.modelValue) ?? null,
+/** Raw model value coerced to an array (works for single + multiple). */
+const modelArray = computed<Array<string | number>>(() => {
+  if (props.multiple) return (props.modelValue as Array<string | number> | null | undefined) ?? []
+  const v = props.modelValue as string | number | null | undefined
+  return v == null || v === '' ? [] : [v]
+})
+
+const selectedOptions = computed<ComboboxOption[]>(
+  () =>
+    props.options.filter(
+      (opt) => modelArray.value.includes(opt[props.optionValue] as string | number),
+    ) ?? [],
 )
+
+const selectedOption = computed<ComboboxOption | null>(() => selectedOptions.value[0] ?? null)
 
 const filteredOptions = computed(() => {
   const q = query.value.trim().toLowerCase()
@@ -61,12 +79,16 @@ const filteredOptions = computed(() => {
   )
 })
 
+function isSelected(opt: ComboboxOption): boolean {
+  return modelArray.value.includes(opt[props.optionValue] as string | number)
+}
+
 function open() {
   if (props.disabled || isOpen.value) return
   isOpen.value = true
   query.value = ''
   const selectedIdx = selectedOption.value
-    ? props.options.findIndex((opt) => opt[props.optionValue] === props.modelValue)
+    ? props.options.findIndex((opt) => opt[props.optionValue] === modelArray.value[0])
     : -1
   activeIndex.value = selectedIdx
   nextTick(() => {
@@ -88,14 +110,30 @@ function toggle() {
 
 function selectOption(opt: ComboboxOption) {
   const value = opt[props.optionValue] as string | number
+  if (props.multiple) {
+    // Toggle the option, keep the panel open for further picks.
+    const next = modelArray.value.includes(value)
+      ? modelArray.value.filter((v) => v !== value)
+      : [...modelArray.value, value]
+    emit('update:modelValue', next)
+    emit('change', opt)
+    searchInput.value?.focus()
+    return
+  }
   emit('update:modelValue', value)
   emit('change', opt)
   close(true)
 }
 
+function removeChip(value: string | number, event: Event) {
+  event.stopPropagation()
+  if (!props.multiple) return
+  emit('update:modelValue', modelArray.value.filter((v) => v !== value))
+}
+
 function clearSelection(event: Event) {
   event.stopPropagation()
-  emit('update:modelValue', null)
+  emit('update:modelValue', props.multiple ? [] : null)
   emit('change', null)
   query.value = ''
 }
@@ -175,12 +213,38 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
       @click="toggle"
       @keydown="onControlKeydown"
     >
-      <span class="combobox__value" :class="{ 'is-placeholder': !selectedOption }">
-        {{ selectedOption ? String(selectedOption[optionLabel]) : placeholder }}
+      <span class="combobox__value" :class="{ 'is-placeholder': !selectedOptions.length }">
+        <!-- Multi-select: show removable chips -->
+        <template v-if="multiple">
+          <span
+            v-for="chip in selectedOptions"
+            :key="String(chip[optionValue])"
+            class="combobox__chip"
+            :title="String(chip[optionLabel] ?? '')"
+          >
+            {{ String(chip[optionLabel] ?? '') }}
+            <span
+              class="combobox__chip-x"
+              role="button"
+              tabindex="-1"
+              :aria-label="'Remove ' + String(chip[optionLabel] ?? '')"
+              @click="removeChip(chip[optionValue] as string | number, $event)"
+            >
+              &#10005;
+            </span>
+          </span>
+          <span v-if="!selectedOptions.length" class="combobox__chip-placeholder">{{
+            placeholder
+          }}</span>
+        </template>
+        <!-- Single select -->
+        <template v-else>
+          {{ selectedOption ? String(selectedOption[optionLabel]) : placeholder }}
+        </template>
       </span>
       <span class="combobox__actions">
         <span
-          v-if="clearable && selectedOption && !disabled"
+          v-if="clearable && selectedOptions.length && !disabled"
           class="combobox__clear"
           role="button"
           tabindex="-1"
@@ -210,12 +274,19 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
           :key="String(opt[optionValue])"
           :data-index="index"
           role="option"
-          :aria-selected="opt[optionValue] === modelValue"
+          :aria-selected="isSelected(opt)"
           class="combobox__option"
-          :class="{ 'is-active': index === activeIndex, 'is-selected': opt[optionValue] === modelValue }"
+          :class="{ 'is-active': index === activeIndex, 'is-selected': isSelected(opt) }"
           @mousedown.prevent="selectOption(opt)"
           @mouseenter="activeIndex = index"
         >
+          <span
+            v-if="multiple"
+            class="combobox__check"
+            :class="{ 'is-checked': isSelected(opt) }"
+          >
+            <i v-if="isSelected(opt)" class="fa-solid fa-check" />
+          </span>
           {{ opt[optionLabel] }}
         </li>
         <li v-if="!filteredOptions.length" class="combobox__empty">{{ emptyText }}</li>

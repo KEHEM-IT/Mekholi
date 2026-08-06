@@ -23,6 +23,7 @@ def init_db():
             eiin TEXT UNIQUE NOT NULL,
             institute_name_bn TEXT DEFAULT '', institute_name_en TEXT DEFAULT '',
             institute_logo TEXT DEFAULT '',
+            classifications TEXT DEFAULT '[]',
             founder_name TEXT DEFAULT '', establishment_date TEXT DEFAULT '',
             parliamentary_constituency TEXT DEFAULT '',
             division_id TEXT DEFAULT '', district_id TEXT DEFAULT '',
@@ -78,6 +79,9 @@ def init_db():
     if "institute_logo" not in cols:
         conn.execute("ALTER TABLE institute_profiles ADD COLUMN institute_logo TEXT DEFAULT ''")
         print("SQL: migrated institute_profiles — added institute_logo column")
+    if "classifications" not in cols:
+        conn.execute("ALTER TABLE institute_profiles ADD COLUMN classifications TEXT DEFAULT '[]'")
+        print("SQL: migrated institute_profiles — added classifications column")
     conn.commit()
     conn.close()
 
@@ -88,6 +92,10 @@ def profile_to_dict(row, conn):
     rows = conn.execute(
         "SELECT facility_key, enabled FROM facilities WHERE profile_id=?", (d["id"],)).fetchall()
     d["facilities"] = {r["facility_key"]: bool(r["enabled"]) for r in rows}
+    try:
+        d["classifications"] = json.loads(d.get("classifications") or "[]")
+    except (json.JSONDecodeError, TypeError):
+        d["classifications"] = []
     del d["id"]
     return d
 
@@ -128,7 +136,8 @@ class Handler(BaseHTTPRequestHandler):
         body = json.loads(body_str) if body_str else {}
         conn = get_db()
         vals = {f: body.get(f, "") for f in [
-            "institute_name_bn","institute_name_en","institute_logo","founder_name",
+            "institute_name_bn","institute_name_en","institute_logo",
+            "classifications","founder_name",
             "establishment_date","parliamentary_constituency",
             "division_id","district_id","upazila_id","union_id",
             "village_road_holding_no","post_office","post_code",
@@ -143,6 +152,11 @@ class Handler(BaseHTTPRequestHandler):
             "bank_name","bank_branch","bank_account_type",
             "bank_account_holder","bank_account_number","bank_account_purpose",
         ]}
+        # classifications is a JSON array — store as text
+        if isinstance(vals.get("classifications"), (list, dict)):
+            vals["classifications"] = json.dumps(vals["classifications"], ensure_ascii=False)
+        else:
+            vals["classifications"] = "[]"
         for b in ("has_english_version","general_mpo","tech_mpo"):
             vals[b] = 1 if body.get(b) else 0
         for n in ("staff_male","staff_female","staff_mpo_male","staff_mpo_female",

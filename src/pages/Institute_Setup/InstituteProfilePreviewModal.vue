@@ -47,6 +47,14 @@ const upazilaName = computed(() => geoName(BD_GEO_UPAZILAS as unknown as { id: s
 const unionName = computed(() => geoName(BD_GEO_UNIONS as unknown as { id: string; LookupText: string }[], f.value.union_id))
 
 const facilities = computed<Record<string, boolean>>(() => (f.value.facilities as Record<string, boolean>) ?? {})
+const classifications = computed<Array<Record<string, unknown>>>(() =>
+  Array.isArray(f.value.classifications) ? (f.value.classifications as Array<Record<string, unknown>>) : [],
+)
+
+function groupsText(c: Record<string, unknown>): string {
+  if (Array.isArray(c.groups) && c.groups.length) return c.groups.join(', ')
+  return show(c.groups)
+}
 const committee = computed<Record<string, unknown>[]>(() => (f.value.committee_members as Record<string, unknown>[]) ?? [])
 
 const logo = computed(() => String(f.value.institute_logo ?? ''))
@@ -84,9 +92,6 @@ const contactFields: Field[] = [
 ]
 
 const classFields: Field[] = [
-  { key: 'institute_type', label: ['Institute Type', 'প্রতিষ্ঠানের ধরন'] },
-  { key: 'attached_technical_branch_type', label: ['Attached Tech. Branch', 'সংযুক্ত কারিগরি শাখা'] },
-  { key: 'group', label: ['Group', 'গ্রুপ'] },
   { key: 'student_type', label: ['Student Type', 'শিক্ষার্থীর ধরন'] },
   { key: 'shift_count', label: ['Shift', 'শিফট'] },
   { key: 'has_english_version', label: ['English Version', 'ইংরেজি ভার্সন'], fmt: yesNo },
@@ -102,16 +107,7 @@ const idFields: Field[] = [
   { key: 'stipend_code', label: ['Stipend Code', 'স্টাইপেন্ড কোড'] },
 ]
 
-const mpoFields: Field[] = [
-  { key: 'general_mpo', label: ['General MPO', 'সাধারণ এমপিও'], fmt: yesNo },
-  { key: 'general_mpo_code', label: ['General MPO Code', 'সাধারণ এমপিও কোড'] },
-  { key: 'secondary_mpo_date', label: ['Secondary MPO Date', 'মাধ্যমিক এমপিও তারিখ'], fmt: fmtDate },
-  { key: 'secondary_mpo_code', label: ['Secondary MPO Code', 'মাধ্যমিক এমপিও কোড'] },
-  { key: 'tech_mpo', label: ['Technical MPO', 'টেকনিক্যাল এমপিও'], fmt: yesNo },
-  { key: 'tech_mpo_code', label: ['Technical MPO Code', 'টেকনিক্যাল এমপিও কোড'] },
-  { key: 'higher_secondary_mpo_date', label: ['Higher Secondary MPO Date', 'উচ্চ মাধ্যমিক এমপিও তারিখ'], fmt: fmtDate },
-  { key: 'higher_secondary_mpo_code', label: ['Higher Secondary MPO Code', 'উচ্চ মাধ্যমিক এমপিও কোড'] },
-]
+
 
 const staffFields: Field[] = [
   { key: 'staff_male', label: ['Male Staff', 'পুরুষ কর্মচারী'] },
@@ -141,9 +137,14 @@ const staffTotal = computed(() => {
 const hasAnyValue = computed(() => {
   const keys = [
     ...identityFields, ...addressFields, ...contactFields, ...classFields,
-    ...idFields, ...mpoFields, ...staffFields, ...bankFields,
+    ...idFields, ...staffFields, ...bankFields,
   ]
-  return keys.some((x) => show(f.value[x.key]) !== '—') || Object.values(facilities.value).some(Boolean) || committee.value.length > 0
+  return (
+    keys.some((x) => show(f.value[x.key]) !== '—') ||
+    Object.values(facilities.value).some(Boolean) ||
+    committee.value.length > 0 ||
+    classifications.value.length > 0
+  )
 })
 </script>
 
@@ -212,22 +213,45 @@ const hasAnyValue = computed(() => {
             <span class="ipfp-field__value">{{ x.fmt ? x.fmt(f[x.key]) : show(f[x.key]) }}</span>
           </div>
         </div>
+
+        <!-- Classification rows -->
+        <div v-if="classifications.length" class="ipfp-class-list">
+          <div v-for="(c, i) in classifications" :key="i" class="ipfp-class-item">
+            <div class="ipfp-class-item__head">
+              <span class="ipfp-class-item__num">#{{ i + 1 }}</span>
+            </div>
+            <div class="ipfp-grid">
+              <div class="ipfp-field">
+                <span class="ipfp-field__label">{{ L('Institute Type', 'প্রতিষ্ঠানের ধরন') }}</span>
+                <span class="ipfp-field__value">{{ show(c.institute_type) }}</span>
+              </div>
+              <div class="ipfp-field">
+                <span class="ipfp-field__label">{{ L('Groups', 'গ্রুপ') }}</span>
+                <span class="ipfp-field__value">{{ groupsText(c) }}</span>
+              </div>
+              <div class="ipfp-field">
+                <span class="ipfp-field__label">{{ L('MPO Status', 'এমপিও অবস্থা') }}</span>
+                <span class="ipfp-field__value">{{ yesNo(c.mpo_status) }}</span>
+              </div>
+              <template v-if="c.mpo_status">
+                <div class="ipfp-field">
+                  <span class="ipfp-field__label">{{ L('MPO Code', 'এমপিও কোড') }}</span>
+                  <span class="ipfp-field__value">{{ show(c.mpo_code) }}</span>
+                </div>
+                <div class="ipfp-field">
+                  <span class="ipfp-field__label">{{ L('MPO Date', 'এমপিও তারিখ') }}</span>
+                  <span class="ipfp-field__value">{{ fmtDate(c.mpo_date) }}</span>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="ipfp-section" v-if="idFields.some((x) => show(f[x.key]) !== '—')">
         <h4 class="ipfp-section__title"><i class="fa-duotone fa-fingerprint" /> {{ L('Identifiers', 'শনাক্তকরণ') }}</h4>
         <div class="ipfp-grid">
           <div v-for="x in idFields" :key="x.key" class="ipfp-field">
-            <span class="ipfp-field__label">{{ L(...x.label) }}</span>
-            <span class="ipfp-field__value">{{ x.fmt ? x.fmt(f[x.key]) : show(f[x.key]) }}</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="ipfp-section" v-if="mpoFields.some((x) => show(f[x.key]) !== '—')">
-        <h4 class="ipfp-section__title"><i class="fa-duotone fa-file-signature" /> {{ L('MPO Status', 'এমপিও অবস্থা') }}</h4>
-        <div class="ipfp-grid">
-          <div v-for="x in mpoFields" :key="x.key" class="ipfp-field">
             <span class="ipfp-field__label">{{ L(...x.label) }}</span>
             <span class="ipfp-field__value">{{ x.fmt ? x.fmt(f[x.key]) : show(f[x.key]) }}</span>
           </div>

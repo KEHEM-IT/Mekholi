@@ -15,6 +15,7 @@ import {
 import BaseCombobox from "@/components/ui/BaseCombobox.vue";
 import BaseDatePicker from "@/components/ui/BaseDatePicker.vue";
 import BaseModal from "@/components/ui/BaseModal.vue";
+import BaseToggle from "@/components/ui/BaseToggle.vue";
 import InstituteProfilePreviewModal from "./InstituteProfilePreviewModal.vue";
 import { FACILITY_ICONS, FACILITY_HELP } from "./facilityMeta";
 import banksJson from "@/assets/jsons/banks.json";
@@ -83,9 +84,6 @@ const form = reactive({
   website: "" as string,
 
   // Classification
-  institute_type: "" as string,
-  attached_technical_branch_type: "" as string,
-  group: "" as string,
   student_type: "" as string,
   shift_count: "" as string,
   has_english_version: false as boolean,
@@ -99,12 +97,6 @@ const form = reactive({
   technical_branch_mpo_code: "" as string,
   stipend_code: "" as string,
 
-  // MPO Status
-  general_mpo: false as boolean,
-  general_mpo_code: "" as string,
-  tech_mpo: false as boolean,
-  tech_mpo_code: "" as string,
-
   // Staff
   staff_male: null as number | null,
   staff_female: null as number | null,
@@ -112,12 +104,6 @@ const form = reactive({
   staff_mpo_female: null as number | null,
   staff_nonmpo_male: null as number | null,
   staff_nonmpo_female: null as number | null,
-
-  // MPO Info
-  secondary_mpo_date: "" as string,
-  secondary_mpo_code: "" as string,
-  higher_secondary_mpo_date: "" as string,
-  higher_secondary_mpo_code: "" as string,
 
   // Bank Account (single)
   bank_name: "" as string,
@@ -138,6 +124,17 @@ const form = reactive({
     occupation: string;
     left_committee: boolean;
     reason_for_leaving: string;
+  }[],
+
+  // Classification rows (added via the "+" button): each row holds one
+  // institute type (unique across rows), multiple groups, and an optional
+  // MPO entry (status toggle → code + date).
+  classifications: [] as {
+    institute_type: string;
+    groups: string[];
+    mpo_status: boolean;
+    mpo_code: string;
+    mpo_date: string;
   }[],
 
   // Facilities
@@ -170,13 +167,6 @@ const geoUpazilaOptions = computed(() =>
   form.district_id ? upazilasByDistrictId(form.district_id) : [],
 );
 const geoUnionOptions = computed(() => (form.upazila_id ? unionsByUpazilaId(form.upazila_id) : []));
-
-// ── Conditional MPO info ──────────────────────────────────────────────────
-
-const showHigherSecondaryMpo = computed(() => {
-  const n = (form.institute_name_en + form.institute_name_bn).toLowerCase();
-  return n.includes("college");
-});
 
 // Live total of staff — sum of the two "Currently Working" fields only
 // (Male + Female), not the MPO breakdown rows.
@@ -412,7 +402,8 @@ async function onExcelImportPicked(event: Event) {
 
   isImportingExcel.value = true;
   try {
-    const { profile, facilities, committee_members, skipped } = await importProfileFromExcel(file);
+    const { profile, facilities, committee_members, classifications, skipped } =
+      await importProfileFromExcel(file);
 
     // Apply without triggering the geo cascade resets (division changes
     // would otherwise clear district/upazila/union).
@@ -425,6 +416,9 @@ async function onExcelImportPicked(event: Event) {
     }
     if (committee_members.length) {
       form.committee_members = committee_members as typeof form.committee_members;
+    }
+    if (classifications.length) {
+      form.classifications = classifications as typeof form.classifications;
     }
     await nextTick();
     isRestoringProfile = false;
@@ -473,6 +467,17 @@ function trimmedForm(): typeof form {
         for (const k of Object.keys(clean) as (keyof typeof clean)[]) {
           if (typeof clean[k] === "string") (clean as Record<string, unknown>)[k] = normalizeText(String(clean[k]));
         }
+        return clean;
+      });
+    } else if (key === "classifications" && Array.isArray(v)) {
+      out.classifications = (v as typeof form.classifications).map((c) => {
+        const clean = {
+          ...c,
+          institute_type: normalizeText(c.institute_type),
+          mpo_code: normalizeText(c.mpo_code),
+          mpo_date: normalizeText(c.mpo_date),
+          groups: c.groups.map((g) => normalizeText(g)),
+        };
         return clean;
       });
     }
@@ -561,6 +566,32 @@ onMounted(async () => {
 useShortcutKeySet([{ key: "s", ctrl: true, handler: () => handleSave() }]);
 
 // ── Committee add/remove ────────────────────────────────────────────────
+
+// ── Classification rows ────────────────────────────────────────────────
+
+function addClassification() {
+  form.classifications.push({
+    institute_type: "",
+    groups: [],
+    mpo_status: false,
+    mpo_code: "",
+    mpo_date: "",
+  });
+}
+function removeClassification(i: number) {
+  form.classifications.splice(i, 1);
+}
+
+/** Institute-type options for a given row — types already chosen in OTHER
+ *  rows are excluded so a type can only be used once. */
+function availableInstituteTypes(rowIndex: number) {
+  const used = new Set(
+    form.classifications
+      .map((c, i) => (i === rowIndex ? "" : c.institute_type))
+      .filter(Boolean),
+  );
+  return INSTITUTE_TYPE_OPTIONS.filter((o) => !used.has(String(o.LookupText)));
+}
 
 function addCommittee() {
   form.committee_members.push({
@@ -892,40 +923,17 @@ function removeCommittee(i: number) {
               <h2>{{ isBn ? "শ্রেণিবিন্যাস" : "Classification" }}</h2>
             </div>
           </div>
+          <button
+            type="button"
+            class="ipf-add-btn"
+            @click="addClassification"
+            :title="isBn ? 'শ্রেণিবিন্যাস যোগ করুন' : 'Add classification'"
+          >
+            <i class="fa-duotone fa-plus" /> {{ isBn ? "যোগ করুন" : "Add" }}
+          </button>
         </div>
         <div class="ipf-section__body">
           <div class="ipf-grid ipf-grid--three">
-            <div class="form-field">
-              <label>{{ isBn ? "প্রতিষ্ঠানের প্রকার" : "Institute Type" }}</label>
-              <BaseCombobox
-                v-model="form.institute_type"
-                :options="INSTITUTE_TYPE_OPTIONS"
-                option-value="LookupText"
-                option-label="LookupText"
-                :placeholder="t('Select the institute type - e.g. School & College', 'প্রতিষ্ঠানের ধরন নির্বাচন করুন - যেমন: স্কুল এন্ড কলেজ')"
-               :title="t('Select the institute type - e.g. School & College', 'প্রতিষ্ঠানের ধরন নির্বাচন করুন - যেমন: স্কুল এন্ড কলেজ')" />
-            </div>
-            <div class="form-field">
-              <label>{{ isBn ? "সংযুক্ত কারিগরি শাখা" : "Attached Tech. Branch" }}</label>
-              <BaseCombobox
-                v-model="form.attached_technical_branch_type"
-                :options="INSTITUTE_TYPE_OPTIONS"
-                option-value="LookupText"
-                option-label="LookupText"
-                :placeholder="t('Select the attached technical branch type - leave blank if not applicable', 'সংযুক্ত কারিগরি শাখার ধরন নির্বাচন করুন - প্রযোজ্য না হলে ফাঁকা রাখুন')"
-                :clearable="false"
-               :title="t('Select the attached technical branch type - leave blank if not applicable', 'সংযুক্ত কারিগরি শাখার ধরন নির্বাচন করুন - প্রযোজ্য না হলে ফাঁকা রাখুন')" />
-            </div>
-            <div class="form-field">
-              <label>{{ isBn ? "গ্রুপ" : "Group" }}</label>
-              <BaseCombobox
-                v-model="form.group"
-                :options="GROUP_OPTIONS"
-                option-value="LookupText"
-                option-label="LookupText"
-                :placeholder="t('Select the education group - e.g. Science', 'শিক্ষা গ্রুপ নির্বাচন করুন - যেমন: বিজ্ঞান')"
-               :title="t('Select the education group - e.g. Science', 'শিক্ষা গ্রুপ নির্বাচন করুন - যেমন: বিজ্ঞান')" />
-            </div>
             <div class="form-field">
               <label>{{ isBn ? "কাদের জন্য" : "Student Type" }}</label>
               <BaseCombobox
@@ -937,7 +945,7 @@ function removeCommittee(i: number) {
                :title="t('Select the student type - Co-Education / Boys / Girls', 'শিক্ষার্থীর ধরন নির্বাচন করুন - সহশিক্ষা / বালক / বালিকা')" />
             </div>
             <div class="form-field">
-              <label>{{ isBn ? "শিফট সংখ্যা" : "Shift Count" }}</label>
+              <label>{{ isBn ? "শিফট" : "Shift" }}</label>
               <BaseCombobox
                 v-model="form.shift_count"
                 :options="SHIFT_COUNT_OPTIONS"
@@ -964,6 +972,77 @@ function removeCommittee(i: number) {
                :title="t('Select the management type - Govt. / Non-Govt. etc.', 'ব্যবস্থাপনার ধরন নির্বাচন করুন - সরকারি / বেসরকারি ইত্যাদি')" />
             </div>
           </div>
+
+          <!-- Classification rows (added via "+") -->
+          <div v-for="(row, i) in form.classifications" :key="i" class="ipf-class-row">
+            <div class="ipf-class-row__head">
+              <span class="ipf-class-row__num">#{{ i + 1 }}</span>
+              <button type="button" class="ipf-array-card__remove" @click="removeClassification(i)">
+                &times;
+              </button>
+            </div>
+            <div class="ipf-grid ipf-grid--three">
+              <div class="form-field">
+                <label>{{ isBn ? "প্রতিষ্ঠানের প্রকার" : "Institute Type" }}</label>
+                <BaseCombobox
+                  v-model="row.institute_type"
+                  :options="availableInstituteTypes(i)"
+                  option-value="LookupText"
+                  option-label="LookupText"
+                  :placeholder="t('Select the institute type - e.g. School & College', 'প্রতিষ্ঠানের ধরন নির্বাচন করুন - যেমন: স্কুল এন্ড কলেজ')"
+                 :title="t('Each type can be used only once', 'প্রতিটি ধরন শুধু একবার নির্বাচন করা যাবে')" />
+              </div>
+              <div class="form-field">
+                <label>{{ isBn ? "গ্রুপ" : "Group" }}</label>
+                <BaseCombobox
+                  v-model="row.groups"
+                  multiple
+                  :options="GROUP_OPTIONS"
+                  option-value="LookupText"
+                  option-label="LookupText"
+                  :placeholder="t('Select one or more groups', 'এক বা একাধিক গ্রুপ নির্বাচন করুন')"
+                 :title="t('Select one or more groups', 'এক বা একাধিক গ্রুপ নির্বাচন করুন')" />
+              </div>
+              <div class="form-field">
+                <label>{{ isBn ? "এমপিও অবস্থা" : "MPO Status" }}</label>
+                <BaseToggle
+                  v-model="row.mpo_status"
+                  :yes-label="isBn ? 'হ্যাঁ' : 'Yes'"
+                  :no-label="isBn ? 'না' : 'No'"
+                />
+              </div>
+              <template v-if="row.mpo_status">
+                <div class="form-field">
+                  <label>{{ isBn ? "এমপিও কোড" : "MPO Code" }}</label
+                  ><input
+                    v-model="row.mpo_code"
+                    type="text"
+                    v-bind="DP_DIGITS"
+                    inputmode="numeric"
+                    @input="onDigitsOnly"
+                    :title="t('MPO code', 'এমপিও কোড লিখুন')"
+                    :placeholder="t('MPO code', 'এমপিও কোড লিখুন')"
+                  />
+                </div>
+                <div class="form-field">
+                  <label>{{ isBn ? "এমপিও তারিখ" : "MPO Date" }}</label>
+                  <BaseDatePicker
+                    v-model="row.mpo_date"
+                    :title="t('Select the MPO approval date', 'এমপিও অনুমোদনের তারিখ নির্বাচন করুন')"
+                    :placeholder="t('Select the MPO approval date', 'এমপিও অনুমোদনের তারিখ নির্বাচন করুন')"
+                  />
+                </div>
+              </template>
+            </div>
+          </div>
+          <p v-if="!form.classifications.length" class="ipf-class-empty">
+            <i class="fa-duotone fa-plus" />
+            {{
+              isBn
+                ? "প্রতিষ্ঠানের ধরন, গ্রুপ ও এমপিও তথ্য যোগ করতে উপরে 'যোগ করুন' চাপুন"
+                : "Press 'Add' above to add an institute type, groups and MPO info"
+            }}
+          </p>
         </div>
       </div>
 
@@ -1001,54 +1080,6 @@ function removeCommittee(i: number) {
             <div class="form-field">
               <label>{{ isBn ? "উপবৃত্তি কোড" : "Stipend Code" }}</label
               ><input v-model="form.stipend_code" type="text" v-bind="DP_DIGITS"  :title="t('Stipend code - if applicable', 'স্টাইপেন্ড কোড লিখুন - প্রযোজ্য হলে')"  :placeholder="t('Stipend code - if applicable', 'স্টাইপেন্ড কোড লিখুন - প্রযোজ্য হলে')"  inputmode="numeric" @input="onDigitsOnly" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── 7. MPO Status ─────────────────────────────── -->
-      <div class="ipf-section">
-        <div class="ipf-section__head">
-          <div class="ipf-section__title">
-            <i class="fa-duotone fa-check-circle" />
-            <div>
-              <h2>{{ isBn ? "এমপিও অবস্থা" : "MPO Status" }}</h2>
-            </div>
-          </div>
-        </div>
-        <div class="ipf-section__body">
-          <div class="ipf-grid">
-            <div class="form-field">
-              <label>{{ isBn ? "সাধারণ শাখা এমপিওভুক্ত?" : "General Branch MPO?" }}</label>
-              <div class="form-field__check">
-                <input id="gen-mpo" v-model="form.general_mpo" type="checkbox"  :title="t('Check if the institute is under general MPO', 'সাধারণ এমপিওভুক্ত হলে টিক দিন')" />
-                <label for="gen-mpo" class="form-field__check-label">{{
-                  form.general_mpo ? (isBn ? "হ্যাঁ" : "Yes") : isBn ? "না" : "No"
-                }}</label>
-              </div>
-              <input
-                v-if="form.general_mpo"
-                v-model="form.general_mpo_code"
-                type="text"
-                v-bind="DP_DIGITS"
-                style="margin-top: 0.5rem"
-               :title="t('General MPO code', 'সাধারণ এমপিও কোড লিখুন')"  :placeholder="t('General MPO code', 'সাধারণ এমপিও কোড লিখুন')"  inputmode="numeric" @input="onDigitsOnly" />
-            </div>
-            <div class="form-field">
-              <label>{{ isBn ? "কারিগরি শাখা এমপিওভুক্ত?" : "Technical Branch MPO?" }}</label>
-              <div class="form-field__check">
-                <input id="tech-mpo" v-model="form.tech_mpo" type="checkbox"  :title="t('Check if the institute is under technical MPO', 'টেকনিক্যাল এমপিওভুক্ত হলে টিক দিন')" />
-                <label for="tech-mpo" class="form-field__check-label">{{
-                  form.tech_mpo ? (isBn ? "হ্যাঁ" : "Yes") : isBn ? "না" : "No"
-                }}</label>
-              </div>
-              <input
-                v-if="form.tech_mpo"
-                v-model="form.tech_mpo_code"
-                type="text"
-                v-bind="DP_DIGITS"
-                style="margin-top: 0.5rem"
-               :title="t('Technical MPO code', 'টেকনিক্যাল এমপিও কোড লিখুন')"  :placeholder="t('Technical MPO code', 'টেকনিক্যাল এমপিও কোড লিখুন')"  inputmode="numeric" @input="onDigitsOnly" />
             </div>
           </div>
         </div>
@@ -1096,40 +1127,6 @@ function removeCommittee(i: number) {
             <div class="form-field">
               <label>{{ isBn ? "অ-এমপিও (মহিলা)" : "Non-MPO Staff (Female)" }}</label
               ><input v-model.number="form.staff_nonmpo_female" type="number" v-bind="MAX3"  :title="t('Female staff not under MPO', 'অ-এমপিওভুক্ত মহিলা কর্মচারীর সংখ্যা')"  :placeholder="t('Female staff not under MPO', 'অ-এমপিওভুক্ত মহিলা কর্মচারীর সংখ্যা')"  @input="onStaffInput('staff_nonmpo_female')" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── 9. MPO Info (conditional) ────────────────── -->
-      <div class="ipf-section">
-        <div class="ipf-section__head">
-          <div class="ipf-section__title">
-            <i class="fa-duotone fa-building-columns" />
-            <div>
-              <h2>{{ isBn ? "এমপিও তথ্য" : "MPO Info" }}</h2>
-            </div>
-          </div>
-        </div>
-        <div class="ipf-section__body">
-          <div class="ipf-grid">
-            <div class="form-field">
-              <label>{{ isBn ? "মাধ্যমিক এমপিও তারিখ" : "Secondary MPO Date" }}</label>
-              <BaseDatePicker v-model="form.secondary_mpo_date"  :title="t('Select the date of secondary MPO approval', 'মাধ্যমিক এমপিও অনুমোদনের তারিখ নির্বাচন করুন')"  :placeholder="t('Select the date of secondary MPO approval', 'মাধ্যমিক এমপিও অনুমোদনের তারিখ নির্বাচন করুন')" />
-            </div>
-            <div class="form-field">
-              <label>{{ isBn ? "মাধ্যমিক এমপিও কোড" : "Secondary MPO Code" }}</label
-              ><input v-model="form.secondary_mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('Secondary MPO code', 'মাধ্যমিক এমপিও কোড লিখুন')"  :placeholder="t('Secondary MPO code', 'মাধ্যমিক এমপিও কোড লিখুন')"  inputmode="numeric" @input="onDigitsOnly" />
-            </div>
-          </div>
-          <div v-if="showHigherSecondaryMpo" class="ipf-grid" style="margin-top: 1rem">
-            <div class="form-field">
-              <label>{{ isBn ? "উচ্চ মাধ্যমিক এমপিও তারিখ" : "Higher Secondary MPO Date" }}</label>
-              <BaseDatePicker v-model="form.higher_secondary_mpo_date"  :title="t('Select the date of higher secondary MPO approval', 'উচ্চ মাধ্যমিক এমপিও অনুমোদনের তারিখ নির্বাচন করুন')"  :placeholder="t('Select the date of higher secondary MPO approval', 'উচ্চ মাধ্যমিক এমপিও অনুমোদনের তারিখ নির্বাচন করুন')" />
-            </div>
-            <div class="form-field">
-              <label>{{ isBn ? "উচ্চ মাধ্যমিক এমপিও কোড" : "Higher Secondary MPO Code" }}</label
-              ><input v-model="form.higher_secondary_mpo_code" type="text" v-bind="DP_DIGITS"  :title="t('Higher secondary MPO code', 'উচ্চ মাধ্যমিক এমপিও কোড লিখুন')"  :placeholder="t('Higher secondary MPO code', 'উচ্চ মাধ্যমিক এমপিও কোড লিখুন')"  inputmode="numeric" @input="onDigitsOnly" />
             </div>
           </div>
         </div>
