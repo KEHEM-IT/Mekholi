@@ -295,6 +295,10 @@ const logoInput = ref<HTMLInputElement | null>(null);
 const showPreview = ref(false);
 const excelInput = ref<HTMLInputElement | null>(null);
 const isImportingExcel = ref(false);
+// Skeleton loader — the page shows a shimmer skeleton for at least 2s on
+// mount while the profile loads from the backend.
+const isPageLoading = ref(true);
+const MIN_SKELETON_MS = 2000;
 
 function triggerLogoPick() {
   if (!isUploadingLogo.value) logoInput.value?.click();
@@ -460,9 +464,12 @@ onBeforeRouteLeave(() => {
   return leave;
 });
 
-// Try loading from SQLite on mount; stays empty if server not running
+// Try loading from SQLite on mount; stays empty if server not running.
+// The skeleton stays visible for at least 2 seconds (MIN_SKELETON_MS) so
+// the page never flashes content instantly.
 onMounted(async () => {
-  const data = (await loadProfile()) as Partial<typeof form> | null;
+  const minDelay = new Promise((resolve) => setTimeout(resolve, MIN_SKELETON_MS));
+  const [data] = await Promise.all([loadProfile(), minDelay]);
   if (data) {
     // Suppress the geo cascade watchers while restoring — otherwise the
     // division change would wipe the loaded district / upazila / union.
@@ -496,6 +503,8 @@ onMounted(async () => {
     // Loaded state = clean baseline for the unsaved-changes guard
     dirtyGuard.markClean();
   }
+  // Skeleton done — reveal the real form.
+  isPageLoading.value = false;
 });
 
 // ── Shortcuts ─────────────────────────────────────────────────────────────
@@ -523,7 +532,37 @@ function removeCommittee(i: number) {
 </script>
 
 <template>
-  <section class="ipf">
+  <!-- ── Skeleton loader (min 2s) ─────────────────────── -->
+  <section v-if="isPageLoading" class="ipf-skeleton" aria-busy="true" aria-label="Loading profile">
+    <div class="ipf-skeleton__header">
+      <div class="ipf-skeleton__titles">
+        <span class="skeleton ipf-skeleton__title" />
+        <span class="skeleton ipf-skeleton__subtitle" />
+      </div>
+      <div class="ipf-skeleton__actions">
+        <span class="skeleton ipf-skeleton__pill" />
+        <span class="skeleton ipf-skeleton__pill" />
+        <span class="skeleton ipf-skeleton__pill" />
+      </div>
+    </div>
+
+    <div class="ipf-skeleton__logo">
+      <span class="skeleton ipf-skeleton__logobox" />
+    </div>
+
+    <div v-for="n in 4" :key="n" class="ipf-skeleton__section">
+      <span class="skeleton ipf-skeleton__section-title" />
+      <div class="ipf-skeleton__grid">
+        <span v-for="m in 6" :key="m" class="skeleton ipf-skeleton__field" />
+      </div>
+    </div>
+
+    <div class="ipf-skeleton__savebar">
+      <span class="skeleton ipf-skeleton__savebtn" />
+    </div>
+  </section>
+
+  <section v-else class="ipf">
     <header class="ipf-header">
       <div class="ipf-header__titles">
         <h1>{{ isBn ? "ইনস্টিটিউট প্রোফাইল" : "Institute Profile" }}</h1>
