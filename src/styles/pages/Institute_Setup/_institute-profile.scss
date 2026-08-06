@@ -43,8 +43,9 @@
   }
 
   &__export {
-    color: $color-success;
+    background: $color-surface-alt;
     border-color: $color-success;
+    color: $color-success;
 
     &:hover:not(:disabled) {
       background: $color-success-muted;
@@ -53,8 +54,9 @@
   }
 
   &__import {
-    color: $color-info;
+    background: $color-surface-alt;
     border-color: $color-info;
+    color: $color-info;
 
     &:hover:not(:disabled) {
       background: $color-info-muted;

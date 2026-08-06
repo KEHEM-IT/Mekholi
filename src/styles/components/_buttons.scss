@@ -1,6 +1,7 @@
 @use '../abstracts' as *;
 
 .btn {
+  @include flex(row, center, center, $space-2);
   padding: $space-2 $space-4;
   border-radius: $radius-md;
   border: 1px solid transparent;
@@ -10,6 +11,11 @@
     background-color $transition-fast,
     border-color $transition-fast,
     opacity $transition-fast;
+
+  i {
+    font-size: 0.95rem;
+    line-height: 1;
+  }
 
   &:disabled {
     opacity: 0.5;
