@@ -434,18 +434,24 @@ async function onExcelImportPicked(event: Event) {
 
 // ── Save / Load ───────────────────────────────────────────────────────
 
+/** Collapse all whitespace runs to single spaces, then trim the ends.
+ *  "  Sofir   Uddin  High School  " -> "Sofir Uddin High School" */
+function normalizeText(s: string): string {
+  return s.replace(/\s+/g, " ").trim();
+}
+
 /** Trim every string field in the form (single choke point on save). */
 function trimmedForm(): typeof form {
   const out = { ...form };
   for (const key of Object.keys(out) as (keyof typeof out)[]) {
     const v = out[key];
     if (typeof v === "string") {
-      (out as Record<string, unknown>)[key] = v.trim();
+      (out as Record<string, unknown>)[key] = normalizeText(v);
     } else if (key === "committee_members" && Array.isArray(v)) {
       out.committee_members = (v as typeof form.committee_members).map((m) => {
         const clean = { ...m };
         for (const k of Object.keys(clean) as (keyof typeof clean)[]) {
-          if (typeof clean[k] === "string") (clean as Record<string, unknown>)[k] = String(clean[k]).trim();
+          if (typeof clean[k] === "string") (clean as Record<string, unknown>)[k] = normalizeText(String(clean[k]));
         }
         return clean;
       });
