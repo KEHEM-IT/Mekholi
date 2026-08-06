@@ -96,48 +96,6 @@
 
 // --- Progress bar ------------------------------------------------------------
 
-.isc-progress {
-  width: 100%;
-  height: 0.5rem;
-  border-radius: $radius-sm;
-  background: $color-surface-alt;
-  overflow: hidden;
-  flex-shrink: 0;
-
-  @include respond-to(sm) {
-    width: 10rem;
-  }
-}
-
-.isc-progress__bar {
-  height: 100%;
-  border-radius: inherit;
-  transition: width $transition-base;
-  // Color-transitional: red (empty) → amber (half) → green (full)
-  background: linear-gradient(
-    90deg,
-    $color-danger 0%,
-    $color-warning 40%,
-    $color-success 80%,
-    $color-success 100%
-  );
-}
-
-.isc-progress-wrap {
-  @include flex(row, center, flex-start, $space-3);
-  flex-shrink: 0;
-
-  @include respond-to(sm) {
-    min-width: 16rem;
-  }
-}
-
-.isc-progress__label {
-  font-size: 0.78rem;
-  color: $color-text-muted;
-  white-space: nowrap;
-}
-
 // --- Checklist grid ------------------------------------------------------------
 
 .isc-checklist {

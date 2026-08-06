@@ -178,18 +178,6 @@ const {
             }}</span>
           </div>
         </div>
-        <div class="isc-progress-wrap">
-          <div class="isc-progress">
-            <div class="isc-progress__bar" :style="{ width: profileProgress.pct + '%' }" />
-          </div>
-          <span class="isc-progress__label">
-            {{ profileProgress.filled }} / {{ profileProgress.total }}
-            {{ isBn ? 'পূরণ হয়েছে' : 'filled' }}
-            <template v-if="profileProgress.empty">
-              &middot; {{ profileProgress.empty }} {{ isBn ? 'খালি' : 'empty' }}
-            </template>
-          </span>
-        </div>
       </div>
 
       <div class="isc-section__body">
