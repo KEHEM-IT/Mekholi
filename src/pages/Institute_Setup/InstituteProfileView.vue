@@ -288,6 +288,26 @@ function onDigitsOnly(event: Event) {
   if (el.value !== digits) el.value = digits;
 }
 
+/** Live normalization while typing: collapse runs of 2+ spaces/tabs into a
+ *  single space. A single trailing space is kept so typing words isn't
+ *  broken; ends are trimmed on blur / save. */
+function onNormalizeInput(event: Event) {
+  const el = event.target as HTMLInputElement;
+  const cleaned = el.value.replace(/[ \t]+/g, " ");
+  if (el.value !== cleaned) el.value = cleaned;
+}
+
+/** Full normalization when the field loses focus: collapse whitespace runs
+ *  and trim both ends, then sync the model via an input event. */
+function onNormalizeBlur(event: Event) {
+  const el = event.target as HTMLInputElement;
+  const cleaned = normalizeText(el.value);
+  if (el.value !== cleaned) {
+    el.value = cleaned;
+    el.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+}
+
 const toast = useToast();
 const isUploadingLogo = ref(false);
 const isDraggingLogo = ref(false);
@@ -720,11 +740,11 @@ function removeCommittee(i: number) {
           <div class="ipf-grid">
             <div class="form-field">
               <label>{{ isBn ? "প্রতিষ্ঠানের নাম (বাংলায়)" : "Institute Name (Bangla)" }}</label
-              ><input v-model="form.institute_name_bn" type="text"  :title="t('Institute name in Bangla - e.g. Sofir Uddin High School and College', 'প্রতিষ্ঠানের নাম বাংলায় লিখুন - যেমন: সোফির উদ্দিন উচ্চ বিদ্যালয় এন্ড কলেজ')"  :placeholder="t('Institute name in Bangla - e.g. Sofir Uddin High School and College', 'প্রতিষ্ঠানের নাম বাংলায় লিখুন - যেমন: সোফির উদ্দিন উচ্চ বিদ্যালয় এন্ড কলেজ')" />
+              ><input v-model="form.institute_name_bn" type="text"  :title="t('Institute name in Bangla - e.g. Sofir Uddin High School and College', 'প্রতিষ্ঠানের নাম বাংলায় লিখুন - যেমন: সোফির উদ্দিন উচ্চ বিদ্যালয় এন্ড কলেজ')"  :placeholder="t('Institute name in Bangla - e.g. Sofir Uddin High School and College', 'প্রতিষ্ঠানের নাম বাংলায় লিখুন - যেমন: সোফির উদ্দিন উচ্চ বিদ্যালয় এন্ড কলেজ')"  @input="onNormalizeInput" @blur="onNormalizeBlur" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "প্রতিষ্ঠানের নাম (ইংরেজি)" : "Institute Name (English)" }}</label
-              ><input v-model="form.institute_name_en" type="text"  :title="t('Institute name in English - e.g. Sofir Uddin High School and College', 'প্রতিষ্ঠানের নাম ইংরেজিতে লিখুন - যেমন: সোফির উদ্দিন উচ্চ বিদ্যালয় এন্ড কলেজ')"  :placeholder="t('Institute name in English - e.g. Sofir Uddin High School and College', 'প্রতিষ্ঠানের নাম ইংরেজিতে লিখুন - যেমন: সোফির উদ্দিন উচ্চ বিদ্যালয় এন্ড কলেজ')" />
+              ><input v-model="form.institute_name_en" type="text"  :title="t('Institute name in English - e.g. Sofir Uddin High School and College', 'প্রতিষ্ঠানের নাম ইংরেজিতে লিখুন - যেমন: সোফির উদ্দিন উচ্চ বিদ্যালয় এন্ড কলেজ')"  :placeholder="t('Institute name in English - e.g. Sofir Uddin High School and College', 'প্রতিষ্ঠানের নাম ইংরেজিতে লিখুন - যেমন: সোফির উদ্দিন উচ্চ বিদ্যালয় এন্ড কলেজ')"  @input="onNormalizeInput" @blur="onNormalizeBlur" />
             </div>
           </div>
         </div>
@@ -744,7 +764,7 @@ function removeCommittee(i: number) {
           <div class="ipf-grid ipf-grid--three">
             <div class="form-field">
               <label>{{ isBn ? "প্রতিষ্ঠাতা" : "Founder" }}</label
-              ><input v-model="form.founder_name" type="text"  :title="t('Founder full name', 'প্রতিষ্ঠাতার পূর্ণ নাম লিখুন')"  :placeholder="t('Founder full name', 'প্রতিষ্ঠাতার পূর্ণ নাম লিখুন')" />
+              ><input v-model="form.founder_name" type="text"  :title="t('Founder full name', 'প্রতিষ্ঠাতার পূর্ণ নাম লিখুন')"  :placeholder="t('Founder full name', 'প্রতিষ্ঠাতার পূর্ণ নাম লিখুন')"  @input="onNormalizeInput" @blur="onNormalizeBlur" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "প্রতিষ্ঠার তারিখ" : "Est. Date" }}</label>
@@ -821,11 +841,11 @@ function removeCommittee(i: number) {
             </div>
             <div class="form-field">
               <label>{{ isBn ? "গ্রাম/হোল্ডিং/রোড" : "Village / Road" }}</label
-              ><input v-model="form.village_road_holding_no" type="text"  :title="t('Village / road / holding number - e.g. 12, Uttar Para', 'গ্রাম / রোড / হোল্ডিং নম্বর লিখুন - যেমন: ১২, উত্তর পাড়া')"  :placeholder="t('Village / road / holding number - e.g. 12, Uttar Para', 'গ্রাম / রোড / হোল্ডিং নম্বর লিখুন - যেমন: ১২, উত্তর পাড়া')" />
+              ><input v-model="form.village_road_holding_no" type="text"  :title="t('Village / road / holding number - e.g. 12, Uttar Para', 'গ্রাম / রোড / হোল্ডিং নম্বর লিখুন - যেমন: ১২, উত্তর পাড়া')"  :placeholder="t('Village / road / holding number - e.g. 12, Uttar Para', 'গ্রাম / রোড / হোল্ডিং নম্বর লিখুন - যেমন: ১২, উত্তর পাড়া')"  @input="onNormalizeInput" @blur="onNormalizeBlur" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "ডাকঘর" : "Post Office" }}</label
-              ><input v-model="form.post_office" type="text"  :title="t('Nearest post office name', 'নিকটবর্তী ডাকঘরের নাম লিখুন')"  :placeholder="t('Nearest post office name', 'নিকটবর্তী ডাকঘরের নাম লিখুন')" />
+              ><input v-model="form.post_office" type="text"  :title="t('Nearest post office name', 'নিকটবর্তী ডাকঘরের নাম লিখুন')"  :placeholder="t('Nearest post office name', 'নিকটবর্তী ডাকঘরের নাম লিখুন')"  @input="onNormalizeInput" @blur="onNormalizeBlur" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "পোস্ট কোড" : "Post Code" }}</label
@@ -853,11 +873,11 @@ function removeCommittee(i: number) {
             </div>
             <div class="form-field">
               <label>{{ isBn ? "ইমেইল" : "Email" }}</label
-              ><input v-model="form.institute_email" type="email"  :title="t('Official email address - e.g. info@school.edu.bd', 'অফিসিয়াল ইমেইল ঠিকানা লিখুন - যেমন: info@school.edu.bd')"  :placeholder="t('Official email address - e.g. info@school.edu.bd', 'অফিসিয়াল ইমেইল ঠিকানা লিখুন - যেমন: info@school.edu.bd')" />
+              ><input v-model="form.institute_email" type="email"  :title="t('Official email address - e.g. info@school.edu.bd', 'অফিসিয়াল ইমেইল ঠিকানা লিখুন - যেমন: info@school.edu.bd')"  :placeholder="t('Official email address - e.g. info@school.edu.bd', 'অফিসিয়াল ইমেইল ঠিকানা লিখুন - যেমন: info@school.edu.bd')"  @input="onNormalizeInput" @blur="onNormalizeBlur" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "ওয়েবসাইট" : "Website" }}</label
-              ><input v-model="form.website" type="text"  :title="t('Institute website URL - e.g. https://example.com', 'প্রতিষ্ঠানের ওয়েবসাইট লিখুন - যেমন: https://example.com')"  :placeholder="t('Institute website URL - e.g. https://example.com', 'প্রতিষ্ঠানের ওয়েবসাইট লিখুন - যেমন: https://example.com')" />
+              ><input v-model="form.website" type="text"  :title="t('Institute website URL - e.g. https://example.com', 'প্রতিষ্ঠানের ওয়েবসাইট লিখুন - যেমন: https://example.com')"  :placeholder="t('Institute website URL - e.g. https://example.com', 'প্রতিষ্ঠানের ওয়েবসাইট লিখুন - যেমন: https://example.com')"  @input="onNormalizeInput" @blur="onNormalizeBlur" />
             </div>
           </div>
         </div>
@@ -1139,7 +1159,7 @@ function removeCommittee(i: number) {
             </div>
             <div class="form-field">
               <label>{{ isBn ? "শাখা" : "Branch" }}</label
-              ><input v-model="form.bank_branch" type="text"  :title="t('Bank branch name - e.g. Sylhet Main Branch', 'ব্যাংক শাখার নাম লিখুন - যেমন: সিলেট প্রধান শাখা')"  :placeholder="t('Bank branch name - e.g. Sylhet Main Branch', 'ব্যাংক শাখার নাম লিখুন - যেমন: সিলেট প্রধান শাখা')" />
+              ><input v-model="form.bank_branch" type="text"  :title="t('Bank branch name - e.g. Sylhet Main Branch', 'ব্যাংক শাখার নাম লিখুন - যেমন: সিলেট প্রধান শাখা')"  :placeholder="t('Bank branch name - e.g. Sylhet Main Branch', 'ব্যাংক শাখার নাম লিখুন - যেমন: সিলেট প্রধান শাখা')"  @input="onNormalizeInput" @blur="onNormalizeBlur" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "হিসাবের ধরন" : "Account Type" }}</label>
@@ -1153,7 +1173,7 @@ function removeCommittee(i: number) {
             </div>
             <div class="form-field">
               <label>{{ isBn ? "একাউন্ট হোল্ডার" : "Account Holder" }}</label
-              ><input v-model="form.bank_account_holder" type="text"  :title="t('Name of the account holder', 'হিসাবের মালিকের নাম লিখুন')"  :placeholder="t('Name of the account holder', 'হিসাবের মালিকের নাম লিখুন')" />
+              ><input v-model="form.bank_account_holder" type="text"  :title="t('Name of the account holder', 'হিসাবের মালিকের নাম লিখুন')"  :placeholder="t('Name of the account holder', 'হিসাবের মালিকের নাম লিখুন')"  @input="onNormalizeInput" @blur="onNormalizeBlur" />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "হিসাব নম্বর" : "Account Number" }}</label
@@ -1203,7 +1223,7 @@ function removeCommittee(i: number) {
             <div class="ipf-grid ipf-grid--three">
               <div class="form-field">
                 <label>{{ isBn ? "সদস্যের নাম" : "Member Name" }}</label
-                ><input v-model="form.committee_members[i].member_name" type="text"  :title="t('Member full name', 'সদস্যের পূর্ণ নাম লিখুন')"  :placeholder="t('Member full name', 'সদস্যের পূর্ণ নাম লিখুন')" />
+                ><input v-model="form.committee_members[i].member_name" type="text"  :title="t('Member full name', 'সদস্যের পূর্ণ নাম লিখুন')"  :placeholder="t('Member full name', 'সদস্যের পূর্ণ নাম লিখুন')"  @input="onNormalizeInput" @blur="onNormalizeBlur" />
               </div>
               <div class="form-field">
                 <label>{{ isBn ? "যোগদানের তারিখ" : "Joining Date" }}</label>
@@ -1235,11 +1255,11 @@ function removeCommittee(i: number) {
               </div>
               <div class="form-field">
                 <label>{{ isBn ? "শিক্ষাগত যোগ্যতা" : "Education" }}</label
-                ><input v-model="form.committee_members[i].education_qualification" type="text"  :title="t('Highest education qualification', 'সর্বোচ্চ শিক্ষাগত যোগ্যতা লিখুন')"  :placeholder="t('Highest education qualification', 'সর্বোচ্চ শিক্ষাগত যোগ্যতা লিখুন')" />
+                ><input v-model="form.committee_members[i].education_qualification" type="text"  :title="t('Highest education qualification', 'সর্বোচ্চ শিক্ষাগত যোগ্যতা লিখুন')"  :placeholder="t('Highest education qualification', 'সর্বোচ্চ শিক্ষাগত যোগ্যতা লিখুন')"  @input="onNormalizeInput" @blur="onNormalizeBlur" />
               </div>
               <div class="form-field">
                 <label>{{ isBn ? "পেশা" : "Occupation" }}</label
-                ><input v-model="form.committee_members[i].occupation" type="text"  :title="t('Current occupation', 'বর্তমান পেশা লিখুন')"  :placeholder="t('Current occupation', 'বর্তমান পেশা লিখুন')" />
+                ><input v-model="form.committee_members[i].occupation" type="text"  :title="t('Current occupation', 'বর্তমান পেশা লিখুন')"  :placeholder="t('Current occupation', 'বর্তমান পেশা লিখুন')"  @input="onNormalizeInput" @blur="onNormalizeBlur" />
               </div>
               <div class="form-field">
                 <label>{{ isBn ? "কমিটি ত্যাগ" : "Left Committee" }}</label>
@@ -1262,7 +1282,7 @@ function removeCommittee(i: number) {
               </div>
               <div v-if="form.committee_members[i].left_committee" class="form-field">
                 <label>{{ isBn ? "ত্যাগের কারণ" : "Reason for Leaving" }}</label
-                ><input v-model="form.committee_members[i].reason_for_leaving" type="text"  :title="t('Reason for leaving the committee', 'কমিটি ছাড়ার কারণ লিখুন')"  :placeholder="t('Reason for leaving the committee', 'কমিটি ছাড়ার কারণ লিখুন')" />
+                ><input v-model="form.committee_members[i].reason_for_leaving" type="text"  :title="t('Reason for leaving the committee', 'কমিটি ছাড়ার কারণ লিখুন')"  :placeholder="t('Reason for leaving the committee', 'কমিটি ছাড়ার কারণ লিখুন')"  @input="onNormalizeInput" @blur="onNormalizeBlur" />
               </div>
             </div>
           </div>
