@@ -303,6 +303,11 @@
     i {
       color: $color-success;
     }
+
+    // "Press Ctrl+S to save" is desktop-only — no Ctrl key on mobile.
+    @media (max-width: #{$breakpoint-sm - 1px}) {
+      display: none;
+    }
   }
 
   &__actions {

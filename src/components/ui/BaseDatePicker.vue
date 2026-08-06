@@ -12,7 +12,7 @@
 //       to the day grid
 // - Today / Clear footer actions; × clear button on the control
 // - Click-outside and Esc close the panel; min/max bound selectable days
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -47,6 +47,7 @@ const MONTHS = [
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 const root = ref<HTMLElement | null>(null)
+const yearGridEl = ref<HTMLElement | null>(null)
 const isOpen = ref(false)
 const mode = ref<'day' | 'month' | 'year'>('day')
 const viewYear = ref(new Date().getFullYear())
@@ -157,6 +158,15 @@ function selectYear(y: number) {
   viewYear.value = y
   // Back to the month grid so the user can then choose a month.
   mode.value = 'month'
+}
+
+/** Open the year grid and scroll the current/active year into view. */
+function openYearMode() {
+  mode.value = 'year'
+  nextTick(() => {
+    const active = yearGridEl.value?.querySelector<HTMLElement>('.datepicker__yearcell.is-active')
+    active?.scrollIntoView({ block: 'nearest' })
+  })
 }
 
 function selectToday() {
@@ -272,7 +282,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
             type="button"
             class="datepicker__header-btn"
             :class="{ 'is-active': mode === 'year' }"
-            @click="mode = mode === 'year' ? 'day' : 'year'"
+            @click="mode === 'year' ? (mode = 'day') : openYearMode()"
           >
             {{ viewYear }}
           </button>
@@ -297,7 +307,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
       </div>
 
       <!-- Year selection grid (scrollable) -->
-      <div v-else-if="mode === 'year'" class="datepicker__yeargrid">
+      <div v-else-if="mode === 'year'" ref="yearGridEl" class="datepicker__yeargrid">
         <button
           v-for="y in yearOptions"
           :key="y"
