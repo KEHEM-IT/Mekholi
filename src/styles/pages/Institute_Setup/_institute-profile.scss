@@ -628,6 +628,11 @@
     border-color $transition-fast,
     background $transition-fast;
 
+  // Mobile: stack the preview on top of the text instead of side-by-side.
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    flex-direction: column;
+  }
+
   &:hover {
     border-color: $color-primary;
     background: $color-surface-hover;
