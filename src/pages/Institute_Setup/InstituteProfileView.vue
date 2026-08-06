@@ -8,6 +8,10 @@ import { isSaving, saveProfile, loadProfile } from "@/composables/useInstitutePr
 import { useToast } from "@/composables/useToast";
 import { uploadToImgbb, validateLogoFile } from "@/composables/useImgbbUpload";
 import { useFormDirtyGuard } from "@/composables/useFormDirtyGuard";
+import {
+  exportProfileToExcel,
+  importProfileFromExcel,
+} from "@/composables/useInstituteProfileExcel";
 import BaseCombobox from "@/components/ui/BaseCombobox.vue";
 import BaseDatePicker from "@/components/ui/BaseDatePicker.vue";
 import BaseModal from "@/components/ui/BaseModal.vue";
@@ -289,6 +293,8 @@ const isUploadingLogo = ref(false);
 const isDraggingLogo = ref(false);
 const logoInput = ref<HTMLInputElement | null>(null);
 const showPreview = ref(false);
+const excelInput = ref<HTMLInputElement | null>(null);
+const isImportingExcel = ref(false);
 
 function triggerLogoPick() {
   if (!isUploadingLogo.value) logoInput.value?.click();
@@ -353,6 +359,73 @@ function onLogoDrop(event: DragEvent) {
 
 function removeLogo() {
   form.institute_logo = "";
+}
+
+// ── Excel Export / Import ───────────────────────────────────────────────
+
+function handleExportExcel() {
+  try {
+    exportProfileToExcel({ ...form });
+    toast.success(isBn.value ? "এক্সেল ফাইল ডাউনলোড হয়েছে" : "Excel file downloaded");
+  } catch (err) {
+    toast.error(
+      isBn.value
+        ? "এক্সেল এক্সপোর্ট ব্যর্থ হয়েছে"
+        : `Export failed: ${err instanceof Error ? err.message : "unknown error"}`,
+    );
+  }
+}
+
+function triggerExcelImport() {
+  if (!isImportingExcel.value) excelInput.value?.click();
+}
+
+async function onExcelImportPicked(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+  input.value = ""; // allow re-selecting the same file
+  if (!file) return;
+
+  isImportingExcel.value = true;
+  try {
+    const { profile, facilities, committee_members, skipped } = await importProfileFromExcel(file);
+
+    // Apply without triggering the geo cascade resets (division changes
+    // would otherwise clear district/upazila/union).
+    isRestoringProfile = true;
+    for (const [key, value] of Object.entries(profile)) {
+      (form as Record<string, unknown>)[key] = value;
+    }
+    if (Object.keys(facilities).length) {
+      Object.assign(form.facilities, facilities);
+    }
+    if (committee_members.length) {
+      form.committee_members = committee_members as typeof form.committee_members;
+    }
+    await nextTick();
+    isRestoringProfile = false;
+
+    toast.success(
+      isBn.value
+        ? `এক্সেল ইমপোর্ট হয়েছে — পর্যালোচনা করে সংরক্ষণ করুন${skipped.length ? ` (বাদ পড়েছে: ${skipped.length})` : ""}`
+        : `Excel imported — review & save${skipped.length ? ` (skipped: ${skipped.length})` : ""}`,
+    );
+    if (skipped.length) {
+      toast.warning(
+        isBn.value
+          ? `অজানা কলাম বাদ পড়েছে: ${skipped.slice(0, 5).join(", ")}`
+          : `Unknown columns skipped: ${skipped.slice(0, 5).join(", ")}`,
+      );
+    }
+  } catch (err) {
+    toast.error(
+      isBn.value
+        ? "এক্সেল ইমপোর্ট ব্যর্থ হয়েছে — সঠিক ফাইলটি নির্বাচন করুন"
+        : `Import failed: ${err instanceof Error ? err.message : "invalid Excel file"}`,
+    );
+  } finally {
+    isImportingExcel.value = false;
+  }
 }
 
 // ── Save / Load ───────────────────────────────────────────────────────
@@ -458,10 +531,38 @@ function removeCommittee(i: number) {
           {{ isBn ? "আপনার প্রতিষ্ঠানের তথ্য সম্পাদনা করুন।" : "Edit your institute information." }}
         </p>
       </div>
-      <button type="button" class="btn btn--primary ipf-header__view" @click="showPreview = true">
-        <i class="fa-duotone fa-eye" />
-        {{ isBn ? "দেখুন" : "View" }}
-      </button>
+      <div class="ipf-header__actions">
+        <button type="button" class="btn btn--primary ipf-header__view" @click="showPreview = true">
+          <i class="fa-duotone fa-eye" />
+          {{ isBn ? "দেখুন" : "View" }}
+        </button>
+        <button
+          type="button"
+          class="btn ipf-header__export"
+          :title="isBn ? 'এক্সেলে ডাউনলোড করুন' : 'Export to Excel'"
+          @click="handleExportExcel"
+        >
+          <i class="fa-duotone fa-file-excel" />
+          {{ isBn ? "এক্সপোর্ট" : "Export" }}
+        </button>
+        <button
+          type="button"
+          class="btn ipf-header__import"
+          :disabled="isImportingExcel"
+          :title="isBn ? 'এক্সেল ফাইল থেকে ইমপোর্ট করুন' : 'Import from Excel'"
+          @click="triggerExcelImport"
+        >
+          <i class="fa-duotone" :class="isImportingExcel ? 'fa-spinner fa-spin' : 'fa-file-import'" />
+          {{ isBn ? "ইমপোর্ট" : "Import" }}
+        </button>
+      </div>
+      <input
+        ref="excelInput"
+        type="file"
+        accept=".xlsx,.xls"
+        class="ipf-logo__input"
+        @change="onExcelImportPicked"
+      />
     </header>
 
     <div class="ipf-main">
