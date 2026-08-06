@@ -26,7 +26,17 @@ interface FieldMeta {
   label: string
   labelBn: string
   type: FieldType
+  /** Combobox on the webpage — must be selected in the app, not typed in Excel. */
+  combo?: boolean
+  /** Checkbox on the webpage — must be set in the app, not typed in Excel. */
+  checkbox?: boolean
 }
+
+/** Note text written in the Excel "Note" column for combobox / checkbox rows. */
+const COMBO_NOTE = 'Select on the webpage (combobox field)'
+const CHECKBOX_NOTE = 'Set on the webpage (checkbox)'
+/** Label rows in the Profile sheet pointing to the other sheets. */
+const NOTE_ROW_LABELS = ['Committee Members', 'Facilities']
 
 export const SCALAR_FIELDS: FieldMeta[] = [
   // Identity
@@ -35,12 +45,12 @@ export const SCALAR_FIELDS: FieldMeta[] = [
   { key: 'institute_logo', label: 'Institute Logo URL', labelBn: 'প্রতিষ্ঠানের লোগো URL', type: 'text' },
   { key: 'founder_name', label: 'Founder Name', labelBn: 'প্রতিষ্ঠাতার নাম', type: 'text' },
   { key: 'establishment_date', label: 'Established Date', labelBn: 'প্রতিষ্ঠার তারিখ', type: 'date' },
-  { key: 'parliamentary_constituency', label: 'Parliamentary Constituency', labelBn: 'সংসদীয় আসন', type: 'text' },
+  { key: 'parliamentary_constituency', label: 'Parliamentary Constituency', labelBn: 'সংসদীয় আসন', type: 'text' , combo: true},
   // Address
-  { key: 'division_id', label: 'Division', labelBn: 'বিভাগ', type: 'geo' },
-  { key: 'district_id', label: 'District', labelBn: 'জেলা', type: 'geo' },
-  { key: 'upazila_id', label: 'Upazila / Thana', labelBn: 'উপজেলা / থানা', type: 'geo' },
-  { key: 'union_id', label: 'Union', labelBn: 'ইউনিয়ন', type: 'geo' },
+  { key: 'division_id', label: 'Division', labelBn: 'বিভাগ', type: 'geo' , combo: true},
+  { key: 'district_id', label: 'District', labelBn: 'জেলা', type: 'geo' , combo: true},
+  { key: 'upazila_id', label: 'Upazila / Thana', labelBn: 'উপজেলা / থানা', type: 'geo' , combo: true},
+  { key: 'union_id', label: 'Union', labelBn: 'ইউনিয়ন', type: 'geo' , combo: true},
   { key: 'village_road_holding_no', label: 'Village / Road / Holding', labelBn: 'গ্রাম / রোড / হোল্ডিং', type: 'text' },
   { key: 'post_office', label: 'Post Office', labelBn: 'ডাকঘর', type: 'text' },
   { key: 'post_code', label: 'Post Code', labelBn: 'পোস্ট কোড', type: 'number' },
@@ -49,13 +59,13 @@ export const SCALAR_FIELDS: FieldMeta[] = [
   { key: 'institute_email', label: 'Email', labelBn: 'ইমেইল', type: 'text' },
   { key: 'website', label: 'Website', labelBn: 'ওয়েবসাইট', type: 'text' },
   // Classification
-  { key: 'institute_type', label: 'Institute Type', labelBn: 'প্রতিষ্ঠানের ধরন', type: 'text' },
-  { key: 'attached_technical_branch_type', label: 'Attached Tech. Branch', labelBn: 'সংযুক্ত কারিগরি শাখা', type: 'text' },
-  { key: 'group', label: 'Group', labelBn: 'গ্রুপ', type: 'text' },
-  { key: 'student_type', label: 'Student Type', labelBn: 'শিক্ষার্থীর ধরন', type: 'text' },
-  { key: 'shift_count', label: 'Shift Count', labelBn: 'শিফট সংখ্যা', type: 'text' },
-  { key: 'has_english_version', label: 'English Version (Yes/No)', labelBn: 'ইংরেজি ভার্সন (হ্যাঁ/না)', type: 'bool' },
-  { key: 'management', label: 'Management', labelBn: 'ব্যবস্থাপনা', type: 'text' },
+  { key: 'institute_type', label: 'Institute Type', labelBn: 'প্রতিষ্ঠানের ধরন', type: 'text' , combo: true},
+  { key: 'attached_technical_branch_type', label: 'Attached Tech. Branch', labelBn: 'সংযুক্ত কারিগরি শাখা', type: 'text' , combo: true},
+  { key: 'group', label: 'Group', labelBn: 'গ্রুপ', type: 'text' , combo: true},
+  { key: 'student_type', label: 'Student Type', labelBn: 'শিক্ষার্থীর ধরন', type: 'text' , combo: true},
+  { key: 'shift_count', label: 'Shift Count', labelBn: 'শিফট সংখ্যা', type: 'text' , combo: true},
+  { key: 'has_english_version', label: 'English Version (Yes/No)', labelBn: 'ইংরেজি ভার্সন (হ্যাঁ/না)', type: 'bool' , checkbox: true},
+  { key: 'management', label: 'Management', labelBn: 'ব্যবস্থাপনা', type: 'text' , combo: true},
   // Identifiers
   { key: 'eiin', label: 'EIIN', labelBn: 'EIIN', type: 'text' },
   { key: 'board_institute_code', label: 'Board Institute Code', labelBn: 'বোর্ড ইনস্টিটিউট কোড', type: 'text' },
@@ -64,9 +74,9 @@ export const SCALAR_FIELDS: FieldMeta[] = [
   { key: 'technical_branch_mpo_code', label: 'Technical Branch MPO Code', labelBn: 'কারিগরি শাখার এমপিও কোড', type: 'text' },
   { key: 'stipend_code', label: 'Stipend Code', labelBn: 'স্টাইপেন্ড কোড', type: 'text' },
   // MPO status
-  { key: 'general_mpo', label: 'General MPO (Yes/No)', labelBn: 'সাধারণ এমপিও (হ্যাঁ/না)', type: 'bool' },
+  { key: 'general_mpo', label: 'General MPO (Yes/No)', labelBn: 'সাধারণ এমপিও (হ্যাঁ/না)', type: 'bool' , checkbox: true},
   { key: 'general_mpo_code', label: 'General MPO Code', labelBn: 'সাধারণ এমপিও কোড', type: 'text' },
-  { key: 'tech_mpo', label: 'Technical MPO (Yes/No)', labelBn: 'টেকনিক্যাল এমপিও (হ্যাঁ/না)', type: 'bool' },
+  { key: 'tech_mpo', label: 'Technical MPO (Yes/No)', labelBn: 'টেকনিক্যাল এমপিও (হ্যাঁ/না)', type: 'bool' , checkbox: true},
   { key: 'tech_mpo_code', label: 'Technical MPO Code', labelBn: 'টেকনিক্যাল এমপিও কোড', type: 'text' },
   { key: 'secondary_mpo_date', label: 'Secondary MPO Date', labelBn: 'মাধ্যমিক এমপিও তারিখ', type: 'date' },
   { key: 'secondary_mpo_code', label: 'Secondary MPO Code', labelBn: 'মাধ্যমিক এমপিও কোড', type: 'text' },
@@ -80,12 +90,12 @@ export const SCALAR_FIELDS: FieldMeta[] = [
   { key: 'staff_nonmpo_male', label: 'Staff Non-MPO (Male)', labelBn: 'অ-এমপিওভুক্ত কর্মচারী (পুরুষ)', type: 'number' },
   { key: 'staff_nonmpo_female', label: 'Staff Non-MPO (Female)', labelBn: 'অ-এমপিওভুক্ত কর্মচারী (মহিলা)', type: 'number' },
   // Bank
-  { key: 'bank_name', label: 'Bank Name', labelBn: 'ব্যাংকের নাম', type: 'text' },
+  { key: 'bank_name', label: 'Bank Name', labelBn: 'ব্যাংকের নাম', type: 'text' , combo: true},
   { key: 'bank_branch', label: 'Bank Branch', labelBn: 'ব্যাংক শাখা', type: 'text' },
-  { key: 'bank_account_type', label: 'Account Type', labelBn: 'হিসাবের ধরন', type: 'text' },
+  { key: 'bank_account_type', label: 'Account Type', labelBn: 'হিসাবের ধরন', type: 'text' , combo: true},
   { key: 'bank_account_holder', label: 'Account Holder', labelBn: 'হিসাবের মালিক', type: 'text' },
   { key: 'bank_account_number', label: 'Account Number', labelBn: 'হিসাব নম্বর', type: 'text' },
-  { key: 'bank_account_purpose', label: 'Account Purpose', labelBn: 'হিসাবের উদ্দেশ্য', type: 'text' },
+  { key: 'bank_account_purpose', label: 'Account Purpose', labelBn: 'হিসাবের উদ্দেশ্য', type: 'text' , combo: true},
 ]
 
 export const COMMITTEE_HEADERS = [
@@ -186,7 +196,8 @@ export interface ExportableProfile {
 
 /** Build and download the Institute Profile Excel workbook. */
 export function exportProfileToExcel(form: ExportableProfile): void {
-  const rows: (string | number)[][] = [['Field', 'Value']]
+  // ── Sheet 1: Profile (Field | Value | Note) ────────────────────────────
+  const rows: (string | number)[][] = [['Field', 'Value', 'Note']]
   for (const f of SCALAR_FIELDS) {
     const raw = form[f.key]
     let value: string | number = ''
@@ -197,38 +208,53 @@ export function exportProfileToExcel(form: ExportableProfile): void {
       else if (f.type === 'geo') value = geoDisplay(f.key, raw)
       else value = String(raw)
     }
-    rows.push([f.label, value])
+    const note = f.combo ? COMBO_NOTE : f.checkbox ? CHECKBOX_NOTE : ''
+    rows.push([f.label, value, note])
   }
-  const ws = XLSX.utils.aoa_to_sheet(rows)
-  ws['!cols'] = [{ wch: 34 }, { wch: 44 }]
+  // Reference rows: facilities & committee are managed on the webpage
+  // and live on their own sheets.
+  rows.push(['Committee Members', '', 'Add on the webpage — see the "Committee Members" sheet'])
+  rows.push(['Facilities', '', 'Set on the webpage — see the "Facilities" sheet'])
 
-  // Facilities sheet
-  const facRows: (string | number)[][] = [['Facility', 'Status']]
+  const ws = XLSX.utils.aoa_to_sheet(rows)
+  ws['!cols'] = [{ wch: 34 }, { wch: 44 }, { wch: 52 }]
+
+  // ── Sheet 2: Facilities (Facility | Status | Note) ─────────────────────
+  const facRows: (string | number)[][] = [['Facility', 'Status', 'Note']]
   for (const key of FACILITY_KEYS) {
     const label = FACILITY_LABELS[key]?.en ?? key
     const on = Boolean((form.facilities ?? {})[key])
-    facRows.push([label, on ? 'Yes' : 'No'])
+    facRows.push([label, on ? 'Yes' : 'No', 'Toggle on the webpage (facilities section)'])
   }
   const wsFac = XLSX.utils.aoa_to_sheet(facRows)
-  wsFac['!cols'] = [{ wch: 24 }, { wch: 12 }]
+  wsFac['!cols'] = [{ wch: 24 }, { wch: 12 }, { wch: 46 }]
 
-  // Committee sheet
-  const cmRows: (string | number)[][] = [COMMITTEE_HEADERS]
+  // ── Sheet 3: Committee Members (headers + Note column) ─────────────────
+  const cmRows: (string | number)[][] = [[...COMMITTEE_HEADERS, 'Note']]
   for (const m of form.committee_members ?? []) {
+    const gender = String(m.gender ?? '')
+    const position = String(m.committee_position ?? '')
+    const note =
+      !gender && !position
+        ? ''
+        : gender && position
+          ? `${COMBO_NOTE}: Gender & Position`
+          : `${COMBO_NOTE}: ${gender ? 'Gender' : 'Position'}`
     cmRows.push([
       String(m.member_name ?? ''),
       toIsoDate(m.joining_date),
       String(m.phone ?? ''),
-      String(m.gender ?? ''),
-      String(m.committee_position ?? ''),
+      gender,
+      position,
       String(m.education_qualification ?? ''),
       String(m.occupation ?? ''),
       m.left_committee ? 'Yes' : 'No',
       String(m.reason_for_leaving ?? ''),
+      note,
     ])
   }
   const wsCm = XLSX.utils.aoa_to_sheet(cmRows)
-  wsCm['!cols'] = [{ wch: 22 }, { wch: 14 }, { wch: 14 }, { wch: 16 }, { wch: 26 }, { wch: 22 }, { wch: 18 }, { wch: 18 }, { wch: 22 }]
+  wsCm['!cols'] = [{ wch: 22 }, { wch: 14 }, { wch: 14 }, { wch: 16 }, { wch: 26 }, { wch: 22 }, { wch: 18 }, { wch: 18 }, { wch: 22 }, { wch: 44 }]
 
   const book = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(book, ws, 'Profile')
@@ -263,6 +289,8 @@ export async function importProfileFromExcel(file: File): Promise<ImportedProfil
     const label = String(row['Field'] ?? '').trim()
     const value = row['Value']
     if (!label || value === '') continue
+    // Reference rows (Committee Members / Facilities) are informational only.
+    if (NOTE_ROW_LABELS.includes(label)) continue
     const meta = SCALAR_FIELDS.find((f) => f.label === label || f.key === label)
     if (!meta) {
       skipped.push(label)
