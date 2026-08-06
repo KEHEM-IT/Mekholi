@@ -206,7 +206,7 @@ export function exportProfileToExcel(form: ExportableProfile): void {
     // Reference row: committee is managed on the webpage and lives on its own sheet.
     rows.push(['Committee Members', 'See "Committee Members" sheet'])
     // Facilities written inline (every facility, Yes/No) so they're visible
-    // on the first tab — plus a dedicated Facilities sheet as well.
+    // on the first tab — single source of truth on import.
     rows.push([])
     rows.push(['FACILITIES', ''])
     for (const key of FACILITY_KEYS) {
@@ -218,17 +218,7 @@ export function exportProfileToExcel(form: ExportableProfile): void {
   const ws = XLSX.utils.aoa_to_sheet(rows)
   ws['!cols'] = [{ wch: 34 }, { wch: 44 }]
 
-  // ── Sheet 2: Facilities (Facility | Status) ─────────────────────────────
-  const facRows: (string | number)[][] = [['Facility', 'Status']]
-  for (const key of FACILITY_KEYS) {
-    const label = FACILITY_LABELS[key]?.en ?? key
-    const on = Boolean((form.facilities ?? {})[key])
-    facRows.push([label, on ? 'Yes' : 'No'])
-  }
-  const wsFac = XLSX.utils.aoa_to_sheet(facRows)
-  wsFac['!cols'] = [{ wch: 24 }, { wch: 12 }]
-
-  // ── Sheet 3: Committee Members ──────────────────────────────────────────
+  // ── Sheet 2: Committee Members ──────────────────────────────────────────
   const cmRows: (string | number)[][] = [COMMITTEE_HEADERS]
   for (const m of form.committee_members ?? []) {
     cmRows.push([
@@ -248,7 +238,6 @@ export function exportProfileToExcel(form: ExportableProfile): void {
 
   const book = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(book, ws, 'Profile')
-  XLSX.utils.book_append_sheet(book, wsFac, 'Facilities')
   XLSX.utils.book_append_sheet(book, wsCm, 'Committee Members')
 
   const eiin = String(form.eiin || 'institute')
@@ -311,7 +300,8 @@ export async function importProfileFromExcel(file: File): Promise<ImportedProfil
     else profile[meta.key] = String(value).trim()
   }
 
-  // Facilities sheet (overrides the inline Profile-sheet rows when present)
+  // Legacy dedicated Facilities sheet — only fills facilities that were NOT
+  // set by the inline Profile-sheet rows, so inline edits always win.
   const facSheet = book.Sheets['Facilities']
   if (facSheet) {
     const facRows = XLSX.utils.sheet_to_json<Record<string, unknown>>(facSheet, { defval: '' })
@@ -319,7 +309,7 @@ export async function importProfileFromExcel(file: File): Promise<ImportedProfil
       const label = String(row['Facility'] ?? '').trim()
       if (!label) continue
       const key = facilityKeyFromLabel(label)
-      if (key) facilities[key] = parseBool(row['Status'])
+      if (key && !(key in facilities)) facilities[key] = parseBool(row['Status'])
     }
   }
 
