@@ -203,10 +203,17 @@ export function exportProfileToExcel(form: ExportableProfile): void {
     }
     rows.push([f.label, value])
   }
-  // Reference rows: facilities & committee are managed on the webpage
-  // and live on their own sheets.
-  rows.push(['Committee Members', 'See "Committee Members" sheet'])
-  rows.push(['Facilities', 'See "Facilities" sheet'])
+    // Reference row: committee is managed on the webpage and lives on its own sheet.
+    rows.push(['Committee Members', 'See "Committee Members" sheet'])
+    // Facilities written inline (every facility, Yes/No) so they're visible
+    // on the first tab — plus a dedicated Facilities sheet as well.
+    rows.push([])
+    rows.push(['FACILITIES', ''])
+    for (const key of FACILITY_KEYS) {
+      const label = FACILITY_LABELS[key]?.en ?? key
+      const on = Boolean((form.facilities ?? {})[key])
+      rows.push([label, on ? 'Yes' : 'No'])
+    }
 
   const ws = XLSX.utils.aoa_to_sheet(rows)
   ws['!cols'] = [{ wch: 34 }, { wch: 44 }]
@@ -257,6 +264,16 @@ export interface ImportedProfile {
   skipped: string[]
 }
 
+/** Match an English/Bangla facility label to its key (case-insensitive). */
+function facilityKeyFromLabel(label: string): string | null {
+  const lower = label.toLowerCase()
+  const entry = Object.entries(FACILITY_LABELS).find(
+    ([, v]) => v.en.toLowerCase() === lower || v.bn === label,
+  )
+  if (entry) return entry[0]
+  return FACILITY_KEYS.find((k) => k.replace(/_/g, ' ').toLowerCase() === lower) ?? null
+}
+
 /** Parse an Institute Profile Excel file into a partial form. */
 export async function importProfileFromExcel(file: File): Promise<ImportedProfile> {
   const buffer = await file.arrayBuffer()
@@ -265,6 +282,7 @@ export async function importProfileFromExcel(file: File): Promise<ImportedProfil
   if (!profileSheet) throw new Error('No sheet found in the Excel file')
 
   const profile: Record<string, unknown> = {}
+  const facilities: Record<string, boolean> = {}
   const skipped: string[] = []
   const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(profileSheet, { defval: '' })
 
@@ -272,8 +290,15 @@ export async function importProfileFromExcel(file: File): Promise<ImportedProfil
     const label = String(row['Field'] ?? '').trim()
     const value = row['Value']
     if (!label || value === '') continue
-    // Reference rows (Committee Members / Facilities) are informational only.
-    if (NOTE_ROW_LABELS.includes(label)) continue
+    // Reference rows (Committee Members / Facilities section header) are
+    // informational only.
+    if (NOTE_ROW_LABELS.includes(label) || label === 'FACILITIES') continue
+    // Inline facility rows in the Profile sheet: "Play Ground" -> Yes/No
+    const facKey = facilityKeyFromLabel(label)
+    if (facKey) {
+      facilities[facKey] = parseBool(value)
+      continue
+    }
     const meta = SCALAR_FIELDS.find((f) => f.label === label || f.key === label)
     if (!meta) {
       skipped.push(label)
@@ -286,16 +311,14 @@ export async function importProfileFromExcel(file: File): Promise<ImportedProfil
     else profile[meta.key] = String(value).trim()
   }
 
-  // Facilities sheet
-  const facilities: Record<string, boolean> = {}
+  // Facilities sheet (overrides the inline Profile-sheet rows when present)
   const facSheet = book.Sheets['Facilities']
   if (facSheet) {
     const facRows = XLSX.utils.sheet_to_json<Record<string, unknown>>(facSheet, { defval: '' })
     for (const row of facRows) {
       const label = String(row['Facility'] ?? '').trim()
       if (!label) continue
-      const entry = Object.entries(FACILITY_LABELS).find(([, v]) => v.en === label || v.bn === label)
-      const key = entry ? entry[0] : FACILITY_KEYS.find((k) => k.replace(/_/g, ' ') === label.toLowerCase())
+      const key = facilityKeyFromLabel(label)
       if (key) facilities[key] = parseBool(row['Status'])
     }
   }
