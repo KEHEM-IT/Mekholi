@@ -1,6 +1,6 @@
 <!-- D:\Web\ERP\Mekholi\src\pages\Institute_Setup\Index.vue -->
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppPreferences } from '@/composables/useAppPreferences'
 import { useDragScroll } from '@/composables/useDragScroll'
@@ -20,6 +20,16 @@ defineOptions({ name: 'InstituteDashboard' })
 const router = useRouter()
 const { preferences } = useAppPreferences()
 const isBn = computed(() => preferences.uiLanguage === 'bn')
+
+// Skeleton loader — the dashboard shows a shimmer skeleton for at least
+// 2s on mount, matching the Institute Profile page behaviour.
+const isPageLoading = ref(true)
+const MIN_SKELETON_MS = 2000
+
+onMounted(async () => {
+  await new Promise((resolve) => setTimeout(resolve, MIN_SKELETON_MS))
+  isPageLoading.value = false
+})
 
 const {
   school,
@@ -111,7 +121,38 @@ const {
 </script>
 
 <template>
-  <section class="isc">
+  <!-- ── Skeleton loader (min 2s) ─────────────────────── -->
+  <section v-if="isPageLoading" class="isc-skeleton" aria-busy="true" aria-label="Loading institute dashboard">
+    <div class="isc-skeleton__header">
+      <span class="skeleton isc-skeleton__title" />
+      <span class="skeleton isc-skeleton__subtitle" />
+    </div>
+
+    <div class="isc-skeleton__section">
+      <div class="isc-skeleton__section-head">
+        <div>
+          <span class="skeleton isc-skeleton__section-title" />
+          <span class="skeleton isc-skeleton__section-sub" />
+        </div>
+        <span class="skeleton isc-skeleton__progress" />
+      </div>
+      <div class="isc-skeleton__cards">
+        <span v-for="n in 4" :key="n" class="skeleton isc-skeleton__card" />
+      </div>
+    </div>
+
+    <div class="isc-skeleton__section">
+      <div class="isc-skeleton__section-head">
+        <div>
+          <span class="skeleton isc-skeleton__section-title" />
+          <span class="skeleton isc-skeleton__section-sub" />
+        </div>
+      </div>
+      <span class="skeleton isc-skeleton__dropzone" />
+    </div>
+  </section>
+
+  <section v-else class="isc">
     <header class="isc-header">
       <h1>{{ isBn ? 'ইনস্টিটিউট ড্যাশবোর্ড' : 'Institute Dashboard' }}</h1>
       <p>
