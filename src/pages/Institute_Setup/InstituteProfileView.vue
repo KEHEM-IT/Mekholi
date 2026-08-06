@@ -956,12 +956,12 @@ function removeCommittee(i: number) {
             </div>
             <div class="form-field">
               <label>{{ isBn ? "ইংরেজি ভার্সন" : "English Version" }}</label>
-              <div class="form-field__check">
-                <input id="eng-ver" v-model="form.has_english_version" type="checkbox"  :title="t('Check if the institute has an English version', 'ইংরেজি ভার্সন থাকলে টিক দিন')" />
-                <label for="eng-ver" class="form-field__check-label">{{
-                  form.has_english_version ? (isBn ? "হ্যাঁ" : "Yes") : isBn ? "না" : "No"
-                }}</label>
-              </div>
+              <BaseToggle
+                v-model="form.has_english_version"
+                :yes-label="isBn ? 'হ্যাঁ' : 'Yes'"
+                :no-label="isBn ? 'না' : 'No'"
+                :title="t('Check if the institute has an English version', 'ইংরেজি ভার্সন থাকলে টিক দিন')"
+              />
             </div>
             <div class="form-field">
               <label>{{ isBn ? "ব্যবস্থাপনা" : "Management" }}</label>
@@ -1260,22 +1260,12 @@ function removeCommittee(i: number) {
               </div>
               <div class="form-field">
                 <label>{{ isBn ? "কমিটি ত্যাগ" : "Left Committee" }}</label>
-                <div class="form-field__check">
-                  <input
-                    :id="`left-cmt-${i}`"
-                    v-model="form.committee_members[i].left_committee"
-                    type="checkbox"
-                   :title="t('Check if the member has left the committee', 'সদস্য কমিটি ছেড়ে দিলে টিক দিন')" />
-                  <label :for="`left-cmt-${i}`" class="form-field__check-label">{{
-                    form.committee_members[i].left_committee
-                      ? isBn
-                        ? "হ্যাঁ"
-                        : "Yes"
-                      : isBn
-                        ? "না"
-                        : "No"
-                  }}</label>
-                </div>
+                <BaseToggle
+                  v-model="form.committee_members[i].left_committee"
+                  :yes-label="isBn ? 'হ্যাঁ' : 'Yes'"
+                  :no-label="isBn ? 'না' : 'No'"
+                  :title="t('Check if the member has left the committee', 'সদস্য কমিটি ছেড়ে দিলে টিক দিন')"
+                />
               </div>
               <div v-if="form.committee_members[i].left_committee" class="form-field">
                 <label>{{ isBn ? "ত্যাগের কারণ" : "Reason for Leaving" }}</label
