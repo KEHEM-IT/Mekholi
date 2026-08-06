@@ -317,7 +317,7 @@ async function uploadLogoFile(file: File) {
     form.institute_logo = url;
     // Persist right away so the logo survives a page reload without
     // requiring the user to press Ctrl+S afterwards.
-    const saved = await saveProfile({ ...form });
+    const saved = await saveProfile({ ...trimmedForm() });
     if (saved) {
       dirtyGuard.markClean();
       toast.success(isBn.value ? "লোগো আপলোড ও সংরক্ষিত হয়েছে" : "Logo uploaded & saved");
@@ -434,13 +434,36 @@ async function onExcelImportPicked(event: Event) {
 
 // ── Save / Load ───────────────────────────────────────────────────────
 
+/** Trim every string field in the form (single choke point on save). */
+function trimmedForm(): typeof form {
+  const out = { ...form };
+  for (const key of Object.keys(out) as (keyof typeof out)[]) {
+    const v = out[key];
+    if (typeof v === "string") {
+      (out as Record<string, unknown>)[key] = v.trim();
+    } else if (key === "committee_members" && Array.isArray(v)) {
+      out.committee_members = (v as typeof form.committee_members).map((m) => {
+        const clean = { ...m };
+        for (const k of Object.keys(clean) as (keyof typeof clean)[]) {
+          if (typeof clean[k] === "string") (clean as Record<string, unknown>)[k] = String(clean[k]).trim();
+        }
+        return clean;
+      });
+    }
+  }
+  return out;
+}
+
 async function handleSave() {
   // Do not write to the DB when nothing changed — just inform the user.
   if (!dirtyGuard.hasChanges()) {
     toast.info(isBn.value ? "সংরক্ষণের কোনো নতুন পরিবর্তন নেই" : "No changes to save");
     return;
   }
-  const saved = await saveProfile({ ...form });
+  // Apply whitespace-trim to all text inputs before saving.
+  const cleaned = trimmedForm();
+  Object.assign(form, cleaned);
+  const saved = await saveProfile({ ...cleaned });
   if (saved) {
     dirtyGuard.markClean();
     toast.success(isBn.value ? "সংরক্ষিত হয়েছে" : "Saved");
