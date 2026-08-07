@@ -355,5 +355,11 @@
   "Reset to defaults": "ডিফল্টে ফিরুন",
   "Save changes": "সংরক্ষণ করুন",
   "Left": "ছেড়ে গেছেন",
-  "No information filled yet": "এখনও কোনো তথ্য পূরণ করা হয়নি"
+  "No information filled yet": "এখনও কোনো তথ্য পূরণ করা হয়নি",
+  "Undo": "পূর্বাবস্থায় ফেরান",
+  "Branch deleted": "শাখা মুছে ফেলা হয়েছে",
+  "Branch restored": "শাখা পুনরুদ্ধার করা হয়েছে",
+  "Academic year deleted": "শিক্ষাবর্ষ মুছে ফেলা হয়েছে",
+  "Academic year restored": "শিক্ষাবর্ষ পুনরুদ্ধার করা হয়েছে",
+  "Restore failed": "পুনরুদ্ধার ব্যর্থ হয়েছে"
 }

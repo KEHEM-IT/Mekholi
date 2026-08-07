@@ -75,8 +75,20 @@ async function onDelete(year: AcademicYear) {
   if (!ok) return
   const deleted = await deleteAcademicYear(year.id)
   if (deleted) {
-    toast.success(t('Deleted'))
     await load()
+    // Undoable toast — recreate the year on Undo (5s window).
+    toast.action(t('Academic year deleted'), {
+      label: t('Undo'),
+      onClick: async () => {
+        const restored = await saveAcademicYear({ ...year, id: undefined })
+        if (restored) {
+          toast.success(t('Academic year restored'))
+          await load()
+        } else {
+          toast.error(t('Restore failed'))
+        }
+      },
+    })
   } else {
     toast.error(t('Delete failed'))
   }
