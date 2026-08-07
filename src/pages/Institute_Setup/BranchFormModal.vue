@@ -152,19 +152,16 @@ watch(
   () => { if (isPrefilling) return; form.union_id = '' },
 )
 
-// ── Logo upload (ImgBB) ────────────────────────────────────────────────
+// ── Logo upload (ImgBB, click + drag & drop) ───────────────────────────
 
 const isUploadingLogo = ref(false)
+const isDraggingLogo = ref(false)
 const logoInput = ref<HTMLInputElement | null>(null)
 
 function triggerLogoPick() {
   if (!isUploadingLogo.value) logoInput.value?.click()
 }
-async function onLogoPicked(event: Event) {
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0]
-  input.value = ''
-  if (!file) return
+async function uploadLogo(file: File) {
   const err = validateLogoFile(file)
   if (err) { toast.error(err); return }
   isUploadingLogo.value = true
@@ -176,6 +173,29 @@ async function onLogoPicked(event: Event) {
   } finally {
     isUploadingLogo.value = false
   }
+}
+async function onLogoPicked(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  input.value = ''
+  if (!file) return
+  await uploadLogo(file)
+}
+function onLogoDragOver(event: DragEvent) {
+  if (isUploadingLogo.value) return
+  event.preventDefault()
+  if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy'
+  isDraggingLogo.value = true
+}
+function onLogoDragLeave(event: DragEvent) {
+  if (!event.currentTarget || event.relatedTarget === event.currentTarget) return
+  isDraggingLogo.value = false
+}
+function onLogoDrop(event: DragEvent) {
+  event.preventDefault()
+  isDraggingLogo.value = false
+  const file = event.dataTransfer?.files?.[0]
+  if (file) void uploadLogo(file)
 }
 function removeLogo() {
   form.logo = ''
@@ -365,14 +385,31 @@ function submit() {
           </div>
           <div class="form-field">
             <label>{{ t('Branch Logo', 'শাখার লোগো') }}</label>
-            <div class="ipf-logo" @click="triggerLogoPick" role="button" tabindex="0">
-              <img v-if="form.logo && !isUploadingLogo" :src="form.logo" class="ipf-logo__preview" alt="logo" />
+            <div
+              class="ipf-logo"
+              :class="{
+                'is-uploading': isUploadingLogo,
+                'is-dragging': isDraggingLogo && !isUploadingLogo,
+              }"
+              @click="triggerLogoPick"
+              @keydown.enter="triggerLogoPick"
+              @dragover.prevent="onLogoDragOver"
+              @dragenter.prevent="isDraggingLogo = true"
+              @dragleave="onLogoDragLeave"
+              @drop.prevent="onLogoDrop"
+              role="button"
+              tabindex="0"
+            >
+              <img v-if="form.logo && !isUploadingLogo && !isDraggingLogo" :src="form.logo" class="ipf-logo__preview" alt="logo" />
               <i v-else-if="isUploadingLogo" class="fa-duotone fa-spinner fa-spin ipf-logo__icon" />
+              <i v-else-if="isDraggingLogo" class="fa-duotone fa-down-to-bracket ipf-logo__icon" />
               <i v-else class="fa-duotone fa-cloud-arrow-up ipf-logo__icon" />
               <div class="ipf-logo__text">
-                {{ isUploadingLogo ? t('Uploading...', 'আপলোড হচ্ছে...') : t('Click to upload logo', 'লোগো আপলোড করতে ক্লিক করুন') }}
+                <template v-if="isUploadingLogo">{{ t('Uploading...', 'আপলোড হচ্ছে...') }}</template>
+                <template v-else-if="isDraggingLogo">{{ t('Drop the image here', 'ছবিটি এখানে ছেড়ে দিন') }}</template>
+                <template v-else>{{ t('Click or drag & drop to upload logo', 'লোগো আপলোড করতে ক্লিক করুন বা ছবি ড্র্যাগ করুন') }}</template>
               </div>
-              <span v-if="form.logo && !isUploadingLogo" class="ipf-logo__remove" role="button" tabindex="-1" @click.stop="removeLogo">&#10005;</span>
+              <span v-if="form.logo && !isUploadingLogo && !isDraggingLogo" class="ipf-logo__remove" role="button" tabindex="-1" @click.stop="removeLogo">&#10005;</span>
             </div>
             <input ref="logoInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" class="ipf-logo__input" @change="onLogoPicked" />
           </div>

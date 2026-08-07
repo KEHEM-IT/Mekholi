@@ -2,7 +2,10 @@
 // Reusable modal shell — teleports to <body>, locks body scroll while
 // open, closes on Esc / overlay click / close button.
 //
-// Props: title (optional), wide (adds a wider panel), closable
+// Props: title (optional), wide (adds a wider panel), closable (shows the
+//   ✕ button + allows Esc), closeOnOverlay (clicking the dimmed backdrop
+//   closes the modal — set false to force the ✕ button only, e.g. for
+//   forms where accidental dismissal would lose data)
 // Events: close
 // Slot: default (panel body)
 import { onBeforeUnmount, onMounted } from 'vue'
@@ -12,11 +15,13 @@ const props = withDefaults(
     title?: string
     wide?: boolean
     closable?: boolean
+    closeOnOverlay?: boolean
   }>(),
   {
     title: '',
     wide: false,
     closable: true,
+    closeOnOverlay: true,
   },
 )
 
@@ -27,7 +32,7 @@ function onKeydown(event: KeyboardEvent) {
 }
 
 function onClickOverlay(event: MouseEvent) {
-  if (event.target === event.currentTarget && props.closable) emit('close')
+  if (event.target === event.currentTarget && props.closable && props.closeOnOverlay) emit('close')
 }
 
 onMounted(() => {

@@ -245,11 +245,12 @@ function shortAddress(b: Branch): string {
       }}
     </p>
 
-    <!-- Form modal -->
+    <!-- Form modal — only closes via ✕ / Cancel so edits are never lost -->
     <BaseModal
       v-if="showForm"
       :title="editingBranch ? t('Edit Branch', 'শাখা সম্পাদনা') : t('Add Branch', 'শাখা যোগ করুন')"
       wide
+      :close-on-overlay="false"
       @close="showForm = false"
     >
       <BranchFormModal
