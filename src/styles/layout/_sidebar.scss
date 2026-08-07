@@ -233,13 +233,12 @@
     color: var(--color-text);
   }
 
-  // Active (a submenu matches the current route): tinted background with a
-  // left accent bar and a brighter, weightier label — reads clearly in
-  // both themes instead of muddy primary-on-tint.
+  // Active (a submenu matches the current route): info-tinted background
+  // with a left accent bar and a brighter, weightier label.
   &.is-active {
     position: relative;
-    background: var(--color-sidebar-active, var(--color-primary-muted));
-    color: var(--color-primary);
+    background: var(--color-info-muted);
+    color: var(--color-info);
     font-weight: 700;
 
     &::before {
@@ -250,18 +249,21 @@
       bottom: 20%;
       width: 3px;
       border-radius: 0 3px 3px 0;
-      background: var(--color-sidebar-active-border, var(--color-primary));
+      background: var(--color-info);
     }
 
     .nav-icon {
-      color: var(--color-primary);
+      color: var(--color-info);
     }
   }
 
-  // A menu whose submenu matches the current route — same treatment when open.
+  // Open menu with an active submenu — the exact requested treatment:
+  //   background: var(--color-info-muted);
+  //   color: var(--color-info);
+  //   font-weight: 700;
   &.is-active.is-open {
-    background: var(--color-sidebar-active, var(--color-primary-muted));
-    color: var(--color-primary);
+    background: var(--color-info-muted);
+    color: var(--color-info);
     font-weight: 700;
 
     &::before {
@@ -272,11 +274,11 @@
       bottom: 20%;
       width: 3px;
       border-radius: 0 3px 3px 0;
-      background: var(--color-sidebar-active-border, var(--color-primary));
+      background: var(--color-info);
     }
 
     .nav-icon {
-      color: var(--color-primary);
+      color: var(--color-info);
     }
   }
 
@@ -426,22 +428,22 @@
     color: var(--color-text);
   }
 
-  // Current route submenu — soft active surface + accent text + dot.
+  // Current route submenu — info tint + text + dot (matches the menu head).
   &.is-active {
-    background: var(--color-sidebar-active, var(--color-primary-muted));
-    color: var(--color-primary);
+    background: var(--color-info-muted);
+    color: var(--color-info);
     font-weight: 700;
 
     .submenu-icon {
       opacity: 1;
-      color: var(--color-primary);
+      color: var(--color-info);
     }
   }
 
   &__dot {
     margin-left: auto;
     font-size: 0.4rem;
-    color: var(--color-primary);
+    color: var(--color-info);
     flex-shrink: 0;
   }
 }
