@@ -132,6 +132,24 @@ export function localized<T extends object>(
 }
 
 /**
+ * Bilingual option label — "EN - desireLanguage", where desireLanguage is
+ * the language chosen in Settings (bn today, zh/es/hi later).
+ *
+ *   lang 'en' → "Sylhet"
+ *   lang 'bn' → "Sylhet - সিলেট"
+ *   lang 'zh' (future) → "Sylhet - 锡尔赫特"  (from the zh dictionary;
+ *                        falls back to the Bengali part when untranslated)
+ */
+export function bilingualLabel(en: string, bn: string): string {
+  const lang = currentLang.value
+  if (lang === 'en') return en
+  if (lang === 'bn') return `${en} - ${bn}`
+  // Future languages: translate the English text via the dictionary.
+  const translated = translate(en)
+  return translated !== en ? `${en} - ${translated}` : `${en} - ${bn}`
+}
+
+/**
  * Composable for <script setup> usage:
  *   const { t, lang, localized } = useTranslator()
  *   t('Bank Account') → "Bank Account" / "ব্যাংক হিসাব"
@@ -161,7 +179,7 @@ export function useTranslator() {
     return preferences.uiLanguage === 'bn' ? bnKey : enKey
   }
 
-  return { t: translate, lang, pick, localized, labelKey }
+  return { t: translate, lang, pick, localized, labelKey, bilingualLabel }
 }
 
 /** Standalone pick (usable outside components). */

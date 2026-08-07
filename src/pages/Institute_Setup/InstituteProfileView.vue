@@ -37,12 +37,23 @@ import {
 defineOptions({ name: "InstituteProfile" });
 
 import { useTranslator } from "@/Translator";
-const { t, labelKey } = useTranslator();
+const { t, bilingualLabel } = useTranslator();
 
-// Option label key per active language:
-//   JSON options → Name / NameInBangla · geo options → name / bn_name
-const optLabelKey = computed(() => labelKey("Name", "NameInBangla"));
-const geoLabelKey = computed(() => labelKey("name", "bn_name"));
+// Combobox options render as "EN - desireLanguage" (Settings-driven).
+// Each option gains a DisplayText field; the stored value (LookupText)
+// stays the full "EN - BN" string for DB/Excel compatibility.
+function addDisplay<T extends object>(list: T[]): (T & { DisplayText: string })[] {
+  return list.map((o) => {
+    const r = o as Record<string, unknown>;
+    return { ...o, DisplayText: bilingualLabel(String(r.Name ?? ''), String(r.NameInBangla ?? '')) };
+  });
+}
+function addGeoDisplay<T extends object>(list: T[]): (T & { DisplayText: string })[] {
+  return list.map((o) => {
+    const r = o as Record<string, unknown>;
+    return { ...o, DisplayText: bilingualLabel(String(r.name ?? ''), String(r.bn_name ?? '')) };
+  });
+}
 
 // ── Constants / Option lists ──────────────────────────────────────────────
 
@@ -159,14 +170,16 @@ const form = reactive({
 
 // ── BD Geo derived ────────────────────────────────────────────────────────
 
-const geoDivisionOptions = computed(() => BD_GEO_DIVISIONS);
+const geoDivisionOptions = computed(() => addGeoDisplay(BD_GEO_DIVISIONS as unknown as object[]));
 const geoDistrictOptions = computed(() =>
-  form.division_id ? districtsByDivisionId(form.division_id) : [],
+  form.division_id ? addGeoDisplay(districtsByDivisionId(form.division_id) as unknown as object[]) : [],
 );
 const geoUpazilaOptions = computed(() =>
-  form.district_id ? upazilasByDistrictId(form.district_id) : [],
+  form.district_id ? addGeoDisplay(upazilasByDistrictId(form.district_id) as unknown as object[]) : [],
 );
-const geoUnionOptions = computed(() => (form.upazila_id ? unionsByUpazilaId(form.upazila_id) : []));
+const geoUnionOptions = computed(() =>
+  form.upazila_id ? addGeoDisplay(unionsByUpazilaId(form.upazila_id) as unknown as object[]) : [],
+);
 
 // Live total staff — mirrors the manual "Total Staffs" input (badge in the
 // section header). Falls back to Male + Female when total is not entered yet.
@@ -253,37 +266,37 @@ watch(
 function comboOptions(items: string[]) {
   return items.map((v) => {
     const sep = v.indexOf(" - ");
-    if (sep > 0) {
-      return {
-        Id: v,
-        Name: v.slice(0, sep).trim(),
-        NameInBangla: v.slice(sep + 3).trim(),
-        LookupText: v,
-      };
-    }
-    return { Id: v, Name: v, NameInBangla: v, LookupText: v };
+    const name = sep > 0 ? v.slice(0, sep).trim() : v;
+    const bn = sep > 0 ? v.slice(sep + 3).trim() : v;
+    return {
+      Id: v,
+      Name: name,
+      NameInBangla: bn,
+      LookupText: v,
+      DisplayText: bilingualLabel(name, bn),
+    };
   });
 }
 
 // Scheduled banks of Bangladesh (English + Bangla) from assets/jsons/banks.json
-const BANK_OPTIONS = banksJson;
+const BANK_OPTIONS = computed(() => addDisplay(banksJson));
 
 // Bilingual option lists (English + Bangla) from assets/jsons
-const INSTITUTE_TYPE_OPTIONS = instituteTypesJson;
-const GROUP_OPTIONS = groupsJson;
-const STUDENT_TYPE_OPTIONS = studentTypesJson;
-const SHIFT_COUNT_OPTIONS = shiftCountsJson;
-const ACCOUNT_TYPE_OPTIONS = accountTypesJson;
-const ACCOUNT_PURPOSE_OPTIONS = accountPurposesJson;
+const INSTITUTE_TYPE_OPTIONS = computed(() => addDisplay(instituteTypesJson));
+const GROUP_OPTIONS = computed(() => addDisplay(groupsJson));
+const STUDENT_TYPE_OPTIONS = computed(() => addDisplay(studentTypesJson));
+const SHIFT_COUNT_OPTIONS = computed(() => addDisplay(shiftCountsJson));
+const ACCOUNT_TYPE_OPTIONS = computed(() => addDisplay(accountTypesJson));
+const ACCOUNT_PURPOSE_OPTIONS = computed(() => addDisplay(accountPurposesJson));
 
 // Committee member gender options (English + Bangla)
-const GENDER_OPTIONS = gendersJson;
+const GENDER_OPTIONS = computed(() => addDisplay(gendersJson));
 
 // Committee member position options (English + Bangla), "Others" last
-const COMMITTEE_POSITION_OPTIONS = committeePositionsJson;
+const COMMITTEE_POSITION_OPTIONS = computed(() => addDisplay(committeePositionsJson));
 
 // Parliamentary constituencies of Bangladesh (300 seats, English + Bangla)
-const PARLIAMENTARY_SEAT_OPTIONS = parliamentarySeatsJson;
+const PARLIAMENTARY_SEAT_OPTIONS = computed(() => addDisplay(parliamentarySeatsJson));
 
 // ── Save ──────────────────────────────────────────────────────────────────
 
@@ -595,7 +608,7 @@ function availableInstituteTypes(rowIndex: number) {
       .map((c, i) => (i === rowIndex ? "" : c.institute_type))
       .filter(Boolean),
   );
-  return INSTITUTE_TYPE_OPTIONS.filter((o) => !used.has(String(o.LookupText)));
+  return INSTITUTE_TYPE_OPTIONS.value.filter((o) => !used.has(String(o.LookupText)));
 }
 
 function addCommittee() {
@@ -845,7 +858,7 @@ function removeCommittee(i: number) {
                 v-model="form.parliamentary_constituency"
                 :options="PARLIAMENTARY_SEAT_OPTIONS"
                 option-value="LookupText"
-                :option-label="optLabelKey"
+                option-label="DisplayText"
                 :placeholder="t('Select the parliamentary constituency of the institute area')"
                :title="t('Select the parliamentary constituency of the institute area')" />
             </div>
@@ -871,7 +884,7 @@ function removeCommittee(i: number) {
                 v-model="form.division_id"
                 option-value="id"
                 :options="geoDivisionOptions"
-                :option-label="geoLabelKey"
+                option-label="DisplayText"
                 :placeholder="t('Select the division / region')"
                :title="t('Select the division / region')" />
             </div>
@@ -881,7 +894,7 @@ function removeCommittee(i: number) {
                 v-model="form.district_id"
                 option-value="id"
                 :options="geoDistrictOptions"
-                :option-label="geoLabelKey"
+                option-label="DisplayText"
                 :placeholder="t('Select the district')"
                 :disabled="!form.division_id"
                :title="t('Select the district')" />
@@ -892,7 +905,7 @@ function removeCommittee(i: number) {
                 v-model="form.upazila_id"
                 option-value="id"
                 :options="geoUpazilaOptions"
-                :option-label="geoLabelKey"
+                option-label="DisplayText"
                 :placeholder="t('Select the upazila / thana')"
                 :disabled="!form.district_id"
                :title="t('Select the upazila / thana')" />
@@ -903,7 +916,7 @@ function removeCommittee(i: number) {
                 v-model="form.union_id"
                 option-value="id"
                 :options="geoUnionOptions"
-                :option-label="geoLabelKey"
+                option-label="DisplayText"
                 :placeholder="t('Select the union')"
                 :disabled="!form.upazila_id"
                :title="t('Select the union')" />
@@ -978,7 +991,7 @@ function removeCommittee(i: number) {
                 v-model="form.student_type"
                 :options="STUDENT_TYPE_OPTIONS"
                 option-value="LookupText"
-                :option-label="optLabelKey"
+                option-label="DisplayText"
                 :placeholder="t('Select the student type - Co-Education / Boys / Girls')"
                :title="t('Select the student type - Co-Education / Boys / Girls')" />
             </div>
@@ -988,7 +1001,7 @@ function removeCommittee(i: number) {
                 v-model="form.shift_count"
                 :options="SHIFT_COUNT_OPTIONS"
                 option-value="LookupText"
-                :option-label="optLabelKey"
+                option-label="DisplayText"
                 :placeholder="t('Select the shift - Day / Morning / Evening / Night')"
                :title="t('Select the shift - Day / Morning / Evening / Night')" />
             </div>
@@ -1026,7 +1039,7 @@ function removeCommittee(i: number) {
                   v-model="row.institute_type"
                   :options="availableInstituteTypes(i)"
                   option-value="LookupText"
-                  :option-label="optLabelKey"
+                  option-label="DisplayText"
                   :placeholder="t('Select the institute type - e.g. School & College')"
                  :title="t('Each type can be used only once')" />
               </div>
@@ -1037,7 +1050,7 @@ function removeCommittee(i: number) {
                   multiple
                   :options="GROUP_OPTIONS"
                   option-value="LookupText"
-                  :option-label="optLabelKey"
+                  option-label="DisplayText"
                   :placeholder="t('Select one or more groups')"
                  :title="t('Select one or more groups')" />
               </div>
@@ -1201,7 +1214,7 @@ function removeCommittee(i: number) {
                 v-model="form.bank_name"
                 :options="BANK_OPTIONS"
                 option-value="LookupText"
-                :option-label="optLabelKey"
+                option-label="DisplayText"
                 :placeholder="t('Select the bank name')"
                :title="t('Select the bank name')" />
             </div>
@@ -1215,7 +1228,7 @@ function removeCommittee(i: number) {
                 v-model="form.bank_account_type"
                 :options="ACCOUNT_TYPE_OPTIONS"
                 option-value="LookupText"
-                :option-label="optLabelKey"
+                option-label="DisplayText"
                 :placeholder="t('Select the account type - Savings / Current / FD')"
                :title="t('Select the account type - Savings / Current / FD')" />
             </div>
@@ -1233,7 +1246,7 @@ function removeCommittee(i: number) {
                 v-model="form.bank_account_purpose"
                 :options="ACCOUNT_PURPOSE_OPTIONS"
                 option-value="LookupText"
-                :option-label="optLabelKey"
+                option-label="DisplayText"
                 :placeholder="t('Select the purpose of the account')"
                :title="t('Select the purpose of the account')" />
             </div>
@@ -1287,7 +1300,7 @@ function removeCommittee(i: number) {
                   v-model="form.committee_members[i].gender"
                   :options="GENDER_OPTIONS"
                   option-value="LookupText"
-                  :option-label="optLabelKey"
+                  option-label="DisplayText"
                   :placeholder="t('Select the gender')"
                  :title="t('Select the gender')" />
               </div>
@@ -1297,7 +1310,7 @@ function removeCommittee(i: number) {
                   v-model="form.committee_members[i].committee_position"
                   :options="COMMITTEE_POSITION_OPTIONS"
                   option-value="LookupText"
-                  :option-label="optLabelKey"
+                  option-label="DisplayText"
                   :placeholder="t('Select the position in the committee')"
                  :title="t('Select the position in the committee')" />
               </div>
