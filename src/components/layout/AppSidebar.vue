@@ -77,6 +77,16 @@ function onSubmenuClick(sub: NavSubMenu) {
 
 const menus = computed<NavMenu[]>(() => (user.value ? (navigation[user.value.role] ?? []) : []));
 
+// Sidebar skeleton — shown briefly while the user/menus initialize.
+const isSidebarLoading = ref(true);
+const SIDEBAR_SKELETON_MS = 600;
+
+onMounted(() => {
+  setTimeout(() => {
+    isSidebarLoading.value = false;
+  }, SIDEBAR_SKELETON_MS);
+});
+
 // Auto-open the parent menu of the current route (deep links / reloads).
 watch(
   [menus, activeRouteName],
@@ -385,7 +395,15 @@ onBeforeUnmount(() => {
       <kbd v-else class="search-shortcut" aria-hidden="true">Ctrl K</kbd>
     </div>
 
-    <nav ref="navRef" class="sidebar-nav" aria-label="Primary">
+    <!-- Sidebar skeleton (brief, while menus initialize) -->
+    <nav v-if="isSidebarLoading" class="sidebar-nav sidebar-skeleton" aria-hidden="true">
+      <div v-for="n in 6" :key="n" class="skeleton sidebar-sk-item">
+        <span class="skeleton sidebar-sk-icon" />
+        <span class="skeleton sidebar-sk-label" />
+      </div>
+    </nav>
+
+    <nav v-else ref="navRef" class="sidebar-nav" aria-label="Primary">
       <template v-if="filteredMenus.length">
         <div
           v-for="item in filteredMenus"

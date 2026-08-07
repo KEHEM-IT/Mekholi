@@ -455,3 +455,32 @@
   font-size: 0.85rem;
   opacity: 0.8;
 }
+
+// ── Sidebar skeleton (brief, while menus initialize) ───────────────────
+
+.sidebar-skeleton {
+  @include flex(column, stretch, flex-start, $space-1);
+  padding: $space-2;
+  pointer-events: none;
+}
+
+.sidebar-sk-item {
+  @include flex(row, center, flex-start, $space-3);
+  width: 100%;
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+}
+
+.sidebar-sk-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border-radius: $radius-sm;
+}
+
+.sidebar-sk-label {
+  flex: 1 1 auto;
+  height: 0.9rem;
+  border-radius: $radius-sm;
+  max-width: 70%;
+}
