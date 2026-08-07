@@ -370,7 +370,9 @@ async function onImportPicked(event: Event) {
         <div class="cm-confirm__icon"><i class="fa-duotone fa-triangle-exclamation" /></div>
         <p class="cm-confirm__text">
           {{
-            t('Are you sure you want to deactivate "{name}"? It will be hidden from new selections.')
+            t('Are you sure you want to deactivate "{name}"? It will be hidden from new selections.', {
+              name: activeToggleTarget ? String(f(activeToggleTarget, nameField(activeTab)) || '') : '',
+            })
           }}
         </p>
       </div>
