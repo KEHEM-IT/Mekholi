@@ -1,11 +1,12 @@
 <script setup lang="ts">
 // Add / edit modal for Class / Section / Group / Shift — a single generic
 // form that renders the fields for the active entity.
-import { computed, reactive } from 'vue'
+import { computed, onMounted, reactive, watch } from 'vue'
 import { useTranslator } from '@/Translator'
 import { useToast } from '@/composables/useToast'
 import BaseCombobox from '@/components/ui/BaseCombobox.vue'
 import BaseToggle from '@/components/ui/BaseToggle.vue'
+import classNamesJson from '@/assets/jsons/class_names.json'
 import {
   emptyItem,
   type ClassItem,
@@ -61,6 +62,49 @@ const shiftOptions = computed(() =>
   }),
 )
 
+// ── Class-name presets (auto-fill phase / Bengali name / sort order) ──
+const CLASS_PRESETS = classNamesJson as {
+  Id: number
+  Name: string
+  NameInBangla: string
+  Phase: string
+  SortOrder: number
+}[]
+
+const classPresetOptions = CLASS_PRESETS.map((c) => ({
+  Id: c.Name,
+  Name: c.Name,
+  NameInBangla: c.NameInBangla,
+  LookupText: c.Name,
+  DisplayText: `${c.Name} - ${c.NameInBangla}`,
+}))
+
+/** Auto-fill phase + Bengali name + sort order when a class is picked. */
+function applyClassPreset(name: string) {
+  const preset = CLASS_PRESETS.find((c) => c.Name === name)
+  if (!preset) return
+  form.class_name_bn = preset.NameInBangla
+  form.phase = preset.Phase
+  form.sort_order = preset.SortOrder
+}
+
+// When the user picks a class name, auto-fill the related fields
+// (all remain editable afterwards).
+watch(
+  () => form.class_name,
+  (val) => {
+    if (props.entity === 'classes' && val) applyClassPreset(String(val))
+  },
+)
+
+// Auto-select the current academic year when ADDING a class.
+onMounted(() => {
+  if (props.entity === 'classes' && !props.item) {
+    const current = props.years.find((y) => (y as unknown as { is_current?: boolean }).is_current)
+    if (current?.id != null) form.academic_year_id = current.id
+  }
+})
+
 function validate(): boolean {
   const name = String(form[props.entity === 'classes' ? 'class_name' : props.entity === 'sections' ? 'section_name' : props.entity === 'groups' ? 'group_name' : 'shift_name'] ?? '').trim()
   if (!name) {
@@ -106,7 +150,13 @@ const isGroups = computed(() => props.entity === 'groups')
           <template v-if="isClasses">
             <div class="form-field">
               <label>{{ t('Class Name') }} *</label>
-              <input v-model="form.class_name" type="text" :placeholder="t('e.g. Six, Nine')" />
+              <BaseCombobox
+                v-model="form.class_name"
+                :options="classPresetOptions"
+                option-value="LookupText"
+                option-label="DisplayText"
+                :placeholder="t('Select class name')"
+              />
             </div>
             <div class="form-field">
               <label>{{ t('Class Name (Bangla)') }}</label>
@@ -117,14 +167,10 @@ const isGroups = computed(() => props.entity === 'groups')
               <BaseCombobox v-model="form.phase" :options="phaseOptions" option-value="LookupText" option-label="DisplayText" :placeholder="t('Select phase')" />
             </div>
             <div class="form-field">
-              <label>{{ t('Sort Order') }}</label>
-              <input v-model.number="form.sort_order" type="number" :placeholder="t('e.g. 6')" />
-            </div>
-            <div class="form-field">
               <label>{{ t('Academic Year') }}</label>
               <BaseCombobox v-model="form.academic_year_id" :options="yearOptions" option-value="Id" option-label="DisplayText" :placeholder="t('Select year')" />
             </div>
-            <div class="form-field">
+            <div class="form-field ipf-field--span2">
               <label>{{ t('Branch') }}</label>
               <BaseCombobox v-model="form.branch_id" :options="branchOptions" option-value="Id" option-label="DisplayText" :placeholder="t('Select branch')" />
             </div>

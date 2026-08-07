@@ -20,10 +20,11 @@
 .combobox__control {
   @include flex(row, center, space-between, $space-2);
   width: 100%;
+  min-height: 2.9rem;
   background: var(--color-input-bg);
   border: 1px solid var(--color-input-border);
   border-radius: $radius-md;
-  padding: $space-2 $space-3;
+  padding: $space-2 $space-4;
   color: var(--color-text);
   font-family: var(--font-family-base);
   font-size: $font-size-base;
@@ -114,10 +115,10 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  max-height: 16rem;
+  max-height: 20rem;
 
   @include respond-to(sm) {
-    max-height: 18rem;
+    max-height: 22rem;
   }
 }
 
@@ -143,8 +144,11 @@
 }
 
 .combobox__option {
-  padding: $space-2 $space-3;
-  font-size: 0.9rem;
+  padding: $space-3 $space-4;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  min-height: 2.6rem;
+  @include flex(row, center, flex-start, $space-2);
   color: var(--color-text);
   cursor: pointer;
   transition: background-color $transition-fast;

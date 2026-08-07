@@ -1150,3 +1150,10 @@
   grid-column: 1 / -1;
   min-width: 0;
 }
+
+// ── Two-column form field ──────────────────────────────────────────────
+
+.ipf-field--span2 {
+  grid-column: span 2;
+  min-width: 0;
+}
