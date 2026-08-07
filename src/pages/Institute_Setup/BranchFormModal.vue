@@ -5,7 +5,7 @@ import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { useAppPreferences } from '@/composables/useAppPreferences'
 import { uploadToImgbb, validateLogoFile } from '@/composables/useImgbbUpload'
 import { useToast } from '@/composables/useToast'
-import { loadProfile } from '@/composables/useInstituteProfile'
+import { loadProfile } from '@/composables/Institute_Setup/useInstituteProfile'
 import {
   BD_GEO_DIVISIONS,
   districtsByDivisionId,
@@ -15,7 +15,7 @@ import {
 import BaseCombobox from '@/components/ui/BaseCombobox.vue'
 import BaseDatePicker from '@/components/ui/BaseDatePicker.vue'
 import BaseToggle from '@/components/ui/BaseToggle.vue'
-import type { Branch } from '@/composables/useBranches'
+import type { Branch } from '@/composables/Institute_Setup/useBranches'
 
 const props = defineProps<{
   branch: Branch | null
@@ -37,7 +37,7 @@ const form = reactive<Branch>({ ...(props.branch ? JSON.parse(JSON.stringify(pro
 
 function empty(): Branch {
   return {
-    branch_name: '', branch_name_bn: '', branch_code: '', campus_type: 'Main - প্রধান',
+    branch_name: '', branch_name_bn: '', branch_code: '', campus_type: 'Annex - অ্যানেক্স',
     is_main: false, logo: '', division_id: '', district_id: '', upazila_id: '', union_id: '',
     village_road_holding_no: '', post_office: '', post_code: null, phone: '', email: '',
     website: '', head_name: '', head_designation: '', head_phone: '', head_email: '',
@@ -74,7 +74,6 @@ const t = (en: string, bn: string) => (isBn.value ? bn : en)
 // ── Option lists (English - বাংলা) ─────────────────────────────────────
 
 const CAMPUS_TYPES = [
-  'Main - প্রধান',
   'Annex - অ্যানেক্স',
   'Sub-Campus - সাব-ক্যাম্পাস',
   'Temporary - অস্থায়ী',

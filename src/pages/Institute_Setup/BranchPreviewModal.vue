@@ -4,7 +4,7 @@
 import { computed } from 'vue'
 import { useAppPreferences } from '@/composables/useAppPreferences'
 import { BD_GEO_DIVISIONS, BD_GEO_DISTRICTS, BD_GEO_UPAZILAS, BD_GEO_UNIONS } from '@/utils/bdGeo'
-import type { Branch } from '@/composables/useBranches'
+import type { Branch } from '@/composables/Institute_Setup/useBranches'
 
 const props = defineProps<{
   branch: Branch

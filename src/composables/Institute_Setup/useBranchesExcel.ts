@@ -6,7 +6,7 @@
 
 import * as XLSX from 'xlsx'
 import { BD_GEO_DIVISIONS, BD_GEO_DISTRICTS, BD_GEO_UPAZILAS, BD_GEO_UNIONS } from '@/utils/bdGeo'
-import type { Branch } from '@/composables/useBranches'
+import type { Branch } from '@/composables/Institute_Setup/useBranches'
 
 /** Column defs: header → branch key → value converter. */
 interface ColDef {

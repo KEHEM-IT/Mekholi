@@ -4,14 +4,14 @@ import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
 import { useAppPreferences } from "@/composables/useAppPreferences";
 import { useShortcutKeySet } from "@/composables/shortcut_key_set";
-import { isSaving, saveProfile, loadProfile } from "@/composables/useInstituteProfile";
+import { isSaving, saveProfile, loadProfile } from "@/composables/Institute_Setup/useInstituteProfile";
 import { useToast } from "@/composables/useToast";
 import { uploadToImgbb, validateLogoFile } from "@/composables/useImgbbUpload";
 import { useFormDirtyGuard } from "@/composables/useFormDirtyGuard";
 import {
   exportProfileToExcel,
   importProfileFromExcel,
-} from "@/composables/useInstituteProfileExcel";
+} from "@/composables/Institute_Setup/useInstituteProfileExcel";
 import BaseCombobox from "@/components/ui/BaseCombobox.vue";
 import BaseDatePicker from "@/components/ui/BaseDatePicker.vue";
 import BaseModal from "@/components/ui/BaseModal.vue";

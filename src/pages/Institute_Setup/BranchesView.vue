@@ -11,8 +11,8 @@ import {
   saveBranch,
   deleteBranch,
   type Branch,
-} from '@/composables/useBranches'
-import { exportBranchesToExcel, importBranchesFromExcel } from '@/composables/useBranchesExcel'
+} from '@/composables/Institute_Setup/useBranches'
+import { exportBranchesToExcel, importBranchesFromExcel } from '@/composables/Institute_Setup/useBranchesExcel'
 import BaseModal from '@/components/ui/BaseModal.vue'
 import BranchFormModal from './BranchFormModal.vue'
 import BranchPreviewModal from './BranchPreviewModal.vue'
