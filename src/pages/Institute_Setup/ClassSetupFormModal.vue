@@ -155,14 +155,14 @@ watch(
   () => form.phase,
   (val, oldVal) => {
     if (props.entity !== 'classes') return
-    if (val !== oldVal) {
-      // A programmatic preset change matches the recorded baseline — ignore.
-      if (val === presetPhase) {
-        presetPhase = ''
-        return
-      }
-      phaseTouchedByUser.value = true
+    if (val === oldVal) return
+    // Back on the auto-filled option → green (clears the user-edit flag).
+    if (val === presetPhase) {
+      phaseTouchedByUser.value = false
+      return
     }
+    // Anything else the user picks → red.
+    phaseTouchedByUser.value = true
   },
 )
 
