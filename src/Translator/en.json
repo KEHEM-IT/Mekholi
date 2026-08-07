@@ -355,5 +355,11 @@
   "Reset to defaults": "Reset to defaults",
   "Save changes": "Save changes",
   "Left": "Left",
-  "No information filled yet": "No information filled yet"
+  "No information filled yet": "No information filled yet",
+  "Undo": "Undo",
+  "Branch deleted": "Branch deleted",
+  "Branch restored": "Branch restored",
+  "Academic year deleted": "Academic year deleted",
+  "Academic year restored": "Academic year restored",
+  "Restore failed": "Restore failed"
 }

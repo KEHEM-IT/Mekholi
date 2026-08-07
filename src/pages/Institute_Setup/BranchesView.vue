@@ -73,8 +73,20 @@ async function onDelete(branch: Branch) {
   if (!ok) return
   const deleted = await deleteBranch(branch.id)
   if (deleted) {
-    toast.success(t('common.deleted'))
     await load()
+    // Undoable toast — recreate the branch on Undo (5s window).
+    toast.action(t('Branch deleted'), {
+      label: t('Undo'),
+      onClick: async () => {
+        const restored = await saveBranch({ ...branch, id: undefined })
+        if (restored) {
+          toast.success(t('Branch restored'))
+          await load()
+        } else {
+          toast.error(t('Restore failed'))
+        }
+      },
+    })
   } else {
     toast.error(t('common.deleteFailed'))
   }
