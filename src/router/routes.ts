@@ -79,8 +79,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'institute-setup/branches',
         name: 'institute-setup-branches',
-        component: InstituteSetupPlaceholder,
-        meta: { title: 'Branches / Campus', titleBn: 'শাখা/ক্যাম্পাস' },
+        component: () => import('@/pages/Institute_Setup/BranchesView.vue'),
         beforeEnter: requireAuth,
       },
       {

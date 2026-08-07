@@ -105,6 +105,26 @@ def init_db():
             facility_key TEXT NOT NULL, enabled INTEGER DEFAULT 0,
             PRIMARY KEY (profile_id, facility_key)
         );
+        CREATE TABLE IF NOT EXISTS branches (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            branch_name TEXT DEFAULT '', branch_name_bn TEXT DEFAULT '',
+            branch_code TEXT DEFAULT '', campus_type TEXT DEFAULT 'Main',
+            is_main INTEGER DEFAULT 0,
+            logo TEXT DEFAULT '',
+            division_id TEXT DEFAULT '', district_id TEXT DEFAULT '',
+            upazila_id TEXT DEFAULT '', union_id TEXT DEFAULT '',
+            village_road_holding_no TEXT DEFAULT '',
+            post_office TEXT DEFAULT '', post_code TEXT DEFAULT '',
+            phone TEXT DEFAULT '', email TEXT DEFAULT '', website TEXT DEFAULT '',
+            head_name TEXT DEFAULT '', head_designation TEXT DEFAULT '',
+            head_phone TEXT DEFAULT '', head_email TEXT DEFAULT '',
+            eiin TEXT DEFAULT '', board TEXT DEFAULT '',
+            institute_type TEXT DEFAULT '', shift TEXT DEFAULT '',
+            established_date TEXT DEFAULT '',
+            is_active INTEGER DEFAULT 1, admission_open INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     # Seed a blank profile so the API always has something to return.
