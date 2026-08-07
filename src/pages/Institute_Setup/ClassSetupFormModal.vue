@@ -159,10 +159,6 @@ const isGroups = computed(() => props.entity === 'groups')
               />
             </div>
             <div class="form-field">
-              <label>{{ t('Class Name (Bangla)') }}</label>
-              <input v-model="form.class_name_bn" type="text" :placeholder="t('e.g. ষষ্ঠ, নবম')" />
-            </div>
-            <div class="form-field">
               <label>{{ t('Phase / Level') }} *</label>
               <BaseCombobox v-model="form.phase" :options="phaseOptions" option-value="LookupText" option-label="DisplayText" :placeholder="t('Select phase')" />
             </div>
