@@ -136,6 +136,41 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        CREATE TABLE IF NOT EXISTS classes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            class_name TEXT DEFAULT '', class_name_bn TEXT DEFAULT '',
+            phase TEXT DEFAULT '', sort_order INTEGER DEFAULT 0,
+            academic_year_id INTEGER DEFAULT 0, branch_id INTEGER DEFAULT 0,
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
+        CREATE TABLE IF NOT EXISTS sections (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            section_name TEXT DEFAULT '', section_name_bn TEXT DEFAULT '',
+            class_id INTEGER DEFAULT 0, shift_id INTEGER DEFAULT 0,
+            capacity INTEGER DEFAULT 0, room_id INTEGER DEFAULT 0,
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
+        CREATE TABLE IF NOT EXISTS groups (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            group_name TEXT DEFAULT '', group_name_bn TEXT DEFAULT '',
+            class_ids TEXT DEFAULT '[]', version TEXT DEFAULT '',
+            group_type TEXT DEFAULT '',
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
+        CREATE TABLE IF NOT EXISTS shifts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            shift_name TEXT DEFAULT '', shift_name_bn TEXT DEFAULT '',
+            start_time TEXT DEFAULT '', end_time TEXT DEFAULT '',
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     # Seed a blank profile so the API always has something to return.

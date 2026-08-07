@@ -91,8 +91,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'institute-setup/classes',
         name: 'institute-setup-classes',
-        component: InstituteSetupPlaceholder,
-        meta: { title: 'Class / Section / Group / Shift', titleBn: 'শ্রেণি/শাখা/গ্রুপ/শিফট' },
+        component: () => import('@/pages/Institute_Setup/ClassesView.vue'),
         beforeEnter: requireAuth,
       },
       {

@@ -394,7 +394,7 @@ children in `src/router/routes.ts`). Unbuilt pages share an inline **placeholder
 | 2 | Institute Profile | `/institute-setup/profile` | `institute-profile` | ✅ implemented |
 | 3 | Branches/Campus | `/institute-setup/branches` | `institute-setup-branches` | ✅ implemented |
 | 4 | Academic Year | `/institute-setup/academic-year` | `institute-setup-academic-year` | ✅ implemented |
-| 5 | Class/Section/Group/Shift | `/institute-setup/classes` | `institute-setup-classes` | 🚧 placeholder |
+| 5 | Class/Section/Group/Shift | `/institute-setup/classes` | `institute-setup-classes` | ✅ implemented |
 | 6 | Holidays & Working Days | `/institute-setup/holidays` | `institute-setup-holidays` | 🚧 placeholder |
 | 7 | Grading Scheme | `/institute-setup/grading` | `institute-setup-grading` | 🚧 placeholder |
 | 8 | Board & Regulatory Setup | `/institute-setup/boards` | `institute-setup-boards` | 🚧 placeholder |
