@@ -26,8 +26,8 @@ PROFILE_FIELDS = [
 
 BOOLEAN_FIELDS = ("has_english_version", "general_mpo", "tech_mpo")
 NUMBER_FIELDS = (
-    "staff_male", "staff_female", "staff_mpo_male", "staff_mpo_female",
-    "staff_nonmpo_male", "staff_nonmpo_female",
+    # Staff model v2: Total / Male / Female / MPO / Non-MPO
+    "staff_total", "staff_male", "staff_female", "staff_mpo", "staff_nonmpo",
 )
 
 

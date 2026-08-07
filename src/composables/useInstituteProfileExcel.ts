@@ -65,12 +65,11 @@ export const SCALAR_FIELDS: FieldMeta[] = [
   { key: 'stipend_code', label: 'Stipend Code', labelBn: 'স্টাইপেন্ড কোড', type: 'text' },
   // MPO status
   // Staff
-  { key: 'staff_male', label: 'Currently Working (Male)', labelBn: 'বর্তমানে কর্মরত (পুরুষ)', type: 'number' },
-  { key: 'staff_female', label: 'Currently Working (Female)', labelBn: 'বর্তমানে কর্মরত (মহিলা)', type: 'number' },
-  { key: 'staff_mpo_male', label: 'Staff MPO (Male)', labelBn: 'এমপিওভুক্ত কর্মচারী (পুরুষ)', type: 'number' },
-  { key: 'staff_mpo_female', label: 'Staff MPO (Female)', labelBn: 'এমপিওভুক্ত কর্মচারী (মহিলা)', type: 'number' },
-  { key: 'staff_nonmpo_male', label: 'Staff Non-MPO (Male)', labelBn: 'অ-এমপিওভুক্ত কর্মচারী (পুরুষ)', type: 'number' },
-  { key: 'staff_nonmpo_female', label: 'Staff Non-MPO (Female)', labelBn: 'অ-এমপিওভুক্ত কর্মচারী (মহিলা)', type: 'number' },
+  { key: 'staff_total', label: 'Total Staffs', labelBn: 'মোট কর্মচারী', type: 'number' },
+  { key: 'staff_male', label: 'Male Staffs', labelBn: 'পুরুষ কর্মচারী', type: 'number' },
+  { key: 'staff_female', label: 'Female Staffs', labelBn: 'মহিলা কর্মচারী', type: 'number' },
+  { key: 'staff_mpo', label: 'MPO Staffs', labelBn: 'এমপিওভুক্ত কর্মচারী', type: 'number' },
+  { key: 'staff_nonmpo', label: 'Non-MPO Staffs', labelBn: 'অ-এমপিওভুক্ত কর্মচারী', type: 'number' },
   // Bank
   { key: 'bank_name', label: 'Bank Name', labelBn: 'ব্যাংকের নাম', type: 'text' },
   { key: 'bank_branch', label: 'Bank Branch', labelBn: 'ব্যাংক শাখা', type: 'text' },

@@ -110,12 +110,11 @@ const idFields: Field[] = [
 
 
 const staffFields: Field[] = [
-  { key: 'staff_male', label: ['Male Staff', 'পুরুষ কর্মচারী'] },
-  { key: 'staff_female', label: ['Female Staff', 'মহিলা কর্মচারী'] },
-  { key: 'staff_mpo_male', label: ['MPO Male', 'এমপিও পুরুষ'] },
-  { key: 'staff_mpo_female', label: ['MPO Female', 'এমপিও মহিলা'] },
-  { key: 'staff_nonmpo_male', label: ['Non-MPO Male', 'অ-এমপিও পুরুষ'] },
-  { key: 'staff_nonmpo_female', label: ['Non-MPO Female', 'অ-এমপিও মহিলা'] },
+  { key: 'staff_total', label: ['Total Staffs', 'মোট কর্মচারী'] },
+  { key: 'staff_male', label: ['Male Staffs', 'পুরুষ কর্মচারী'] },
+  { key: 'staff_female', label: ['Female Staffs', 'মহিলা কর্মচারী'] },
+  { key: 'staff_mpo', label: ['MPO Staffs', 'এমপিওভুক্ত কর্মচারী'] },
+  { key: 'staff_nonmpo', label: ['Non-MPO Staffs', 'অ-এমপিওভুক্ত কর্মচারী'] },
 ]
 
 const bankFields: Field[] = [
@@ -128,10 +127,10 @@ const bankFields: Field[] = [
 ]
 
 const staffTotal = computed(() => {
-  // Same rule as the profile editor: Total Staffs = Currently Working
-  // (Male) + Currently Working (Female) only — not the MPO breakdown rows.
-  const nums = [f.value.staff_male, f.value.staff_female]
-  return nums.reduce((acc: number, n) => acc + (Number(n) || 0), 0)
+  // Mirrors the editor: the manual Total Staffs input, falling back to
+  // Male + Female when total is not entered yet.
+  const total = Number(f.value.staff_total) || 0
+  return total > 0 ? total : (Number(f.value.staff_male) || 0) + (Number(f.value.staff_female) || 0)
 })
 
 const hasAnyValue = computed(() => {
@@ -264,10 +263,6 @@ const hasAnyValue = computed(() => {
           <div v-for="x in staffFields" :key="x.key" class="ipfp-field">
             <span class="ipfp-field__label">{{ L(...x.label) }}</span>
             <span class="ipfp-field__value">{{ x.fmt ? x.fmt(f[x.key]) : show(f[x.key]) }}</span>
-          </div>
-          <div v-if="staffTotal > 0" class="ipfp-field ipfp-field--total">
-            <span class="ipfp-field__label">{{ L('Total Staffs', 'মোট কর্মচারী') }}</span>
-            <span class="ipfp-field__value">{{ staffTotal }}</span>
           </div>
         </div>
       </div>

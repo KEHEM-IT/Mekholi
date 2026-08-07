@@ -98,12 +98,13 @@ const form = reactive({
   stipend_code: "" as string,
 
   // Staff
+  // Staff (v2): Total / Male / Female / MPO / Non-MPO — Female & Non-MPO
+  // are auto-derived (Total − Male / Total − MPO) and stored for history.
+  staff_total: null as number | null,
   staff_male: null as number | null,
   staff_female: null as number | null,
-  staff_mpo_male: null as number | null,
-  staff_mpo_female: null as number | null,
-  staff_nonmpo_male: null as number | null,
-  staff_nonmpo_female: null as number | null,
+  staff_mpo: null as number | null,
+  staff_nonmpo: null as number | null,
 
   // Bank Account (single)
   bank_name: "" as string,
@@ -168,24 +169,21 @@ const geoUpazilaOptions = computed(() =>
 );
 const geoUnionOptions = computed(() => (form.upazila_id ? unionsByUpazilaId(form.upazila_id) : []));
 
-// Live total of staff — sum of the two "Currently Working" fields only
-// (Male + Female), not the MPO breakdown rows.
-const staffTotal = computed(() =>
-  [form.staff_male, form.staff_female].reduce<number>(
-    (sum, n) => sum + (Number(n) || 0),
-    0,
-  ),
-);
+// Live total staff — mirrors the manual "Total Staffs" input (badge in the
+// section header). Falls back to Male + Female when total is not entered yet.
+const staffTotal = computed(() => {
+  const t = Number(form.staff_total) || 0;
+  return t > 0 ? t : (Number(form.staff_male) || 0) + (Number(form.staff_female) || 0);
+});
 
 // Staff count fields: a 0 means "nothing entered" — keep the field empty so
 // the placeholder shows instead of a stale 0.
 const STAFF_KEYS = [
+  "staff_total",
   "staff_male",
   "staff_female",
-  "staff_mpo_male",
-  "staff_mpo_female",
-  "staff_nonmpo_male",
-  "staff_nonmpo_female",
+  "staff_mpo",
+  "staff_nonmpo",
 ];
 
 function isStaffKey(key: string): boolean {
@@ -199,6 +197,17 @@ function onStaffInput(key: string) {
     (form as Record<string, unknown>)[key] = null;
   }
 }
+
+// Derived staff fields: Female = Total − Male, Non-MPO = Total − MPO.
+// Clamped at 0; recomputed live as the user types the manual fields.
+function deriveStaff(key: "staff_female" | "staff_nonmpo", from: "staff_male" | "staff_mpo") {
+  const total = Number(form.staff_total) || 0;
+  const part = Number(form[from]) || 0;
+  const derived = total - part;
+  form[key] = derived > 0 ? derived : null;
+}
+watch([() => form.staff_total, () => form.staff_male], () => deriveStaff("staff_female", "staff_male"));
+watch([() => form.staff_total, () => form.staff_mpo], () => deriveStaff("staff_nonmpo", "staff_mpo"));
 
 // While restoring a saved profile we must NOT run the geo cascade resets —
 // the watchers below would otherwise clear the loaded child selections
@@ -1105,28 +1114,44 @@ function removeCommittee(i: number) {
         <div class="ipf-section__body">
           <div class="ipf-grid ipf-grid--three">
             <div class="form-field">
-              <label>{{ isBn ? "বর্তমানে কর্মরত (পুরুষ)" : "Currently Working (Male)" }}</label
+              <label>{{ isBn ? "মোট কর্মচারী" : "Total Staffs" }}</label
+              ><input v-model.number="form.staff_total" type="number" v-bind="MAX3"  :title="t('Total number of staff members', 'মোট কর্মচারীর সংখ্যা লিখুন')"  :placeholder="t('Total number of staff members', 'মোট কর্মচারীর সংখ্যা লিখুন')"  @input="onStaffInput('staff_total')" />
+            </div>
+            <div class="form-field">
+              <label>{{ isBn ? "পুরুষ কর্মচারী" : "Male Staffs" }}</label
               ><input v-model.number="form.staff_male" type="number" v-bind="MAX3"  :title="t('Number of male staff members', 'পুরুষ কর্মচারীর সংখ্যা লিখুন')"  :placeholder="t('Number of male staff members', 'পুরুষ কর্মচারীর সংখ্যা লিখুন')"  @input="onStaffInput('staff_male')" />
             </div>
             <div class="form-field">
-              <label>{{ isBn ? "বর্তমানে কর্মরত (মহিলা)" : "Currently Working (Female)" }}</label
-              ><input v-model.number="form.staff_female" type="number" v-bind="MAX3"  :title="t('Number of female staff members', 'মহিলা কর্মচারীর সংখ্যা লিখুন')"  :placeholder="t('Number of female staff members', 'মহিলা কর্মচারীর সংখ্যা লিখুন')"  @input="onStaffInput('staff_female')" />
+              <label>
+                {{ isBn ? "মহিলা কর্মচারী" : "Female Staffs" }}
+                <small class="ipf-field-auto">{{ isBn ? "স্বয়ংক্রিয়" : "auto" }}</small>
+              </label
+              ><input
+                type="number"
+                readonly
+                :value="form.staff_female ?? ''"
+                class="ipf-field-readonly"
+                :title="t('Auto-calculated: Total Staffs − Male Staffs', 'স্বয়ংক্রিয়: মোট কর্মচারী − পুরুষ কর্মচারী')"
+                :placeholder="t('Auto (Total − Male)', 'স্বয়ংক্রিয় (মোট − পুরুষ)')"
+              />
             </div>
             <div class="form-field">
-              <label>{{ isBn ? "এমপিও (পুরুষ)" : "MPO Staff (Male)" }}</label
-              ><input v-model.number="form.staff_mpo_male" type="number" v-bind="MAX3"  :title="t('Male staff under MPO', 'এমপিওভুক্ত পুরুষ কর্মচারীর সংখ্যা')"  :placeholder="t('Male staff under MPO', 'এমপিওভুক্ত পুরুষ কর্মচারীর সংখ্যা')"  @input="onStaffInput('staff_mpo_male')" />
+              <label>{{ isBn ? "এমপিওভুক্ত কর্মচারী" : "MPO Staffs" }}</label
+              ><input v-model.number="form.staff_mpo" type="number" v-bind="MAX3"  :title="t('Number of staff under MPO', 'এমপিওভুক্ত কর্মচারীর সংখ্যা লিখুন')"  :placeholder="t('Number of staff under MPO', 'এমপিওভুক্ত কর্মচারীর সংখ্যা লিখুন')"  @input="onStaffInput('staff_mpo')" />
             </div>
             <div class="form-field">
-              <label>{{ isBn ? "এমপিও (মহিলা)" : "MPO Staff (Female)" }}</label
-              ><input v-model.number="form.staff_mpo_female" type="number" v-bind="MAX3"  :title="t('Female staff under MPO', 'এমপিওভুক্ত মহিলা কর্মচারীর সংখ্যা')"  :placeholder="t('Female staff under MPO', 'এমপিওভুক্ত মহিলা কর্মচারীর সংখ্যা')"  @input="onStaffInput('staff_mpo_female')" />
-            </div>
-            <div class="form-field">
-              <label>{{ isBn ? "অ-এমপিও (পুরুষ)" : "Non-MPO Staff (Male)" }}</label
-              ><input v-model.number="form.staff_nonmpo_male" type="number" v-bind="MAX3"  :title="t('Male staff not under MPO', 'অ-এমপিওভুক্ত পুরুষ কর্মচারীর সংখ্যা')"  :placeholder="t('Male staff not under MPO', 'অ-এমপিওভুক্ত পুরুষ কর্মচারীর সংখ্যা')"  @input="onStaffInput('staff_nonmpo_male')" />
-            </div>
-            <div class="form-field">
-              <label>{{ isBn ? "অ-এমপিও (মহিলা)" : "Non-MPO Staff (Female)" }}</label
-              ><input v-model.number="form.staff_nonmpo_female" type="number" v-bind="MAX3"  :title="t('Female staff not under MPO', 'অ-এমপিওভুক্ত মহিলা কর্মচারীর সংখ্যা')"  :placeholder="t('Female staff not under MPO', 'অ-এমপিওভুক্ত মহিলা কর্মচারীর সংখ্যা')"  @input="onStaffInput('staff_nonmpo_female')" />
+              <label>
+                {{ isBn ? "অ-এমপিওভুক্ত কর্মচারী" : "Non-MPO Staffs" }}
+                <small class="ipf-field-auto">{{ isBn ? "স্বয়ংক্রিয়" : "auto" }}</small>
+              </label
+              ><input
+                type="number"
+                readonly
+                :value="form.staff_nonmpo ?? ''"
+                class="ipf-field-readonly"
+                :title="t('Auto-calculated: Total Staffs − MPO Staffs', 'স্বয়ংক্রিয়: মোট কর্মচারী − এমপিওভুক্ত কর্মচারী')"
+                :placeholder="t('Auto (Total − MPO)', 'স্বয়ংক্রিয় (মোট − এমপিও)')"
+              />
             </div>
           </div>
         </div>

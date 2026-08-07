@@ -36,6 +36,20 @@ def _migrate(conn):
     if "classifications" not in cols:
         conn.execute("ALTER TABLE institute_profiles ADD COLUMN classifications TEXT DEFAULT '[]'")
         print("SQL: migrated institute_profiles — added classifications column")
+    if "staff_total" not in cols:
+        # Staff model v2: Total / Male / Female / MPO / Non-MPO.
+        # Female & Non-MPO are derived on the frontend but stored for history.
+        conn.execute("ALTER TABLE institute_profiles ADD COLUMN staff_total INTEGER DEFAULT 0")
+        conn.execute("ALTER TABLE institute_profiles ADD COLUMN staff_mpo INTEGER DEFAULT 0")
+        conn.execute("ALTER TABLE institute_profiles ADD COLUMN staff_nonmpo INTEGER DEFAULT 0")
+        # Backfill from the legacy 6-column split (Male/Female × MPO/Non-MPO).
+        conn.execute(
+            "UPDATE institute_profiles SET "
+            "staff_total = staff_male + staff_female, "
+            "staff_mpo = staff_mpo_male + staff_mpo_female, "
+            "staff_nonmpo = staff_nonmpo_male + staff_nonmpo_female"
+        )
+        print("SQL: migrated institute_profiles — staff model v2 (total/mpo/nonmpo) + backfill")
 
 
 def init_db():
@@ -68,6 +82,8 @@ def init_db():
             staff_male INTEGER DEFAULT 0, staff_female INTEGER DEFAULT 0,
             staff_mpo_male INTEGER DEFAULT 0, staff_mpo_female INTEGER DEFAULT 0,
             staff_nonmpo_male INTEGER DEFAULT 0, staff_nonmpo_female INTEGER DEFAULT 0,
+            staff_total INTEGER DEFAULT 0, staff_mpo INTEGER DEFAULT 0,
+            staff_nonmpo INTEGER DEFAULT 0,
             secondary_mpo_date TEXT DEFAULT '', secondary_mpo_code TEXT DEFAULT '',
             higher_secondary_mpo_date TEXT DEFAULT '', higher_secondary_mpo_code TEXT DEFAULT '',
             bank_name TEXT DEFAULT '', bank_branch TEXT DEFAULT '',
