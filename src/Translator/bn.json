@@ -361,5 +361,8 @@
   "Branch restored": "শাখা পুনরুদ্ধার করা হয়েছে",
   "Academic year deleted": "শিক্ষাবর্ষ মুছে ফেলা হয়েছে",
   "Academic year restored": "শিক্ষাবর্ষ পুনরুদ্ধার করা হয়েছে",
-  "Restore failed": "পুনরুদ্ধার ব্যর্থ হয়েছে"
+  "Restore failed": "পুনরুদ্ধার ব্যর্থ হয়েছে",
+  "No branches yet": "এখনও কোনো শাখা নেই",
+  "Add your main campus and annexes to start organising classes, students and staff by branch.": "শাখা অনুযায়ী ক্লাস, শিক্ষার্থী ও কর্মচারী সংগঠিত করতে আপনার প্রধান ক্যাম্পাস ও অ্যানেক্স যোগ করুন।",
+  "One main branch drives the whole institute": "একটি প্রধান শাখা পুরো প্রতিষ্ঠান পরিচালনা করে"
 }

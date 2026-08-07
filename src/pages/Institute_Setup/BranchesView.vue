@@ -241,12 +241,25 @@ function shortAddress(b: Branch): string {
       </article>
     </div>
 
-    <p v-if="!branches.length" class="ipf-class-empty">
-      <i class="fa-duotone fa-building-circle-check" />
-      {{
-        t('branches.empty')
-      }}
-    </p>
+    <!-- Empty state -->
+    <div v-if="!branches.length" class="ay-empty reveal-content">
+      <div class="ay-empty__icon">
+        <i class="fa-duotone fa-building-columns" />
+      </div>
+      <h3 class="ay-empty__title">{{ t('No branches yet') }}</h3>
+      <p class="ay-empty__subtitle">
+        {{ t('Add your main campus and annexes to start organising classes, students and staff by branch.') }}
+      </p>
+      <p class="ay-empty__hint">
+        <i class="fa-solid fa-circle" />
+        {{ t('One main branch drives the whole institute') }}
+      </p>
+      <div class="ay-empty__actions">
+        <button type="button" class="btn btn--primary" @click="openAdd">
+          <i class="fa-duotone fa-plus" /> {{ t('Add Branch') }}
+        </button>
+      </div>
+    </div>
 
     <!-- Form modal — only closes via ✕ / Cancel so edits are never lost -->
     <BaseModal
