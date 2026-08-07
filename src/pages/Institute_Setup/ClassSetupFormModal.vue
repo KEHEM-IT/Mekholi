@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Add / edit modal for Class / Section / Group / Shift — a single generic
 // form that renders the fields for the active entity.
-import { computed, onMounted, reactive, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useTranslator } from '@/Translator'
 import { useToast } from '@/composables/useToast'
 import BaseCombobox from '@/components/ui/BaseCombobox.vue'
@@ -86,6 +86,9 @@ function applyClassPreset(name: string) {
   form.class_name_bn = preset.NameInBangla
   form.phase = preset.Phase
   form.sort_order = preset.SortOrder
+  // Programmatic fill — record baseline; the watcher ignores this exact change.
+  presetPhase = preset.Phase
+  phaseTouchedByUser.value = false
 }
 
 // When the user picks a class name, auto-fill the related fields
@@ -139,9 +142,32 @@ function submit() {
 }
 
 const isClasses = computed(() => props.entity === 'classes')
-/** True when the Phase field is required but empty — shows red border. */
+
+// Red border ONLY when the user manually changes Phase and leaves it
+// different from the auto-filled value. Auto-fill never flags it, and an
+// untouched empty field doesn't either — the border appears when the user
+// edits the auto-selected Phase.
+// A user edit = any Phase change that did NOT come from applyClassPreset.
+const phaseTouchedByUser = ref(false)
+let presetPhase = ''
+
+watch(
+  () => form.phase,
+  (val, oldVal) => {
+    if (props.entity !== 'classes') return
+    if (val !== oldVal) {
+      // A programmatic preset change matches the recorded baseline — ignore.
+      if (val === presetPhase) {
+        presetPhase = ''
+        return
+      }
+      phaseTouchedByUser.value = true
+    }
+  },
+)
+
 const phaseInvalid = computed(
-  () => isClasses.value && !String(form.phase ?? '').trim(),
+  () => isClasses.value && phaseTouchedByUser.value,
 )
 const isSections = computed(() => props.entity === 'sections')
 const isGroups = computed(() => props.entity === 'groups')
