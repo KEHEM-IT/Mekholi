@@ -469,6 +469,7 @@
   width: 100%;
   padding: $space-2 $space-3;
   border-radius: $radius-md;
+  margin-bottom: $space-2;
 }
 
 .sidebar-sk-icon {
@@ -480,7 +481,7 @@
 
 .sidebar-sk-label {
   flex: 1 1 auto;
-  height: 5rem;
+  height: 1.5rem;
   border-radius: $radius-sm;
   max-width: 70%;
 }
