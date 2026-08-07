@@ -420,5 +420,9 @@
   "e.g. সকাল": "e.g. সকাল",
   "Max students": "Max students",
   "Optional room id": "Optional room id",
-  "Select class name": "Select class name"
+  "Select class name": "Select class name",
+  "Add Class": "Add Class",
+  "Add Section": "Add Section",
+  "Add Group": "Add Group",
+  "Add Shift": "Add Shift"
 }

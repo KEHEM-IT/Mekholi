@@ -64,6 +64,9 @@ onMounted(async () => {
 function tabLabel(key: ClassSetupEntity): string {
   return key === 'classes' ? t('Classes') : key === 'sections' ? t('Sections') : key === 'groups' ? t('Groups') : t('Shifts')
 }
+function addLabel(key: ClassSetupEntity): string {
+  return key === 'classes' ? t('Add Class') : key === 'sections' ? t('Add Section') : key === 'groups' ? t('Add Group') : t('Add Shift')
+}
 
 function openAdd() {
   editingItem.value = null
@@ -218,7 +221,7 @@ async function onImportPicked(event: Event) {
       </div>
       <div class="ipf-header__actions">
         <button type="button" class="btn btn--primary" @click="openAdd">
-          <i class="fa-duotone fa-plus" /> {{ t('Add') }}
+          <i class="fa-duotone fa-plus" /> {{ addLabel(activeTab) }}
         </button>
         <button type="button" class="btn ipf-header__export" @click="handleExport">
           <i class="fa-duotone fa-file-excel" /> {{ t('Export') }}
@@ -310,7 +313,7 @@ async function onImportPicked(event: Event) {
       </p>
       <div class="ay-empty__actions">
         <button type="button" class="btn btn--primary" @click="openAdd">
-          <i class="fa-duotone fa-plus" /> {{ t('Add') }}
+          <i class="fa-duotone fa-plus" /> {{ addLabel(activeTab) }}
         </button>
       </div>
     </div>
