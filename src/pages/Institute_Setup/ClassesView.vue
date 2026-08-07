@@ -54,39 +54,46 @@ const activeItems = computed(() => lists.value[activeTab.value])
 // ── Table column definitions per tab ───────────────────────────────────
 const tableColumns = computed<Record<string, TableColumn[]>>(() => ({
   classes: [
-    { key: 'sort_order', label: '#', width: '3.5rem', align: 'center' },
-    { key: 'class_name', label: t('Class Name') },
-    { key: 'class_name_bn', label: t('Bangla') },
-    { key: 'phase', label: t('Phase / Level') },
-    { key: 'academic_year_id', label: t('Year'), render: (r) => yearLabel((r as Record<string, unknown>).academic_year_id) },
-    { key: 'branch_id', label: t('Branch'), render: (r) => branchLabel((r as Record<string, unknown>).branch_id) },
-    { key: 'is_active', label: t('Active'), align: 'center', render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
+    { key: 'sort_order', label: '#', width: '3.5rem', align: 'center', sortable: true },
+    { key: 'class_name', label: t('Class Name'), sortable: true },
+    { key: 'class_name_bn', label: t('Bangla'), sortable: true },
+    { key: 'phase', label: t('Phase / Level'), sortable: true },
+    { key: 'academic_year_id', label: t('Year'), sortable: true, sortValue: (r) => yearLabel((r as Record<string, unknown>).academic_year_id), render: (r) => yearLabel((r as Record<string, unknown>).academic_year_id) },
+    { key: 'branch_id', label: t('Branch'), sortable: true, sortValue: (r) => branchLabel((r as Record<string, unknown>).branch_id), render: (r) => branchLabel((r as Record<string, unknown>).branch_id) },
+    { key: 'is_active', label: t('Active'), align: 'center', sortable: true, render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
   ],
   sections: [
-    { key: 'id', label: '#', width: '3.5rem', align: 'center' },
-    { key: 'section_name', label: t('Section') },
-    { key: 'section_name_bn', label: t('Bangla') },
-    { key: 'class_id', label: t('Class'), render: (r) => classLabel((r as Record<string, unknown>).class_id) },
-    { key: 'shift_id', label: t('Shift'), render: (r) => shiftLabel((r as Record<string, unknown>).shift_id) },
-    { key: 'capacity', label: t('Capacity'), align: 'right' },
-    { key: 'is_active', label: t('Active'), align: 'center', render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
+    { key: 'id', label: '#', width: '3.5rem', align: 'center', sortable: true },
+    { key: 'section_name', label: t('Section'), sortable: true },
+    { key: 'section_name_bn', label: t('Bangla'), sortable: true },
+    { key: 'class_id', label: t('Class'), sortable: true, sortValue: (r) => classLabel((r as Record<string, unknown>).class_id), render: (r) => classLabel((r as Record<string, unknown>).class_id) },
+    { key: 'shift_id', label: t('Shift'), sortable: true, sortValue: (r) => shiftLabel((r as Record<string, unknown>).shift_id), render: (r) => shiftLabel((r as Record<string, unknown>).shift_id) },
+    { key: 'capacity', label: t('Capacity'), align: 'right', sortable: true },
+    { key: 'is_active', label: t('Active'), align: 'center', sortable: true, render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
   ],
   groups: [
-    { key: 'group_name', label: t('Group Name') },
-    { key: 'group_name_bn', label: t('Bangla') },
-    { key: 'class_ids', label: t('Classes'), render: (r) => (f(r, 'class_ids') as number[] | undefined)?.map((id) => classLabel(id)).join(', ') ?? '—' },
-    { key: 'version', label: t('Version') },
-    { key: 'group_type', label: t('Group Type') },
-    { key: 'is_active', label: t('Active'), align: 'center', render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
+    { key: 'group_name', label: t('Group Name'), sortable: true },
+    { key: 'group_name_bn', label: t('Bangla'), sortable: true },
+    { key: 'class_ids', label: t('Classes'), sortable: true, sortValue: (r) => (f(r, 'class_ids') as number[] | undefined)?.map((id) => classLabel(id)).join(', ') ?? '—', render: (r) => (f(r, 'class_ids') as number[] | undefined)?.map((id) => classLabel(id)).join(', ') ?? '—' },
+    { key: 'version', label: t('Version'), sortable: true },
+    { key: 'group_type', label: t('Group Type'), sortable: true },
+    { key: 'is_active', label: t('Active'), align: 'center', sortable: true, render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
   ],
   shifts: [
-    { key: 'shift_name', label: t('Shift Name') },
-    { key: 'shift_name_bn', label: t('Bangla') },
-    { key: 'start_time', label: t('Start') },
-    { key: 'end_time', label: t('End') },
-    { key: 'is_active', label: t('Active'), align: 'center', render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
+    { key: 'shift_name', label: t('Shift Name'), sortable: true },
+    { key: 'shift_name_bn', label: t('Bangla'), sortable: true },
+    { key: 'start_time', label: t('Start'), sortable: true },
+    { key: 'end_time', label: t('End'), sortable: true },
+    { key: 'is_active', label: t('Active'), align: 'center', sortable: true, render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
   ],
 }))
+
+/** Default sort per tab (empty = natural order). */
+const defaultSortForTab = computed(() =>
+  activeTab.value === 'classes' ? { key: 'sort_order', dir: 'asc' as const }
+  : activeTab.value === 'sections' ? { key: 'id', dir: 'asc' as const }
+  : { key: '', dir: 'asc' as const },
+)
 
 function yearLabel(id: unknown): string {
   const n = Number(id)
@@ -336,9 +343,12 @@ async function onImportPicked(event: Event) {
 
     <!-- Data table (reusable, sticky head, scrollable body) -->
     <DataTable
+      :key="activeTab"
       :columns="tableColumns[activeTab]"
       :rows="activeItems"
       row-key="id"
+      :default-sort-key="defaultSortForTab.key"
+      :default-sort-dir="defaultSortForTab.dir"
       :empty-text="t('No {entity} yet', { entity: tabLabel(activeTab) })"
     >
       <template #is_active="{ row }">
