@@ -107,7 +107,7 @@ onMounted(() => {
       null,
     )
     const pick = current ?? latest
-    if (pick?.id != null) form.academic_year_id = pick.id
+    if (pick?.id != null) (form as unknown as Record<string, unknown>).academic_year_id = String(pick.id)
   }
 })
 
@@ -139,6 +139,10 @@ function submit() {
 }
 
 const isClasses = computed(() => props.entity === 'classes')
+/** True when the Phase field is required but empty — shows red border. */
+const phaseInvalid = computed(
+  () => isClasses.value && !String(form.phase ?? '').trim(),
+)
 const isSections = computed(() => props.entity === 'sections')
 const isGroups = computed(() => props.entity === 'groups')
 </script>
@@ -166,7 +170,7 @@ const isGroups = computed(() => props.entity === 'groups')
             </div>
             <div class="form-field">
               <label>{{ t('Phase / Level') }} *</label>
-              <BaseCombobox v-model="form.phase" :options="phaseOptions" option-value="LookupText" option-label="DisplayText" :placeholder="t('Select phase')" />
+              <BaseCombobox v-model="form.phase" :options="phaseOptions" option-value="LookupText" option-label="DisplayText" :placeholder="t('Select phase')" :invalid="phaseInvalid" />
             </div>
             <div class="form-field">
               <label>{{ t('Academic Year') }}</label>
