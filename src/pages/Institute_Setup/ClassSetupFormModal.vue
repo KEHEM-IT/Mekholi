@@ -97,11 +97,17 @@ watch(
   },
 )
 
-// Auto-select the current academic year when ADDING a class.
+// Auto-select the academic year when ADDING a class: prefer the current
+// year, otherwise fall back to the latest one.
 onMounted(() => {
   if (props.entity === 'classes' && !props.item) {
-    const current = props.years.find((y) => (y as unknown as { is_current?: boolean }).is_current)
-    if (current?.id != null) form.academic_year_id = current.id
+    const current = props.years.find((y) => (y as unknown as { is_current?: boolean | number }).is_current)
+    const latest = props.years.reduce<(typeof props.years)[number] | null>(
+      (best, y) => (best == null || Number(y.id) > Number(best.id) ? y : best),
+      null,
+    )
+    const pick = current ?? latest
+    if (pick?.id != null) form.academic_year_id = pick.id
   }
 })
 
