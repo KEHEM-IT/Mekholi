@@ -64,12 +64,11 @@ export const SCALAR_FIELDS: FieldMeta[] = [
   { key: 'technical_branch_mpo_code', label: 'Technical Branch MPO Code', labelBn: 'কারিগরি শাখার এমপিও কোড', type: 'text' },
   { key: 'stipend_code', label: 'Stipend Code', labelBn: 'স্টাইপেন্ড কোড', type: 'text' },
   // MPO status
-  // Staff
+  // Staff (auto fields — Female & Non-MPO — are excluded: they're derived
+  // on the webpage, so the Excel only carries the manual inputs)
   { key: 'staff_total', label: 'Total Staffs', labelBn: 'মোট কর্মচারী', type: 'number' },
   { key: 'staff_male', label: 'Male Staffs', labelBn: 'পুরুষ কর্মচারী', type: 'number' },
-  { key: 'staff_female', label: 'Female Staffs', labelBn: 'মহিলা কর্মচারী', type: 'number' },
   { key: 'staff_mpo', label: 'MPO Staffs', labelBn: 'এমপিওভুক্ত কর্মচারী', type: 'number' },
-  { key: 'staff_nonmpo', label: 'Non-MPO Staffs', labelBn: 'অ-এমপিওভুক্ত কর্মচারী', type: 'number' },
   // Bank
   { key: 'bank_name', label: 'Bank Name', labelBn: 'ব্যাংকের নাম', type: 'text' },
   { key: 'bank_branch', label: 'Bank Branch', labelBn: 'ব্যাংক শাখা', type: 'text' },
