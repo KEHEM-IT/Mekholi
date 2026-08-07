@@ -780,7 +780,7 @@ function removeCommittee(i: number) {
             </div>
             <div class="form-field">
               <label>{{ t("Est. Date") }}</label>
-              <BaseDatePicker v-model="form.establishment_date"  :title="t('Select the date the institute was established (DD/MM/YYYY)')"  :placeholder="t('Select the date the institute was established (DD/MM/YYYY)')" />
+              <BaseDatePicker v-model="form.establishment_date"  :title="t('Select the date the institute was established')"  :placeholder="t('DD/MM/YYYY')" />
             </div>
             <div class="form-field">
               <label>{{ t("Parliamentary Constituency") }}</label>
@@ -1010,8 +1010,7 @@ function removeCommittee(i: number) {
                   <BaseDatePicker
                     v-model="row.mpo_date"
                     :title="t('Select the MPO approval date')"
-                    :placeholder="t('Select the MPO approval date')"
-                  />
+                    :placeholder="t('DD/MM/YYYY')" />
                 </div>
               </template>
             </div>
@@ -1219,7 +1218,7 @@ function removeCommittee(i: number) {
               </div>
               <div class="form-field">
                 <label>{{ t("Joining Date") }}</label>
-                <BaseDatePicker v-model="form.committee_members[i].joining_date"  :title="t('Select the date the member joined the committee')"  :placeholder="t('Select the date the member joined the committee')" />
+                <BaseDatePicker v-model="form.committee_members[i].joining_date"  :title="t('Select the date the member joined the committee')"  :placeholder="t('DD/MM/YYYY')" />
               </div>
               <div class="form-field">
                 <label>{{ t("Phone") }}</label

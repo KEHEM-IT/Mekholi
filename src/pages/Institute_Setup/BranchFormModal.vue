@@ -263,7 +263,7 @@ function submit() {
           </div>
           <div class="form-field">
             <label>{{ t('branches.estDate') }}</label>
-            <BaseDatePicker v-model="form.established_date" :placeholder="t('branches.estDate')" />
+            <BaseDatePicker v-model="form.established_date" :placeholder="t('DD/MM/YYYY')" />
           </div>
         </div>
       </div>

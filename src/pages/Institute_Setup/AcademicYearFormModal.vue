@@ -75,11 +75,11 @@ function submit() {
           </div>
           <div class="form-field">
             <label>{{ t('Start Date') }}</label>
-            <BaseDatePicker v-model="form.start_date" :placeholder="t('Select start date')" />
+            <BaseDatePicker v-model="form.start_date" :placeholder="t('DD/MM/YYYY')" />
           </div>
           <div class="form-field">
             <label>{{ t('End Date') }}</label>
-            <BaseDatePicker v-model="form.end_date" :placeholder="t('Select end date')" />
+            <BaseDatePicker v-model="form.end_date" :placeholder="t('DD/MM/YYYY')" />
           </div>
         </div>
       </div>
@@ -90,11 +90,11 @@ function submit() {
         <div class="ipfp-grid">
           <div class="form-field">
             <label>{{ t('Registration From') }}</label>
-            <BaseDatePicker v-model="form.reg_start" :placeholder="t('Select registration start')" />
+            <BaseDatePicker v-model="form.reg_start" :placeholder="t('DD/MM/YYYY')" />
           </div>
           <div class="form-field">
             <label>{{ t('Registration To') }}</label>
-            <BaseDatePicker v-model="form.reg_end" :placeholder="t('Select registration end')" />
+            <BaseDatePicker v-model="form.reg_end" :placeholder="t('DD/MM/YYYY')" />
           </div>
         </div>
       </div>
