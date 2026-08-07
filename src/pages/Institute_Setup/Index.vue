@@ -58,7 +58,19 @@ const checklistSteps = computed(
 
 // Map nav step names to Vue Router route names + progress percentages.
 const STEP_ROUTES: Record<string, string> = {
+  // Maps each checklist step name (from the nav JSON) to its route name.
+  'Institute Dashboard': 'institute-setup',
   'Institute Profile': 'institute-profile',
+  'Branches/Campus': 'institute-setup-branches',
+  'Academic Year': 'institute-setup-academic-year',
+  'Class/Section/Group/Shift': 'institute-setup-classes',
+  'Holidays & Working Days': 'institute-setup-holidays',
+  'Grading Scheme': 'institute-setup-grading',
+  'Board & Regulatory Setup': 'institute-setup-boards',
+  'Subjects & Curriculum': 'institute-setup-subjects',
+  'Exam Terms & Types': 'institute-setup-exam-terms',
+  'Classrooms / Rooms / Buildings': 'institute-setup-rooms',
+  'Academic Sessions & Terms': 'institute-setup-sessions',
 }
 
 /** Per-step progress pct — each step maps to its own data source.

@@ -577,3 +577,44 @@
     border-radius: $radius-md;
   }
 }
+
+// ── Under-construction placeholder (routed sub-menus) ───────────────────
+
+.isp-placeholder {
+  @include flex(column, center, center, $space-3);
+  padding: $space-8 $space-4;
+  border: 1px dashed $color-border;
+  border-radius: $radius-lg;
+  background: $color-surface-alt;
+  text-align: center;
+  min-height: 40vh;
+
+  &__icon {
+    @include flex(row, center, center);
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: $color-primary-muted;
+    color: $color-primary;
+    font-size: 1.6rem;
+  }
+
+  h2 {
+    margin: $space-2 0 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: $color-text;
+  }
+
+  p {
+    margin: 0;
+    color: $color-text-secondary;
+    font-size: 0.95rem;
+  }
+
+  &__hint {
+    font-size: 0.8rem !important;
+    color: $color-text-muted !important;
+    max-width: 32rem;
+  }
+}
