@@ -27,7 +27,8 @@
    - 10. Exam Terms & Types
    - 11. Classrooms / Rooms / Buildings
    - 12. Academic Sessions & Terms
-4. [Suggested Implementation Order](#suggested-implementation-order)
+4. [Route Table](#route-table)
+5. [Suggested Implementation Order](#suggested-implementation-order)
 
 ---
 
@@ -377,6 +378,37 @@ class; College: `Semester 1..6`.
 | Result Type | `result_type` | combobox | `jsons/result_types.json` (Annual, Average of Terms, Cumulative) | – | how the final result is computed |
 
 **Relation:** `exam_terms.term_id` (10); fees & instalments can be term-scoped.
+
+---
+
+## Route Table
+
+All sub-menus are routed under the `/institute-setup` parent (inside the `DefaultLayout`
+children in `src/router/routes.ts`). Unbuilt pages share an inline **placeholder component**
+(no separate `.vue` file) that shows a styled "under construction" card using the bilingual
+`meta` title — building a real page is a one-line swap of the `component`.
+
+| # | Subcategory (nav name) | Route path | Route name | Status |
+|---|---|---|---|---|
+| 1 | Institute Dashboard | `/institute-setup` | `institute-setup` | ✅ implemented |
+| 2 | Institute Profile | `/institute-setup/profile` | `institute-profile` | ✅ implemented |
+| 3 | Branches/Campus | `/institute-setup/branches` | `institute-setup-branches` | 🚧 placeholder |
+| 4 | Academic Year | `/institute-setup/academic-year` | `institute-setup-academic-year` | 🚧 placeholder |
+| 5 | Class/Section/Group/Shift | `/institute-setup/classes` | `institute-setup-classes` | 🚧 placeholder |
+| 6 | Holidays & Working Days | `/institute-setup/holidays` | `institute-setup-holidays` | 🚧 placeholder |
+| 7 | Grading Scheme | `/institute-setup/grading` | `institute-setup-grading` | 🚧 placeholder |
+| 8 | Board & Regulatory Setup | `/institute-setup/boards` | `institute-setup-boards` | 🚧 placeholder |
+| 9 | Subjects & Curriculum | `/institute-setup/subjects` | `institute-setup-subjects` | 🚧 placeholder |
+| 10 | Exam Terms & Types | `/institute-setup/exam-terms` | `institute-setup-exam-terms` | 🚧 placeholder |
+| 11 | Classrooms / Rooms / Buildings | `/institute-setup/rooms` | `institute-setup-rooms` | 🚧 placeholder |
+| 12 | Academic Sessions & Terms | `/institute-setup/sessions` | `institute-setup-sessions` | 🚧 placeholder |
+
+**Checklist wiring:** `Index.vue` maps each nav step name → route name in `STEP_ROUTES`, so a
+card becomes clickable as soon as its route exists. When building a new page:
+
+1. Create `<Name>View.vue` in `src/pages/Institute_Setup/`
+2. Swap the placeholder's `component` for the real view (keep the route name)
+3. The dashboard checklist lights up automatically — no other change needed
 
 ---
 
