@@ -121,7 +121,7 @@ function sessionRange(y: AcademicYear): string {
 </script>
 
 <template>
-  <!-- Skeleton -->
+  <!-- Skeleton — mirrors the real page: header + year-card grid -->
   <section v-if="isPageLoading" class="ipf-skeleton" aria-busy="true">
     <div class="ipf-skeleton__header">
       <div class="ipf-skeleton__titles">
@@ -134,15 +134,29 @@ function sessionRange(y: AcademicYear): string {
         <span class="skeleton ipf-skeleton__pill" />
       </div>
     </div>
-    <div v-for="n in 3" :key="n" class="ipf-skeleton__section">
-      <span class="skeleton ipf-skeleton__section-title" />
-      <div class="ipf-skeleton__grid">
-        <span v-for="m in 3" :key="m" class="skeleton ipf-skeleton__field" />
+
+    <div class="ay-grid">
+      <div v-for="n in 6" :key="n" class="skeleton skeleton--card ay-sk-card">
+        <div class="ay-sk-head">
+          <span class="skeleton ay-sk-badge" />
+          <div class="ay-sk-titles">
+            <span class="skeleton ay-sk-name" />
+            <span class="skeleton ay-sk-namebn" />
+            <span class="skeleton ay-sk-chip" />
+          </div>
+        </div>
+        <span class="skeleton ay-sk-line" />
+        <span class="skeleton ay-sk-line ay-sk-line--short" />
+        <div class="ay-sk-foot">
+          <span class="skeleton ay-sk-btn" />
+          <span class="skeleton ay-sk-btn" />
+          <span class="skeleton ay-sk-btn" />
+        </div>
       </div>
     </div>
   </section>
 
-  <section v-else class="ipf">
+  <section v-else class="ipf reveal-content">
     <header class="ipf-header">
       <div class="ipf-header__titles">
         <h1>{{ t('Academic Year') }}</h1>

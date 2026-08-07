@@ -126,7 +126,7 @@ function shortAddress(b: Branch): string {
 </script>
 
 <template>
-  <!-- Skeleton -->
+  <!-- Skeleton — mirrors the real page: header + branch-card grid -->
   <section v-if="isPageLoading" class="ipf-skeleton" aria-busy="true">
     <div class="ipf-skeleton__header">
       <div class="ipf-skeleton__titles">
@@ -139,15 +139,29 @@ function shortAddress(b: Branch): string {
         <span class="skeleton ipf-skeleton__pill" />
       </div>
     </div>
-    <div v-for="n in 3" :key="n" class="ipf-skeleton__section">
-      <span class="skeleton ipf-skeleton__section-title" />
-      <div class="ipf-skeleton__grid">
-        <span v-for="m in 4" :key="m" class="skeleton ipf-skeleton__field" />
+
+    <div class="br-grid">
+      <div v-for="n in 6" :key="n" class="skeleton skeleton--card br-sk-card">
+        <div class="br-sk-head">
+          <span class="skeleton br-sk-logo" />
+          <div class="br-sk-titles">
+            <span class="skeleton br-sk-name" />
+            <span class="skeleton br-sk-namebn" />
+            <span class="skeleton br-sk-chip" />
+          </div>
+        </div>
+        <span class="skeleton br-sk-line" />
+        <span class="skeleton br-sk-line br-sk-line--short" />
+        <div class="br-sk-foot">
+          <span class="skeleton br-sk-btn" />
+          <span class="skeleton br-sk-btn" />
+          <span class="skeleton br-sk-btn" />
+        </div>
       </div>
     </div>
   </section>
 
-  <section v-else class="ipf">
+  <section v-else class="ipf reveal-content">
     <header class="ipf-header">
       <div class="ipf-header__titles">
         <h1>{{ t('branches.title') }}</h1>

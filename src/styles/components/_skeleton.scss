@@ -1,16 +1,30 @@
 @use '../abstracts' as *;
 
 // Generic shimmering placeholder block, used on any page while its data is
-// "loading" (see pages/_institute-profile.scss for a full page built from
-// these). This file only owns the shimmer look - size comes from a
-// page-specific modifier class or an inline style on the element.
+// loading. Sizes come from page-specific modifier classes; this file only
+// owns the look and the (slower, smoother) animation.
+//
+// A page skeleton should MIRROR the real page structure (same containers,
+// grids and cards) so the user sees where content is about to appear.
 
 @keyframes skeleton-shimmer {
   0% {
-    background-position: -200% 0;
+    background-position: 200% 0;
   }
   100% {
-    background-position: 200% 0;
+    background-position: -200% 0;
+  }
+}
+
+// Soft breathing pulse used on card-shaped skeleton containers so blocks
+// read as "cards" rather than flat bars.
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.75;
   }
 }
 
@@ -18,8 +32,40 @@
   position: relative;
   display: block;
   border-radius: $radius-sm;
-  background: linear-gradient(90deg, var(--color-surface-alt) 25%, var(--color-surface-hover) 37%, var(--color-surface-alt) 63%);
-  background-size: 400% 100%;
-  animation: skeleton-shimmer 1.4s ease infinite;
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-alt) 30%,
+    var(--color-surface-hover) 45%,
+    var(--color-surface-hover) 55%,
+    var(--color-surface-alt) 70%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 2.2s ease-in-out infinite;
   pointer-events: none;
+
+  // Skeleton shaped like a real card/container — border + radius + pulse so
+  // the loading screen mirrors the actual page containers.
+  &--card {
+    border: 1px solid var(--color-border);
+    border-radius: $radius-lg;
+    animation:
+      skeleton-shimmer 2.2s ease-in-out infinite,
+      skeleton-pulse 2.6s ease-in-out infinite;
+  }
+}
+
+// Content reveal — real page fades/slides in gently after the skeleton.
+@keyframes content-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-content {
+  animation: content-reveal 0.45s ease both;
 }

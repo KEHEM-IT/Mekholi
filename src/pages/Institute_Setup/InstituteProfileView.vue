@@ -598,7 +598,7 @@ function removeCommittee(i: number) {
 </script>
 
 <template>
-  <!-- ── Skeleton loader (min 2s) ─────────────────────── -->
+  <!-- ── Skeleton loader (min 2s) — mirrors the real form layout ─────── -->
   <section v-if="isPageLoading" class="ipf-skeleton" aria-busy="true" aria-label="Loading profile">
     <div class="ipf-skeleton__header">
       <div class="ipf-skeleton__titles">
@@ -612,23 +612,61 @@ function removeCommittee(i: number) {
       </div>
     </div>
 
-    <div class="ipf-skeleton__logo">
-      <span class="skeleton ipf-skeleton__logobox" />
-    </div>
-
-    <div v-for="n in 4" :key="n" class="ipf-skeleton__section">
-      <span class="skeleton ipf-skeleton__section-title" />
-      <div class="ipf-skeleton__grid">
-        <span v-for="m in 6" :key="m" class="skeleton ipf-skeleton__field" />
+    <!-- Identity section: logo uploader + name fields -->
+    <div class="skeleton skeleton--card ipf-sk-section">
+      <span class="skeleton ipf-sk-section-title" />
+      <span class="skeleton ipf-sk-logo" />
+      <div class="ipf-sk-grid ipf-sk-grid--two">
+        <span v-for="m in 2" :key="m" class="skeleton ipf-sk-field" />
       </div>
     </div>
 
+    <!-- Founder/Date + Address + Contact: mixed field densities -->
+    <div class="skeleton skeleton--card ipf-sk-section">
+      <span class="skeleton ipf-sk-section-title" />
+      <div class="ipf-sk-grid ipf-sk-grid--three">
+        <span v-for="m in 3" :key="m" class="skeleton ipf-sk-field" />
+      </div>
+    </div>
+
+    <div class="skeleton skeleton--card ipf-sk-section">
+      <span class="skeleton ipf-sk-section-title" />
+      <div class="ipf-sk-grid ipf-sk-grid--three">
+        <span v-for="m in 6" :key="m" class="skeleton ipf-sk-field" />
+      </div>
+    </div>
+
+    <!-- Classification + Identifiers -->
+    <div class="skeleton skeleton--card ipf-sk-section">
+      <span class="skeleton ipf-sk-section-title" />
+      <div class="ipf-sk-grid ipf-sk-grid--three">
+        <span v-for="m in 4" :key="m" class="skeleton ipf-sk-field" />
+      </div>
+      <span class="skeleton ipf-sk-row" />
+    </div>
+
+    <div class="skeleton skeleton--card ipf-sk-section">
+      <span class="skeleton ipf-sk-section-title" />
+      <div class="ipf-sk-grid ipf-sk-grid--three">
+        <span v-for="m in 6" :key="m" class="skeleton ipf-sk-field" />
+      </div>
+    </div>
+
+    <!-- Facilities: toggle chips row -->
+    <div class="skeleton skeleton--card ipf-sk-section">
+      <span class="skeleton ipf-sk-section-title" />
+      <div class="ipf-sk-facilities">
+        <span v-for="m in 10" :key="m" class="skeleton ipf-sk-chip" />
+      </div>
+    </div>
+
+    <!-- Sticky save bar -->
     <div class="ipf-skeleton__savebar">
-      <span class="skeleton ipf-skeleton__savebtn" />
+      <span class="skeleton ipf-sk-savebtn" />
     </div>
   </section>
 
-  <section v-else class="ipf">
+  <section v-else class="ipf reveal-content">
     <header class="ipf-header">
       <div class="ipf-header__titles">
         <h1>{{ t('profile.title') }}</h1>

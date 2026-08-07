@@ -502,123 +502,6 @@
   flex-shrink: 0;
 }
 
-// ── Skeleton loader (dashboard, shown min 2s on mount) ───────────────────
-
-.isc-skeleton {
-  @include flex(column, stretch, flex-start, $space-6);
-  pointer-events: none;
-
-  &__header {
-    @include flex(column, flex-start, flex-start, $space-2);
-  }
-
-  &__title {
-    width: 16rem;
-    height: 1.6rem;
-    max-width: 70%;
-  }
-
-  &__subtitle {
-    width: 26rem;
-    height: 0.9rem;
-    max-width: 95%;
-  }
-
-  &__section {
-    @include card;
-    @include flex(column, stretch, flex-start, $space-4);
-    min-width: 0;
-  }
-
-  &__section-head {
-    @include flex(row, center, space-between, $space-3);
-    flex-wrap: wrap;
-    gap: $space-3;
-    width: 100%;
-  }
-
-  &__section-title {
-    display: block;
-    width: 11rem;
-    height: 1.1rem;
-  }
-
-  &__section-sub {
-    display: block;
-    margin-top: $space-2;
-    width: 20rem;
-    max-width: 90%;
-    height: 0.8rem;
-  }
-
-  &__progress {
-    display: block;
-    width: 9rem;
-    height: 1.4rem;
-    border-radius: $radius-md;
-  }
-
-  &__cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
-    gap: $space-3;
-    width: 100%;
-  }
-
-  &__card {
-    height: 5.5rem;
-    border-radius: $radius-md;
-  }
-
-  &__dropzone {
-    display: block;
-    width: 100%;
-    height: 9rem;
-    border-radius: $radius-md;
-  }
-}
-
-// ── Under-construction placeholder (routed sub-menus) ───────────────────
-
-.isp-placeholder {
-  @include flex(column, center, center, $space-3);
-  padding: $space-8 $space-4;
-  border: 1px dashed var(--color-border);
-  border-radius: $radius-lg;
-  background: var(--color-surface-alt);
-  text-align: center;
-  min-height: 40vh;
-
-  &__icon {
-    @include flex(row, center, center);
-    width: 4rem;
-    height: 4rem;
-    border-radius: 50%;
-    background: var(--color-primary-muted);
-    color: var(--color-primary);
-    font-size: 1.6rem;
-  }
-
-  h2 {
-    margin: $space-2 0 0;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--color-text);
-  }
-
-  p {
-    margin: 0;
-    color: var(--color-text-secondary);
-    font-size: 0.95rem;
-  }
-
-  &__hint {
-    font-size: 0.8rem !important;
-    color: var(--color-text-muted) !important;
-    max-width: 32rem;
-  }
-}
-
 // ── Branches / Campus ───────────────────────────────────────────────────
 
 .br-grid {
@@ -856,4 +739,173 @@
   color: var(--color-text-secondary);
   font-size: 0.9rem;
   margin: 0;
+}
+
+// ── Card-grid skeletons (Branches + Academic Years) ─────────────────────
+// Mirror the real .br-card / .ay-card layout: logo/badge + titles + lines
+// + footer buttons, inside the same responsive grid.
+
+.br-sk-card,
+.ay-sk-card {
+  @include flex(column, stretch, flex-start, $space-3);
+  padding: $space-4;
+  border-radius: $radius-lg !important;
+  min-width: 0;
+}
+
+.br-sk-head,
+.ay-sk-head {
+  @include flex(row, flex-start, flex-start, $space-3);
+  width: 100%;
+  min-width: 0;
+}
+
+.br-sk-logo {
+  width: 3.4rem;
+  height: 3.4rem;
+  flex-shrink: 0;
+  border-radius: $radius-md;
+}
+
+.ay-sk-badge {
+  width: 3.4rem;
+  height: 3.4rem;
+  flex-shrink: 0;
+  border-radius: $radius-md;
+}
+
+.br-sk-titles,
+.ay-sk-titles {
+  @include flex(column, flex-start, flex-start, $space-2);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.br-sk-name,
+.ay-sk-name {
+  width: 70%;
+  max-width: 12rem;
+  height: 1.05rem;
+  border-radius: $radius-sm;
+}
+
+.br-sk-namebn,
+.ay-sk-namebn {
+  width: 50%;
+  max-width: 9rem;
+  height: 0.8rem;
+  border-radius: $radius-sm;
+}
+
+.br-sk-chip,
+.ay-sk-chip {
+  width: 5rem;
+  height: 1.1rem;
+  border-radius: 999px;
+}
+
+.br-sk-line,
+.ay-sk-line {
+  width: 100%;
+  height: 0.85rem;
+  border-radius: $radius-sm;
+
+  &--short {
+    width: 70%;
+  }
+}
+
+.br-sk-foot,
+.ay-sk-foot {
+  @include flex(row, center, flex-start, $space-2);
+  width: 100%;
+  margin-top: auto;
+  padding-top: $space-3;
+  border-top: 1px solid var(--color-border);
+}
+
+.br-sk-btn,
+.ay-sk-btn {
+  width: 4.5rem;
+  height: 1.9rem;
+  border-radius: $radius-md;
+}
+
+// ── Dashboard skeleton (mirrors .isc-section + check cards) ────────────
+
+.isc-sk-section {
+  @include flex(column, stretch, flex-start, $space-4);
+  padding: $space-4;
+  border-radius: $radius-lg !important;
+  min-width: 0;
+}
+
+.isc-sk-head {
+  @include flex(column, flex-start, flex-start, $space-2);
+  width: 100%;
+}
+
+.isc-sk-title {
+  width: 11rem;
+  height: 1.1rem;
+  border-radius: $radius-sm;
+}
+
+.isc-sk-sub {
+  width: 20rem;
+  max-width: 90%;
+  height: 0.8rem;
+  border-radius: $radius-sm;
+}
+
+.isc-sk-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(13rem, 100%), 1fr));
+  gap: $space-3;
+  width: 100%;
+}
+
+.isc-sk-card {
+  position: relative;
+  @include flex(column, center, center, $space-2);
+  padding: $space-4;
+  border-radius: $radius-md !important;
+  min-height: 6rem;
+  overflow: hidden;
+}
+
+.isc-sk-icon {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+}
+
+.isc-sk-label {
+  width: 60%;
+  height: 0.85rem;
+  border-radius: $radius-sm;
+}
+
+.isc-sk-pct {
+  position: absolute;
+  top: $space-2;
+  right: $space-2;
+  width: 2.6rem;
+  height: 1rem;
+  border-radius: 999px;
+}
+
+.isc-sk-vbar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 0;
+}
+
+.isc-sk-dropzone {
+  width: 100%;
+  height: 8.5rem;
+  border-radius: $radius-md;
 }

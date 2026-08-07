@@ -1029,6 +1029,7 @@
 }
 
 // ── Skeleton loader (profile page, shown min 2s on mount) ───────────────
+// Mirrors the real page containers: header, section cards, facilities chips.
 
 .ipf-skeleton {
   @include flex(column, stretch, flex-start, $space-6);
@@ -1069,138 +1070,76 @@
     border-radius: $radius-md;
   }
 
-  &__logo {
-    .ipf-skeleton__logobox {
-      display: block;
-      width: 100%;
-      height: 7rem;
-      border-radius: $radius-md;
-    }
-  }
-
-  &__section {
-    @include flex(column, stretch, flex-start, $space-3);
-    padding: $space-4;
-    border: 1px solid var(--color-border);
-    border-radius: $radius-md;
-    background: var(--color-surface-alt);
-  }
-
-  &__section-title {
-    width: 9rem;
-    height: 0.95rem;
-  }
-
-  &__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
-    gap: $space-3 $space-4;
-    width: 100%;
-  }
-
-  &__field {
-    height: 3.4rem;
-    border-radius: $radius-md;
-  }
-
   &__savebar {
     @include flex(row, center, flex-end, $space-3);
     width: 100%;
   }
-
-  &__savebtn {
-    width: 9rem;
-    height: 2.6rem;
-    border-radius: $radius-md;
-  }
 }
 
-// ── Classification rows (added via "+") ─────────────────────────────────
+// ── Profile skeleton section cards (mirror .ipf-section) ───────────────
 
-.ipf-class-row {
-  margin-top: $space-4;
-  padding: $space-3;
-  border-radius: $radius-md;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface-alt);
-
-  &__head {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    margin-bottom: $space-3;
-    @include flex(row, center, space-between, $space-2);
-  }
-
-  &__num {
-    color: var(--color-primary);
-  }
-}
-
-.ipf-class-empty {
-  @include flex(row, center, center, $space-2);
-  margin-top: $space-4;
+.ipf-sk-section {
+  @include flex(column, stretch, flex-start, $space-3);
   padding: $space-4;
-  border: 1px dashed var(--color-border);
+  border-radius: $radius-lg !important;
+}
+
+.ipf-sk-section-title {
+  width: 9rem;
+  height: 0.95rem;
+  border-radius: $radius-sm;
+}
+
+.ipf-sk-logo {
+  width: 100%;
+  height: 6.5rem;
   border-radius: $radius-md;
-  color: var(--color-text-muted);
-  font-size: 0.85rem;
-  text-align: center;
+}
 
-  i {
-    color: var(--color-primary);
+.ipf-sk-grid {
+  display: grid;
+  gap: $space-3 $space-4;
+  width: 100%;
+
+  &--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  &--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    @media (max-width: #{$breakpoint-sm - 1px}) {
+      grid-template-columns: 1fr;
+    }
   }
 }
 
-// ── Preview: classification rows ────────────────────────────────────────
-
-.ipfp-class-list {
-  @include flex(column, stretch, flex-start, $space-2);
-  margin-top: $space-4;
-}
-
-.ipfp-class-item {
-  padding: $space-3;
+.ipf-sk-field {
+  height: 3.4rem;
   border-radius: $radius-md;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-
-  &__head {
-    margin-bottom: $space-2;
-  }
-
-  &__num {
-    font-size: 0.72rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--color-primary);
-  }
 }
 
-// ── Staff derived fields (auto / readonly) ─────────────────────────────
-
-.ipf-field-auto {
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-info);
-  margin-left: $space-1;
+.ipf-sk-row {
+  width: 100%;
+  height: 3.8rem;
+  border-radius: $radius-md;
 }
 
-.ipf-field-readonly {
-  background: var(--color-surface-alt) !important;
-  color: var(--color-info) !important;
-  font-weight: 600;
-  cursor: not-allowed;
-  opacity: 0.85;
+.ipf-sk-facilities {
+  @include flex(row, center, flex-start, $space-2);
+  flex-wrap: wrap;
+  width: 100%;
 }
 
-// ── Full-row form field (spans every grid column) ──────────────────────
-
-.ipf-field--full {
-  grid-column: 1 / -1;
-  min-width: 0;
+.ipf-sk-chip {
+  width: 8.5rem;
+  height: 2.2rem;
+  border-radius: $radius-md;
 }
+
+.ipf-sk-savebtn {
+  width: 9rem;
+  height: 2.6rem;
+  border-radius: $radius-md;
+}
+

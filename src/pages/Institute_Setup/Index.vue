@@ -145,31 +145,33 @@ const {
       <span class="skeleton isc-skeleton__subtitle" />
     </div>
 
-    <div class="isc-skeleton__section">
-      <div class="isc-skeleton__section-head">
-        <div>
-          <span class="skeleton isc-skeleton__section-title" />
-          <span class="skeleton isc-skeleton__section-sub" />
-        </div>
-        <span class="skeleton isc-skeleton__progress" />
+    <!-- Setup checklist section: section head + check-card grid -->
+    <div class="skeleton skeleton--card isc-sk-section">
+      <div class="isc-sk-head">
+        <span class="skeleton isc-sk-title" />
+        <span class="skeleton isc-sk-sub" />
       </div>
-      <div class="isc-skeleton__cards">
-        <span v-for="n in 4" :key="n" class="skeleton isc-skeleton__card" />
+      <div class="isc-sk-cards">
+        <div v-for="n in 6" :key="n" class="skeleton skeleton--card isc-sk-card">
+          <span class="skeleton isc-sk-icon" />
+          <span class="skeleton isc-sk-label" />
+          <span class="skeleton isc-sk-pct" />
+          <span class="skeleton isc-sk-vbar" />
+        </div>
       </div>
     </div>
 
-    <div class="isc-skeleton__section">
-      <div class="isc-skeleton__section-head">
-        <div>
-          <span class="skeleton isc-skeleton__section-title" />
-          <span class="skeleton isc-skeleton__section-sub" />
-        </div>
+    <!-- EMIS import section: dropzone -->
+    <div class="skeleton skeleton--card isc-sk-section">
+      <div class="isc-sk-head">
+        <span class="skeleton isc-sk-title" />
+        <span class="skeleton isc-sk-sub" />
       </div>
-      <span class="skeleton isc-skeleton__dropzone" />
+      <span class="skeleton isc-sk-dropzone" />
     </div>
   </section>
 
-  <section v-else class="isc">
+  <section v-else class="isc reveal-content">
     <header class="isc-header">
       <h1>{{ t("Institute Dashboard") }}</h1>
       <p>
