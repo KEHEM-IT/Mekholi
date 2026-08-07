@@ -14,16 +14,16 @@ const navigation = navigationJson.shikkha_erp_navigation as unknown as Navigatio
 
 const { user } = useAuth();
 const { isCollapsed, isMobileOpen, toggleCollapsed, closeMobile } = useSidebar();
-const { pick } = useTranslator();
+const { localized } = useTranslator();
 const router = useRouter();
 
 
 function menuLabel(item: NavMenu) {
-  return pick(item.menu, item.menu_bn);
+  return localized(item, 'menu');
 }
 
 function subLabel(sub: NavSubMenu) {
-  return pick(sub.name, sub.name_bn);
+  return localized(sub, 'name');
 }
 
 // Sub-menu items are mostly placeholders (Core + Plugin blueprint - most

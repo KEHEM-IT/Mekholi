@@ -18,7 +18,7 @@ import type { NavigationMap } from '@/types'
 defineOptions({ name: 'InstituteDashboard' })
 
 const router = useRouter()
-const { t, pick } = useTranslator()
+const { t, localized } = useTranslator()
 
 // Skeleton loader — the dashboard shows a shimmer skeleton for at least
 // 2s on mount, matching the Institute Profile page behaviour.
@@ -202,7 +202,7 @@ const {
             @click="goToStep(step.name)"
           >
             <span class="isc-check-card__icon"><i :class="step.icon" /></span>
-            <span class="isc-check-card__label">{{ pick(step.name, step.name_bn) }}</span>
+            <span class="isc-check-card__label">{{ localized(step, 'name') }}</span>
             <span class="isc-check-card__pct">{{ (STEP_PCTS[step.name]?.() ?? 0) }}%</span>
             <!-- Vertical progress bar on the right edge -->
             <div class="isc-check-card__bar">
@@ -282,7 +282,7 @@ const {
             {{ t("Institute summary") }}
           </div>
           <p>
-            <strong>{{ pick(school.general_info.institute_name_en ?? '', school.general_info.institute_name_bn ?? '') }}</strong>
+            <strong>{{ localized(school.general_info, 'institute_name') }}</strong>
             <template v-if="school.general_info.classification.institute_type">
               &mdash; {{ school.general_info.classification.institute_type }}
             </template>
@@ -302,7 +302,7 @@ const {
               :class="{ 'is-active': activeTab === tab.key }"
               @click="activeTab = tab.key"
             >
-              {{ pick(tab.label, tab.label_bn) }}
+              {{ localized(tab, 'label') }}
               <span class="isc-tab__count">{{ tabRowCount(tab.key) }}</span>
             </button>
           </div>

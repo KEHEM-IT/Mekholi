@@ -96,9 +96,46 @@ export function translate(key: string, params?: TranslateParams): string {
 }
 
 /**
+ * Reactive current language — the "desireLang" straight from Settings.
+ * Use it anywhere:  const LANG = currentLang.value  →  'en' | 'bn' | 'zh'…
+ */
+export const currentLang = computed(() => useAppPreferences().preferences.uiLanguage)
+
+/**
+ * AUTOMATED localization for bilingual DATA objects.
+ *
+ * Convention: data carries `field_en` / `field_bn` (or a bare `field` as
+ * the English default). The desired language comes from Settings — you
+ * never pass the Bengali value manually:
+ *
+ *   localized(school.general_info, 'institute_name')
+ *     → lang 'en' → institute_name_en
+ *     → lang 'bn' → institute_name_bn
+ *     → lang 'zh' → institute_name_zh  (falls back to _en when missing)
+ *
+ *   localized(tab, 'label')      → label_bn / label (data may omit _en)
+ *   localized(step, 'name')      → name_bn / name
+ *
+ * Adding a future language = add `field_zh` to the data — zero code changes.
+ */
+export function localized<T extends object>(
+  data: T | null | undefined,
+  field: string,
+): string {
+  if (!data) return ''
+  const rec = data as unknown as Record<string, unknown>
+  const lang = currentLang.value
+  const byLang = rec[`${field}_${lang}`]
+  if (typeof byLang === 'string' && byLang !== '') return byLang
+  const en = rec[`${field}_en`] ?? rec[field]
+  return typeof en === 'string' ? en : ''
+}
+
+/**
  * Composable for <script setup> usage:
- *   const { t, lang } = useTranslator()
+ *   const { t, lang, localized } = useTranslator()
  *   t('Bank Account') → "Bank Account" / "ব্যাংক হিসাব"
+ *   localized(school.general_info, 'institute_name') → auto by settings
  */
 export function useTranslator() {
   const { preferences } = useAppPreferences()
@@ -113,7 +150,7 @@ export function useTranslator() {
     return preferences.uiLanguage === 'bn' ? bn : en
   }
 
-  return { t: translate, lang, pick }
+  return { t: translate, lang, pick, localized }
 }
 
 /** Standalone pick (usable outside components). */
