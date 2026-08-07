@@ -341,7 +341,7 @@ async function onImportPicked(event: Event) {
       row-key="id"
       :empty-text="t('No {entity} yet', { entity: tabLabel(activeTab) })"
     >
-      <template #cell-is_active="{ row }">
+      <template #is_active="{ row }">
         <BaseToggle
           :model-value="Boolean(f(row, 'is_active'))"
           :yes-label="t('Yes')"
