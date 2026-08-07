@@ -48,6 +48,7 @@ const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 const root = ref<HTMLElement | null>(null)
 const yearGridEl = ref<HTMLElement | null>(null)
+const inputEl = ref<HTMLInputElement | null>(null)
 const isOpen = ref(false)
 const mode = ref<'day' | 'month' | 'year'>('day')
 const viewYear = ref(new Date().getFullYear())
@@ -77,6 +78,67 @@ const displayText = computed(() => {
     ? `${String(s.d).padStart(2, '0')}/${String(s.m + 1).padStart(2, '0')}/${s.y}`
     : ''
 })
+
+// ── Editable input support ─────────────────────────────────────────────
+// While focused the field shows what the user typed (masked DD/MM/YYYY);
+// on blur an incomplete/invalid draft is rolled back to the stored value.
+
+const draft = ref('')
+const isFocused = ref(false)
+const showInputError = ref(false)
+
+/** ISO → DD/MM/YYYY for the input ('' when not an ISO date). */
+function isoToDmy(iso: string): string {
+  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : ''
+}
+
+/** DD/MM/YYYY → ISO; '' when incomplete or not a real date. */
+function dmyToIso(dmy: string): string {
+  const m = dmy.match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
+  if (!m) return ''
+  const day = Number(m[1])
+  const month = Number(m[2])
+  const year = Number(m[3])
+  const d = new Date(year, month - 1, day)
+  if (d.getFullYear() !== year || d.getMonth() !== month - 1 || d.getDate() !== day) return ''
+  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+}
+
+/** Value shown in the input: live draft while typing, stored date otherwise. */
+const inputValue = computed(() => (isFocused.value ? draft.value : displayText.value))
+
+function onInputFocus() {
+  isFocused.value = true
+  showInputError.value = false
+  draft.value = isoToDmy(props.modelValue ?? '')
+}
+
+function onInputChange(event: Event) {
+  const el = event.target as HTMLInputElement
+  const digits = el.value.replace(/\D/g, '').slice(0, 8)
+  let out = digits
+  if (digits.length > 4) out = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`
+  else if (digits.length > 2) out = `${digits.slice(0, 2)}/${digits.slice(2)}`
+  draft.value = out
+  if (out.length === 10) {
+    const iso = dmyToIso(out)
+    showInputError.value = !iso
+    if (iso) emit('update:modelValue', iso)
+  } else if (out.length === 0) {
+    showInputError.value = false
+    emit('update:modelValue', '')
+  } else {
+    showInputError.value = false
+  }
+}
+
+function onInputBlur() {
+  isFocused.value = false
+  // Incomplete but non-empty → roll back to the stored value.
+  if (draft.value.length > 0 && draft.value.length < 10) showInputError.value = true
+  draft.value = ''
+}
 
 function isoOf(y: number, m: number, d: number): string {
   return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
@@ -137,10 +199,6 @@ function open() {
 
 function close() {
   isOpen.value = false
-}
-
-function toggle() {
-  isOpen.value ? close() : open()
 }
 
 function selectDay(day: number) {
@@ -227,19 +285,24 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
 
 <template>
   <div ref="root" class="datepicker" :class="{ 'is-open': isOpen, 'is-disabled': disabled }">
-    <button
-      type="button"
-      class="datepicker__control"
-      :disabled="disabled"
-      :aria-haspopup="'dialog'"
-      :aria-expanded="isOpen"
-      @click="toggle"
-      @keydown="onControlKeydown"
-    >
-      <i class="fa-duotone fa-calendar" aria-hidden="true" />
-      <span class="datepicker__value" :class="{ 'is-placeholder': !displayText }">
-        {{ displayText || placeholder }}
-      </span>
+    <div class="datepicker__control" :class="{ 'is-error': showInputError }">
+      <i class="fa-duotone fa-calendar datepicker__cal-icon" aria-hidden="true" />
+      <input
+        ref="inputEl"
+        type="text"
+        inputmode="numeric"
+        maxlength="10"
+        autocomplete="off"
+        :value="inputValue"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        class="datepicker__input"
+        @focus="onInputFocus"
+        @input="onInputChange"
+        @blur="onInputBlur"
+        @click="open"
+        @keydown="onControlKeydown"
+      />
       <span class="datepicker__actions">
         <span
           v-if="displayText && !disabled"
@@ -253,7 +316,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
         </span>
         <span class="datepicker__caret" aria-hidden="true" />
       </span>
-    </button>
+    </div>
 
     <div v-if="isOpen" class="datepicker__panel" role="dialog" @keydown="onPanelKeydown">
       <!-- Header: arrows + clickable month/year fields -->

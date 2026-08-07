@@ -33,8 +33,19 @@ function subLabel(sub: NavSubMenu) {
 // JSON. Everything else just closes the sidebar, same as before.
 const SUBMENU_ROUTES: Record<string, string> = {
   "Language & Theme (Bilingual)": "settings-language-theme",
+  // Institute Setup
   "Institute Dashboard": "institute-setup",
-  "Profile & EIIN": "institute-profile",
+  "Institute Profile": "institute-profile",
+  "Branches/Campus": "institute-setup-branches",
+  "Academic Year": "institute-setup-academic-year",
+  "Class/Section/Group/Shift": "institute-setup-classes",
+  "Holidays & Working Days": "institute-setup-holidays",
+  "Grading Scheme": "institute-setup-grading",
+  "Board & Regulatory Setup": "institute-setup-boards",
+  "Subjects & Curriculum": "institute-setup-subjects",
+  "Exam Terms & Types": "institute-setup-exam-terms",
+  "Classrooms / Rooms / Buildings": "institute-setup-rooms",
+  "Academic Sessions & Terms": "institute-setup-sessions",
 };
 
 function onSubmenuClick(sub: NavSubMenu) {

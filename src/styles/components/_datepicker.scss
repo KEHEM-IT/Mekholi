@@ -25,40 +25,62 @@
   background: $color-input-bg;
   border: 1px solid $color-input-border;
   border-radius: $radius-md;
-  padding: $space-2 $space-3;
+  padding: 0 $space-3;
   color: $color-text;
   font-family: var(--font-family-base);
   font-size: $font-size-base;
   text-align: left;
-  cursor: pointer;
   transition:
     border-color $transition-fast,
     background-color $transition-fast;
-
-  > i {
-    font-size: 0.95rem;
-    color: $color-text-muted;
-    flex-shrink: 0;
-  }
 
   &:hover:not(:disabled) {
     border-color: $color-border-strong;
   }
 
-  &:focus-visible {
-    outline: none;
+  &:focus-within {
     border-color: $color-input-border-focus;
   }
 
-  &:disabled {
-    background: $color-input-disabled-bg;
-    color: $color-text-disabled;
-    cursor: not-allowed;
+  &.is-error {
+    border-color: $color-danger;
   }
 }
 
 .datepicker.is-open .datepicker__control {
   border-color: $color-input-border-focus;
+}
+
+.datepicker__cal-icon {
+  font-size: 0.95rem;
+  color: $color-text-muted;
+  flex-shrink: 0;
+}
+
+.datepicker__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  background: transparent !important;
+  border: none !important;
+  padding: $space-2 0 !important;
+  color: $color-text;
+  font-family: var(--font-family-base);
+  font-size: $font-size-base;
+
+  &::placeholder {
+    color: $color-input-placeholder;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled {
+    background: transparent !important;
+    color: $color-text-disabled;
+    cursor: not-allowed;
+  }
 }
 
 .datepicker__value {
