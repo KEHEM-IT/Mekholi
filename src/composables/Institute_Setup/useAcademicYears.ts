@@ -71,3 +71,29 @@ export async function deleteAcademicYear(id: number): Promise<boolean> {
     return false
   }
 }
+
+export interface AcademicYearImportResult {
+  ok: boolean
+  inserted: number
+  skipped: string[]
+}
+
+/**
+ * Bulk import with cross-check (upsert): years whose name already exists are
+ * skipped — only new years are stored.
+ */
+export async function importAcademicYears(items: AcademicYear[]): Promise<AcademicYearImportResult> {
+  const empty = { ok: false, inserted: 0, skipped: [] as string[] }
+  try {
+    const res = await fetch(`${API_BASE}/api/academic-years/import`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items }),
+    })
+    if (!res.ok) return empty
+    const data = (await res.json()) as AcademicYearImportResult
+    return { ...empty, ...data }
+  } catch {
+    return empty
+  }
+}

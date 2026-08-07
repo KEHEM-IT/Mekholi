@@ -32,6 +32,75 @@ ENTITIES = {
     },
 }
 
+# Natural business keys used by import to decide "does this already exist?".
+#  - "text" → case-insensitive trimmed comparison
+#  - "int"  → numeric equality (a blank value matches rows where it is NULL/'')
+# A row in the import file is a duplicate when ALL its key parts match an
+# existing record; duplicates are skipped, only genuinely new rows are stored.
+MATCH_KEYS = {
+    "classes": [("class_name", "text"), ("academic_year_id", "int"), ("branch_id", "int")],
+    "sections": [("section_name", "text"), ("class_id", "int"), ("shift_id", "int")],
+    "groups": [("group_name", "text")],
+    "shifts": [("shift_name", "text")],
+}
+
+NAME_FIELD = {
+    "classes": "class_name",
+    "sections": "section_name",
+    "groups": "group_name",
+    "shifts": "shift_name",
+}
+
+
+def _match_clause(entity, vals):
+    """Build a WHERE clause that finds an existing record matching `vals`."""
+    clauses, params = [], []
+    for field, kind in MATCH_KEYS[entity]:
+        v = vals.get(field)
+        is_empty = v is None or v == "" or v == "[]"
+        if is_empty:
+            clauses.append(f"({field} IS NULL OR {field} = '')")
+        elif kind == "text":
+            clauses.append(f"TRIM({field}) = TRIM(?) COLLATE NOCASE")
+            params.append(v)
+        else:
+            clauses.append(f"{field} = ?")
+            params.append(int(v))
+    return " AND ".join(clauses), params
+
+
+def import_items(entity, items):
+    """Bulk import with cross-check: existing matches are kept (skipped),
+    only new rows are inserted.
+
+    Returns {"inserted": [new ids], "skipped": [names of matched rows]}.
+    """
+    conn = get_db()
+    try:
+        inserted, skipped = [], []
+        for body in items:
+            vals = _normalize(entity, body)
+            where, params = _match_clause(entity, vals)
+            found = conn.execute(
+                f"SELECT id FROM {entity} WHERE {where}", params
+            ).fetchone()
+            if found:
+                skipped.append(str(vals.get(NAME_FIELD[entity]) or ""))
+                continue
+            fields = list(vals.keys())
+            cols = ", ".join(fields)
+            phs = ", ".join(f":{k}" for k in fields)
+            conn.execute(f"INSERT INTO {entity} ({cols}) VALUES ({phs})", vals)
+            new_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+            inserted.append(new_id)
+        conn.commit()
+        return {"inserted": inserted, "skipped": skipped}
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
 
 def _normalize(entity, body, item_id=None):
     spec = ENTITIES[entity]

@@ -56,10 +56,34 @@ def handle_delete(handler):
     res.ok(handler, {"ok": True})
 
 
+def handle_import(handler):
+    """POST /api/branches/import — bulk upsert with cross-check.
+
+    Body: { "items": [...] } — rows whose branch_name already exists are
+    skipped; only new branches are inserted.
+    """
+    body = _read_json_body(handler)
+    try:
+        stats = branch_controller.import_branches(body.get("items") or [])
+        res.ok(handler, {
+            "ok": True,
+            "inserted": len(stats["inserted"]),
+            "skipped": stats["skipped"],
+        })
+    except Exception as err:  # pragma: no cover - defensive
+        res.error(handler, 500, f"Import failed: {err}")
+
+
 def register_branch_routes(handler, method, path):
     """Dispatch /api/branches requests to the right handler."""
     if not path.startswith("/api/branches"):
         return False
+    if path == "/api/branches/import":
+        if method == "POST":
+            handle_import(handler)
+        else:
+            res.error(handler, 405, "Method not allowed")
+        return True
     if method == "GET":
         handle_get(handler)
     elif method == "POST":

@@ -10,6 +10,7 @@ import {
   fetchBranches,
   saveBranch,
   deleteBranch,
+  importBranches,
   type Branch,
 } from '@/composables/Institute_Setup/useBranches'
 import { exportBranchesToExcel, importBranchesFromExcel } from '@/composables/Institute_Setup/useBranchesExcel'
@@ -113,11 +114,20 @@ async function onImportPicked(event: Event) {
   if (!file) return
   isImporting.value = true
   try {
-    const { branches: imported, skipped } = await importBranchesFromExcel(file)
-    for (const b of imported) await saveBranch(b)
-    toast.success(
-      t('branches.importedCount', { count: imported.length, skipped: skipped.length }),
-    )
+    // Import = cross-check + add only NEW rows; existing names are kept as-is.
+    const { branches: imported } = await importBranchesFromExcel(file)
+    const result = await importBranches(imported)
+    if (!result.ok) throw new Error('server')
+    if (result.inserted === 0 && imported.length > 0) {
+      toast.success(t('All {count} rows already existed — nothing new added', { count: imported.length }))
+    } else {
+      toast.success(
+        t('{added} added · {skipped} already existed', {
+          added: result.inserted,
+          skipped: result.skipped.length,
+        }),
+      )
+    }
     await load()
   } catch (err) {
     toast.error(t('common.importFailed', { error: err instanceof Error ? err.message : 'invalid file' }))

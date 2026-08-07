@@ -99,3 +99,31 @@ export async function deleteItem(entity: ClassSetupEntity, id: number): Promise<
     return false
   }
 }
+
+export interface ClassSetupImportResult {
+  ok: boolean
+  inserted: Record<ClassSetupEntity, number>
+  skipped: Record<ClassSetupEntity, string[]>
+}
+
+/**
+ * Bulk import with cross-check (upsert): rows that already exist in the DB
+ * (matched by natural key) are skipped — only new rows are stored.
+ */
+export async function importClassSetupAll(
+  payload: Record<ClassSetupEntity, ClassSetupItem[]>,
+): Promise<ClassSetupImportResult> {
+  const empty = { ok: false, inserted: { classes: 0, sections: 0, groups: 0, shifts: 0 }, skipped: { classes: [], sections: [], groups: [], shifts: [] } }
+  try {
+    const res = await fetch(`${API_BASE}/api/class-setup/import`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+    if (!res.ok) return empty
+    const data = (await res.json()) as ClassSetupImportResult
+    return { ...empty, ...data }
+  } catch {
+    return empty
+  }
+}

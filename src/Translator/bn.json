@@ -408,6 +408,8 @@
   "Updated": "আপডেট হয়েছে",
   "Added": "যোগ হয়েছে",
   "{count} items imported": "{count}টি আইটেম ইমপোর্ট হয়েছে",
+  "{added} added · {skipped} already existed": "{added}টি যোগ হয়েছে · {skipped}টি আগে থেকেই ছিল",
+  "All {count} rows already existed — nothing new added": "সব {count}টি সারি আগে থেকেই ছিল — নতুন কিছু যোগ হয়নি",
   "Restored": "পুনরুদ্ধার হয়েছে",
   "e.g. Six, Nine": "যেমন: সিক্স, নাইন",
   "e.g. ষষ্ঠ, নবম": "যেমন: ষষ্ঠ, নবম",

@@ -9,6 +9,7 @@ import {
   fetchAcademicYears,
   saveAcademicYear,
   deleteAcademicYear,
+  importAcademicYears,
   type AcademicYear,
 } from '@/composables/Institute_Setup/useAcademicYears'
 import {
@@ -115,9 +116,20 @@ async function onImportPicked(event: Event) {
   if (!file) return
   isImporting.value = true
   try {
+    // Import = cross-check + add only NEW rows; existing years are kept as-is.
     const { years: imported } = await importAcademicYearsFromExcel(file)
-    for (const y of imported) await saveAcademicYear(y)
-    toast.success(t('{count} years imported', { count: imported.length }))
+    const result = await importAcademicYears(imported)
+    if (!result.ok) throw new Error('server')
+    if (result.inserted === 0 && imported.length > 0) {
+      toast.success(t('All {count} rows already existed — nothing new added', { count: imported.length }))
+    } else {
+      toast.success(
+        t('{added} added · {skipped} already existed', {
+          added: result.inserted,
+          skipped: result.skipped.length,
+        }),
+      )
+    }
     await load()
   } catch (err) {
     toast.error(t('Import failed: {error}', { error: err instanceof Error ? err.message : 'invalid file' }))

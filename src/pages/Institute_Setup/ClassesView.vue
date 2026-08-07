@@ -9,6 +9,7 @@ import {
   fetchItems,
   saveItem,
   deleteItem,
+  importClassSetupAll,
   type ClassSetupEntity,
   type ClassSetupItem,
 } from '@/composables/Institute_Setup/useClassesSetup'
@@ -249,15 +250,22 @@ async function onImportPicked(event: Event) {
   isImporting.value = true
   try {
     // One click imports ALL sheets: classes + sections + groups + shifts.
+    // Import = cross-check + add only NEW rows; existing ones are kept as-is.
     const imported = await importAllClassesSetupSheets(file)
-    let total = 0
-    for (const entity of ['classes', 'sections', 'groups', 'shifts'] as const) {
-      for (const it of imported[entity]) {
-        await saveItem(entity, it)
-        total++
-      }
+    const result = await importClassSetupAll(imported)
+    if (!result.ok) throw new Error('server')
+    const total = Object.values(result.inserted).reduce((a, b) => a + b, 0)
+    const totalSkipped = Object.values(result.skipped).reduce((a, list) => a + list.length, 0)
+    if (total === 0 && totalSkipped > 0) {
+      toast.success(t('All {count} rows already existed — nothing new added', { count: totalSkipped }))
+    } else {
+      toast.success(
+        t('{added} added · {skipped} already existed', {
+          added: total,
+          skipped: totalSkipped,
+        }),
+      )
     }
-    toast.success(t('{count} items imported', { count: total }))
     await loadAll()
   } catch (err) {
     toast.error(t('Import failed: {error}', { error: err instanceof Error ? err.message : 'invalid file' }))

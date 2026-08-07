@@ -66,8 +66,37 @@ def _handle_delete(handler, entity):
     res.ok(handler, {"ok": True})
 
 
+def _handle_import(handler):
+    """POST /api/class-setup/import — bulk upsert with cross-check.
+
+    Body: { "classes": [...], "sections": [...], "groups": [...], "shifts": [...] }
+    Existing matches (by natural key) are kept, only new rows are inserted.
+    """
+    body = _read_json_body(handler)
+    try:
+        result = {"inserted": {}, "skipped": {}}
+        for entity in ("classes", "sections", "groups", "shifts"):
+            items = body.get(entity) or []
+            if not items:
+                result["inserted"][entity] = 0
+                result["skipped"][entity] = []
+                continue
+            stats = class_setup_controller.import_items(entity, items)
+            result["inserted"][entity] = len(stats["inserted"])
+            result["skipped"][entity] = stats["skipped"]
+        res.ok(handler, {"ok": True, **result})
+    except Exception as err:  # pragma: no cover - defensive
+        res.error(handler, 500, f"Import failed: {err}")
+
+
 def register_class_setup_routes(handler, method, path):
-    """Dispatch /api/classes|sections|groups|shifts requests."""
+    """Dispatch /api/classes|sections|groups|shifts and /api/class-setup/import."""
+    if path == "/api/class-setup/import":
+        if method == "POST":
+            _handle_import(handler)
+        else:
+            res.error(handler, 405, "Method not allowed")
+        return True
     entity = ENTITY_PATHS.get(path)
     if not entity:
         return False

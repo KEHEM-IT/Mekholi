@@ -106,3 +106,29 @@ export async function deleteBranch(id: number): Promise<boolean> {
     return false
   }
 }
+
+export interface BranchImportResult {
+  ok: boolean
+  inserted: number
+  skipped: string[]
+}
+
+/**
+ * Bulk import with cross-check (upsert): branches whose name already exists
+ * are skipped — only new branches are stored.
+ */
+export async function importBranches(items: Branch[]): Promise<BranchImportResult> {
+  const empty = { ok: false, inserted: 0, skipped: [] as string[] }
+  try {
+    const res = await fetch(`${API_BASE}/api/branches/import`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items }),
+    })
+    if (!res.ok) return empty
+    const data = (await res.json()) as BranchImportResult
+    return { ...empty, ...data }
+  } catch {
+    return empty
+  }
+}

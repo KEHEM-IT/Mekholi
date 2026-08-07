@@ -408,6 +408,8 @@
   "Updated": "Updated",
   "Added": "Added",
   "{count} items imported": "{count} items imported",
+  "{added} added · {skipped} already existed": "{added} added · {skipped} already existed",
+  "All {count} rows already existed — nothing new added": "All {count} rows already existed — nothing new added",
   "Restored": "Restored",
   "e.g. Six, Nine": "e.g. Six, Nine",
   "e.g. ষষ্ঠ, নবম": "e.g. ষষ্ঠ, নবম",

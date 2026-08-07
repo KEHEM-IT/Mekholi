@@ -56,10 +56,34 @@ def handle_delete(handler):
     res.ok(handler, {"ok": True})
 
 
+def handle_import(handler):
+    """POST /api/academic-years/import — bulk upsert with cross-check.
+
+    Body: { "items": [...] } — rows whose year_name already exists are
+    skipped; only new years are inserted.
+    """
+    body = _read_json_body(handler)
+    try:
+        stats = academic_year_controller.import_years(body.get("items") or [])
+        res.ok(handler, {
+            "ok": True,
+            "inserted": len(stats["inserted"]),
+            "skipped": stats["skipped"],
+        })
+    except Exception as err:  # pragma: no cover - defensive
+        res.error(handler, 500, f"Import failed: {err}")
+
+
 def register_academic_year_routes(handler, method, path):
     """Dispatch /api/academic-years requests to the right handler."""
     if not path.startswith("/api/academic-years"):
         return False
+    if path == "/api/academic-years/import":
+        if method == "POST":
+            handle_import(handler)
+        else:
+            res.error(handler, 405, "Method not allowed")
+        return True
     if method == "GET":
         handle_get(handler)
     elif method == "POST":

@@ -91,3 +91,37 @@ def delete_year(year_id):
         return cur.rowcount > 0
     finally:
         conn.close()
+
+
+def import_years(items):
+    """Bulk import with cross-check: a row whose year_name already exists
+    (case-insensitive) is skipped; only new years are inserted.
+
+    Returns {"inserted": [new ids], "skipped": [names of matched rows]}.
+    """
+    conn = get_db()
+    try:
+        inserted, skipped = [], []
+        for body in items:
+            vals = _normalize(body)
+            found = conn.execute(
+                "SELECT id FROM academic_years WHERE TRIM(year_name) = TRIM(?) COLLATE NOCASE",
+                (vals["year_name"],),
+            ).fetchone()
+            if found:
+                skipped.append(str(vals["year_name"] or ""))
+                continue
+            if vals["is_current"]:
+                conn.execute("UPDATE academic_years SET is_current=0")
+            cols = ", ".join(FIELDS + ["created_at", "updated_at"])
+            phs = ", ".join(f":{k}" for k in FIELDS) + ", datetime('now'), datetime('now')"
+            conn.execute(f"INSERT INTO academic_years ({cols}) VALUES ({phs})", vals)
+            new_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+            inserted.append(new_id)
+        conn.commit()
+        return {"inserted": inserted, "skipped": skipped}
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()

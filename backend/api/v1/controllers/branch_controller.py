@@ -99,3 +99,37 @@ def delete_branch(branch_id):
         return cur.rowcount > 0
     finally:
         conn.close()
+
+
+def import_branches(items):
+    """Bulk import with cross-check: a row whose branch_name already exists
+    (case-insensitive) is skipped; only new branches are inserted.
+
+    Returns {"inserted": [new ids], "skipped": [names of matched rows]}.
+    """
+    conn = get_db()
+    try:
+        inserted, skipped = [], []
+        for body in items:
+            vals = _normalize(body)
+            found = conn.execute(
+                "SELECT id FROM branches WHERE TRIM(branch_name) = TRIM(?) COLLATE NOCASE",
+                (vals["branch_name"],),
+            ).fetchone()
+            if found:
+                skipped.append(str(vals["branch_name"] or ""))
+                continue
+            if vals["is_main"]:
+                conn.execute("UPDATE branches SET is_main=0")
+            cols = ", ".join(BRANCH_FIELDS + ["created_at", "updated_at"])
+            phs = ", ".join(f":{k}" for k in BRANCH_FIELDS) + ", datetime('now'), datetime('now')"
+            conn.execute(f"INSERT INTO branches ({cols}) VALUES ({phs})", vals)
+            new_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+            inserted.append(new_id)
+        conn.commit()
+        return {"inserted": inserted, "skipped": skipped}
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
