@@ -1,34 +1,34 @@
 <!-- D:\Web\ERP\Mekholi\src\pages\Institute_Setup\Index.vue -->
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useTranslator } from '@/Translator'
-import { useDragScroll } from '@/composables/useDragScroll'
-import { profileProgress } from '@/composables/Institute_Setup/useInstituteProfile'
+import { computed, onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+import { useTranslator } from "@/Translator";
+import { useDragScroll } from "@/composables/useDragScroll";
+import { profileProgress } from "@/composables/Institute_Setup/useInstituteProfile";
 import {
   TABLE_TABS,
   formatBytes,
   useInstituteSetupImport,
-} from '@/composables/Institute_Setup/useInstituteSetupImport'
-import navigationJson from '@/assets/navigation/shikkha_erp_navigation.json'
-import type { NavigationMap } from '@/types'
+} from "@/composables/Institute_Setup/useInstituteSetupImport";
+import navigationJson from "@/assets/navigation/shikkha_erp_navigation.json";
+import type { NavigationMap } from "@/types";
 
 // Explicit multi-word component name to satisfy the linter (filename is
 // single-word "Index.vue" per pages/Institute_Setup/ convention).
-defineOptions({ name: 'InstituteDashboard' })
+defineOptions({ name: "InstituteDashboard" });
 
-const router = useRouter()
-const { t, localized } = useTranslator()
+const router = useRouter();
+const { t, localized } = useTranslator();
 
 // Skeleton loader — the dashboard shows a shimmer skeleton for at least
 // 2s on mount, matching the Institute Profile page behaviour.
-const isPageLoading = ref(true)
-const MIN_SKELETON_MS = 2000
+const isPageLoading = ref(true);
+const MIN_SKELETON_MS = 2000;
 
 onMounted(async () => {
-  await new Promise((resolve) => setTimeout(resolve, MIN_SKELETON_MS))
-  isPageLoading.value = false
-})
+  await new Promise((resolve) => setTimeout(resolve, MIN_SKELETON_MS));
+  isPageLoading.value = false;
+});
 
 const {
   school,
@@ -45,81 +45,82 @@ const {
   onFileInputChange,
   clear,
   saveAs,
-} = useInstituteSetupImport()
+} = useInstituteSetupImport();
 
 // Setup checklist mirrors the other "Institute Setup" sub-menus from the
 // nav JSON (everything after this dashboard itself), so it stays in sync
 // automatically as more of them get real pages behind them.
-const navigation = navigationJson.shikkha_erp_navigation as unknown as NavigationMap
+const navigation = navigationJson.shikkha_erp_navigation as unknown as NavigationMap;
 const checklistSteps = computed(
-  () => navigation.institute_admin?.find((m) => m.menu === 'Institute Setup')?.sub_menus.slice(1) ?? [],
-)
+  () =>
+    navigation.institute_admin?.find((m) => m.menu === "Institute Setup")?.sub_menus.slice(1) ?? [],
+);
 
 // Map nav step names to Vue Router route names + progress percentages.
 const STEP_ROUTES: Record<string, string> = {
   // Maps each checklist step name (from the nav JSON) to its route name.
-  'Institute Dashboard': 'institute-setup',
-  'Institute Profile': 'institute-profile',
-  'Branches/Campus': 'institute-setup-branches',
-  'Academic Year': 'institute-setup-academic-year',
-  'Class/Section/Group/Shift': 'institute-setup-classes',
-  'Holidays & Working Days': 'institute-setup-holidays',
-  'Grading Scheme': 'institute-setup-grading',
-  'Board & Regulatory Setup': 'institute-setup-boards',
-  'Subjects & Curriculum': 'institute-setup-subjects',
-  'Exam Terms & Types': 'institute-setup-exam-terms',
-  'Classrooms / Rooms / Buildings': 'institute-setup-rooms',
-  'Academic Sessions & Terms': 'institute-setup-sessions',
-}
+  "Institute Dashboard": "institute-setup",
+  "Institute Profile": "institute-profile",
+  "Branches/Campus": "institute-setup-branches",
+  "Academic Year": "institute-setup-academic-year",
+  "Class/Section/Group/Shift": "institute-setup-classes",
+  "Holidays & Working Days": "institute-setup-holidays",
+  "Grading Scheme": "institute-setup-grading",
+  "Board & Regulatory Setup": "institute-setup-boards",
+  "Subjects & Curriculum": "institute-setup-subjects",
+  "Exam Terms & Types": "institute-setup-exam-terms",
+  "Classrooms / Rooms / Buildings": "institute-setup-rooms",
+  "Academic Sessions & Terms": "institute-setup-sessions",
+};
 
 /** Per-step progress pct — each step maps to its own data source.
  *  Only Institute Profile has real data today; more will join as pages
  *  get built and their JSON sources are registered here. */
 const STEP_PCTS: Record<string, () => number> = {
-  'Institute Profile': () => profileProgress.value.pct,
-}
+  "Institute Profile": () => profileProgress.value.pct,
+};
 
 /** Pick a fill color for the vertical bar based on completion percentage. */
 function barColor(pct: number): string {
-  if (pct >= 67) return '#22c55e'
-  if (pct >= 34) return '#eab308'
-  return '#ef4444'
+  if (pct >= 67) return "#22c55e";
+  if (pct >= 34) return "#eab308";
+  return "#ef4444";
 }
 
 function stepHasRoute(name: string) {
-  return STEP_ROUTES[name] != null
+  return STEP_ROUTES[name] != null;
 }
 
 function goToStep(name: string) {
-  const route = STEP_ROUTES[name]
-  if (route) router.push({ name: route })
+  const route = STEP_ROUTES[name];
+  if (route) router.push({ name: route });
 }
 
-const saveName = ref('')
+const saveName = ref("");
 
-function tabRowCount(key: (typeof TABLE_TABS)[number]['key']) {
-  if (key === 'general_info') {
-    const info = school.value?.general_info
-    if (!info) return 0
-    let count = 0
+function tabRowCount(key: (typeof TABLE_TABS)[number]["key"]) {
+  if (key === "general_info") {
+    const info = school.value?.general_info;
+    if (!info) return 0;
+    let count = 0;
     const walk = (obj: Record<string, unknown>) => {
       for (const v of Object.values(obj)) {
-        if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
-          walk(v as Record<string, unknown>)
+        if (v !== null && typeof v === "object" && !Array.isArray(v)) {
+          walk(v as Record<string, unknown>);
         } else {
-          count++
+          count++;
         }
       }
-    }
-    walk(info as unknown as Record<string, unknown>)
-    return count
+    };
+    walk(info as unknown as Record<string, unknown>);
+    return count;
   }
-  const rows = school.value?.[key]
-  return Array.isArray(rows) ? rows.length : 0
+  const rows = school.value?.[key];
+  return Array.isArray(rows) ? rows.length : 0;
 }
 
 async function handleSave() {
-  await saveAs(saveName.value)
+  await saveAs(saveName.value);
 }
 
 // Click-and-drag panning for the tab strip - see useDragScroll for the
@@ -128,12 +129,17 @@ const {
   elRef: tabsRef,
   isDragging: isDraggingTabs,
   onMouseDown: onTabsMouseDown,
-} = useDragScroll<HTMLDivElement>()
+} = useDragScroll<HTMLDivElement>();
 </script>
 
 <template>
   <!-- ── Skeleton loader (min 2s) ─────────────────────── -->
-  <section v-if="isPageLoading" class="isc-skeleton" aria-busy="true" aria-label="Loading institute dashboard">
+  <section
+    v-if="isPageLoading"
+    class="isc-skeleton"
+    aria-busy="true"
+    aria-label="Loading institute dashboard"
+  >
     <div class="isc-skeleton__header">
       <span class="skeleton isc-skeleton__title" />
       <span class="skeleton isc-skeleton__subtitle" />
@@ -180,9 +186,7 @@ const {
           <i class="fa-duotone fa-list-check" />
           <div>
             <h2>{{ t("Setup checklist") }}</h2>
-            <span>{{
-              t("Work through these to finish setting up your institute")
-            }}</span>
+            <span>{{ t("Work through these to finish setting up your institute") }}</span>
           </div>
         </div>
       </div>
@@ -202,8 +206,8 @@ const {
             @click="goToStep(step.name)"
           >
             <span class="isc-check-card__icon"><i :class="step.icon" /></span>
-            <span class="isc-check-card__label">{{ localized(step, 'name') }}</span>
-            <span class="isc-check-card__pct">{{ (STEP_PCTS[step.name]?.() ?? 0) }}%</span>
+            <span class="isc-check-card__label">{{ localized(step, "name") }}</span>
+            <span class="isc-check-card__pct">{{ STEP_PCTS[step.name]?.() ?? 0 }}%</span>
             <!-- Vertical progress bar on the right edge -->
             <div class="isc-check-card__bar">
               <div
@@ -246,16 +250,16 @@ const {
             {{ t("Drag a file here, or") }}
           </p>
 
-            <span class="isc-dropzone__browse">
-              {{ t("Browse") }}
-              <input
-                type="file"
-                class="isc-dropzone__input"
-                accept=".md,.txt,.json"
-                aria-label="Upload EMIS workbook"
-                @change="onFileInputChange"
-              />
-            </span>
+          <span class="isc-dropzone__browse">
+            {{ t("Browse") }}
+            <input
+              type="file"
+              class="isc-dropzone__input"
+              accept=".md,.txt,.json"
+              aria-label="Upload EMIS workbook"
+              @change="onFileInputChange"
+            />
+          </span>
           <span class="isc-dropzone__hint">{{ t("Accepted: .md, .json") }}</span>
         </div>
 
@@ -282,7 +286,7 @@ const {
             {{ t("Institute summary") }}
           </div>
           <p>
-            <strong>{{ localized(school.general_info, 'institute_name') }}</strong>
+            <strong>{{ localized(school.general_info, "institute_name") }}</strong>
             <template v-if="school.general_info.classification.institute_type">
               &mdash; {{ school.general_info.classification.institute_type }}
             </template>
@@ -302,7 +306,7 @@ const {
               :class="{ 'is-active': activeTab === tab.key }"
               @click="activeTab = tab.key"
             >
-              {{ localized(tab, 'label') }}
+              {{ localized(tab, "label") }}
               <span class="isc-tab__count">{{ tabRowCount(tab.key) }}</span>
             </button>
           </div>
@@ -316,7 +320,7 @@ const {
               </thead>
               <tbody>
                 <tr v-for="(row, i) in activeRows" :key="i">
-                  <td v-for="col in activeColumns" :key="col">{{ row[col] ?? '—' }}</td>
+                  <td v-for="col in activeColumns" :key="col">{{ row[col] ?? "—" }}</td>
                 </tr>
               </tbody>
             </table>
@@ -328,11 +332,7 @@ const {
           <div class="isc-save-row">
             <div class="form-field">
               <label>{{ t("Save as (EIIN)") }}</label>
-              <input
-                v-model="saveName"
-                type="text"
-                :placeholder="t('e.g. 129332')"
-              />
+              <input v-model="saveName" type="text" :placeholder="t('e.g. 129332')" />
             </div>
             <div class="isc-save-row__actions">
               <button
@@ -342,11 +342,7 @@ const {
                 @click="handleSave"
               >
                 <i class="fa-duotone fa-floppy-disk" />
-                {{
-                  isSaving
-                    ? t("Saving...")
-                    : t("Save as JSON")
-                }}
+                {{ isSaving ? t("Saving...") : t("Save as JSON") }}
               </button>
             </div>
           </div>
