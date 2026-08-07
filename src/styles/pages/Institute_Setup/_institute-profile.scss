@@ -1143,3 +1143,10 @@
   border-radius: $radius-md;
 }
 
+
+// ── Full-row form field — spans every grid column (bottom line) ────────
+
+.ipf-field--full {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
