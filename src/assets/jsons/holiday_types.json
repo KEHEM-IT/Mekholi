@@ -1,0 +1,38 @@
+[
+  {
+    "Id": "Government",
+    "Name": "Government / National",
+    "Name_bn": "সরকারি / জাতীয়",
+    "LookupText": "Government / National - সরকারি / জাতীয়"
+  },
+  {
+    "Id": "Religious",
+    "Name": "Religious",
+    "Name_bn": "ধর্মীয়",
+    "LookupText": "Religious - ধর্মীয়"
+  },
+  {
+    "Id": "Institute",
+    "Name": "Institute / Internal",
+    "Name_bn": "প্রতিষ্ঠানিক / অভ্যন্তরীণ",
+    "LookupText": "Institute / Internal - প্রতিষ্ঠানিক / অভ্যন্তরীণ"
+  },
+  {
+    "Id": "Sports",
+    "Name": "Sports",
+    "Name_bn": "ক্রীড়া",
+    "LookupText": "Sports - ক্রীড়া"
+  },
+  {
+    "Id": "Exam",
+    "Name": "Exam",
+    "Name_bn": "পরীক্ষা",
+    "LookupText": "Exam - পরীক্ষা"
+  },
+  {
+    "Id": "Other",
+    "Name": "Other",
+    "Name_bn": "অন্যান্য",
+    "LookupText": "Other - অন্যান্য"
+  }
+]
