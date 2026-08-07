@@ -14,7 +14,7 @@
   }
 
   p {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
   }
 }
 
@@ -35,8 +35,8 @@
       width: 2.25rem;
       height: 2.25rem;
       border-radius: $radius-md;
-      background: $color-primary-muted;
-      color: $color-primary;
+      background: var(--color-primary-muted);
+      color: var(--color-primary);
       font-size: 1rem;
     }
 
@@ -49,7 +49,7 @@
       display: block;
       font-size: 0.85rem;
       font-weight: 400;
-      color: $color-text-secondary;
+      color: var(--color-text-secondary);
     }
   }
 }
@@ -75,7 +75,7 @@
 
   &__hint {
     font-size: 0.82rem;
-    color: $color-text-muted;
+    color: var(--color-text-muted);
     max-width: 46ch;
   }
 
@@ -86,7 +86,7 @@
 
 .lts-divider {
   height: 1px;
-  background: $color-border;
+  background: var(--color-border);
 }
 
 // --- Language toggle (English / বাংলা) ---------------------------------
@@ -101,8 +101,8 @@
   @include flex(row, center, flex-start, $space-3);
   padding: $space-3 $space-4;
   border-radius: $radius-md;
-  border: 1px solid $color-border;
-  background: $color-surface-alt;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
   cursor: pointer;
   text-align: left;
   transition:
@@ -110,7 +110,7 @@
     background-color $transition-fast;
 
   &:hover {
-    background: $color-surface-hover;
+    background: var(--color-surface-hover);
   }
 
   &__flag {
@@ -124,15 +124,15 @@
 
   &__native {
     font-size: 0.82rem;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
   }
 
   &.is-active {
-    border-color: $color-primary;
-    background: $color-primary-muted;
+    border-color: var(--color-primary);
+    background: var(--color-primary-muted);
 
     .lts-lang-option__native {
-      color: $color-text;
+      color: var(--color-text);
     }
   }
 }
@@ -144,10 +144,10 @@
 .lts-bn-font-preview {
   padding: $space-3 $space-4;
   border-radius: $radius-md;
-  border: 1px solid $color-border;
-  background: $color-surface-alt;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
   font-size: 1.05rem;
-  color: $color-text;
+  color: var(--color-text);
 }
 
 // --- Accent swatches -----------------------------------------------------
@@ -176,11 +176,11 @@
   }
 
   &:hover {
-    border-color: $color-border-strong;
+    border-color: var(--color-border-strong);
   }
 
   &.is-active {
-    border-color: $color-text;
+    border-color: var(--color-text);
 
     i {
       opacity: 1;
@@ -190,7 +190,7 @@
 
 .lts-accent-name {
   font-size: 0.85rem;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   margin-top: $space-2;
 }
 
@@ -198,30 +198,30 @@
 
 .lts-segmented {
   display: inline-flex;
-  border: 1px solid $color-border;
+  border: 1px solid var(--color-border);
   border-radius: $radius-md;
   overflow: hidden;
 }
 
 .lts-segmented__option {
   padding: $space-2 $space-4;
-  background: $color-surface-alt;
-  color: $color-text-secondary;
+  background: var(--color-surface-alt);
+  color: var(--color-text-secondary);
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
   transition: background-color $transition-fast;
 
   & + & {
-    border-left: 1px solid $color-border;
+    border-left: 1px solid var(--color-border);
   }
 
   &:hover {
-    background: $color-surface-hover;
+    background: var(--color-surface-hover);
   }
 
   &.is-active {
-    background: $color-primary;
+    background: var(--color-primary);
     color: #fff;
   }
 }
@@ -245,14 +245,14 @@
   width: 220px;
   border-radius: $radius-lg;
   overflow: hidden;
-  border: 1px solid $color-border;
-  background: $color-surface-alt;
-  box-shadow: $shadow-sm;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
+  box-shadow: var(--shadow-sm);
 }
 
 .lts-id-card__band {
   height: 3rem;
-  background: $color-primary;
+  background: var(--color-primary);
 }
 
 .lts-id-card__body {
@@ -265,11 +265,11 @@
     height: 2.75rem;
     margin: -1.75rem auto $space-2;
     border-radius: 50%;
-    background: $color-surface;
-    border: 3px solid $color-surface-alt;
+    background: var(--color-surface);
+    border: 3px solid var(--color-surface-alt);
     display: grid;
     place-items: center;
-    color: $color-primary;
+    color: var(--color-primary);
   }
 
   strong {
@@ -277,7 +277,7 @@
   }
 
   small {
-    color: $color-text-muted;
+    color: var(--color-text-muted);
     font-size: 0.72rem;
   }
 }
@@ -289,16 +289,16 @@
   bottom: $space-4;
   @include flex(row, center, space-between, $space-4);
   @include card;
-  border-color: $color-border-strong;
+  border-color: var(--color-border-strong);
   flex-wrap: wrap;
 
   &__status {
     @include flex(row, center, flex-start, $space-2);
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.85rem;
 
     i {
-      color: $color-success;
+      color: var(--color-success);
     }
   }
 

@@ -1,0 +1,75 @@
+// ============================================================
+// Mekholi — Light Theme Tokens
+//
+// The app's design tokens are exposed as CSS custom properties in
+// base/_base.scss (:root). Dark is the default; this file overrides
+// those variables when <html data-theme="light"> is set, so the whole
+// app (components, layouts, pages) switches without touching any
+// component styles. The SCSS `$color-*` variables keep their dark
+// values — only the *runtime* CSS variables change.
+//
+// color-scheme: light also makes native widgets (scrollbars, date
+// inputs, selects) render light.
+// ============================================================
+
+html[data-theme='light'] {
+  color-scheme: light;
+
+  // Surfaces
+  --color-bg: #f4f5f7;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f0f1f4;
+  --color-surface-hover: #e8eaef;
+
+  // Borders
+  --color-border: #d9dde3;
+  --color-border-strong: #b9bfc9;
+
+  // Text
+  --color-text: #1c2026;
+  --color-text-secondary: #4a525e;
+  --color-text-muted: #7a828e;
+  --color-text-disabled: #a5abb5;
+  --color-text-inverse: #ffffff;
+
+  // Brand — indigo keeps its identity in light mode
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-primary-active: #3730a3;
+  --color-primary-muted: rgba(79, 70, 229, 0.1);
+
+  // Semantic status
+  --color-success: #15803d;
+  --color-success-hover: #166534;
+  --color-success-muted: rgba(21, 128, 61, 0.12);
+
+  --color-warning: #b45309;
+  --color-warning-hover: #92400e;
+  --color-warning-muted: rgba(180, 83, 9, 0.12);
+
+  --color-danger: #dc2626;
+  --color-danger-hover: #b91c1c;
+  --color-danger-muted: rgba(220, 38, 38, 0.12);
+
+  --color-info: #0284c7;
+  --color-info-hover: #0369a1;
+  --color-info-muted: rgba(2, 132, 199, 0.12);
+
+  // Forms / inputs
+  --color-input-bg: #ffffff;
+  --color-input-border: var(--color-border);
+  --color-input-border-focus: var(--color-primary);
+  --color-input-placeholder: var(--color-text-muted);
+  --color-input-disabled-bg: var(--color-surface-alt);
+
+  // Elevation — lighter shadows suit light surfaces
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --shadow-card: 0 4px 16px rgba(16, 24, 40, 0.08);
+
+  // Tinted text used on muted success/danger/etc. backgrounds — in light
+  // mode these need dark tinted shades instead of the dark-mode pastels.
+  --color-on-success: #14532d;
+  --color-on-danger: #7f1d1d;
+  --color-on-warning: #78350f;
+  --color-on-info: #0c4a6e;
+}

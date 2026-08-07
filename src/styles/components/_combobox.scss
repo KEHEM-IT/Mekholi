@@ -20,11 +20,11 @@
 .combobox__control {
   @include flex(row, center, space-between, $space-2);
   width: 100%;
-  background: $color-input-bg;
-  border: 1px solid $color-input-border;
+  background: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
   border-radius: $radius-md;
   padding: $space-2 $space-3;
-  color: $color-text;
+  color: var(--color-text);
   font-family: var(--font-family-base);
   font-size: $font-size-base;
   text-align: left;
@@ -34,23 +34,23 @@
     background-color $transition-fast;
 
   &:hover:not(:disabled) {
-    border-color: $color-border-strong;
+    border-color: var(--color-border-strong);
   }
 
   &:focus-visible {
     outline: none;
-    border-color: $color-input-border-focus;
+    border-color: var(--color-input-border-focus);
   }
 
   &:disabled {
-    background: $color-input-disabled-bg;
-    color: $color-text-disabled;
+    background: var(--color-input-disabled-bg);
+    color: var(--color-text-disabled);
     cursor: not-allowed;
   }
 }
 
 .combobox.is-open .combobox__control {
-  border-color: $color-input-border-focus;
+  border-color: var(--color-input-border-focus);
 }
 
 .combobox__value {
@@ -59,7 +59,7 @@
   min-width: 0;
 
   &.is-placeholder {
-    color: $color-input-placeholder;
+    color: var(--color-input-placeholder);
   }
 }
 
@@ -75,14 +75,14 @@
   border-radius: 50%;
   font-size: 0.7rem;
   line-height: 1;
-  color: $color-text-muted;
+  color: var(--color-text-muted);
   transition:
     background-color $transition-fast,
     color $transition-fast;
 
   &:hover {
-    background: $color-surface-hover;
-    color: $color-text;
+    background: var(--color-surface-hover);
+    color: var(--color-text);
   }
 }
 
@@ -91,7 +91,7 @@
   height: 0;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
-  border-top: 5px solid $color-text-muted;
+  border-top: 5px solid var(--color-text-muted);
   transition: transform $transition-fast;
 }
 
@@ -107,10 +107,10 @@
   top: calc(100% + #{$space-1});
   left: 0;
   right: 0;
-  background: $color-surface-alt;
-  border: 1px solid $color-border-strong;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border-strong);
   border-radius: $radius-md;
-  box-shadow: $shadow-card;
+  box-shadow: var(--shadow-card);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -124,7 +124,7 @@
 .combobox__search {
   flex-shrink: 0;
   padding: $space-2;
-  border-bottom: 1px solid $color-border;
+  border-bottom: 1px solid var(--color-border);
 
   input {
     width: 100%;
@@ -132,7 +132,7 @@
     // reads as part of the panel chrome rather than a full form field.
     padding: $space-1 $space-2;
     font-size: 0.9rem;
-    background: $color-surface;
+    background: var(--color-surface);
   }
 }
 
@@ -145,16 +145,16 @@
 .combobox__option {
   padding: $space-2 $space-3;
   font-size: 0.9rem;
-  color: $color-text;
+  color: var(--color-text);
   cursor: pointer;
   transition: background-color $transition-fast;
 
   &.is-active {
-    background: $color-surface-hover;
+    background: var(--color-surface-hover);
   }
 
   &.is-selected {
-    color: $color-primary;
+    color: var(--color-primary);
     font-weight: 600;
   }
 }
@@ -162,7 +162,7 @@
 .combobox__empty {
   padding: $space-3;
   font-size: 0.85rem;
-  color: $color-text-muted;
+  color: var(--color-text-muted);
   text-align: center;
 }
 
@@ -178,9 +178,9 @@
   max-width: 100%;
   padding: 1px 6px;
   border-radius: 999px;
-  background: $color-primary-muted;
-  border: 1px solid $color-primary;
-  color: $color-text;
+  background: var(--color-primary-muted);
+  border: 1px solid var(--color-primary);
+  color: var(--color-text);
   font-size: 0.72rem;
   font-weight: 600;
   @include truncate;
@@ -192,17 +192,17 @@
   height: 1rem;
   border-radius: 50%;
   font-size: 0.55rem;
-  color: $color-text-muted;
+  color: var(--color-text-muted);
   cursor: pointer;
 
   &:hover {
-    background: $color-surface-hover;
-    color: $color-text;
+    background: var(--color-surface-hover);
+    color: var(--color-text);
   }
 }
 
 .combobox__chip-placeholder {
-  color: $color-input-placeholder;
+  color: var(--color-input-placeholder);
 }
 
 .combobox__check {
@@ -211,13 +211,13 @@
   height: 1rem;
   flex-shrink: 0;
   border-radius: $radius-sm;
-  border: 1px solid $color-border-strong;
+  border: 1px solid var(--color-border-strong);
   color: transparent;
   font-size: 0.6rem;
 
   &.is-checked {
-    background: $color-primary;
-    border-color: $color-primary;
-    color: $color-text-inverse;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-text-inverse);
   }
 }

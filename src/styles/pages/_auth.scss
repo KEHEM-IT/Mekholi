@@ -3,7 +3,7 @@
 .auth-shell {
   min-height: 100vh;
   @include flex(row, center, center);
-  background: $color-bg;
+  background: var(--color-bg);
 }
 
 .auth-card {

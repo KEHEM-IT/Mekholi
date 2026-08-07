@@ -9,6 +9,7 @@ import type { AppPreferences } from '@/types'
 // store.
 const DEFAULT_PREFERENCES: AppPreferences = {
   uiLanguage: 'en',
+  theme: 'dark',
   accentTheme: 'indigo',
   banglaNumerals: false,
   dateCalendar: 'gregorian',
@@ -48,6 +49,7 @@ const preferences = reactive<AppPreferences>(loadPreferences())
 function applyToDocument(prefs: AppPreferences) {
   const root = document.documentElement
   root.setAttribute('lang', prefs.uiLanguage)
+  root.setAttribute('data-theme', prefs.theme)
   root.setAttribute('data-accent', prefs.accentTheme)
   root.setAttribute('data-density', prefs.density)
   root.setAttribute('data-font-en', prefs.englishFont)

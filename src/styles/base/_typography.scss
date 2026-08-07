@@ -4,8 +4,9 @@ body {
   font-family: var(--font-family-en);
   font-size: $font-size-base;
   line-height: $line-height-base;
-  color: $color-text;
-  background: $color-bg;
+  // Use the runtime CSS variables so the light theme repaints the body too.
+  color: var(--color-text, $color-text);
+  background: var(--color-bg, $color-bg);
 }
 
 // Bangla UI uses a dedicated font (default: Hind Siliguri) instead of the

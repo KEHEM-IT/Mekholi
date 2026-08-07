@@ -55,6 +55,9 @@ export interface NotificationItem {
 
 export type UILanguage = 'en' | 'bn'
 
+/** App color scheme — dark is the default; light for schools that prefer it. */
+export type AppTheme = 'dark' | 'light'
+
 export type AccentTheme = 'indigo' | 'emerald' | 'amber' | 'crimson' | 'sky' | 'violet'
 
 export type DateCalendar = 'gregorian' | 'bangla'
@@ -84,6 +87,7 @@ export interface DocumentLanguagePrefs {
 
 export interface AppPreferences {
   uiLanguage: UILanguage
+  theme: AppTheme
   accentTheme: AccentTheme
   banglaNumerals: boolean
   dateCalendar: DateCalendar

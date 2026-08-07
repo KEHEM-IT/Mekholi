@@ -393,6 +393,40 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
       </div>
 
       <div class="lts-section__body">
+        <!-- Theme mode: Dark / Light -->
+        <div class="lts-row">
+          <div>
+            <div class="lts-row__label">{{ isBn ? 'থিম' : 'Theme' }}</div>
+            <div class="lts-row__hint">
+              {{
+                isBn
+                  ? 'সম্পূর্ণ অ্যাডমিন প্যানেলের জন্য আলো-অন্ধকার চেহারা বেছে নিন'
+                  : 'Choose the light or dark appearance for the whole admin panel'
+              }}
+            </div>
+          </div>
+          <div class="lts-segmented lts-row__control">
+            <button
+              type="button"
+              class="lts-segmented__option"
+              :class="{ 'is-active': preferences.theme === 'dark' }"
+              @click="preferences.theme = 'dark'"
+            >
+              <i class="fa-duotone fa-moon" /> {{ isBn ? 'অন্ধকার' : 'Dark' }}
+            </button>
+            <button
+              type="button"
+              class="lts-segmented__option"
+              :class="{ 'is-active': preferences.theme === 'light' }"
+              @click="preferences.theme = 'light'"
+            >
+              <i class="fa-duotone fa-sun" /> {{ isBn ? 'আলো' : 'Light' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="lts-divider" />
+
         <div class="lts-preview">
           <div class="lts-accents">
             <button

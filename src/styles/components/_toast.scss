@@ -22,10 +22,10 @@
   @include flex(row, center, flex-start, $space-2);
   padding: $space-3 $space-4;
   border-radius: $radius-md;
-  border: 1px solid $color-border-strong;
+  border: 1px solid var(--color-border-strong);
   font-size: 0.85rem;
   font-weight: 600;
-  color: $color-text;
+  color: var(--color-text);
   pointer-events: auto;
   // Colored border + tinted background + glow per type, set below.
   border-left-width: 4px;
@@ -39,46 +39,46 @@
 // ── Type highlights ─────────────────────────────────────────────────────
 
 .toast--success {
-  border-color: $color-success;
-  background: $color-success-muted;
-  color: #bbf7d0;
+  border-color: var(--color-success);
+  background: var(--color-success-muted);
+  color: var(--color-on-success);
   box-shadow: 0 4px 16px rgba(34, 197, 94, 0.28);
 
   .toast__icon {
-    color: $color-success;
+    color: var(--color-success);
   }
 }
 
 .toast--error {
-  border-color: $color-danger;
-  background: $color-danger-muted;
-  color: #fecaca;
+  border-color: var(--color-danger);
+  background: var(--color-danger-muted);
+  color: var(--color-on-danger);
   box-shadow: 0 4px 16px rgba(239, 68, 68, 0.28);
 
   .toast__icon {
-    color: $color-danger;
+    color: var(--color-danger);
   }
 }
 
 .toast--info {
-  border-color: $color-info;
-  background: $color-info-muted;
-  color: #bae6fd;
+  border-color: var(--color-info);
+  background: var(--color-info-muted);
+  color: var(--color-on-info);
   box-shadow: 0 4px 16px rgba(56, 189, 248, 0.28);
 
   .toast__icon {
-    color: $color-info;
+    color: var(--color-info);
   }
 }
 
 .toast--warning {
-  border-color: $color-warning;
-  background: $color-warning-muted;
-  color: #fde68a;
+  border-color: var(--color-warning);
+  background: var(--color-warning-muted);
+  color: var(--color-on-warning);
   box-shadow: 0 4px 16px rgba(234, 179, 8, 0.28);
 
   .toast__icon {
-    color: $color-warning;
+    color: var(--color-warning);
   }
 }
 

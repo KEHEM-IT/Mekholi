@@ -23,61 +23,61 @@
   }
 
   &--primary {
-    background: $color-primary;
+    background: var(--color-primary);
     color: #fff;
 
     &:hover:not(:disabled) {
-      background: $color-primary-hover;
+      background: var(--color-primary-hover);
     }
     &:active:not(:disabled) {
-      background: $color-primary-active;
+      background: var(--color-primary-active);
     }
   }
 
   &--secondary {
-    background: $color-surface-alt;
-    border-color: $color-border;
-    color: $color-text;
+    background: var(--color-surface-alt);
+    border-color: var(--color-border);
+    color: var(--color-text);
 
     &:hover:not(:disabled) {
-      background: $color-surface-hover;
+      background: var(--color-surface-hover);
     }
   }
 
   &--success {
-    background: $color-success;
-    color: $color-text-inverse;
+    background: var(--color-success);
+    color: var(--color-text-inverse);
 
     &:hover:not(:disabled) {
-      background: $color-success-hover;
+      background: var(--color-success-hover);
     }
   }
 
   &--warning {
-    background: $color-warning;
-    color: $color-text-inverse;
+    background: var(--color-warning);
+    color: var(--color-text-inverse);
 
     &:hover:not(:disabled) {
-      background: $color-warning-hover;
+      background: var(--color-warning-hover);
     }
   }
 
   &--danger {
-    background: $color-danger;
+    background: var(--color-danger);
     color: #fff;
 
     &:hover:not(:disabled) {
-      background: $color-danger-hover;
+      background: var(--color-danger-hover);
     }
   }
 
   &--ghost {
     background: transparent;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
 
     &:hover:not(:disabled) {
-      background: $color-surface-hover;
-      color: $color-text;
+      background: var(--color-surface-hover);
+      color: var(--color-text);
     }
   }
 }

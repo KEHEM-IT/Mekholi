@@ -20,7 +20,7 @@
   }
 
   p {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     max-width: 60rem;
   }
 }
@@ -49,8 +49,8 @@
       width: 2.25rem;
       height: 2.25rem;
       border-radius: $radius-md;
-      background: $color-primary-muted;
-      color: $color-primary;
+      background: var(--color-primary-muted);
+      color: var(--color-primary);
       font-size: 1rem;
       flex-shrink: 0;
     }
@@ -64,7 +64,7 @@
       display: block;
       font-size: 0.85rem;
       font-weight: 400;
-      color: $color-text-secondary;
+      color: var(--color-text-secondary);
     }
   }
 }
@@ -76,22 +76,22 @@
 
 .isc-divider {
   height: 1px;
-  background: $color-border;
+  background: var(--color-border);
 }
 
 .isc-error {
   padding: $space-2 $space-3;
   border-radius: $radius-md;
-  background: $color-danger-muted;
-  border: 1px solid $color-danger;
-  color: $color-danger;
+  background: var(--color-danger-muted);
+  border: 1px solid var(--color-danger);
+  color: var(--color-danger);
   font-size: 0.85rem;
 }
 
 .isc-subhead {
   font-size: 0.85rem;
   font-weight: 700;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 // --- Progress bar ------------------------------------------------------------
@@ -118,8 +118,8 @@
   padding: $space-4;
   padding-right: calc($space-4 + 10px + $space-3); // room for the bar
   border-radius: $radius-lg;
-  border: 1px solid $color-border;
-  background: $color-surface-alt;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
   text-align: left;
   cursor: pointer;
   overflow: hidden; // clip the bar fill to the card's border-radius
@@ -129,8 +129,8 @@
     transform $transition-fast;
 
   &:hover:not(:disabled) {
-    border-color: $color-primary;
-    background: $color-primary-muted;
+    border-color: var(--color-primary);
+    background: var(--color-primary-muted);
     transform: translateY(-1px);
   }
 
@@ -143,11 +143,11 @@
   }
 
   &.is-active {
-    border-left: 3px solid $color-primary;
+    border-left: 3px solid var(--color-primary);
   }
 
   &.is-complete {
-    border-color: $color-success;
+    border-color: var(--color-success);
   }
 }
 
@@ -157,15 +157,15 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: $radius-md;
-  background: $color-primary-muted;
-  color: $color-primary;
+  background: var(--color-primary-muted);
+  color: var(--color-primary);
   font-size: 1.1rem;
   flex-shrink: 0;
 }
 
 .isc-check-card.is-complete .isc-check-card__icon {
-  background: $color-success-muted;
-  color: $color-success;
+  background: var(--color-success-muted);
+  color: var(--color-success);
 }
 
 .isc-check-card__label {
@@ -178,7 +178,7 @@
 .isc-check-card__pct {
   font-size: 0.82rem;
   font-weight: 700;
-  color: $color-text-muted;
+  color: var(--color-text-muted);
   flex-shrink: 0;
   // Hidden by default — shown only on hover in place of the bar
   opacity: 0;
@@ -201,7 +201,7 @@
   right: 0;
   bottom: 0;
   width: 10px;
-  background: $color-border;
+  background: var(--color-border);
   // Fade out on hover so the percentage label shows through
   transition: opacity $transition-fast;
 }
@@ -211,7 +211,7 @@
   right: 0;
   bottom: 0;
   width: 100%;
-  background: $color-primary;
+  background: var(--color-primary);
   border-radius: 0 0 $radius-lg 0;
   transition: height $transition-base, opacity $transition-fast;
 }
@@ -235,9 +235,9 @@
   position: relative;
   @include flex(column, center, center, $space-3);
   padding: $space-8 $space-4;
-  border: 1px dashed $color-border-strong;
+  border: 1px dashed var(--color-border-strong);
   border-radius: $radius-lg;
-  background: $color-surface-alt;
+  background: var(--color-surface-alt);
   text-align: center;
   transition:
     border-color $transition-fast,
@@ -245,17 +245,17 @@
 
   i {
     font-size: 2rem;
-    color: $color-text-muted;
+    color: var(--color-text-muted);
   }
 
   p {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.9rem;
   }
 
   &.is-dragging {
-    border-color: $color-primary;
-    background: $color-primary-muted;
+    border-color: var(--color-primary);
+    background: var(--color-primary-muted);
   }
 
   &.is-busy {
@@ -265,7 +265,7 @@
 
 .isc-dropzone__hint {
   font-size: 0.75rem;
-  color: $color-text-muted;
+  color: var(--color-text-muted);
 }
 
 .isc-dropzone__browse {
@@ -273,7 +273,7 @@
   display: inline-block;
   padding: $space-2 $space-4;
   border-radius: $radius-md;
-  background: $color-primary;
+  background: var(--color-primary);
   color: #fff;
   font-weight: 600;
   font-size: 0.85rem;
@@ -281,7 +281,7 @@
   overflow: hidden;
 
   &:hover {
-    background: $color-primary-hover;
+    background: var(--color-primary-hover);
   }
 }
 
@@ -301,8 +301,8 @@
   flex-wrap: wrap;
   padding: $space-3;
   border-radius: $radius-md;
-  background: $color-surface-alt;
-  border: 1px solid $color-border;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
 }
 
 .isc-import-meta__file {
@@ -310,7 +310,7 @@
 
   i {
     font-size: 1.25rem;
-    color: $color-success;
+    color: var(--color-success);
   }
 
   strong {
@@ -320,7 +320,7 @@
 
   span {
     font-size: 0.78rem;
-    color: $color-text-muted;
+    color: var(--color-text-muted);
   }
 }
 
@@ -328,13 +328,13 @@
   @include flex(row, center, flex-start, $space-2);
   background: none;
   border: none;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
 
   &:hover {
-    color: $color-danger;
+    color: var(--color-danger);
   }
 }
 
@@ -353,9 +353,9 @@
   @include flex(row, center, flex-start, $space-2);
   padding: $space-2 $space-3;
   border-radius: $radius-md;
-  border: 1px solid $color-border;
-  background: $color-surface-alt;
-  color: $color-text-secondary;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
+  color: var(--color-text-secondary);
   font-size: 0.85rem;
   font-weight: 600;
   white-space: nowrap;
@@ -366,29 +366,29 @@
     color $transition-fast;
 
   &:hover {
-    border-color: $color-primary;
-    color: $color-text;
+    border-color: var(--color-primary);
+    color: var(--color-text);
   }
 
   &.is-active {
-    border-color: $color-primary;
-    background: $color-primary-muted;
-    color: $color-primary;
+    border-color: var(--color-primary);
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
   }
 }
 
 .isc-tab__count {
   padding: 0 $space-2;
   border-radius: 999px;
-  background: $color-surface;
-  color: $color-text-muted;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
   font-size: 0.72rem;
   font-weight: 700;
 }
 
 .isc-tab.is-active .isc-tab__count {
-  background: $color-primary-muted;
-  color: $color-primary;
+  background: var(--color-primary-muted);
+  color: var(--color-primary);
 }
 
 // --- Preview table ------------------------------------------------------------
@@ -398,7 +398,7 @@
   max-height: 32rem; // all rows render; this just keeps a very long import from taking over the whole page
   overflow: auto;
   border-radius: $radius-md;
-  border: 1px solid $color-border;
+  border: 1px solid var(--color-border);
 
   // Key-value variant for general-info display
   &--kv {
@@ -407,19 +407,19 @@
     th {
       width: 1%;
       white-space: nowrap;
-      color: $color-text-muted;
+      color: var(--color-text-muted);
       font-size: 0.8rem;
       font-family: 'Consolas', 'Courier New', monospace;
-      background: $color-surface-alt;
+      background: var(--color-surface-alt);
       padding: $space-2 $space-3;
       text-align: left;
-      border-bottom: 1px solid $color-border;
+      border-bottom: 1px solid var(--color-border);
       vertical-align: top;
     }
 
     td {
       padding: $space-2 $space-3;
-      border-bottom: 1px solid $color-border;
+      border-bottom: 1px solid var(--color-border);
       word-break: break-word;
     }
 
@@ -430,7 +430,7 @@
 
     tr:hover td,
     tr:hover th {
-      background: $color-surface-hover;
+      background: var(--color-surface-hover);
     }
   }
 
@@ -444,7 +444,7 @@
   thead {
     position: sticky;
     top: 0;
-    background: $color-surface-alt;
+    background: var(--color-surface-alt);
     z-index: 1;
   }
 
@@ -452,16 +452,16 @@
     padding: $space-2 $space-3;
     text-align: left;
     font-weight: 700;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     white-space: nowrap;
-    border-bottom: 1px solid $color-border;
+    border-bottom: 1px solid var(--color-border);
   }
 
   td {
     padding: $space-2 $space-3;
-    color: $color-text;
+    color: var(--color-text);
     white-space: nowrap;
-    border-bottom: 1px solid $color-border;
+    border-bottom: 1px solid var(--color-border);
   }
 
   tbody tr:last-child td {
@@ -469,13 +469,13 @@
   }
 
   tbody tr:hover td {
-    background: $color-surface-hover;
+    background: var(--color-surface-hover);
   }
 }
 
 .isc-table-more {
   padding: $space-2 $space-3;
-  color: $color-text-muted;
+  color: var(--color-text-muted);
   font-size: 0.8rem;
   text-align: center;
 }
@@ -583,9 +583,9 @@
 .isp-placeholder {
   @include flex(column, center, center, $space-3);
   padding: $space-8 $space-4;
-  border: 1px dashed $color-border;
+  border: 1px dashed var(--color-border);
   border-radius: $radius-lg;
-  background: $color-surface-alt;
+  background: var(--color-surface-alt);
   text-align: center;
   min-height: 40vh;
 
@@ -594,8 +594,8 @@
     width: 4rem;
     height: 4rem;
     border-radius: 50%;
-    background: $color-primary-muted;
-    color: $color-primary;
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
     font-size: 1.6rem;
   }
 
@@ -603,18 +603,18 @@
     margin: $space-2 0 0;
     font-size: 1.3rem;
     font-weight: 700;
-    color: $color-text;
+    color: var(--color-text);
   }
 
   p {
     margin: 0;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.95rem;
   }
 
   &__hint {
     font-size: 0.8rem !important;
-    color: $color-text-muted !important;
+    color: var(--color-text-muted) !important;
     max-width: 32rem;
   }
 }
@@ -640,7 +640,7 @@
     transform $transition-fast;
 
   &:hover {
-    border-color: $color-border-strong;
+    border-color: var(--color-border-strong);
     transform: translateY(-2px);
   }
 
@@ -660,12 +660,12 @@
     height: 3.4rem;
     flex-shrink: 0;
     border-radius: $radius-md;
-    background: $color-primary-muted;
-    color: $color-primary;
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
     font-weight: 800;
     font-size: 1.1rem;
     overflow: hidden;
-    border: 1px solid $color-border;
+    border: 1px solid var(--color-border);
 
     img {
       width: 100%;
@@ -684,7 +684,7 @@
       margin: 0;
       font-size: 1rem;
       font-weight: 700;
-      color: $color-text;
+      color: var(--color-text);
       // Clamp to 2 lines with ellipsis — long names stay inside the card.
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -697,7 +697,7 @@
     p {
       margin: 0;
       font-size: 0.82rem;
-      color: $color-text-secondary;
+      color: var(--color-text-secondary);
       @include truncate;
       min-width: 0;
       max-width: 100%;
@@ -715,7 +715,7 @@
   &__body {
     @include flex(column, stretch, flex-start, $space-1);
     font-size: 0.8rem;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     min-width: 0;
     max-width: 100%;
 
@@ -726,7 +726,7 @@
       max-width: 100%;
 
       i {
-        color: $color-text-muted;
+        color: var(--color-text-muted);
         margin-right: $space-1;
         font-size: 0.75rem;
       }
@@ -735,7 +735,7 @@
 
   &__headline {
     font-weight: 600;
-    color: $color-text;
+    color: var(--color-text);
   }
 
   &__foot {
@@ -743,7 +743,7 @@
     flex-wrap: nowrap;
     margin-top: auto;
     padding-top: $space-3;
-    border-top: 1px solid $color-border;
+    border-top: 1px solid var(--color-border);
     min-width: 0;
   }
 
@@ -755,8 +755,8 @@
     white-space: nowrap;
 
     &--danger:hover:not(:disabled) {
-      background: $color-danger-muted;
-      color: $color-danger;
+      background: var(--color-danger-muted);
+      color: var(--color-danger);
     }
   }
 }
@@ -767,30 +767,30 @@
   border-radius: 999px;
   font-size: 0.68rem;
   font-weight: 700;
-  background: $color-surface-alt;
-  border: 1px solid $color-border;
-  color: $color-text-secondary;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
 
   &--code {
-    color: $color-text;
-    border-color: $color-primary;
-    background: $color-primary-muted;
+    color: var(--color-text);
+    border-color: var(--color-primary);
+    background: var(--color-primary-muted);
   }
 
   &--main {
-    color: $color-warning;
-    border-color: $color-warning;
-    background: $color-warning-muted;
+    color: var(--color-warning);
+    border-color: var(--color-warning);
+    background: var(--color-warning-muted);
 
     i {
-      color: $color-warning;
+      color: var(--color-warning);
     }
   }
 
   &--admission {
-    color: $color-success;
-    border-color: $color-success;
-    background: $color-success-muted;
+    color: var(--color-success);
+    border-color: var(--color-success);
+    background: var(--color-success-muted);
   }
 }
 
@@ -798,5 +798,5 @@
   @include flex(row, center, flex-end, $space-2);
   margin-top: $space-4;
   padding-top: $space-4;
-  border-top: 1px solid $color-border;
+  border-top: 1px solid var(--color-border);
 }

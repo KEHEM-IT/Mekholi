@@ -1,3 +1,10 @@
-// Dark is the only theme for Mekholi — all tokens live in
+// Dark is the default theme — all tokens live in
 // abstracts/_variables.scss and are exposed as CSS custom
-// properties in base/_base.scss. No override needed here.
+// properties in base/_base.scss. Tinted-text tokens are defined
+// here so the light theme can swap them.
+:root {
+  --color-on-success: #bbf7d0;
+  --color-on-danger: #fecaca;
+  --color-on-warning: #fde68a;
+  --color-on-info: #bae6fd;
+}

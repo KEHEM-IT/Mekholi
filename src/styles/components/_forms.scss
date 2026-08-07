@@ -10,50 +10,50 @@
   label {
     font-size: 0.9rem;
     font-weight: 600;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
   }
 
   .form-hint {
     font-size: 0.8rem;
-    color: $color-text-muted;
+    color: var(--color-text-muted);
   }
 
   .form-error {
     font-size: 0.8rem;
-    color: $color-danger;
+    color: var(--color-danger);
   }
 }
 
 input,
 select,
 textarea {
-  background: $color-input-bg;
-  border: 1px solid $color-input-border;
+  background: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
   border-radius: $radius-md;
   padding: $space-2 $space-3;
   font-family: var(--font-family-base);
-  color: $color-text;
+  color: var(--color-text);
   transition:
     border-color $transition-fast,
     background-color $transition-fast;
 
   &::placeholder {
-    color: $color-input-placeholder;
+    color: var(--color-input-placeholder);
   }
 
   &:focus {
     outline: none;
-    border-color: $color-input-border-focus;
+    border-color: var(--color-input-border-focus);
   }
 
   &:disabled {
-    background: $color-input-disabled-bg;
-    color: $color-text-disabled;
+    background: var(--color-input-disabled-bg);
+    color: var(--color-text-disabled);
     cursor: not-allowed;
   }
 
   &.has-error {
-    border-color: $color-danger;
+    border-color: var(--color-danger);
   }
 }
 
@@ -64,18 +64,18 @@ table {
   th,
   td {
     padding: $space-2 $space-3;
-    border-bottom: 1px solid $color-border;
+    border-bottom: 1px solid var(--color-border);
     text-align: left;
   }
 
   th {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-weight: 600;
-    background: $color-surface-alt;
+    background: var(--color-surface-alt);
   }
 
   tr:hover td {
-    background: $color-surface-hover;
+    background: var(--color-surface-hover);
   }
 }
 
@@ -89,8 +89,8 @@ table {
   height: var(--switch-h);
   flex-shrink: 0;
   border-radius: $radius-lg;
-  background: $color-surface-alt;
-  border: 1px solid $color-border;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
   cursor: pointer;
   transition:
     background-color $transition-fast,
@@ -104,19 +104,19 @@ table {
     width: calc(var(--switch-h) - 6px);
     height: calc(var(--switch-h) - 6px);
     border-radius: 50%;
-    background: $color-text-secondary;
+    background: var(--color-text-secondary);
     transition:
       transform $transition-base,
       background-color $transition-fast;
   }
 
   &.is-on {
-    background: $color-primary-muted;
-    border-color: $color-primary;
+    background: var(--color-primary-muted);
+    border-color: var(--color-primary);
 
     &::after {
       transform: translateX(calc(var(--switch-w) - var(--switch-h)));
-      background: $color-primary;
+      background: var(--color-primary);
     }
   }
 
@@ -135,20 +135,20 @@ table {
   font-weight: 600;
 
   &--success {
-    background: $color-success-muted;
-    color: $color-success;
+    background: var(--color-success-muted);
+    color: var(--color-success);
   }
   &--warning {
-    background: $color-warning-muted;
-    color: $color-warning;
+    background: var(--color-warning-muted);
+    color: var(--color-warning);
   }
   &--danger {
-    background: $color-danger-muted;
-    color: $color-danger;
+    background: var(--color-danger-muted);
+    color: var(--color-danger);
   }
   &--info {
-    background: $color-info-muted;
-    color: $color-info;
+    background: var(--color-info-muted);
+    color: var(--color-info);
   }
 }
 
@@ -172,8 +172,8 @@ table {
     width: 3rem;
     height: 1.6rem;
     border-radius: 999px;
-    background: $color-danger-muted;
-    border: 1px solid $color-danger;
+    background: var(--color-danger-muted);
+    border: 1px solid var(--color-danger);
     transition:
       background-color 0.25s ease,
       border-color 0.25s ease;
@@ -187,7 +187,7 @@ table {
     width: 1.2rem;
     height: 1.2rem;
     border-radius: 50%;
-    background: $color-danger;
+    background: var(--color-danger);
     transition:
       transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
       background-color 0.25s ease;
@@ -199,24 +199,24 @@ table {
 
   &.is-on {
     .base-toggle__track {
-      background: $color-success-muted;
-      border-color: $color-success;
+      background: var(--color-success-muted);
+      border-color: var(--color-success);
     }
 
     .base-toggle__thumb {
       transform: translateX(1.4rem);
-      background: $color-success;
+      background: var(--color-success);
     }
 
     .base-toggle__label {
-      color: $color-success;
+      color: var(--color-success);
     }
   }
 
   &__label {
     font-size: 0.85rem;
     font-weight: 700;
-    color: $color-danger;
+    color: var(--color-danger);
     transition: color 0.25s ease;
   }
 }

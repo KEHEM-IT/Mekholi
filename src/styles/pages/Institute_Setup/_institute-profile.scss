@@ -26,7 +26,7 @@
   }
 
   p {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     max-width: 100%;
   }
 
@@ -43,24 +43,24 @@
   }
 
   &__export {
-    background: $color-surface-alt;
-    border-color: $color-success;
-    color: $color-success;
+    background: var(--color-surface-alt);
+    border-color: var(--color-success);
+    color: var(--color-success);
 
     &:hover:not(:disabled) {
-      background: $color-success-muted;
-      border-color: $color-success;
+      background: var(--color-success-muted);
+      border-color: var(--color-success);
     }
   }
 
   &__import {
-    background: $color-surface-alt;
-    border-color: $color-info;
-    color: $color-info;
+    background: var(--color-surface-alt);
+    border-color: var(--color-info);
+    color: var(--color-info);
 
     &:hover:not(:disabled) {
-      background: $color-info-muted;
-      border-color: $color-info;
+      background: var(--color-info-muted);
+      border-color: var(--color-info);
     }
   }
 }
@@ -99,8 +99,8 @@
       width: 2.25rem;
       height: 2.25rem;
       border-radius: $radius-md;
-      background: $color-primary-muted;
-      color: $color-primary;
+      background: var(--color-primary-muted);
+      color: var(--color-primary);
       font-size: 1rem;
       flex-shrink: 0;
     }
@@ -114,7 +114,7 @@
       display: block;
       font-size: 0.85rem;
       font-weight: 400;
-      color: $color-text-secondary;
+      color: var(--color-text-secondary);
     }
   }
 }
@@ -129,12 +129,12 @@
 .ipf-subhead {
   font-size: 0.85rem;
   font-weight: 700;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 }
 
 .ipf-divider {
   height: 1px;
-  background: $color-border;
+  background: var(--color-border);
 }
 
 // --- Field grids -----------------------------------------------------------
@@ -166,11 +166,11 @@
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  border: 1px dashed $color-border-strong;
+  border: 1px dashed var(--color-border-strong);
   border-radius: $radius-md;
-  background: $color-surface-alt;
+  background: var(--color-surface-alt);
   overflow: hidden;
-  color: $color-text-muted;
+  color: var(--color-text-muted);
   font-size: 1.5rem;
 
   img {
@@ -206,7 +206,7 @@
     display: block;
     font-size: 0.78rem;
     font-weight: 400;
-    color: $color-text-muted;
+    color: var(--color-text-muted);
     margin-top: 2px;
   }
 }
@@ -241,7 +241,7 @@
 
 .ipf-preview__band {
   height: 4.5rem;
-  background: linear-gradient(135deg, $color-primary, $color-primary-active);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-active));
   display: grid;
   place-items: center;
 }
@@ -252,9 +252,9 @@
   height: 3.5rem;
   margin-top: 2.75rem;
   border-radius: 50%;
-  background: $color-surface;
-  border: 3px solid $color-surface;
-  box-shadow: $shadow-sm;
+  background: var(--color-surface);
+  border: 3px solid var(--color-surface);
+  box-shadow: var(--shadow-sm);
 }
 
 .ipf-preview__logo {
@@ -264,7 +264,7 @@
 .ipf-preview__logo-fallback {
   display: grid;
   place-items: center;
-  color: $color-primary;
+  color: var(--color-primary);
   font-size: 1.25rem;
 }
 
@@ -279,7 +279,7 @@
 
 .ipf-preview__eiin {
   font-size: 0.8rem;
-  color: $color-text-muted;
+  color: var(--color-text-muted);
 }
 
 .ipf-preview__badges {
@@ -294,16 +294,16 @@
   bottom: $space-4;
   @include flex(row, center, space-between, $space-4);
   @include card;
-  border-color: $color-border-strong;
+  border-color: var(--color-border-strong);
   flex-wrap: wrap;
 
   &__status {
     @include flex(row, center, flex-start, $space-2);
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: 0.85rem;
 
     i {
-      color: $color-success;
+      color: var(--color-success);
     }
 
     // "Press Ctrl+S to save" is desktop-only — no Ctrl key on mobile.
@@ -401,9 +401,9 @@
 .ipf-chip {
   padding: $space-2 $space-3;
   border-radius: $radius-lg;
-  border: 1px solid $color-border;
-  background: $color-surface-alt;
-  color: $color-text-secondary;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
+  color: var(--color-text-secondary);
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
@@ -413,13 +413,13 @@
     color $transition-fast;
 
   &:hover {
-    background: $color-surface-hover;
+    background: var(--color-surface-hover);
   }
 
   &.is-active {
-    border-color: $color-primary;
-    background: $color-primary-muted;
-    color: $color-primary;
+    border-color: var(--color-primary);
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
   }
 }
 
@@ -443,12 +443,12 @@
   @include flex(row, center, space-between, $space-3);
   padding: $space-2 $space-3;
   border-radius: $radius-md;
-  border: 1px solid $color-border;
-  background: $color-surface-alt;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
 
   // Red (unchecked) by default — green when input is checked
-  .form-field__check-label { color: $color-danger; }
-  &:has(input:checked) .form-field__check-label { color: $color-success; }
+  .form-field__check-label { color: var(--color-danger); }
+  &:has(input:checked) .form-field__check-label { color: var(--color-success); }
 
   &__label {
     @include flex(row, center, flex-start, $space-2);
@@ -456,7 +456,7 @@
     font-weight: 600;
 
     i {
-      color: $color-primary;
+      color: var(--color-primary);
       flex-shrink: 0;
     }
   }
@@ -486,14 +486,14 @@
 .ipf-array-card {
   padding: $space-3;
   border-radius: $radius-md;
-  border: 1px solid $color-border;
-  background: $color-surface-alt;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
 }
 
 .ipf-array-card__head {
   font-size: 0.78rem;
   font-weight: 700;
-  color: $color-text-muted;
+  color: var(--color-text-muted);
   text-transform: uppercase;
   margin-bottom: $space-3;
   @include flex(row, center, space-between, $space-2);
@@ -502,7 +502,7 @@
 .ipf-array-card__remove {
   background: none;
   border: none;
-  color: $color-text-muted;
+  color: var(--color-text-muted);
   font-size: 1.1rem;
   line-height: 1;
   cursor: pointer;
@@ -510,8 +510,8 @@
   border-radius: $radius-sm;
 
   &:hover {
-    color: $color-danger;
-    background: $color-danger-muted;
+    color: var(--color-danger);
+    background: var(--color-danger-muted);
   }
 }
 
@@ -522,8 +522,8 @@
   padding: $space-2 0;
 
   // Red (unchecked) by default — green when input is checked
-  .form-field__check-label { color: $color-danger; }
-  &:has(input:checked) .form-field__check-label { color: $color-success; }
+  .form-field__check-label { color: var(--color-danger); }
+  &:has(input:checked) .form-field__check-label { color: var(--color-success); }
 }
 
 .form-field__check-label {
@@ -539,18 +539,18 @@
   @include flex(row, center, space-between, $space-2);
   padding: $space-3 $space-3;
   border-radius: $radius-md;
-  border: 1px solid $color-border;
-  background: $color-surface-alt;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
   cursor: pointer;
   transition: border-color $transition-fast, background $transition-fast;
 
   &:hover {
-    border-color: $color-primary;
+    border-color: var(--color-primary);
   }
 
   &.is-active {
-    border-color: $color-success;
-    background: $color-success-muted;
+    border-color: var(--color-success);
+    background: var(--color-success-muted);
   }
 }
 
@@ -560,19 +560,19 @@
 
   i {
     font-size: 0.95rem;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     transition: color $transition-fast;
   }
 
   .ipf-toggle-btn.is-active & i {
-    color: $color-success;
+    color: var(--color-success);
   }
 }
 
 .ipf-toggle-btn__label {
   font-size: 0.85rem;
   font-weight: 600;
-  color: $color-text;
+  color: var(--color-text);
 }
 
 .ipf-toggle-btn__state {
@@ -580,12 +580,12 @@
   font-weight: 700;
   padding: 2px 8px;
   border-radius: $radius-sm;
-  border: 1px solid $color-danger;
-  color: $color-danger;
+  border: 1px solid var(--color-danger);
+  color: var(--color-danger);
 
   .ipf-toggle-btn.is-active & {
-    border-color: $color-success;
-    color: $color-success;
+    border-color: var(--color-success);
+    color: var(--color-success);
   }
 }
 
@@ -596,18 +596,18 @@
   flex-shrink: 0;
   padding: $space-2 $space-3;
   border-radius: $radius-md;
-  border: 1px solid $color-border;
-  background: $color-surface;
-  color: $color-text-secondary;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
   transition: border-color $transition-fast, color $transition-fast, background $transition-fast;
 
   &:hover {
-    border-color: $color-primary;
-    color: $color-primary;
-    background: $color-primary-muted;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: var(--color-primary-muted);
   }
 
   i {
@@ -621,9 +621,9 @@
   position: relative;
   @include flex(row, center, center, $space-3);
   padding: $space-4 $space-3;
-  border: 2px dashed $color-input-border;
+  border: 2px dashed var(--color-input-border);
   border-radius: $radius-md;
-  background: $color-surface-alt;
+  background: var(--color-surface-alt);
   cursor: pointer;
   text-align: center;
   transition:
@@ -636,8 +636,8 @@
   }
 
   &:hover {
-    border-color: $color-primary;
-    background: $color-surface-hover;
+    border-color: var(--color-primary);
+    background: var(--color-surface-hover);
   }
 
   &.is-uploading {
@@ -646,16 +646,16 @@
   }
 
   &.is-dragging {
-    border-color: $color-primary;
+    border-color: var(--color-primary);
     border-style: solid;
-    background: $color-primary-muted;
+    background: var(--color-primary-muted);
 
     .ipf-logo__icon {
-      color: $color-primary;
+      color: var(--color-primary);
     }
 
     .ipf-logo__text {
-      color: $color-primary;
+      color: var(--color-primary);
     }
   }
 }
@@ -665,14 +665,14 @@
   height: 4.5rem;
   object-fit: contain;
   border-radius: $radius-md;
-  background: $color-surface;
-  border: 1px solid $color-border;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   flex-shrink: 0;
 }
 
 .ipf-logo__icon {
   font-size: 2rem;
-  color: $color-text-muted;
+  color: var(--color-text-muted);
   flex-shrink: 0;
 }
 
@@ -680,12 +680,12 @@
   @include flex(column, flex-start, center, $space-1);
   font-size: 0.9rem;
   font-weight: 600;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 
   small {
     font-size: 0.75rem;
     font-weight: 400;
-    color: $color-text-muted;
+    color: var(--color-text-muted);
   }
 }
 
@@ -699,16 +699,16 @@
   border-radius: 50%;
   font-size: 0.75rem;
   line-height: 1;
-  color: $color-text-muted;
-  background: $color-surface;
-  border: 1px solid $color-border;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   transition:
     background-color $transition-fast,
     color $transition-fast;
 
   &:hover {
-    background: $color-danger-muted;
-    color: $color-danger;
+    background: var(--color-danger-muted);
+    color: var(--color-danger);
   }
 }
 
@@ -730,10 +730,10 @@
   flex-wrap: wrap;
   padding: $space-6;
   border-radius: $radius-lg;
-  border: 1px solid $color-border;
+  border: 1px solid var(--color-border);
   background:
-    radial-gradient(120% 160% at 0% 0%, $color-primary-muted 0%, transparent 55%),
-    linear-gradient(135deg, $color-surface-alt, $color-surface);
+    radial-gradient(120% 160% at 0% 0%, var(--color-primary-muted) 0%, transparent 55%),
+    linear-gradient(135deg, var(--color-surface-alt), var(--color-surface));
 
   &__logo {
     @include flex(row, center, center);
@@ -741,10 +741,10 @@
     height: 4.5rem;
     flex-shrink: 0;
     border-radius: $radius-lg;
-    background: $color-surface;
-    border: 1px solid $color-border-strong;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
     overflow: hidden;
-    box-shadow: $shadow-sm;
+    box-shadow: var(--shadow-sm);
 
     img {
       width: 100%;
@@ -755,7 +755,7 @@
     span {
       font-size: 1.3rem;
       font-weight: 800;
-      color: $color-primary;
+      color: var(--color-primary);
     }
   }
 
@@ -769,7 +769,7 @@
     margin: 0;
     font-size: 1.25rem;
     font-weight: 800;
-    color: $color-text;
+    color: var(--color-text);
     @include truncate;
   }
 
@@ -777,7 +777,7 @@
     margin: 0;
     font-size: 0.95rem;
     font-weight: 600;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     @include truncate;
   }
 
@@ -794,30 +794,30 @@
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 600;
-  background: $color-surface;
-  border: 1px solid $color-border;
-  color: $color-text-secondary;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
 
   i {
-    color: $color-primary;
+    color: var(--color-primary);
     font-size: 0.7rem;
   }
 
   &--eiin {
-    color: $color-text;
-    border-color: $color-primary;
-    background: $color-primary-muted;
+    color: var(--color-text);
+    border-color: var(--color-primary);
+    background: var(--color-primary-muted);
 
     i {
-      color: $color-primary;
+      color: var(--color-primary);
     }
   }
 }
 
 // Section cards
 .ipfp-section {
-  background: $color-surface-alt;
-  border: 1px solid $color-border;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
   border-radius: $radius-md;
   padding: $space-4;
 
@@ -828,10 +828,10 @@
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: $color-text-muted;
+    color: var(--color-text-muted);
 
     i {
-      color: $color-primary;
+      color: var(--color-primary);
     }
   }
 
@@ -842,8 +842,8 @@
     padding: 0 6px;
     border-radius: 999px;
     font-size: 0.7rem;
-    background: $color-primary-muted;
-    color: $color-primary;
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
   }
 }
 
@@ -862,18 +862,18 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: $color-text-muted;
+    color: var(--color-text-muted);
   }
 
   &__value {
     font-size: 0.92rem;
     font-weight: 600;
-    color: $color-text;
+    color: var(--color-text);
     word-break: break-word;
   }
 
   &--total .ipfp-field__value {
-    color: $color-primary;
+    color: var(--color-primary);
     font-weight: 800;
   }
 }
@@ -891,13 +891,13 @@
   border-radius: $radius-md;
   font-size: 0.82rem;
   font-weight: 600;
-  border: 1px solid $color-border;
-  background: $color-surface;
-  color: $color-text-muted;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
 
   i:first-child {
     font-size: 0.9rem;
-    color: $color-text-muted;
+    color: var(--color-text-muted);
   }
 
   &__mark {
@@ -905,16 +905,16 @@
   }
 
   &.is-on {
-    border-color: $color-success;
-    background: $color-success-muted;
-    color: #bbf7d0;
+    border-color: var(--color-success);
+    background: var(--color-success-muted);
+    color: var(--color-on-success);
 
     i:first-child {
-      color: $color-success;
+      color: var(--color-success);
     }
 
     .ipfp-facility__mark {
-      color: $color-success;
+      color: var(--color-success);
     }
   }
 
@@ -922,7 +922,7 @@
     opacity: 0.55;
 
     .ipfp-facility__mark {
-      color: $color-danger;
+      color: var(--color-danger);
     }
   }
 }
@@ -937,8 +937,8 @@
   flex-wrap: wrap;
   padding: $space-3;
   border-radius: $radius-md;
-  border: 1px solid $color-border;
-  background: $color-surface;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
 
   &__avatar {
     @include flex(row, center, center);
@@ -946,8 +946,8 @@
     height: 2.5rem;
     flex-shrink: 0;
     border-radius: 50%;
-    background: $color-primary-muted;
-    color: $color-primary;
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
     font-weight: 800;
     font-size: 1rem;
   }
@@ -960,13 +960,13 @@
 
   &__name {
     font-weight: 700;
-    color: $color-text;
+    color: var(--color-text);
     @include truncate;
   }
 
   &__meta {
     font-size: 0.78rem;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     @include truncate;
   }
 
@@ -974,17 +974,17 @@
     @include flex(column, flex-end, center, 4px);
     flex-shrink: 0;
     font-size: 0.75rem;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     text-align: right;
 
     i {
       margin-right: 2px;
-      color: $color-text-muted;
+      color: var(--color-text-muted);
     }
   }
 
   &__left {
-    color: $color-danger;
+    color: var(--color-danger);
     font-weight: 700;
     font-size: 0.7rem;
     text-transform: uppercase;
@@ -994,7 +994,7 @@
 .ipfp-empty {
   @include flex(column, center, center, $space-2);
   padding: $space-8;
-  color: $color-text-muted;
+  color: var(--color-text-muted);
   font-weight: 600;
 
   i {
@@ -1010,19 +1010,19 @@
   flex-shrink: 0;
   padding: $space-1 $space-3;
   border-radius: 999px;
-  border: 1px solid $color-primary;
-  background: $color-primary-muted;
+  border: 1px solid var(--color-primary);
+  background: var(--color-primary-muted);
   font-size: 0.82rem;
   font-weight: 600;
-  color: $color-text-secondary;
+  color: var(--color-text-secondary);
 
   i {
-    color: $color-primary;
+    color: var(--color-primary);
     font-size: 0.85rem;
   }
 
   strong {
-    color: $color-primary;
+    color: var(--color-primary);
     font-size: 1rem;
     font-weight: 800;
   }
@@ -1081,9 +1081,9 @@
   &__section {
     @include flex(column, stretch, flex-start, $space-3);
     padding: $space-4;
-    border: 1px solid $color-border;
+    border: 1px solid var(--color-border);
     border-radius: $radius-md;
-    background: $color-surface-alt;
+    background: var(--color-surface-alt);
   }
 
   &__section-title {
@@ -1121,20 +1121,20 @@
   margin-top: $space-4;
   padding: $space-3;
   border-radius: $radius-md;
-  border: 1px solid $color-border;
-  background: $color-surface-alt;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
 
   &__head {
     font-size: 0.78rem;
     font-weight: 700;
-    color: $color-text-muted;
+    color: var(--color-text-muted);
     text-transform: uppercase;
     margin-bottom: $space-3;
     @include flex(row, center, space-between, $space-2);
   }
 
   &__num {
-    color: $color-primary;
+    color: var(--color-primary);
   }
 }
 
@@ -1142,14 +1142,14 @@
   @include flex(row, center, center, $space-2);
   margin-top: $space-4;
   padding: $space-4;
-  border: 1px dashed $color-border;
+  border: 1px dashed var(--color-border);
   border-radius: $radius-md;
-  color: $color-text-muted;
+  color: var(--color-text-muted);
   font-size: 0.85rem;
   text-align: center;
 
   i {
-    color: $color-primary;
+    color: var(--color-primary);
   }
 }
 
@@ -1163,8 +1163,8 @@
 .ipfp-class-item {
   padding: $space-3;
   border-radius: $radius-md;
-  border: 1px solid $color-border;
-  background: $color-surface;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
 
   &__head {
     margin-bottom: $space-2;
@@ -1175,7 +1175,7 @@
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: $color-primary;
+    color: var(--color-primary);
   }
 }
 
@@ -1186,13 +1186,13 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: $color-info;
+  color: var(--color-info);
   margin-left: $space-1;
 }
 
 .ipf-field-readonly {
-  background: $color-surface-alt !important;
-  color: $color-info !important;
+  background: var(--color-surface-alt) !important;
+  color: var(--color-info) !important;
   font-weight: 600;
   cursor: not-allowed;
   opacity: 0.85;
