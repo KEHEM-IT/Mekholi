@@ -382,7 +382,8 @@ function submit() {
             <label>{{ t('Admission Open', 'ভর্তি চলছে') }}</label>
             <BaseToggle v-model="form.admission_open" :yes-label="isBn ? 'হ্যাঁ' : 'Yes'" :no-label="isBn ? 'না' : 'No'" />
           </div>
-          <div class="form-field">
+          <!-- Branch Logo — full grid row (never squeezed into one column) -->
+          <div class="form-field ipf-field--full">
             <label>{{ t('Branch Logo', 'শাখার লোগো') }}</label>
             <div
               class="ipf-logo"
