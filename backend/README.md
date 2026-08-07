@@ -30,7 +30,7 @@ added without touching the HTTP plumbing.
 ```
 ┌─────────────────────┐         HTTP / JSON          ┌──────────────────────────┐
 │  Vue 3 + Vite SPA   │  ──────────────────────────► │  Python HTTP Server      │
-│  (src/, services/)  │  GET/POST /api/profile…      │  (backend/server.py)    │
+│  (src/, services/)  │  GET/POST /api/profile…      │  (backend/server.py)     │
 └─────────────────────┘                              └───────────┬──────────────┘
                                                                  │
                                               ┌──────────────────┼──────────────────┐
@@ -43,13 +43,13 @@ added without touching the HTTP plumbing.
 
 **Layers (dependency direction — each layer only imports the ones below it):**
 
-| Layer | Responsibility | Imports |
-|---|---|---|
-| `server.py` | HTTP plumbing: threaded server, method dispatch, route registry | routes, core, utils |
-| `api/v1/routes/` | URL parsing, method dispatch, request → controller, response shaping | controllers, utils/response |
-| `api/v1/controllers/` | Business logic: validation, DB operations, guards | core/db |
-| `core/db.py` | SQLite connection, schema, migrations, row→dict conversion | — |
-| `utils/response.py` | Single JSON + CORS response builder | — |
+| Layer                 | Responsibility                                                       | Imports                     |
+| --------------------- | -------------------------------------------------------------------- | --------------------------- |
+| `server.py`           | HTTP plumbing: threaded server, method dispatch, route registry      | routes, core, utils         |
+| `api/v1/routes/`      | URL parsing, method dispatch, request → controller, response shaping | controllers, utils/response |
+| `api/v1/controllers/` | Business logic: validation, DB operations, guards                    | core/db                     |
+| `core/db.py`          | SQLite connection, schema, migrations, row→dict conversion           | —                           |
+| `utils/response.py`   | Single JSON + CORS response builder                                  | —                           |
 
 The whole server has **zero third-party dependencies** — only Python's standard
 library (`http.server`, `sqlite3`, `json`, `urllib`).
@@ -148,8 +148,8 @@ Returns the full institute profile document (or `404` when the EIIN does not exi
 
 **Query params**
 
-| Param | Default | Description |
-|---|---|---|
+| Param  | Default  | Description                      |
+| ------ | -------- | -------------------------------- |
 | `eiin` | `130430` | Institute's EIIN (11-digit code) |
 
 **Response `200 OK`** — profile document:
@@ -286,14 +286,14 @@ profile twice updates it rather than creating a duplicate.
 
 **Behaviour notes**
 
-| Body key | Behaviour |
-|---|---|
-| scalar text fields | stored as-is (`TEXT`) |
-| `classifications` | must be a JSON **array**; stored as JSON text, parsed back to an array on GET |
-| boolean fields (`has_english_version`, `general_mpo`, `tech_mpo`) | truthy → `1`, falsy → `0` |
-| numeric fields (staff counts, post code) | coerced with `int()`; empty → `0` |
-| `facilities` | **guard:** only replaced when the body sends a non-empty object. A payload *without* `facilities` (older client) preserves existing rows — prevents accidental data wipe |
-| `committee_members` | replaced wholesale (delete + re-insert) |
+| Body key                                                          | Behaviour                                                                                                                                                                |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| scalar text fields                                                | stored as-is (`TEXT`)                                                                                                                                                    |
+| `classifications`                                                 | must be a JSON **array**; stored as JSON text, parsed back to an array on GET                                                                                            |
+| boolean fields (`has_english_version`, `general_mpo`, `tech_mpo`) | truthy → `1`, falsy → `0`                                                                                                                                                |
+| numeric fields (staff counts, post code)                          | coerced with `int()`; empty → `0`                                                                                                                                        |
+| `facilities`                                                      | **guard:** only replaced when the body sends a non-empty object. A payload _without_ `facilities` (older client) preserves existing rows — prevents accidental data wipe |
+| `committee_members`                                               | replaced wholesale (delete + re-insert)                                                                                                                                  |
 
 ### `OPTIONS /api/profile`
 
@@ -464,21 +464,24 @@ the same CORS, error format and threading automatically.
 The frontend talks to this API through `src/composables/useInstituteProfile.ts`:
 
 ```ts
-const API_BASE = 'http://localhost:5000'
+const API_BASE = "http://localhost:5000";
 
 export async function loadProfile(): Promise<Record<string, any> | null> {
-  const res = await fetch(`${API_BASE}/api/profile?eiin=130430`)
-  if (!res.ok) return null
-  return await res.json()
+  const res = await fetch(`${API_BASE}/api/profile?eiin=130430`);
+  if (!res.ok) return null;
+  return await res.json();
 }
 
 export async function saveProfile(form) {
-  const res = await fetch(`${API_BASE}/api/profile?eiin=${form.eiin || '130430'}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(form),
-  })
-  return res.ok
+  const res = await fetch(
+    `${API_BASE}/api/profile?eiin=${form.eiin || "130430"}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    },
+  );
+  return res.ok;
 }
 ```
 
@@ -527,11 +530,11 @@ manual "run migrations" step.
 
 ## Deployment Notes
 
-| Target | Works? | Notes |
-|---|---|---|
-| Local dev (`python3 backend/server.py`) | ✅ | Primary use today |
-| Small VPS (Hetzner/DigitalOcean/Railway/Render) | ✅ | SQLite file persists on disk; fine for 1–5 schools |
-| Vercel / serverless | ⚠️ **No** | Serverless has **no persistent filesystem** — the `school.db` file cannot survive between requests. Needs a hosted DB (Postgres/MySQL) or a VPS |
+| Target                                          | Works?    | Notes                                                                                                                                           |
+| ----------------------------------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Local dev (`python3 backend/server.py`)         | ✅        | Primary use today                                                                                                                               |
+| Small VPS (Hetzner/DigitalOcean/Railway/Render) | ✅        | SQLite file persists on disk; fine for 1–5 schools                                                                                              |
+| Vercel / serverless                             | ⚠️ **No** | Serverless has **no persistent filesystem** — the `school.db` file cannot survive between requests. Needs a hosted DB (Postgres/MySQL) or a VPS |
 
 Before hosting:
 
