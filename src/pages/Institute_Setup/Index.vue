@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAppPreferences } from '@/composables/useAppPreferences'
+import { useTranslator } from '@/Translator'
 import { useDragScroll } from '@/composables/useDragScroll'
 import { profileProgress } from '@/composables/Institute_Setup/useInstituteProfile'
 import {
@@ -18,8 +18,7 @@ import type { NavigationMap } from '@/types'
 defineOptions({ name: 'InstituteDashboard' })
 
 const router = useRouter()
-const { preferences } = useAppPreferences()
-const isBn = computed(() => preferences.uiLanguage === 'bn')
+const { t, pick } = useTranslator()
 
 // Skeleton loader — the dashboard shows a shimmer skeleton for at least
 // 2s on mount, matching the Institute Profile page behaviour.
@@ -166,12 +165,10 @@ const {
 
   <section v-else class="isc">
     <header class="isc-header">
-      <h1>{{ isBn ? 'ইনস্টিটিউট ড্যাশবোর্ড' : 'Institute Dashboard' }}</h1>
+      <h1>{{ t("Institute Dashboard") }}</h1>
       <p>
         {{
-          isBn
-            ? 'আপনার প্রতিষ্ঠানের সেটআপ অগ্রগতি দেখুন এবং সরকারি ইএমআইএস ওয়ার্কবুক থেকে তথ্য আমদানি করুন।'
-            : 'Track your institute setup progress and import data from a government EMIS workbook.'
+          t("Track your institute setup progress and import data from a government EMIS workbook.")
         }}
       </p>
     </header>
@@ -182,11 +179,9 @@ const {
         <div class="isc-section__title">
           <i class="fa-duotone fa-list-check" />
           <div>
-            <h2>{{ isBn ? 'সেটআপ চেকলিস্ট' : 'Setup checklist' }}</h2>
+            <h2>{{ t("Setup checklist") }}</h2>
             <span>{{
-              isBn
-                ? 'এই ধাপগুলো একে একে সম্পন্ন করুন'
-                : 'Work through these to finish setting up your institute'
+              t("Work through these to finish setting up your institute")
             }}</span>
           </div>
         </div>
@@ -207,7 +202,7 @@ const {
             @click="goToStep(step.name)"
           >
             <span class="isc-check-card__icon"><i :class="step.icon" /></span>
-            <span class="isc-check-card__label">{{ isBn ? step.name_bn : step.name }}</span>
+            <span class="isc-check-card__label">{{ pick(step.name, step.name_bn) }}</span>
             <span class="isc-check-card__pct">{{ (STEP_PCTS[step.name]?.() ?? 0) }}%</span>
             <!-- Vertical progress bar on the right edge -->
             <div class="isc-check-card__bar">
@@ -230,11 +225,9 @@ const {
         <div class="isc-section__title">
           <i class="fa-duotone fa-file-import" />
           <div>
-            <h2>{{ isBn ? 'ইএমআইএস তথ্য আমদানি' : 'EMIS data import' }}</h2>
+            <h2>{{ t("EMIS data import") }}</h2>
             <span>{{
-              isBn
-                ? 'সরকারি ইএমআইএস ওয়ার্কবুক (মার্কডাউন/জেএসওএন) থেকে প্রতিষ্ঠানের তথ্য আমদানি করুন'
-                : 'Import institute data from a government EMIS workbook export (Markdown/JSON)'
+              t("Import institute data from a government EMIS workbook export (Markdown/JSON)")
             }}</span>
           </div>
         </div>
@@ -250,11 +243,11 @@ const {
         >
           <i class="fa-duotone fa-cloud-arrow-up" />
           <p>
-            {{ isBn ? 'ফাইল টেনে আনুন অথবা' : 'Drag a file here, or' }}
+            {{ t("Drag a file here, or") }}
           </p>
 
             <span class="isc-dropzone__browse">
-              {{ isBn ? 'ব্রাউজ করুন' : 'Browse' }}
+              {{ t("Browse") }}
               <input
                 type="file"
                 class="isc-dropzone__input"
@@ -263,7 +256,7 @@ const {
                 @change="onFileInputChange"
               />
             </span>
-          <span class="isc-dropzone__hint">{{ isBn ? 'গ্রহণযোগ্য: .md, .json' : 'Accepted: .md, .json' }}</span>
+          <span class="isc-dropzone__hint">{{ t("Accepted: .md, .json") }}</span>
         </div>
 
         <p v-if="errorMessage" class="isc-error">{{ errorMessage }}</p>
@@ -279,17 +272,17 @@ const {
             </div>
             <button type="button" class="isc-import-meta__clear" @click="clear">
               <i class="fa-duotone fa-xmark" />
-              {{ isBn ? 'সাফ করুন' : 'Clear' }}
+              {{ t("Clear") }}
             </button>
           </div>
 
           <div class="isc-divider" />
 
           <div class="isc-subhead">
-            {{ isBn ? 'প্রতিষ্ঠান সংক্ষিপ্ত তথ্য' : 'Institute summary' }}
+            {{ t("Institute summary") }}
           </div>
           <p>
-            <strong>{{ isBn ? school.general_info.institute_name_bn : school.general_info.institute_name_en }}</strong>
+            <strong>{{ pick(school.general_info.institute_name_en ?? '', school.general_info.institute_name_bn ?? '') }}</strong>
             <template v-if="school.general_info.classification.institute_type">
               &mdash; {{ school.general_info.classification.institute_type }}
             </template>
@@ -309,7 +302,7 @@ const {
               :class="{ 'is-active': activeTab === tab.key }"
               @click="activeTab = tab.key"
             >
-              {{ isBn ? tab.label_bn : tab.label }}
+              {{ pick(tab.label, tab.label_bn) }}
               <span class="isc-tab__count">{{ tabRowCount(tab.key) }}</span>
             </button>
           </div>
@@ -328,17 +321,17 @@ const {
               </tbody>
             </table>
             <p v-if="!activeRows.length" class="isc-table-more">
-              {{ isBn ? 'এই বিভাগে কোনো তথ্য নেই' : 'No rows in this section' }}
+              {{ t("No rows in this section") }}
             </p>
           </div>
 
           <div class="isc-save-row">
             <div class="form-field">
-              <label>{{ isBn ? 'সংরক্ষণের নাম (EIIN)' : 'Save as (EIIN)' }}</label>
+              <label>{{ t("Save as (EIIN)") }}</label>
               <input
                 v-model="saveName"
                 type="text"
-                :placeholder="isBn ? 'যেমন: 129332' : 'e.g. 129332'"
+                :placeholder="t('e.g. 129332')"
               />
             </div>
             <div class="isc-save-row__actions">
@@ -351,12 +344,8 @@ const {
                 <i class="fa-duotone fa-floppy-disk" />
                 {{
                   isSaving
-                    ? isBn
-                      ? 'সংরক্ষণ হচ্ছে...'
-                      : 'Saving...'
-                    : isBn
-                      ? 'JSON হিসেবে সংরক্ষণ করুন'
-                      : 'Save as JSON'
+                    ? t("Saving...")
+                    : t("Save as JSON")
                 }}
               </button>
             </div>

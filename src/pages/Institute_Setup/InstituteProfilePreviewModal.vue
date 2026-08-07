@@ -2,7 +2,7 @@
 // Beautiful read-only preview of the Institute Profile form.
 // Shows every filled field, grouped by section, bilingual.
 import { computed } from 'vue'
-import { useAppPreferences } from '@/composables/useAppPreferences'
+import { useTranslator } from '@/Translator'
 import { BD_GEO_DIVISIONS, BD_GEO_DISTRICTS, BD_GEO_UPAZILAS, BD_GEO_UNIONS } from '@/utils/bdGeo'
 import { FACILITY_ICONS, FACILITY_KEYS, FACILITY_LABELS } from '@/pages/Institute_Setup/facilityMeta'
 
@@ -10,10 +10,8 @@ const props = defineProps<{
   form: Record<string, unknown>
 }>()
 
-const { preferences } = useAppPreferences()
-const isBn = computed(() => preferences.uiLanguage === 'bn')
-
 const f = computed(() => props.form)
+const { t } = useTranslator()
 
 // ── helpers ────────────────────────────────────────────────────────────
 
@@ -25,10 +23,7 @@ function show(v: unknown): string {
   return String(v)
 }
 
-function yesNo(v: unknown): string {
-  if (isBn.value) return v ? 'হ্যাঁ' : 'না'
-  return v ? 'Yes' : 'No'
-}
+const yesNo = (v: unknown) => (v ? t('Yes') : t('No'))
 
 function fmtDate(v: unknown): string {
   const s = String(v ?? '')
@@ -63,7 +58,8 @@ const initials = computed(() => {
   return en.trim().split(/\s+/).slice(0, 2).map((w) => w[0]?.toUpperCase() ?? '').join('') || 'SCH'
 })
 
-const L = (en: string, bn: string) => (isBn.value ? bn : en)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const L = (en: string, _bn?: string) => t(en)
 
 // ── Section field lists ────────────────────────────────────────────────
 
@@ -287,7 +283,7 @@ const hasAnyValue = computed(() => {
             :class="{ 'is-on': facilities[key], 'is-off': !facilities[key] }"
           >
             <i class="fa-duotone" :class="FACILITY_ICONS[key] ?? 'fa-circle'" />
-            {{ isBn ? (FACILITY_LABELS[key]?.bn ?? key) : (FACILITY_LABELS[key]?.en ?? key) }}
+            {{ t(FACILITY_LABELS[key]?.en ?? key) }}
             <i class="fa-solid ipfp-facility__mark" :class="facilities[key] ? 'fa-check' : 'fa-xmark'" />
           </span>
         </div>
@@ -316,7 +312,7 @@ const hasAnyValue = computed(() => {
                 <i class="fa-duotone fa-phone" /> {{ m.phone }}
               </span>
               <span v-if="m.left_committee" class="ipfp-member__left">
-                {{ isBn ? 'ছেড়ে গেছেন' : 'Left' }}
+                {{ t("Left") }}
               </span>
             </div>
           </div>
@@ -325,7 +321,7 @@ const hasAnyValue = computed(() => {
 
       <p v-if="!hasAnyValue" class="ipfp-empty">
         <i class="fa-duotone fa-folder-open" />
-        {{ isBn ? 'এখনও কোনো তথ্য পূরণ করা হয়নি' : 'No information filled yet' }}
+        {{ t("No information filled yet") }}
       </p>
     </div>
   </div>

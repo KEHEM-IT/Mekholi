@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import { useTranslator } from '@/Translator'
 import { useAppPreferences } from '@/composables/useAppPreferences'
 import { ACCENT_THEMES } from '@/utils/constants'
 import type {
@@ -13,13 +14,13 @@ import type {
 } from '@/types'
 
 const { preferences, resetToDefaults } = useAppPreferences()
+const { t, pick } = useTranslator()
 
 const accentEntries = Object.entries(ACCENT_THEMES) as [
   AccentTheme,
   (typeof ACCENT_THEMES)[AccentTheme],
 ][]
 
-const isBn = computed(() => preferences.uiLanguage === 'bn')
 
 function setLanguage(lang: UILanguage) {
   preferences.uiLanguage = lang
@@ -146,12 +147,10 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
 <template>
   <section class="lts">
     <div class="lts-header">
-      <h1>{{ isBn ? 'ভাষা ও থিম' : 'Language & Theme' }}</h1>
+      <h1>{{ t("Language & Theme") }}</h1>
       <p>
         {{
-          isBn
-            ? 'প্রতিষ্ঠানের ইন্টারফেস ভাষা, প্রিন্ট ডকুমেন্টের ভাষা এবং অ্যাডমিন প্যানেলের রঙ পছন্দ করুন।'
-            : 'Choose the interface language, print-document language, and admin panel accent for your institution.'
+          t("Choose the interface language, print-document language, and admin panel accent for your institution.")
         }}
       </p>
     </div>
@@ -162,11 +161,9 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
         <div class="lts-section__title">
           <i class="fa-duotone fa-language" />
           <div>
-            <h2>{{ isBn ? 'ইন্টারফেস ভাষা' : 'Interface Language' }}</h2>
+            <h2>{{ t("Interface Language") }}</h2>
             <span>{{
-              isBn
-                ? 'অ্যাডমিন প্যানেল, মেনু ও লেবেলের ভাষা'
-                : 'Applies to the admin panel, sidebar menu, and labels'
+              t("Applies to the admin panel, sidebar menu, and labels")
             }}</span>
           </div>
         </div>
@@ -204,12 +201,10 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
 
         <div class="lts-row">
           <div>
-            <div class="lts-row__label">{{ isBn ? 'বাংলা সংখ্যা' : 'Bangla numerals' }}</div>
+            <div class="lts-row__label">{{ t("Bangla numerals") }}</div>
             <div class="lts-row__hint">
               {{
-                isBn
-                  ? 'রোল নম্বর, মার্কস ও তারিখে ০-৯ এর পরিবর্তে বাংলা অংক দেখান'
-                  : 'Show ০-৯ instead of 0-9 in rolls, marks, and printed dates'
+                t("Show ০-৯ instead of 0-9 in rolls, marks, and printed dates")
               }}
             </div>
           </div>
@@ -227,18 +222,16 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
 
         <div class="lts-row">
           <div>
-            <div class="lts-row__label">{{ isBn ? 'ক্যালেন্ডার / তারিখ ফরম্যাট' : 'Calendar / date format' }}</div>
+            <div class="lts-row__label">{{ t("Calendar / date format") }}</div>
             <div class="lts-row__hint">
               {{
-                isBn
-                  ? 'শিক্ষাবর্ষ, উপস্থিতি ও রিপোর্টে ব্যবহৃত তারিখ ফরম্যাট'
-                  : 'Used across academic year, attendance, and report dates'
+                t("Used across academic year, attendance, and report dates")
               }}
             </div>
           </div>
           <select v-model="preferences.dateCalendar" class="lts-row__control">
-            <option value="gregorian">{{ isBn ? 'গ্রেগরিয়ান (১৫ জুলাই, ২০২৬)' : 'Gregorian (Jul 15, 2026)' }}</option>
-            <option value="bangla">{{ isBn ? 'বাংলা সন (৩১ আষাঢ়, ১৪৩৩)' : 'Bangla calendar (31 Ashar, 1433)' }}</option>
+            <option value="gregorian">{{ t("Gregorian (Jul 15, 2026)") }}</option>
+            <option value="bangla">{{ t("Bangla calendar (31 Ashar, 1433)") }}</option>
           </select>
         </div>
       </div>
@@ -250,11 +243,9 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
         <div class="lts-section__title">
           <i class="fa-duotone fa-font" />
           <div>
-            <h2>{{ isBn ? 'টাইপোগ্রাফি' : 'Typography' }}</h2>
+            <h2>{{ t("Typography") }}</h2>
             <span>{{
-              isBn
-                ? 'ইংরেজি ও বাংলা লেখার ফন্ট এবং ইন্টারফেসের লেখার আকার'
-                : 'English and Bengali font faces and base interface text size'
+              t("English and Bengali font faces and base interface text size")
             }}</span>
           </div>
         </div>
@@ -263,8 +254,8 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
       <div class="lts-section__body">
         <div class="lts-row">
           <div>
-            <div class="lts-row__label">{{ isBn ? 'ইংরেজি ফন্ট' : 'English font' }}</div>
-            <div class="lts-row__hint">{{ isBn ? selectedEnglishFont?.hint_bn : selectedEnglishFont?.hint }}</div>
+            <div class="lts-row__label">{{ t("English font") }}</div>
+            <div class="lts-row__hint">{{ pick(selectedEnglishFont?.hint ?? '', selectedEnglishFont?.hint_bn ?? '') }}</div>
           </div>
           <select
             class="lts-row__control"
@@ -287,8 +278,8 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
 
         <div class="lts-row">
           <div>
-            <div class="lts-row__label">{{ isBn ? 'বাংলা ফন্ট' : 'Bengali font' }}</div>
-            <div class="lts-row__hint">{{ isBn ? selectedBengaliFont?.hint_bn : selectedBengaliFont?.hint }}</div>
+            <div class="lts-row__label">{{ t("Bengali font") }}</div>
+            <div class="lts-row__hint">{{ pick(selectedBengaliFont?.hint ?? '', selectedBengaliFont?.hint_bn ?? '') }}</div>
           </div>
           <select
             class="lts-row__control"
@@ -311,12 +302,10 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
 
         <div class="lts-row">
           <div>
-            <div class="lts-row__label">{{ isBn ? 'লেখার আকার' : 'Text size' }}</div>
+            <div class="lts-row__label">{{ t("Text size") }}</div>
             <div class="lts-row__hint">
               {{
-                isBn
-                  ? 'পুরো অ্যাডমিন প্যানেল জুড়ে বেস ফন্ট সাইজ পরিবর্তন করে'
-                  : 'Scales the base font size across the whole admin panel'
+                t("Scales the base font size across the whole admin panel")
               }}
             </div>
           </div>
@@ -329,7 +318,7 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
               :class="{ 'is-active': preferences.fontSize === opt.value }"
               @click="setFontSize(opt.value)"
             >
-              {{ isBn ? opt.bn : opt.en }}
+              {{ pick(opt.en, opt.bn) }}
             </button>
           </div>
         </div>
@@ -342,11 +331,9 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
         <div class="lts-section__title">
           <i class="fa-duotone fa-file-lines" />
           <div>
-            <h2>{{ isBn ? 'ডকুমেন্ট ও প্রিন্ট ভাষা' : 'Document & Print Language' }}</h2>
+            <h2>{{ t("Document & Print Language") }}</h2>
             <span>{{
-              isBn
-                ? 'প্রতিষ্ঠান যে ভাষায় সনদ প্রদান করে, তা এখানে নির্ধারণ করুন'
-                : 'The language each printed document is certified in - independent of the UI language'
+              t("The language each printed document is certified in - independent of the UI language")
             }}</span>
           </div>
         </div>
@@ -356,17 +343,17 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
         <table>
           <thead>
             <tr>
-              <th>{{ isBn ? 'ডকুমেন্টের ধরন' : 'Document type' }}</th>
-              <th>{{ isBn ? 'ভাষা' : 'Language' }}</th>
+              <th>{{ t("Document type") }}</th>
+              <th>{{ t("Language") }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="field in documentLanguageFields" :key="field.key">
-              <td>{{ isBn ? field.bn : field.en }}</td>
+              <td>{{ pick(field.en, field.bn) }}</td>
               <td>
                 <select v-model="preferences.documentLanguage[field.key]">
                   <option v-for="opt in docLangOptions" :key="opt.value" :value="opt.value">
-                    {{ isBn ? opt.bn : opt.en }}
+                    {{ pick(opt.en, opt.bn) }}
                   </option>
                 </select>
               </td>
@@ -382,11 +369,9 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
         <div class="lts-section__title">
           <i class="fa-duotone fa-palette" />
           <div>
-            <h2>{{ isBn ? 'থিম ও ব্র্যান্ডিং' : 'Theme & Branding' }}</h2>
+            <h2>{{ t("Theme & Branding") }}</h2>
             <span>{{
-              isBn
-                ? 'অ্যাডমিন প্যানেল, বাটন ও আইডি কার্ডে ব্যবহৃত রঙ'
-                : 'Accent color used across buttons, links, and ID card previews'
+              t("Accent color used across buttons, links, and ID card previews")
             }}</span>
           </div>
         </div>
@@ -396,12 +381,10 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
         <!-- Theme mode: Dark / Light -->
         <div class="lts-row">
           <div>
-            <div class="lts-row__label">{{ isBn ? 'থিম' : 'Theme' }}</div>
+            <div class="lts-row__label">{{ t("Theme") }}</div>
             <div class="lts-row__hint">
               {{
-                isBn
-                  ? 'সম্পূর্ণ অ্যাডমিন প্যানেলের জন্য আলো-অন্ধকার চেহারা বেছে নিন'
-                  : 'Choose the light or dark appearance for the whole admin panel'
+                t("Choose the light or dark appearance for the whole admin panel")
               }}
             </div>
           </div>
@@ -412,7 +395,7 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
               :class="{ 'is-active': preferences.theme === 'dark' }"
               @click="preferences.theme = 'dark'"
             >
-              <i class="fa-duotone fa-moon" /> {{ isBn ? 'অন্ধকার' : 'Dark' }}
+              <i class="fa-duotone fa-moon" /> {{ t("Dark") }}
             </button>
             <button
               type="button"
@@ -420,7 +403,7 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
               :class="{ 'is-active': preferences.theme === 'light' }"
               @click="preferences.theme = 'light'"
             >
-              <i class="fa-duotone fa-sun" /> {{ isBn ? 'আলো' : 'Light' }}
+              <i class="fa-duotone fa-sun" /> {{ t("Light") }}
             </button>
           </div>
         </div>
@@ -436,7 +419,7 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
               class="lts-accent-swatch"
               :class="{ 'is-active': preferences.accentTheme === key }"
               :style="{ background: accent.swatch }"
-              :title="isBn ? accent.label_bn : accent.label"
+              :title="pick(accent.label, accent.label_bn)"
               @click="setAccent(key)"
             >
               <i class="fa-solid fa-check" />
@@ -447,16 +430,17 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
             <div class="lts-id-card__band" />
             <div class="lts-id-card__body">
               <span class="avatar"><i class="fa-duotone fa-user" /></span>
-              <strong>{{ isBn ? 'রাহুল আহমেদ' : 'Rahul Ahmed' }}</strong>
-              <small>{{ isBn ? 'শ্রেণি ৮ • রোল ০৭' : 'Class 8 · Roll 07' }}</small>
+              <strong>{{ t("Rahul Ahmed") }}</strong>
+              <small>{{ t("Class 8 · Roll 07") }}</small>
             </div>
           </div>
         </div>
         <p class="lts-accent-name">
           {{
-            isBn
-              ? `বর্তমানে নির্বাচিত: ${ACCENT_THEMES[preferences.accentTheme].label_bn}`
-              : `Currently selected: ${ACCENT_THEMES[preferences.accentTheme].label}`
+            pick(
+              `Currently selected: ${ACCENT_THEMES[preferences.accentTheme].label}`,
+              `বর্তমানে নির্বাচিত: ${ACCENT_THEMES[preferences.accentTheme].label_bn}`,
+            )
           }}
         </p>
 
@@ -464,12 +448,10 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
 
         <div class="lts-row">
           <div>
-            <div class="lts-row__label">{{ isBn ? 'ইন্টারফেস ঘনত্ব' : 'Interface density' }}</div>
+            <div class="lts-row__label">{{ t("Interface density") }}</div>
             <div class="lts-row__hint">
               {{
-                isBn
-                  ? 'কমপ্যাক্ট মোডে সাইডবার ও কন্টেন্টের প্যাডিং কমে যায়'
-                  : 'Compact reduces padding in the sidebar and page content'
+                t("Compact reduces padding in the sidebar and page content")
               }}
             </div>
           </div>
@@ -480,7 +462,7 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
               :class="{ 'is-active': preferences.density === 'comfortable' }"
               @click="preferences.density = 'comfortable'"
             >
-              {{ isBn ? 'আরামদায়ক' : 'Comfortable' }}
+              {{ t("Comfortable") }}
             </button>
             <button
               type="button"
@@ -488,7 +470,7 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
               :class="{ 'is-active': preferences.density === 'compact' }"
               @click="preferences.density = 'compact'"
             >
-              {{ isBn ? 'কমপ্যাক্ট' : 'Compact' }}
+              {{ t("Compact") }}
             </button>
           </div>
         </div>
@@ -501,20 +483,16 @@ const englishPreviewText = 'Institute Management System - Invoice #INV-2026-0417
         <i v-if="justSaved" class="fa-duotone fa-circle-check" />
         <span>{{
           justSaved
-            ? isBn
-              ? 'সংরক্ষণ করা হয়েছে'
-              : 'Saved'
-            : isBn
-              ? 'পরিবর্তনগুলো স্বয়ংক্রিয়ভাবে সংরক্ষিত হয়'
-              : 'Changes are saved automatically as you go'
+            ? t("Saved")
+            : t("Changes are saved automatically as you go")
         }}</span>
       </div>
       <div class="lts-savebar__actions">
         <BaseButton variant="ghost" @click="handleReset">
-          {{ isBn ? 'ডিফল্টে ফিরুন' : 'Reset to defaults' }}
+          {{ t("Reset to defaults") }}
         </BaseButton>
         <BaseButton variant="primary" @click="handleSave">
-          {{ isBn ? 'সংরক্ষণ করুন' : 'Save changes' }}
+          {{ t("Save changes") }}
         </BaseButton>
       </div>
     </div>

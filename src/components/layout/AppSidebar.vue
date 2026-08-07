@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useTranslator } from "@/Translator";
 import { useAuth } from "@/composables/useAuth";
 import { useSidebar } from "@/composables/useSidebar";
-import { useAppPreferences } from "@/composables/useAppPreferences";
 import { useShortcutKeySet } from "@/composables/shortcut_key_set";
 import { slugify } from "@/utils";
 import { APP_NAME } from "@/utils/constants";
@@ -14,17 +14,16 @@ const navigation = navigationJson.shikkha_erp_navigation as unknown as Navigatio
 
 const { user } = useAuth();
 const { isCollapsed, isMobileOpen, toggleCollapsed, closeMobile } = useSidebar();
-const { preferences } = useAppPreferences();
+const { pick } = useTranslator();
 const router = useRouter();
 
-const isBn = computed(() => preferences.uiLanguage === "bn");
 
 function menuLabel(item: NavMenu) {
-  return isBn.value ? item.menu_bn : item.menu;
+  return pick(item.menu, item.menu_bn);
 }
 
 function subLabel(sub: NavSubMenu) {
-  return isBn.value ? sub.name_bn : sub.name;
+  return pick(sub.name, sub.name_bn);
 }
 
 // Sub-menu items are mostly placeholders (Core + Plugin blueprint - most

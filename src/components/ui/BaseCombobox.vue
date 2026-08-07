@@ -9,6 +9,7 @@
 // control shows selected items as removable chips, and clicking an option
 // toggles it while keeping the panel open.
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from 'vue'
+import { useTranslator } from '@/Translator'
 
 type ComboboxOption = Record<string, unknown>
 
@@ -39,6 +40,8 @@ const props = withDefaults(
   },
 )
 
+const { t } = useTranslator()
+
 const emit = defineEmits<{
   'update:modelValue': [value: string | number | null | Array<string | number>]
   change: [option: ComboboxOption | null]
@@ -48,6 +51,10 @@ const listboxId = useId()
 const root = ref<HTMLElement | null>(null)
 const controlEl = ref<HTMLButtonElement | null>(null)
 const searchInput = ref<HTMLInputElement | null>(null)
+
+const displayPlaceholder = computed(() => props.placeholder || t('Select…'))
+const displaySearchPlaceholder = computed(() => props.searchPlaceholder || t('Search…'))
+const displayEmptyText = computed(() => props.emptyText || t('No results found'))
 
 const isOpen = ref(false)
 const query = ref('')
@@ -234,12 +241,12 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
             </span>
           </span>
           <span v-if="!selectedOptions.length" class="combobox__chip-placeholder">{{
-            placeholder
+            displayPlaceholder
           }}</span>
         </template>
         <!-- Single select -->
         <template v-else>
-          {{ selectedOption ? String(selectedOption[optionLabel]) : placeholder }}
+          {{ selectedOption ? String(selectedOption[optionLabel]) : displayPlaceholder }}
         </template>
       </span>
       <span class="combobox__actions">
@@ -263,7 +270,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
           ref="searchInput"
           v-model="query"
           type="text"
-          :placeholder="searchPlaceholder"
+          :placeholder="displaySearchPlaceholder"
           autocomplete="off"
           @keydown="onSearchKeydown"
         />
@@ -289,7 +296,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
           </span>
           {{ opt[optionLabel] }}
         </li>
-        <li v-if="!filteredOptions.length" class="combobox__empty">{{ emptyText }}</li>
+        <li v-if="!filteredOptions.length" class="combobox__empty">{{ displayEmptyText }}</li>
       </ul>
     </div>
   </div>

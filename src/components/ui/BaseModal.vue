@@ -9,6 +9,7 @@
 // Events: close
 // Slot: default (panel body)
 import { onBeforeUnmount, onMounted } from 'vue'
+import { useTranslator } from '@/Translator'
 
 const props = withDefaults(
   defineProps<{
@@ -24,6 +25,8 @@ const props = withDefaults(
     closeOnOverlay: true,
   },
 )
+
+const { t } = useTranslator()
 
 const emit = defineEmits<{ close: [] }>()
 
@@ -58,7 +61,7 @@ onBeforeUnmount(() => {
             v-if="closable"
             type="button"
             class="modal-panel__close"
-            aria-label="Close"
+            :aria-label="t('Close')"
             @click="emit('close')"
           >
             <i class="fa-duotone fa-xmark" />

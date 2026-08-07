@@ -13,6 +13,7 @@
 // - Today / Clear footer actions; × clear button on the control
 // - Click-outside and Esc close the panel; min/max bound selectable days
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useTranslator } from '@/Translator'
 
 const props = withDefaults(
   defineProps<{
@@ -45,6 +46,8 @@ const MONTHS = [
 ]
 // Bangladesh week starts on Sunday (রবিবার).
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
+const { t } = useTranslator()
 
 const root = ref<HTMLElement | null>(null)
 const yearGridEl = ref<HTMLElement | null>(null)
@@ -412,10 +415,10 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
 
       <div class="datepicker__footer">
         <button type="button" class="datepicker__today" @click="selectToday">
-          {{ todayLabel }}
+          {{ todayLabel || t('Today') }}
         </button>
         <button type="button" class="datepicker__clearbtn" @click="clearDate">
-          {{ clearLabel }}
+          {{ clearLabel || t('Clear') }}
         </button>
       </div>
     </div>
