@@ -16,6 +16,7 @@ import { exportClassesSetupToExcel, importAllClassesSetupSheets } from '@/compos
 import { fetchAcademicYears, type AcademicYear } from '@/composables/Institute_Setup/useAcademicYears'
 import { fetchBranches, type Branch } from '@/composables/Institute_Setup/useBranches'
 import BaseModal from '@/components/ui/BaseModal.vue'
+import DataTable, { type TableColumn } from '@/components/ui/DataTable.vue'
 import ClassSetupFormModal from './ClassSetupFormModal.vue'
 
 defineOptions({ name: 'ClassesView' })
@@ -44,6 +45,68 @@ const isImporting = ref(false)
 const excelInput = ref<HTMLInputElement | null>(null)
 
 const activeItems = computed(() => lists.value[activeTab.value])
+
+// ── Table column definitions per tab ───────────────────────────────────
+const tableColumns = computed<Record<string, TableColumn[]>>(() => ({
+  classes: [
+    { key: 'sort_order', label: '#', width: '3.5rem', align: 'center' },
+    { key: 'class_name', label: t('Class Name') },
+    { key: 'class_name_bn', label: t('Bangla') },
+    { key: 'phase', label: t('Phase / Level') },
+    { key: 'academic_year_id', label: t('Year'), render: (r) => yearLabel((r as Record<string, unknown>).academic_year_id) },
+    { key: 'branch_id', label: t('Branch'), render: (r) => branchLabel((r as Record<string, unknown>).branch_id) },
+    { key: 'is_active', label: t('Active'), align: 'center', render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
+  ],
+  sections: [
+    { key: 'id', label: '#', width: '3.5rem', align: 'center' },
+    { key: 'section_name', label: t('Section') },
+    { key: 'section_name_bn', label: t('Bangla') },
+    { key: 'class_id', label: t('Class'), render: (r) => classLabel((r as Record<string, unknown>).class_id) },
+    { key: 'shift_id', label: t('Shift'), render: (r) => shiftLabel((r as Record<string, unknown>).shift_id) },
+    { key: 'capacity', label: t('Capacity'), align: 'right' },
+    { key: 'is_active', label: t('Active'), align: 'center', render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
+  ],
+  groups: [
+    { key: 'group_name', label: t('Group Name') },
+    { key: 'group_name_bn', label: t('Bangla') },
+    { key: 'class_ids', label: t('Classes'), render: (r) => (f(r, 'class_ids') as number[] | undefined)?.map((id) => classLabel(id)).join(', ') ?? '—' },
+    { key: 'version', label: t('Version') },
+    { key: 'group_type', label: t('Group Type') },
+    { key: 'is_active', label: t('Active'), align: 'center', render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
+  ],
+  shifts: [
+    { key: 'shift_name', label: t('Shift Name') },
+    { key: 'shift_name_bn', label: t('Bangla') },
+    { key: 'start_time', label: t('Start') },
+    { key: 'end_time', label: t('End') },
+    { key: 'is_active', label: t('Active'), align: 'center', render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
+  ],
+}))
+
+function yearLabel(id: unknown): string {
+  const n = Number(id)
+  const y = years.value.find((x) => x.id === n)
+  return y?.year_name ?? String(id ?? '')
+}
+function branchLabel(id: unknown): string {
+  const n = Number(id)
+  const b = branches.value.find((x) => x.id === n)
+  return b?.branch_name ?? String(id ?? '')
+}
+function classLabel(id: unknown): string {
+  const n = Number(id)
+  const c = lists.value.classes.find((x) => x.id === n) as unknown as { class_name?: string } | undefined
+  return c?.class_name ?? String(id ?? '')
+}
+function shiftLabel(id: unknown): string {
+  const n = Number(id)
+  const sh = lists.value.shifts.find((x) => x.id === n) as unknown as { shift_name?: string } | undefined
+  return sh?.shift_name ?? String(id ?? '')
+}
+/** Read a field from an item (avoids `as any` in templates/computeds). */
+function f(item: unknown, key: string): unknown {
+  return (item as Record<string, unknown>)[key]
+}
 
 async function loadAll() {
   const [c, s, g, sh, y, b] = await Promise.all([
@@ -119,29 +182,6 @@ function nameField(entity: ClassSetupEntity): string {
 }
 
 // ── Card display helpers ───────────────────────────────────────────────
-
-function itemName(item: ClassSetupItem): string {
-  const r = item as unknown as Record<string, string>
-  return r[nameField(activeTab.value)] || r[`${nameField(activeTab.value)}_bn`] || '—'
-}
-function itemNameBn(item: ClassSetupItem): string {
-  const r = item as unknown as Record<string, string>
-  return r[`${nameField(activeTab.value)}_bn`] || ''
-}
-/** Read a field from an item (avoids `as any` in the template). */
-function f(item: ClassSetupItem, key: string): unknown {
-  return (item as unknown as Record<string, unknown>)[key]
-}
-function classLabel(id: unknown): string {
-  const n = Number(id)
-  const c = lists.value.classes.find((x) => x.id === n) as unknown as { class_name?: string } | undefined
-  return c?.class_name ?? String(id ?? '')
-}
-function shiftLabel(id: unknown): string {
-  const n = Number(id)
-  const s = lists.value.shifts.find((x) => x.id === n) as unknown as { shift_name?: string } | undefined
-  return s?.shift_name ?? String(id ?? '')
-}
 
 // ── Excel ──────────────────────────────────────────────────────────────
 
@@ -257,73 +297,22 @@ async function onImportPicked(event: Event) {
       </button>
     </div>
 
-    <!-- Cards -->
-    <div class="ay-grid">
-      <article v-for="item in activeItems" :key="item.id" class="ay-card">
-        <div class="br-card__head">
-          <div class="ay-card__year">
-            <i class="fa-duotone" :class="TABS.find((x) => x.key === activeTab)?.icon" />
-          </div>
-          <div class="br-card__titles">
-            <h3>{{ itemName(item) }}</h3>
-            <p v-if="itemNameBn(item)">{{ itemNameBn(item) }}</p>
-            <div class="br-card__chips">
-              <!-- Class chips -->
-              <template v-if="activeTab === 'classes'">
-                <span class="br-chip">{{ f(item, 'phase') }}</span>
-                <span v-if="f(item, 'sort_order')" class="br-chip br-chip--code">#{{ f(item, 'sort_order') }}</span>
-              </template>
-              <!-- Section chips -->
-              <template v-else-if="activeTab === 'sections'">
-                <span class="br-chip br-chip--code">{{ classLabel(f(item, 'class_id')) }}</span>
-                <span class="br-chip">{{ shiftLabel(f(item, 'shift_id')) }}</span>
-                <span v-if="f(item, 'capacity')" class="br-chip">{{ t('Cap') }}: {{ f(item, 'capacity') }}</span>
-              </template>
-              <!-- Group chips -->
-              <template v-else-if="activeTab === 'groups'">
-                <span v-if="f(item, 'version')" class="br-chip">{{ f(item, 'version') }}</span>
-                <span v-if="f(item, 'group_type')" class="br-chip br-chip--code">{{ f(item, 'group_type') }}</span>
-              </template>
-              <!-- Shift chips -->
-              <template v-else>
-                <span v-if="f(item, 'start_time')" class="br-chip">{{ f(item, 'start_time') }} → {{ f(item, 'end_time') }}</span>
-              </template>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="activeTab === 'groups' && (f(item, 'class_ids') as unknown[] | undefined)?.length" class="br-card__body">
-          <p><i class="fa-duotone fa-layer-group" />
-            {{ t('Classes') }}: {{ (f(item, 'class_ids') as number[]).map((id) => classLabel(id)).join(', ') }}
-          </p>
-        </div>
-
-        <div class="br-card__foot">
-          <button type="button" class="btn btn--ghost br-card__btn" @click="openEdit(item)">
-            <i class="fa-duotone fa-pen" /> {{ t('Edit') }}
-          </button>
-          <button type="button" class="btn btn--ghost br-card__btn br-card__btn--danger" @click="onDelete(item)">
-            <i class="fa-duotone fa-trash" /> {{ t('Delete') }}
-          </button>
-        </div>
-      </article>
-    </div>
-
-    <!-- Empty state -->
-    <div v-if="!activeItems.length" class="ay-empty reveal-content">
-      <div class="ay-empty__icon">
-        <i class="fa-duotone" :class="TABS.find((x) => x.key === activeTab)?.icon" />
-      </div>
-      <h3 class="ay-empty__title">{{ t('No {entity} yet', { entity: tabLabel(activeTab) }) }}</h3>
-      <p class="ay-empty__subtitle">
-        {{ t('Add your first item to start building the academic structure.') }}
-      </p>
-      <div class="ay-empty__actions">
-        <button type="button" class="btn btn--primary" @click="openAdd">
-          <i class="fa-duotone fa-plus" /> {{ addLabel(activeTab) }}
+    <!-- Data table (reusable, sticky head, scrollable body) -->
+    <DataTable
+      :columns="tableColumns[activeTab]"
+      :rows="activeItems"
+      row-key="id"
+      :empty-text="t('No {entity} yet', { entity: tabLabel(activeTab) })"
+    >
+      <template #actions="{ row }">
+        <button type="button" class="btn btn--ghost br-card__btn" @click="openEdit(row as ClassSetupItem)">
+          <i class="fa-duotone fa-pen" /> {{ t('Edit') }}
         </button>
-      </div>
-    </div>
+        <button type="button" class="btn btn--ghost br-card__btn br-card__btn--danger" @click="onDelete(row as ClassSetupItem)">
+          <i class="fa-duotone fa-trash" /> {{ t('Delete') }}
+        </button>
+      </template>
+    </DataTable>
 
     <!-- Form modal -->
     <BaseModal
