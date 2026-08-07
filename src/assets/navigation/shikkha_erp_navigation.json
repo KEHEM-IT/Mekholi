@@ -204,6 +204,31 @@
             "name": "Grading Scheme",
             "name_bn": "গ্রেডিং পদ্ধতি",
             "icon": "fa-duotone fa-ranking-star"
+          },
+          {
+            "name": "Board & Regulatory Setup",
+            "name_bn": "বোর্ড ও নিয়ন্ত্রক সেটআপ",
+            "icon": "fa-duotone fa-landmark"
+          },
+          {
+            "name": "Subjects & Curriculum",
+            "name_bn": "বিষয় ও কারিকুলাম",
+            "icon": "fa-duotone fa-book-open"
+          },
+          {
+            "name": "Exam Terms & Types",
+            "name_bn": "পরীক্ষার শর্ত ও ধরন",
+            "icon": "fa-duotone fa-calendar-check"
+          },
+          {
+            "name": "Classrooms / Rooms / Buildings",
+            "name_bn": "ক্লাসরুম / কক্ষ / ভবন",
+            "icon": "fa-duotone fa-door-open"
+          },
+          {
+            "name": "Academic Sessions & Terms",
+            "name_bn": "একাডেমিক সেশন ও টার্ম",
+            "icon": "fa-duotone fa-calendar-week"
           }
         ]
       },
