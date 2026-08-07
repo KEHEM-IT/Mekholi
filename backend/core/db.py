@@ -171,6 +171,30 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        -- Weekly working calendar (one row per day of the week)
+        CREATE TABLE IF NOT EXISTS working_days (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            day_of_week TEXT DEFAULT '',
+            is_working INTEGER DEFAULT 1,
+            open_time TEXT DEFAULT '', close_time TEXT DEFAULT '',
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
+        -- One-off / recurring closed days + special working days
+        CREATE TABLE IF NOT EXISTS holidays (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            holiday_name TEXT DEFAULT '', holiday_name_bn TEXT DEFAULT '',
+            date_from TEXT DEFAULT '', date_to TEXT DEFAULT '',
+            holiday_type TEXT DEFAULT '',
+            is_recurring INTEGER DEFAULT 0,
+            is_working_override INTEGER DEFAULT 0,
+            branch_id INTEGER DEFAULT 0,
+            remarks TEXT DEFAULT '',
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     # Seed a blank profile so the API always has something to return.

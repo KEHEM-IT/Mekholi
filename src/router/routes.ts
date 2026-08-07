@@ -97,7 +97,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'institute-setup/holidays',
         name: 'institute-setup-holidays',
-        component: InstituteSetupPlaceholder,
+        component: () => import('@/pages/Institute_Setup/HolidaysWorkingDaysView.vue'),
         meta: { title: 'Holidays & Working Days', titleBn: 'ছুটি ও কর্মদিবস' },
         beforeEnter: requireAuth,
       },
