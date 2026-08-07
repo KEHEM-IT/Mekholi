@@ -12,7 +12,7 @@ import {
   type ClassSetupEntity,
   type ClassSetupItem,
 } from '@/composables/Institute_Setup/useClassesSetup'
-import { exportClassesSetupToExcel, importClassesSetupFromExcel } from '@/composables/Institute_Setup/useClassesSetupExcel'
+import { exportClassesSetupToExcel, importAllClassesSetupSheets } from '@/composables/Institute_Setup/useClassesSetupExcel'
 import { fetchAcademicYears, type AcademicYear } from '@/composables/Institute_Setup/useAcademicYears'
 import { fetchBranches, type Branch } from '@/composables/Institute_Setup/useBranches'
 import BaseModal from '@/components/ui/BaseModal.vue'
@@ -164,9 +164,16 @@ async function onImportPicked(event: Event) {
   if (!file) return
   isImporting.value = true
   try {
-    const { items } = await importClassesSetupFromExcel(file, activeTab.value)
-    for (const it of items) await saveItem(activeTab.value, it)
-    toast.success(t('{count} items imported', { count: items.length }))
+    // One click imports ALL sheets: classes + sections + groups + shifts.
+    const imported = await importAllClassesSetupSheets(file)
+    let total = 0
+    for (const entity of ['classes', 'sections', 'groups', 'shifts'] as const) {
+      for (const it of imported[entity]) {
+        await saveItem(entity, it)
+        total++
+      }
+    }
+    toast.success(t('{count} items imported', { count: total }))
     await loadAll()
   } catch (err) {
     toast.error(t('Import failed: {error}', { error: err instanceof Error ? err.message : 'invalid file' }))
