@@ -17,6 +17,7 @@ import { fetchAcademicYears, type AcademicYear } from '@/composables/Institute_S
 import { fetchBranches, type Branch } from '@/composables/Institute_Setup/useBranches'
 import BaseModal from '@/components/ui/BaseModal.vue'
 import DataTable, { type TableColumn } from '@/components/ui/DataTable.vue'
+import BaseToggle from '@/components/ui/BaseToggle.vue'
 import ClassSetupFormModal from './ClassSetupFormModal.vue'
 
 defineOptions({ name: 'ClassesView' })
@@ -43,6 +44,10 @@ const showForm = ref(false)
 const editingItem = ref<ClassSetupItem | null>(null)
 const isImporting = ref(false)
 const excelInput = ref<HTMLInputElement | null>(null)
+
+// Confirm modal for toggling an item OFF.
+const showActiveConfirm = ref(false)
+const activeToggleTarget = ref<ClassSetupItem | null>(null)
 
 const activeItems = computed(() => lists.value[activeTab.value])
 
@@ -177,6 +182,38 @@ async function onDelete(item: ClassSetupItem) {
   }
 }
 
+/** Called when the Active toggle is clicked — opens confirm when turning OFF. */
+function onToggleActive(item: ClassSetupItem) {
+  const target = { ...item }
+  const currentlyOn = Boolean(f(item, 'is_active'))
+  if (currentlyOn) {
+    // Turning OFF → ask for confirmation first.
+    activeToggleTarget.value = target
+    showActiveConfirm.value = true
+  } else {
+    // Turning back ON → apply immediately.
+    void applyActive(target, true)
+  }
+}
+
+async function applyActive(item: ClassSetupItem, value: boolean) {
+  const updated = { ...item, is_active: value } as ClassSetupItem
+  const saved = await saveItem(activeTab.value, updated)
+  if (saved) {
+    toast.success(t('Updated'))
+    await loadAll()
+  } else {
+    toast.error(t('Save failed — is server.py running?'))
+  }
+}
+
+function confirmDeactivate() {
+  const target = activeToggleTarget.value
+  if (target) void applyActive(target, false)
+  showActiveConfirm.value = false
+  activeToggleTarget.value = null
+}
+
 function nameField(entity: ClassSetupEntity): string {
   return entity === 'classes' ? 'class_name' : entity === 'sections' ? 'section_name' : entity === 'groups' ? 'group_name' : 'shift_name'
 }
@@ -304,6 +341,15 @@ async function onImportPicked(event: Event) {
       row-key="id"
       :empty-text="t('No {entity} yet', { entity: tabLabel(activeTab) })"
     >
+      <template #cell-is_active="{ row }">
+        <BaseToggle
+          :model-value="Boolean(f(row, 'is_active'))"
+          :yes-label="t('Yes')"
+          :no-label="t('No')"
+          @update:model-value="onToggleActive(row as ClassSetupItem)"
+        />
+      </template>
+
       <template #actions="{ row }">
         <button type="button" class="btn btn--ghost br-card__btn" @click="openEdit(row as ClassSetupItem)">
           <i class="fa-duotone fa-pen" /> {{ t('Edit') }}
@@ -313,6 +359,30 @@ async function onImportPicked(event: Event) {
         </button>
       </template>
     </DataTable>
+
+    <!-- Warning modal: confirm turning an item OFF -->
+    <BaseModal
+      v-if="showActiveConfirm"
+      :title="t('Deactivate item')"
+      @close="showActiveConfirm = false"
+    >
+      <div class="cm-confirm">
+        <div class="cm-confirm__icon"><i class="fa-duotone fa-triangle-exclamation" /></div>
+        <p class="cm-confirm__text">
+          {{
+            t('Are you sure you want to deactivate "{name}"? It will be hidden from new selections.')
+          }}
+        </p>
+      </div>
+      <template #footer>
+        <button type="button" class="btn" @click="showActiveConfirm = false">
+          {{ t('Cancel') }}
+        </button>
+        <button type="button" class="btn btn--danger" @click="confirmDeactivate">
+          <i class="fa-duotone fa-power-off" /> {{ t('Deactivate') }}
+        </button>
+      </template>
+    </BaseModal>
 
     <!-- Form modal -->
     <BaseModal

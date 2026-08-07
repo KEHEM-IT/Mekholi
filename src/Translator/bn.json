@@ -424,5 +424,8 @@
   "Add Class": "শ্রেণি যোগ করুন",
   "Add Section": "শাখা যোগ করুন",
   "Add Group": "গ্রুপ যোগ করুন",
-  "Add Shift": "শিফট যোগ করুন"
+  "Add Shift": "শিফট যোগ করুন",
+  "Deactivate item": "নিষ্ক্রিয় করুন",
+  "Deactivate": "নিষ্ক্রিয় করুন",
+  "Are you sure you want to deactivate \"{name}\"? It will be hidden from new selections.": "আপনি কি \"{name}\" নিষ্ক্রিয় করতে চান? এটি নতুন নির্বাচন থেকে লুকানো হবে।"
 }

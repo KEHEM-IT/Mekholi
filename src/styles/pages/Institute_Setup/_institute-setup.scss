@@ -1024,3 +1024,28 @@
     border-color: var(--color-primary);
   }
 }
+
+// ── Confirm modal (deactivate) ─────────────────────────────────────────
+
+.cm-confirm {
+  @include flex(column, center, center, $space-3);
+  text-align: center;
+  padding: $space-2 0;
+
+  &__icon {
+    @include flex(row, center, center);
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: var(--color-danger-muted);
+    color: var(--color-danger);
+    font-size: 1.4rem;
+  }
+
+  &__text {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.92rem;
+    max-width: 26rem;
+  }
+}

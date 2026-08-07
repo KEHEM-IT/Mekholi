@@ -424,5 +424,8 @@
   "Add Class": "Add Class",
   "Add Section": "Add Section",
   "Add Group": "Add Group",
-  "Add Shift": "Add Shift"
+  "Add Shift": "Add Shift",
+  "Deactivate item": "Deactivate item",
+  "Deactivate": "Deactivate",
+  "Are you sure you want to deactivate \"{name}\"? It will be hidden from new selections.": "Are you sure you want to deactivate \"{name}\"? It will be hidden from new selections."
 }
