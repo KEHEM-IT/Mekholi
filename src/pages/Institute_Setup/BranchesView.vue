@@ -252,7 +252,12 @@ function shortAddress(b: Branch): string {
       wide
       @close="showForm = false"
     >
-      <BranchFormModal :branch="editingBranch" @save="onSave" @close="showForm = false" />
+      <BranchFormModal
+        :branch="editingBranch"
+        :main-exists="branches.some((b) => b.is_main)"
+        @save="onSave"
+        @close="showForm = false"
+      />
     </BaseModal>
 
     <!-- View modal -->

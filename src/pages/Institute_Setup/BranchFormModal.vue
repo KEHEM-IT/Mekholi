@@ -1,10 +1,11 @@
 <script setup lang="ts">
 // Add / edit branch form modal — follows the Institute Profile page's form
 // design language (sections, comboboxes, date picker, toggle, geo cascade).
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { useAppPreferences } from '@/composables/useAppPreferences'
 import { uploadToImgbb, validateLogoFile } from '@/composables/useImgbbUpload'
 import { useToast } from '@/composables/useToast'
+import { loadProfile } from '@/composables/useInstituteProfile'
 import {
   BD_GEO_DIVISIONS,
   districtsByDivisionId,
@@ -18,6 +19,9 @@ import type { Branch } from '@/composables/useBranches'
 
 const props = defineProps<{
   branch: Branch | null
+  /** True when a main branch already exists — the "Is Main" toggle is then
+   *  hidden on the add form (a second main branch is not allowed). */
+  mainExists?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -33,7 +37,7 @@ const form = reactive<Branch>({ ...(props.branch ? JSON.parse(JSON.stringify(pro
 
 function empty(): Branch {
   return {
-    branch_name: '', branch_name_bn: '', branch_code: '', campus_type: 'Main',
+    branch_name: '', branch_name_bn: '', branch_code: '', campus_type: 'Main - প্রধান',
     is_main: false, logo: '', division_id: '', district_id: '', upazila_id: '', union_id: '',
     village_road_holding_no: '', post_office: '', post_code: null, phone: '', email: '',
     website: '', head_name: '', head_designation: '', head_phone: '', head_email: '',
@@ -42,19 +46,57 @@ function empty(): Branch {
   }
 }
 
+// ── Address auto-fill from the Institute Profile ───────────────────────
+// When ADDING a branch (not editing), the address block is prefilled from
+// the saved profile so the user only tweaks what differs.
+
+let isPrefilling = false
+
+onMounted(async () => {
+  if (props.branch) return // never overwrite when editing
+  const data = await loadProfile()
+  if (!data) return
+  isPrefilling = true
+  const addressKeys = [
+    'division_id', 'district_id', 'upazila_id', 'union_id',
+    'village_road_holding_no', 'post_office', 'post_code',
+  ]
+  for (const key of addressKeys) {
+    const v = data[key]
+    if (v != null && v !== '') (form as unknown as Record<string, unknown>)[key] = v
+  }
+  await nextTick()
+  isPrefilling = false
+})
+
 const t = (en: string, bn: string) => (isBn.value ? bn : en)
 
-// ── Option lists ───────────────────────────────────────────────────────
+// ── Option lists (English - বাংলা) ─────────────────────────────────────
 
-const CAMPUS_TYPES = ['Main', 'Annex', 'Sub-Campus', 'Temporary']
+const CAMPUS_TYPES = [
+  'Main - প্রধান',
+  'Annex - অ্যানেক্স',
+  'Sub-Campus - সাব-ক্যাম্পাস',
+  'Temporary - অস্থায়ী',
+]
 const BOARDS = [
-  'Dhaka', 'Rajshahi', 'Cumilla', 'Chattogram', 'Sylhet', 'Barishal',
-  'Jashore', 'Rangpur', 'Dinajpur', 'Mymensingh', 'Madrasah Education Board',
-  'Technical Education Board (BTEB)', 'National University', 'Other',
+  'Dhaka - ঢাকা', 'Rajshahi - রাজশাহী', 'Cumilla - কুমিল্লা', 'Chattogram - চট্টগ্রাম',
+  'Sylhet - সিলেট', 'Barishal - বরিশাল', 'Jashore - যশোর', 'Rangpur - রংপুর',
+  'Dinajpur - দিনাজপুর', 'Mymensingh - ময়মনসিংহ',
+  'Madrasah Education Board - মাদ্রাসা শিক্ষা বোর্ড',
+  'Technical Education Board (BTEB) - কারিগরি শিক্ষা বোর্ড',
+  'National University - জাতীয় বিশ্ববিদ্যালয়',
+  'Other - অন্যান্য',
 ]
 const DESIGNATIONS = [
-  'Principal', 'Vice Principal', 'Headmaster', 'Headmistress', 'Director',
-  'Campus Coordinator', 'Administrator', 'Other',
+  'Principal - প্রধান শিক্ষক',
+  'Vice Principal - সহকারী প্রধান শিক্ষক',
+  'Headmaster - প্রধান শিক্ষক',
+  'Headmistress - প্রধান শিক্ষিকা',
+  'Director - পরিচালক',
+  'Campus Coordinator - ক্যাম্পাস সমন্বয়কারী',
+  'Administrator - প্রশাসক',
+  'Other - অন্যান্য',
 ]
 
 import instituteTypesJson from '@/assets/jsons/institute_types.json'
@@ -99,15 +141,15 @@ const geoUnionOptions = computed(() =>
 )
 watch(
   () => form.division_id,
-  () => { form.district_id = ''; form.upazila_id = ''; form.union_id = '' },
+  () => { if (isPrefilling) return; form.district_id = ''; form.upazila_id = ''; form.union_id = '' },
 )
 watch(
   () => form.district_id,
-  () => { form.upazila_id = ''; form.union_id = '' },
+  () => { if (isPrefilling) return; form.upazila_id = ''; form.union_id = '' },
 )
 watch(
   () => form.upazila_id,
-  () => { form.union_id = '' },
+  () => { if (isPrefilling) return; form.union_id = '' },
 )
 
 // ── Logo upload (ImgBB) ────────────────────────────────────────────────
@@ -196,7 +238,9 @@ function submit() {
             <label>{{ t('Campus Type', 'ক্যাম্পাসের ধরন') }}</label>
             <BaseCombobox v-model="form.campus_type" :options="comboOptions(CAMPUS_TYPES)" option-value="LookupText" option-label="LookupText" :placeholder="t('Select campus type', 'ক্যাম্পাসের ধরন নির্বাচন করুন')" />
           </div>
-          <div class="form-field">
+          <!-- Is Main toggle: hidden when adding a new branch while a main
+               branch already exists (only one main branch is allowed). -->
+          <div v-if="props.branch || !mainExists" class="form-field">
             <label>{{ t('Main Branch', 'প্রধান শাখা') }}</label>
             <BaseToggle v-model="form.is_main" :yes-label="isBn ? 'হ্যাঁ' : 'Yes'" :no-label="isBn ? 'না' : 'No'" />
           </div>
