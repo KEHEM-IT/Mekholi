@@ -1,4 +1,4 @@
-@use '../abstracts' as *;
+@use "../abstracts" as *;
 
 .sidebar-backdrop {
   position: fixed;
@@ -242,7 +242,7 @@
     font-weight: 700;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       left: 0;
       top: 20%;
@@ -267,7 +267,7 @@
     font-weight: 700;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       left: 0;
       top: 20%;
@@ -480,7 +480,7 @@
 
 .sidebar-sk-label {
   flex: 1 1 auto;
-  height: 0.9rem;
+  height: 5rem;
   border-radius: $radius-sm;
   max-width: 70%;
 }

@@ -33,14 +33,12 @@ function isMenuActive(item: NavMenu): boolean {
   return (item.sub_menus ?? []).some(isSubActive);
 }
 
-
-
 function menuLabel(item: NavMenu) {
-  return localized(item, 'menu');
+  return localized(item, "menu");
 }
 
 function subLabel(sub: NavSubMenu) {
-  return localized(sub, 'name');
+  return localized(sub, "name");
 }
 
 // Sub-menu items are mostly placeholders (Core + Plugin blueprint - most
@@ -70,7 +68,7 @@ function onSubmenuClick(sub: NavSubMenu) {
   router.push({ name: routeName });
   // Keep the parent menu open so the user sees where they are.
   const parent = menus.value.find((m) => (m.sub_menus ?? []).some((x) => x.name === sub.name));
-  if (parent && parent.menu !== 'Dashboard') openMenu.value = parent.menu;
+  if (parent && parent.menu !== "Dashboard") openMenu.value = parent.menu;
   closeMobile();
   clearHoverCloseTimer();
 }
@@ -93,7 +91,7 @@ watch(
   () => {
     if (isCollapsed.value) return; // collapsed rail uses hover flyouts
     const parent = menus.value.find((m) => (m.sub_menus ?? []).some(isSubActive));
-    if (parent && parent.menu !== 'Dashboard') openMenu.value = parent.menu;
+    if (parent && parent.menu !== "Dashboard") openMenu.value = parent.menu;
   },
   { immediate: true },
 );
@@ -139,9 +137,7 @@ useShortcutKeySet([
 // A label matches when the query is found in ANY language variant
 // (English or Bengali today; future languages just add more fields).
 function labelMatches(label: string, labelBn: string, q: string): boolean {
-  return (
-    label.toLowerCase().includes(q) || labelBn.toLowerCase().includes(q)
-  );
+  return label.toLowerCase().includes(q) || labelBn.toLowerCase().includes(q);
 }
 
 const filteredMenus = computed<NavMenu[]>(() => {
@@ -397,7 +393,7 @@ onBeforeUnmount(() => {
 
     <!-- Sidebar skeleton (brief, while menus initialize) -->
     <nav v-if="isSidebarLoading" class="sidebar-nav sidebar-skeleton" aria-hidden="true">
-      <div v-for="n in 10" :key="n" class="skeleton sidebar-sk-item">
+      <div v-for="n in 20" :key="n" class="skeleton sidebar-sk-item">
         <span class="skeleton sidebar-sk-icon" />
         <span class="skeleton sidebar-sk-label" />
       </div>
