@@ -909,3 +909,61 @@
   height: 8.5rem;
   border-radius: $radius-md;
 }
+
+// ── Empty state (no academic years yet) ────────────────────────────────
+
+.ay-empty {
+  @include flex(column, center, center, $space-4);
+  padding: $space-8 $space-4;
+  text-align: center;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: $radius-lg;
+  background:
+    radial-gradient(120% 140% at 50% 0%, var(--color-primary-muted) 0%, transparent 55%),
+    var(--color-surface-alt);
+  min-height: 18rem;
+  margin-top: $space-4;
+
+  &__icon {
+    @include flex(row, center, center);
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-primary);
+    font-size: 1.7rem;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: $space-1;
+  }
+
+  &__title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  &__subtitle {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    max-width: 26rem;
+  }
+
+  &__hint {
+    @include flex(row, center, center, $space-1);
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+
+    i {
+      color: var(--color-primary);
+      font-size: 0.7rem;
+    }
+  }
+
+  &__actions {
+    @include flex(row, center, center, $space-2);
+    margin-top: $space-2;
+  }
+}

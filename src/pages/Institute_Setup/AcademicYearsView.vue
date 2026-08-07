@@ -221,10 +221,25 @@ function sessionRange(y: AcademicYear): string {
       </article>
     </div>
 
-    <p v-if="!years.length" class="ipf-class-empty">
-      <i class="fa-duotone fa-calendar-days" />
-      {{ t('No academic years yet — press "Add Year" above to create your first session') }}
-    </p>
+    <!-- Empty state -->
+    <div v-if="!years.length" class="ay-empty reveal-content">
+      <div class="ay-empty__icon">
+        <i class="fa-duotone fa-calendar-days" />
+      </div>
+      <h3 class="ay-empty__title">{{ t('No academic years yet') }}</h3>
+      <p class="ay-empty__subtitle">
+        {{ t('Create your first academic session to start managing enrolment, fees and exams.') }}
+      </p>
+      <p class="ay-empty__hint">
+        <i class="fa-solid fa-circle" />
+        {{ t('One current year drives the whole institute') }}
+      </p>
+      <div class="ay-empty__actions">
+        <button type="button" class="btn btn--primary" @click="openAdd">
+          <i class="fa-duotone fa-plus" /> {{ t('Add Year') }}
+        </button>
+      </div>
+    </div>
 
     <!-- Form modal -->
     <BaseModal
