@@ -79,7 +79,7 @@ const menus = computed<NavMenu[]>(() => (user.value ? (navigation[user.value.rol
 
 // Sidebar skeleton — shown briefly while the user/menus initialize.
 const isSidebarLoading = ref(true);
-const SIDEBAR_SKELETON_MS = 600;
+const SIDEBAR_SKELETON_MS = 2000;
 
 onMounted(() => {
   setTimeout(() => {
@@ -397,7 +397,7 @@ onBeforeUnmount(() => {
 
     <!-- Sidebar skeleton (brief, while menus initialize) -->
     <nav v-if="isSidebarLoading" class="sidebar-nav sidebar-skeleton" aria-hidden="true">
-      <div v-for="n in 6" :key="n" class="skeleton sidebar-sk-item">
+      <div v-for="n in 10" :key="n" class="skeleton sidebar-sk-item">
         <span class="skeleton sidebar-sk-icon" />
         <span class="skeleton sidebar-sk-label" />
       </div>
