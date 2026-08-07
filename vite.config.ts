@@ -84,6 +84,10 @@ export default defineConfig({
     },
   },
   server: {
+    // Bind to all interfaces so the dev server is reachable from other
+    // devices on the LAN (phone testing) — Vite prints the Network URL.
+    host: true,
+    port: 5173,
     // Allow any preview host (sandbox/cloud preview domains) in dev.
     allowedHosts: true,
   },
