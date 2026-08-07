@@ -12,7 +12,7 @@ def _headers(extra=None):
     headers = {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": CORS_ORIGIN,
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
     }
     if extra:
