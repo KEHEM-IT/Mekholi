@@ -25,6 +25,7 @@ const props = withDefaults(
     clearable?: boolean
     emptyText?: string
     multiple?: boolean
+    invalid?: boolean
   }>(),
   {
     modelValue: null,
@@ -37,6 +38,7 @@ const props = withDefaults(
     clearable: true,
     emptyText: 'No results found',
     multiple: false,
+    invalid: false,
   },
 )
 
@@ -207,7 +209,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
 </script>
 
 <template>
-  <div ref="root" class="combobox" :class="{ 'is-open': isOpen, 'is-disabled': disabled }">
+  <div ref="root" class="combobox" :class="{ 'is-open': isOpen, 'is-disabled': disabled, 'is-error': invalid }">
     <button
       ref="controlEl"
       type="button"
