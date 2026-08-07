@@ -3,6 +3,8 @@
 // properties in base/_base.scss. Tinted-text tokens are defined
 // here so the light theme can swap them.
 :root {
+  --color-sidebar-active: #2a2f45;
+  --color-sidebar-active-border: #6366f1;
   --color-on-success: #bbf7d0;
   --color-on-danger: #fecaca;
   --color-on-warning: #fde68a;
