@@ -1,0 +1,201 @@
+@use '../abstracts' as *;
+
+// ── Dashboard skeleton (min 2s, mirrors real dashboard layout) ─────────
+
+.dash-skeleton {
+  @include flex(column, stretch, flex-start, $space-6);
+  pointer-events: none;
+}
+
+.dash-sk-header {
+  @include flex(row, flex-start, space-between, $space-3);
+  flex-wrap: wrap;
+  gap: $space-3;
+}
+
+.dash-sk-titles {
+  @include flex(column, flex-start, flex-start, $space-2);
+  flex: 1 1 auto;
+  min-width: 12rem;
+}
+
+.dash-sk-title {
+  width: 14rem;
+  height: 1.7rem;
+  max-width: 70%;
+}
+
+.dash-sk-subtitle {
+  width: 20rem;
+  height: 0.9rem;
+  max-width: 90%;
+}
+
+.dash-sk-actions {
+  @include flex(row, center, flex-end, $space-2);
+  flex-shrink: 0;
+}
+
+.dash-sk-pill {
+  width: 5.5rem;
+  height: 2.4rem;
+  border-radius: $radius-md;
+}
+
+// Stat cards
+.dash-sk-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(13rem, 100%), 1fr));
+  gap: $space-4;
+  width: 100%;
+}
+
+.dash-sk-stat {
+  @include flex(row, center, flex-start, $space-3);
+  padding: $space-4;
+  border-radius: $radius-lg !important;
+  min-width: 0;
+}
+
+.dash-sk-stat-icon {
+  width: 2.8rem;
+  height: 2.8rem;
+  flex-shrink: 0;
+  border-radius: $radius-md;
+}
+
+.dash-sk-stat-body {
+  @include flex(column, flex-start, flex-start, $space-2);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.dash-sk-stat-value {
+  width: 45%;
+  height: 1.4rem;
+  border-radius: $radius-sm;
+}
+
+.dash-sk-stat-label {
+  width: 70%;
+  height: 0.8rem;
+  border-radius: $radius-sm;
+}
+
+// Chart + side panel
+.dash-sk-main {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: $space-4;
+  width: 100%;
+
+  @media (max-width: #{$breakpoint-md - 1px}) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dash-sk-chart {
+  @include flex(column, stretch, flex-start, $space-4);
+  padding: $space-4;
+  border-radius: $radius-lg !important;
+  min-width: 0;
+}
+
+.dash-sk-chart-title {
+  width: 9rem;
+  height: 1rem;
+  border-radius: $radius-sm;
+}
+
+.dash-sk-chart-bars {
+  @include flex(row, flex-end, flex-start, $space-2);
+  height: 12rem;
+  width: 100%;
+  padding-top: $space-2;
+}
+
+.dash-sk-bar {
+  flex: 1 1 0;
+  min-width: 0;
+  border-radius: $radius-sm $radius-sm 0 0;
+  max-width: 2.2rem;
+}
+
+.dash-sk-side {
+  @include flex(column, stretch, flex-start, $space-4);
+  padding: $space-4;
+  border-radius: $radius-lg !important;
+  min-width: 0;
+}
+
+.dash-sk-side-title {
+  width: 8rem;
+  height: 1rem;
+  border-radius: $radius-sm;
+}
+
+.dash-sk-side-list {
+  @include flex(column, stretch, flex-start, $space-3);
+  width: 100%;
+}
+
+.dash-sk-side-item {
+  @include flex(row, center, flex-start, $space-2);
+  width: 100%;
+}
+
+.dash-sk-side-avatar {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.dash-sk-side-line {
+  flex: 1 1 auto;
+  height: 0.85rem;
+  border-radius: $radius-sm;
+}
+
+// Activity list
+.dash-sk-list {
+  @include flex(column, stretch, flex-start, $space-4);
+  padding: $space-4;
+  border-radius: $radius-lg !important;
+  width: 100%;
+}
+
+.dash-sk-list-title {
+  width: 10rem;
+  height: 1rem;
+  border-radius: $radius-sm;
+}
+
+.dash-sk-list-item {
+  @include flex(row, center, flex-start, $space-3);
+  width: 100%;
+}
+
+.dash-sk-list-avatar {
+  width: 2.4rem;
+  height: 2.4rem;
+  flex-shrink: 0;
+  border-radius: $radius-md;
+}
+
+.dash-sk-list-body {
+  @include flex(column, flex-start, flex-start, $space-1);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.dash-sk-list-line {
+  width: 70%;
+  height: 0.85rem;
+  border-radius: $radius-sm;
+
+  &--short {
+    width: 40%;
+    height: 0.7rem;
+  }
+}
