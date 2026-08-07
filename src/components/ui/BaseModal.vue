@@ -2,10 +2,11 @@
 // Reusable modal shell — teleports to <body>, locks body scroll while
 // open, closes on Esc / overlay click / close button.
 //
-// Props: title (optional), wide (adds a wider panel), closable (shows the
-//   ✕ button + allows Esc), closeOnOverlay (clicking the dimmed backdrop
-//   closes the modal — set false to force the ✕ button only, e.g. for
-//   forms where accidental dismissal would lose data)
+// Props: title (optional), wide (adds a wider panel), tall (adds a fixed
+//   min-height panel — used by the tall form modals, e.g. Add Class/Section/
+//   Group/Shift), closable (shows the ✕ button + allows Esc), closeOnOverlay
+//   (clicking the dimmed backdrop closes the modal — set false to force the
+//   ✕ button only, e.g. for forms where accidental dismissal would lose data)
 // Events: close
 // Slot: default (panel body)
 import { onBeforeUnmount, onMounted } from 'vue'
@@ -15,12 +16,14 @@ const props = withDefaults(
   defineProps<{
     title?: string
     wide?: boolean
+    tall?: boolean
     closable?: boolean
     closeOnOverlay?: boolean
   }>(),
   {
     title: '',
     wide: false,
+    tall: false,
     closable: true,
     closeOnOverlay: true,
   },
@@ -52,7 +55,12 @@ onBeforeUnmount(() => {
 <template>
   <Teleport to="body">
     <div class="modal-overlay" @mousedown.self="onClickOverlay">
-      <div class="modal-panel" :class="{ 'modal-panel--wide': wide }" role="dialog" aria-modal="true">
+      <div
+        class="modal-panel"
+        :class="{ 'modal-panel--wide': wide, 'modal-panel--tall': tall }"
+        role="dialog"
+        aria-modal="true"
+      >
         <header class="modal-panel__head">
           <h3 class="modal-panel__title">
             <slot name="title">{{ title }}</slot>

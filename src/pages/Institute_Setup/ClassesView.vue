@@ -386,11 +386,12 @@ async function onImportPicked(event: Event) {
       </template>
     </BaseModal>
 
-    <!-- Form modal -->
+    <!-- Form modal (Add/Edit Class · Section · Group · Shift) -->
     <BaseModal
       v-if="showForm"
       :title="editingItem ? t('Edit') : t('Add')"
       wide
+      tall
       :close-on-overlay="false"
       @close="showForm = false"
     >
