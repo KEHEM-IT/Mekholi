@@ -126,14 +126,23 @@ useShortcutKeySet([
   },
 ]);
 
+// A label matches when the query is found in ANY language variant
+// (English or Bengali today; future languages just add more fields).
+function labelMatches(label: string, labelBn: string, q: string): boolean {
+  return (
+    label.toLowerCase().includes(q) || labelBn.toLowerCase().includes(q)
+  );
+}
+
 const filteredMenus = computed<NavMenu[]>(() => {
   const q = searchQuery.value.trim().toLowerCase();
   if (!q) return menus.value;
 
   const result: NavMenu[] = [];
   for (const item of menus.value) {
-    const menuMatches = item.menu.toLowerCase().includes(q);
-    const matchedSubs = item.sub_menus?.filter((sub) => sub.name.toLowerCase().includes(q)) ?? [];
+    const menuMatches = labelMatches(item.menu, item.menu_bn, q);
+    const matchedSubs =
+      item.sub_menus?.filter((sub) => labelMatches(sub.name, sub.name_bn, q)) ?? [];
 
     if (menuMatches || matchedSubs.length) {
       result.push(menuMatches ? item : { ...item, sub_menus: matchedSubs });
@@ -167,6 +176,11 @@ function highlightMatch(text: string) {
   if (!q) return escapeHtml(text);
 
   const idx = text.toLowerCase().indexOf(q.toLowerCase());
+  if (idx === -1) {
+    // Query typed in another language — the label may be the opposite
+    // language's variant. Highlight nothing rather than force a match.
+    return escapeHtml(text);
+  }
   if (idx === -1) return escapeHtml(text);
 
   const before = escapeHtml(text.slice(0, idx));
