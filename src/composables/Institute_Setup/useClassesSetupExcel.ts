@@ -96,21 +96,19 @@ export function exportClassesSetupToExcel(lists: Record<ClassSetupEntity, ClassS
   XLSX.writeFile(book, 'ClassSetup.xlsx')
 }
 
-export async function importClassesSetupFromExcel(
-  file: File,
+/** Parse one sheet of the workbook into items for the given entity. */
+function parseSheet(
+  book: XLSX.WorkBook,
   entity: ClassSetupEntity,
-): Promise<{ items: ClassSetupItem[]; skipped: string[] }> {
-  const buffer = await file.arrayBuffer()
-  const book = XLSX.read(buffer, { cellDates: true })
+): { items: ClassSetupItem[]; skipped: string[] } {
   const { label, cols } = ENTITY_SHEETS[entity]
   const sheet = book.Sheets[label] ?? book.Sheets[book.SheetNames[0]]
-  if (!sheet) throw new Error('No sheet found in the Excel file')
+  if (!sheet) return { items: [], skipped: [] }
 
   const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: '' })
   const items: ClassSetupItem[] = []
   const skipped: string[] = []
   const nameKey = entity === 'classes' ? 'Class Name' : entity === 'sections' ? 'Section Name' : entity === 'groups' ? 'Group Name' : 'Shift Name'
-
   const nameField = entity === 'classes' ? 'class_name' : entity === 'sections' ? 'section_name' : entity === 'groups' ? 'group_name' : 'shift_name'
 
   for (const row of rows) {
@@ -126,6 +124,29 @@ export async function importClassesSetupFromExcel(
     items.push(item as unknown as ClassSetupItem)
   }
   return { items, skipped }
+}
+
+/** Import a SINGLE entity's sheet (kept for per-tab use). */
+export async function importClassesSetupFromExcel(
+  file: File,
+  entity: ClassSetupEntity,
+): Promise<{ items: ClassSetupItem[]; skipped: string[] }> {
+  const buffer = await file.arrayBuffer()
+  const book = XLSX.read(buffer, { cellDates: true })
+  return parseSheet(book, entity)
+}
+
+/** Import ALL 4 sheets in one go — one click imports everything. */
+export async function importAllClassesSetupSheets(
+  file: File,
+): Promise<Record<ClassSetupEntity, ClassSetupItem[]>> {
+  const buffer = await file.arrayBuffer()
+  const book = XLSX.read(buffer, { cellDates: true })
+  const result = {} as Record<ClassSetupEntity, ClassSetupItem[]>
+  for (const entity of Object.keys(ENTITY_SHEETS) as ClassSetupEntity[]) {
+    result[entity] = parseSheet(book, entity).items
+  }
+  return result
 }
 
 function emptyOf(entity: ClassSetupEntity): ClassSetupItem {
