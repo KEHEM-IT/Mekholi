@@ -125,6 +125,17 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        CREATE TABLE IF NOT EXISTS academic_years (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            year_name TEXT DEFAULT '', year_name_bn TEXT DEFAULT '',
+            start_date TEXT DEFAULT '', end_date TEXT DEFAULT '',
+            reg_start TEXT DEFAULT '', reg_end TEXT DEFAULT '',
+            is_current INTEGER DEFAULT 0,
+            is_active INTEGER DEFAULT 1,
+            remarks TEXT DEFAULT '',
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     # Seed a blank profile so the API always has something to return.

@@ -800,3 +800,60 @@
   padding-top: $space-4;
   border-top: 1px solid var(--color-border);
 }
+
+// ── Academic Year ───────────────────────────────────────────────────────
+
+.ay-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+  gap: $space-4;
+}
+
+.ay-card {
+  @include card;
+  @include flex(column, stretch, flex-start, $space-3);
+  padding: $space-4;
+  min-width: 0;
+  overflow: hidden;
+  transition:
+    border-color $transition-fast,
+    transform $transition-fast;
+
+  &:hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(-2px);
+  }
+
+  &--inactive {
+    opacity: 0.7;
+  }
+
+  &__year {
+    @include flex(row, center, center);
+    width: 3.4rem;
+    height: 3.4rem;
+    flex-shrink: 0;
+    border-radius: $radius-md;
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+    font-weight: 800;
+    font-size: 1.2rem;
+    border: 1px solid var(--color-border);
+  }
+
+  &__remarks {
+    color: var(--color-text-muted) !important;
+  }
+}
+
+.br-chip--closed {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+  background: var(--color-danger-muted);
+}
+
+.ipfp-remarks {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}

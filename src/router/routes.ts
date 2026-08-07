@@ -85,8 +85,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'institute-setup/academic-year',
         name: 'institute-setup-academic-year',
-        component: InstituteSetupPlaceholder,
-        meta: { title: 'Academic Year', titleBn: 'শিক্ষাবর্ষ' },
+        component: () => import('@/pages/Institute_Setup/AcademicYearsView.vue'),
         beforeEnter: requireAuth,
       },
       {
