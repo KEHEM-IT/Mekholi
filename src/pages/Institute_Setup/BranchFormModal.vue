@@ -2,7 +2,7 @@
 // Add / edit branch form modal — follows the Institute Profile page's form
 // design language (sections, comboboxes, date picker, toggle, geo cascade).
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
-import { useAppPreferences } from '@/composables/useAppPreferences'
+import { useTranslator } from '@/Translator'
 import { uploadToImgbb, validateLogoFile } from '@/composables/useImgbbUpload'
 import { useToast } from '@/composables/useToast'
 import { loadProfile } from '@/composables/Institute_Setup/useInstituteProfile'
@@ -29,9 +29,8 @@ const emit = defineEmits<{
   close: []
 }>()
 
-const { preferences } = useAppPreferences()
-const isBn = computed(() => preferences.uiLanguage === 'bn')
 const toast = useToast()
+const { t } = useTranslator()
 
 const form = reactive<Branch>({ ...(props.branch ? JSON.parse(JSON.stringify(props.branch)) : empty()) })
 
@@ -69,7 +68,6 @@ onMounted(async () => {
   isPrefilling = false
 })
 
-const t = (en: string, bn: string) => (isBn.value ? bn : en)
 
 // ── Option lists (English - বাংলা) ─────────────────────────────────────
 
@@ -166,7 +164,7 @@ async function uploadLogo(file: File) {
   isUploadingLogo.value = true
   try {
     form.logo = await uploadToImgbb(file)
-    toast.success(isBn.value ? 'লোগো আপলোড হয়েছে' : 'Logo uploaded')
+    toast.success(t('common.logoUploaded'))
   } catch (e) {
     toast.error(e instanceof Error ? e.message : 'Logo upload failed')
   } finally {
@@ -204,7 +202,7 @@ function removeLogo() {
 
 function submit() {
   if (!form.branch_name.trim()) {
-    toast.error(isBn.value ? 'শাখার নাম আবশ্যক' : 'Branch name is required')
+    toast.error(t('branches.nameRequired'))
     return
   }
   emit('save', { ...form, branch_name: form.branch_name.trim(), branch_name_bn: form.branch_name_bn.trim() })
@@ -220,7 +218,7 @@ function submit() {
         <span v-else>{{ (form.branch_name || 'BR').trim().charAt(0).toUpperCase() }}</span>
       </div>
       <div class="ipfp-hero__titles">
-        <h2 class="ipfp-hero__name-en">{{ form.branch_name || (isBn ? 'নতুন শাখা' : 'New Branch') }}</h2>
+        <h2 class="ipfp-hero__name-en">{{ form.branch_name || t('branches.addBranch') }}</h2>
         <p class="ipfp-hero__name-bn">{{ form.branch_name_bn }}</p>
         <div class="ipfp-hero__chips">
           <span v-if="form.branch_code" class="ipfp-chip ipfp-chip--eiin">
@@ -230,7 +228,7 @@ function submit() {
             <i class="fa-duotone fa-building-columns" /> {{ form.campus_type }}
           </span>
           <span v-if="form.is_main" class="ipfp-chip">
-            <i class="fa-duotone fa-star" /> {{ isBn ? 'প্রধান শাখা' : 'Main Branch' }}
+            <i class="fa-duotone fa-star" /> {{ t('branches.isMain') }}
           </span>
         </div>
       </div>
@@ -239,67 +237,67 @@ function submit() {
     <div class="ipfp-body">
       <!-- Identity -->
       <div class="ipfp-section">
-        <h4 class="ipfp-section__title"><i class="fa-duotone fa-id-card" /> {{ t('Identity', 'পরিচয়') }}</h4>
+        <h4 class="ipfp-section__title"><i class="fa-duotone fa-id-card" /> {{ t('branches.identity') }}</h4>
         <div class="ipfp-grid">
           <div class="form-field">
-            <label>{{ t('Branch Name', 'শাখার নাম') }} *</label>
+            <label>{{ t('branches.name') }} *</label>
             <input v-model="form.branch_name" type="text" @input="onNormalizeInput" @blur="onNormalizeBlur" />
           </div>
           <div class="form-field">
-            <label>{{ t('Branch Name (Bangla)', 'শাখার নাম (বাংলা)') }}</label>
+            <label>{{ t('branches.nameBn') }}</label>
             <input v-model="form.branch_name_bn" type="text" @input="onNormalizeInput" @blur="onNormalizeBlur" />
           </div>
           <div class="form-field">
-            <label>{{ t('Branch Code', 'শাখা কোড') }}</label>
+            <label>{{ t('branches.code') }}</label>
             <input v-model="form.branch_code" type="text" inputmode="numeric" @input="onDigitsOnly" placeholder="01, 02…" />
           </div>
           <div class="form-field">
-            <label>{{ t('Campus Type', 'ক্যাম্পাসের ধরন') }}</label>
-            <BaseCombobox v-model="form.campus_type" :options="comboOptions(CAMPUS_TYPES)" option-value="LookupText" option-label="LookupText" :placeholder="t('Select campus type', 'ক্যাম্পাসের ধরন নির্বাচন করুন')" />
+            <label>{{ t('branches.campusType') }}</label>
+            <BaseCombobox v-model="form.campus_type" :options="comboOptions(CAMPUS_TYPES)" option-value="LookupText" option-label="LookupText" :placeholder="t('common.select')" />
           </div>
           <!-- Is Main toggle: hidden when adding a new branch while a main
                branch already exists (only one main branch is allowed). -->
           <div v-if="props.branch || !mainExists" class="form-field">
-            <label>{{ t('Main Branch', 'প্রধান শাখা') }}</label>
-            <BaseToggle v-model="form.is_main" :yes-label="isBn ? 'হ্যাঁ' : 'Yes'" :no-label="isBn ? 'না' : 'No'" />
+            <label>{{ t('branches.isMain') }}</label>
+            <BaseToggle v-model="form.is_main" :yes-label="t('common.yes')" :no-label="t('common.no')" />
           </div>
           <div class="form-field">
-            <label>{{ t('Established Date', 'প্রতিষ্ঠার তারিখ') }}</label>
-            <BaseDatePicker v-model="form.established_date" :placeholder="t('DD/MM/YYYY', 'DD/MM/YYYY')" />
+            <label>{{ t('branches.estDate') }}</label>
+            <BaseDatePicker v-model="form.established_date" :placeholder="t('branches.estDate')" />
           </div>
         </div>
       </div>
 
       <!-- Address -->
       <div class="ipfp-section">
-        <h4 class="ipfp-section__title"><i class="fa-duotone fa-location-dot" /> {{ t('Address', 'ঠিকানা') }}</h4>
+        <h4 class="ipfp-section__title"><i class="fa-duotone fa-location-dot" /> {{ t('branches.address') }}</h4>
         <div class="ipfp-grid">
           <div class="form-field">
-            <label>{{ t('Division', 'বিভাগ') }}</label>
-            <BaseCombobox v-model="form.division_id" :options="geoDivisionOptions" option-value="id" option-label="LookupText" :placeholder="t('Select', 'নির্বাচন করুন')" />
+            <label>{{ t('branches.division') }}</label>
+            <BaseCombobox v-model="form.division_id" :options="geoDivisionOptions" option-value="id" option-label="LookupText" :placeholder="t('common.select')" />
           </div>
           <div class="form-field">
-            <label>{{ t('District', 'জেলা') }}</label>
-            <BaseCombobox v-model="form.district_id" :options="geoDistrictOptions" option-value="id" option-label="LookupText" :placeholder="t('Select', 'নির্বাচন করুন')" :disabled="!form.division_id" />
+            <label>{{ t('branches.district') }}</label>
+            <BaseCombobox v-model="form.district_id" :options="geoDistrictOptions" option-value="id" option-label="LookupText" :placeholder="t('common.select')" :disabled="!form.division_id" />
           </div>
           <div class="form-field">
-            <label>{{ t('Upazila / Thana', 'উপজেলা / থানা') }}</label>
-            <BaseCombobox v-model="form.upazila_id" :options="geoUpazilaOptions" option-value="id" option-label="LookupText" :placeholder="t('Select', 'নির্বাচন করুন')" :disabled="!form.district_id" />
+            <label>{{ t('branches.upazila') }}</label>
+            <BaseCombobox v-model="form.upazila_id" :options="geoUpazilaOptions" option-value="id" option-label="LookupText" :placeholder="t('common.select')" :disabled="!form.district_id" />
           </div>
           <div class="form-field">
-            <label>{{ t('Union', 'ইউনিয়ন') }}</label>
-            <BaseCombobox v-model="form.union_id" :options="geoUnionOptions" option-value="id" option-label="LookupText" :placeholder="t('Select', 'নির্বাচন করুন')" :disabled="!form.upazila_id" />
+            <label>{{ t('branches.union') }}</label>
+            <BaseCombobox v-model="form.union_id" :options="geoUnionOptions" option-value="id" option-label="LookupText" :placeholder="t('common.select')" :disabled="!form.upazila_id" />
           </div>
           <div class="form-field">
-            <label>{{ t('Village / Road / Holding', 'গ্রাম / রোড / হোল্ডিং') }}</label>
+            <label>{{ t('branches.village') }}</label>
             <input v-model="form.village_road_holding_no" type="text" @input="onNormalizeInput" @blur="onNormalizeBlur" />
           </div>
           <div class="form-field">
-            <label>{{ t('Post Office', 'ডাকঘর') }}</label>
+            <label>{{ t('branches.postOffice') }}</label>
             <input v-model="form.post_office" type="text" @input="onNormalizeInput" @blur="onNormalizeBlur" />
           </div>
           <div class="form-field">
-            <label>{{ t('Post Code', 'পোস্ট কোড') }}</label>
+            <label>{{ t('branches.postCode') }}</label>
             <input v-model.number="form.post_code" type="number" />
           </div>
         </div>
@@ -307,18 +305,18 @@ function submit() {
 
       <!-- Contact -->
       <div class="ipfp-section">
-        <h4 class="ipfp-section__title"><i class="fa-duotone fa-phone" /> {{ t('Contact', 'যোগাযোগ') }}</h4>
+        <h4 class="ipfp-section__title"><i class="fa-duotone fa-phone" /> {{ t('branches.contact') }}</h4>
         <div class="ipfp-grid">
           <div class="form-field">
-            <label>{{ t('Phone', 'ফোন') }}</label>
+            <label>{{ t('branches.phone') }}</label>
             <input v-model="form.phone" type="text" inputmode="numeric" @input="onDigitsOnly" />
           </div>
           <div class="form-field">
-            <label>{{ t('Email', 'ইমেইল') }}</label>
+            <label>{{ t('branches.email') }}</label>
             <input v-model="form.email" type="email" @input="onNormalizeInput" @blur="onNormalizeBlur" />
           </div>
           <div class="form-field">
-            <label>{{ t('Website', 'ওয়েবসাইট') }}</label>
+            <label>{{ t('branches.website') }}</label>
             <input v-model="form.website" type="text" @input="onNormalizeInput" @blur="onNormalizeBlur" />
           </div>
         </div>
@@ -326,22 +324,22 @@ function submit() {
 
       <!-- Head of campus -->
       <div class="ipfp-section">
-        <h4 class="ipfp-section__title"><i class="fa-duotone fa-user-tie" /> {{ t('Head of Campus', 'ক্যাম্পাস প্রধান') }}</h4>
+        <h4 class="ipfp-section__title"><i class="fa-duotone fa-user-tie" /> {{ t('branches.headOf') }}</h4>
         <div class="ipfp-grid">
           <div class="form-field">
-            <label>{{ t('Head Name', 'প্রধানের নাম') }}</label>
+            <label>{{ t('branches.headName') }}</label>
             <input v-model="form.head_name" type="text" @input="onNormalizeInput" @blur="onNormalizeBlur" />
           </div>
           <div class="form-field">
-            <label>{{ t('Designation', 'পদবি') }}</label>
-            <BaseCombobox v-model="form.head_designation" :options="comboOptions(DESIGNATIONS)" option-value="LookupText" option-label="LookupText" :placeholder="t('Select', 'নির্বাচন করুন')" />
+            <label>{{ t('branches.headDesignation') }}</label>
+            <BaseCombobox v-model="form.head_designation" :options="comboOptions(DESIGNATIONS)" option-value="LookupText" option-label="LookupText" :placeholder="t('common.select')" />
           </div>
           <div class="form-field">
-            <label>{{ t('Head Phone', 'প্রধানের ফোন') }}</label>
+            <label>{{ t('branches.headPhone') }}</label>
             <input v-model="form.head_phone" type="text" inputmode="numeric" @input="onDigitsOnly" />
           </div>
           <div class="form-field">
-            <label>{{ t('Head Email', 'প্রধানের ইমেইল') }}</label>
+            <label>{{ t('branches.headEmail') }}</label>
             <input v-model="form.head_email" type="email" @input="onNormalizeInput" @blur="onNormalizeBlur" />
           </div>
         </div>
@@ -349,42 +347,42 @@ function submit() {
 
       <!-- Regulatory & academic -->
       <div class="ipfp-section">
-        <h4 class="ipfp-section__title"><i class="fa-duotone fa-landmark" /> {{ t('Regulatory & Academic', 'নিয়ন্ত্রক ও একাডেমিক') }}</h4>
+        <h4 class="ipfp-section__title"><i class="fa-duotone fa-landmark" /> {{ t('branches.regulatory') }}</h4>
         <div class="ipfp-grid">
           <div class="form-field">
-            <label>{{ t('EIIN', 'EIIN') }}</label>
+            <label>{{ t('branches.eiin') }}</label>
             <input v-model="form.eiin" type="text" inputmode="numeric" @input="onDigitsOnly" placeholder="130430" />
           </div>
           <div class="form-field">
-            <label>{{ t('Board', 'বোর্ড') }}</label>
-            <BaseCombobox v-model="form.board" :options="comboOptions(BOARDS)" option-value="LookupText" option-label="LookupText" :placeholder="t('Select board', 'বোর্ড নির্বাচন করুন')" />
+            <label>{{ t('branches.board') }}</label>
+            <BaseCombobox v-model="form.board" :options="comboOptions(BOARDS)" option-value="LookupText" option-label="LookupText" :placeholder="t('common.select')" />
           </div>
           <div class="form-field">
-            <label>{{ t('Institute Type', 'প্রতিষ্ঠানের ধরন') }}</label>
-            <BaseCombobox v-model="form.institute_type" :options="INSTITUTE_TYPE_OPTIONS" option-value="LookupText" option-label="LookupText" :placeholder="t('Select', 'নির্বাচন করুন')" />
+            <label>{{ t('branches.instituteType') }}</label>
+            <BaseCombobox v-model="form.institute_type" :options="INSTITUTE_TYPE_OPTIONS" option-value="LookupText" option-label="LookupText" :placeholder="t('common.select')" />
           </div>
           <div class="form-field">
-            <label>{{ t('Shift', 'শিফট') }}</label>
-            <BaseCombobox v-model="form.shift" :options="SHIFT_OPTIONS" option-value="LookupText" option-label="LookupText" :placeholder="t('Select', 'নির্বাচন করুন')" />
+            <label>{{ t('branches.shift') }}</label>
+            <BaseCombobox v-model="form.shift" :options="SHIFT_OPTIONS" option-value="LookupText" option-label="LookupText" :placeholder="t('common.select')" />
           </div>
         </div>
       </div>
 
       <!-- Status -->
       <div class="ipfp-section">
-        <h4 class="ipfp-section__title"><i class="fa-duotone fa-toggle-on" /> {{ t('Status', 'অবস্থা') }}</h4>
+        <h4 class="ipfp-section__title"><i class="fa-duotone fa-toggle-on" /> {{ t('common.status') }}</h4>
         <div class="ipfp-grid">
           <div class="form-field">
-            <label>{{ t('Active', 'সক্রিয়') }}</label>
-            <BaseToggle v-model="form.is_active" :yes-label="isBn ? 'হ্যাঁ' : 'Yes'" :no-label="isBn ? 'না' : 'No'" />
+            <label>{{ t('common.active') }}</label>
+            <BaseToggle v-model="form.is_active" :yes-label="t('common.yes')" :no-label="t('common.no')" />
           </div>
           <div class="form-field">
-            <label>{{ t('Admission Open', 'ভর্তি চলছে') }}</label>
-            <BaseToggle v-model="form.admission_open" :yes-label="isBn ? 'হ্যাঁ' : 'Yes'" :no-label="isBn ? 'না' : 'No'" />
+            <label>{{ t('common.admissionOpen') }}</label>
+            <BaseToggle v-model="form.admission_open" :yes-label="t('common.yes')" :no-label="t('common.no')" />
           </div>
           <!-- Branch Logo — full grid row (never squeezed into one column) -->
           <div class="form-field ipf-field--full">
-            <label>{{ t('Branch Logo', 'শাখার লোগো') }}</label>
+            <label>{{ t('branches.logo') }}</label>
             <div
               class="ipf-logo"
               :class="{
@@ -405,9 +403,9 @@ function submit() {
               <i v-else-if="isDraggingLogo" class="fa-duotone fa-down-to-bracket ipf-logo__icon" />
               <i v-else class="fa-duotone fa-cloud-arrow-up ipf-logo__icon" />
               <div class="ipf-logo__text">
-                <template v-if="isUploadingLogo">{{ t('Uploading...', 'আপলোড হচ্ছে...') }}</template>
-                <template v-else-if="isDraggingLogo">{{ t('Drop the image here', 'ছবিটি এখানে ছেড়ে দিন') }}</template>
-                <template v-else>{{ t('Click or drag & drop to upload logo', 'লোগো আপলোড করতে ক্লিক করুন বা ছবি ড্র্যাগ করুন') }}</template>
+                <template v-if="isUploadingLogo">{{ t('common.uploading') }}</template>
+                <template v-else-if="isDraggingLogo">{{ t('common.dropHere') }}</template>
+                <template v-else>{{ t('common.clickOrDragLogo') }}</template>
               </div>
               <span v-if="form.logo && !isUploadingLogo && !isDraggingLogo" class="ipf-logo__remove" role="button" tabindex="-1" @click.stop="removeLogo">&#10005;</span>
             </div>
@@ -420,11 +418,11 @@ function submit() {
     <!-- Footer actions -->
     <div class="ipfp-form-actions">
       <button type="button" class="btn" @click="emit('close')">
-        <i class="fa-duotone fa-xmark" /> {{ t('Cancel', 'বাতিল') }}
+        <i class="fa-duotone fa-xmark" /> {{ t('common.cancel') }}
       </button>
       <button type="button" class="btn btn--primary" @click="submit">
         <i class="fa-duotone fa-floppy-disk" />
-        {{ props.branch ? t('Update Branch', 'শাখা আপডেট করুন') : t('Save Branch', 'শাখা সংরক্ষণ করুন') }}
+        {{ props.branch ? t('branches.updateBranch') : t('branches.saveBranch') }}
       </button>
     </div>
   </div>

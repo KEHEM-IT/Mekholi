@@ -40,8 +40,12 @@ defineOptions({ name: "InstituteProfile" });
 const { preferences } = useAppPreferences();
 const isBn = computed(() => preferences.uiLanguage === "bn");
 
-// Bilingual tooltip helper — returns the text for the active UI language.
-function t(en: string, bn: string): string {
+// Bilingual helper — dual mode:
+//   t('key')          → dictionary lookup via the Translator (structured i18n)
+//   t('EN', 'BN')     → legacy inline pair (kept during the migration)
+import { translate } from "@/Translator";
+function t(en: string, bn?: string): string {
+  if (bn === undefined) return translate(en);
   return isBn.value ? bn : en;
 }
 
@@ -654,7 +658,7 @@ function removeCommittee(i: number) {
   <section v-else class="ipf">
     <header class="ipf-header">
       <div class="ipf-header__titles">
-        <h1>{{ isBn ? "ইনস্টিটিউট প্রোফাইল" : "Institute Profile" }}</h1>
+        <h1>{{ t('profile.title') }}</h1>
         <p>
           {{ isBn ? "আপনার প্রতিষ্ঠানের তথ্য সম্পাদনা করুন।" : "Edit your institute information." }}
         </p>
@@ -1100,13 +1104,13 @@ function removeCommittee(i: number) {
           <div class="ipf-section__title">
             <i class="fa-duotone fa-people-group" />
             <div>
-              <h2>{{ isBn ? "জনবল" : "Staff" }}</h2>
+              <h2>{{ t('profile.staff') }}</h2>
             </div>
           </div>
           <div class="ipf-staff-total" :title="isBn ? 'মোট কর্মচারী' : 'Total staffs'">
             <i class="fa-duotone fa-calculator" />
             <span>
-              {{ isBn ? "মোট কর্মচারী" : "Total Staffs" }}:
+              {{ t('staff.total') }}:
               <strong>{{ staffTotal }}</strong>
             </span>
           </div>
@@ -1114,17 +1118,17 @@ function removeCommittee(i: number) {
         <div class="ipf-section__body">
           <div class="ipf-grid ipf-grid--three">
             <div class="form-field">
-              <label>{{ isBn ? "মোট কর্মচারী" : "Total Staffs" }}</label
+              <label>{{ t('staff.total') }}</label
               ><input v-model.number="form.staff_total" type="number" v-bind="MAX3"  :title="t('Total number of staff members', 'মোট কর্মচারীর সংখ্যা লিখুন')"  :placeholder="t('Total number of staff members', 'মোট কর্মচারীর সংখ্যা লিখুন')"  @input="onStaffInput('staff_total')" />
             </div>
             <div class="form-field">
-              <label>{{ isBn ? "পুরুষ কর্মচারী" : "Male Staffs" }}</label
+              <label>{{ t('staff.male') }}</label
               ><input v-model.number="form.staff_male" type="number" v-bind="MAX3"  :title="t('Number of male staff members', 'পুরুষ কর্মচারীর সংখ্যা লিখুন')"  :placeholder="t('Number of male staff members', 'পুরুষ কর্মচারীর সংখ্যা লিখুন')"  @input="onStaffInput('staff_male')" />
             </div>
             <div class="form-field">
               <label>
-                {{ isBn ? "মহিলা কর্মচারী" : "Female Staffs" }}
-                <small class="ipf-field-auto">{{ isBn ? "স্বয়ংক্রিয়" : "auto" }}</small>
+                {{ t('staff.female') }}
+                <small class="ipf-field-auto">{{ t('staff.auto') }}</small>
               </label
               ><input
                 type="number"
@@ -1136,13 +1140,13 @@ function removeCommittee(i: number) {
               />
             </div>
             <div class="form-field">
-              <label>{{ isBn ? "এমপিওভুক্ত কর্মচারী" : "MPO Staffs" }}</label
+              <label>{{ t('staff.mpo') }}</label
               ><input v-model.number="form.staff_mpo" type="number" v-bind="MAX3"  :title="t('Number of staff under MPO', 'এমপিওভুক্ত কর্মচারীর সংখ্যা লিখুন')"  :placeholder="t('Number of staff under MPO', 'এমপিওভুক্ত কর্মচারীর সংখ্যা লিখুন')"  @input="onStaffInput('staff_mpo')" />
             </div>
             <div class="form-field">
               <label>
-                {{ isBn ? "অ-এমপিওভুক্ত কর্মচারী" : "Non-MPO Staffs" }}
-                <small class="ipf-field-auto">{{ isBn ? "স্বয়ংক্রিয়" : "auto" }}</small>
+                {{ t('staff.nonMpo') }}
+                <small class="ipf-field-auto">{{ t('staff.auto') }}</small>
               </label
               ><input
                 type="number"
@@ -1221,7 +1225,7 @@ function removeCommittee(i: number) {
           <div class="ipf-section__title">
             <i class="fa-duotone fa-users" />
             <div>
-              <h2>{{ isBn ? "কমিটির সদস্য" : "Committee Members" }}</h2>
+              <h2>{{ t('profile.committee') }}</h2>
               <span>{{ form.committee_members.length }} {{ isBn ? "সদস্য" : "members" }}</span>
             </div>
           </div>
@@ -1307,7 +1311,7 @@ function removeCommittee(i: number) {
           <div class="ipf-section__title">
             <i class="fa-duotone fa-grid-2" />
             <div>
-              <h2>{{ isBn ? "সুবিধাদি" : "Facilities" }}</h2>
+              <h2>{{ t('profile.facilities') }}</h2>
             </div>
           </div>
         </div>
@@ -1340,7 +1344,7 @@ function removeCommittee(i: number) {
     <div class="ipf-savebar">
       <div class="ipf-savebar__status">
         <i class="fa-duotone fa-circle-check" />
-        <span>{{ isBn ? "Ctrl+S দিয়ে সংরক্ষণ করুন" : "Press Ctrl+S to save" }}</span>
+        <span>{{ t('profile.saveHint') }}</span>
       </div>
       <div class="ipf-savebar__actions">
         <button type="button" class="btn btn--primary" :disabled="isSaving" @click="handleSave">
@@ -1348,11 +1352,11 @@ function removeCommittee(i: number) {
           {{
             isSaving
               ? isBn
-                ? "সংরক্ষণ হচ্ছে..."
-                : "Saving..."
+                ? t("common.saving")
+                : t("common.saving")
               : isBn
-                ? "সংরক্ষণ করুন"
-                : "Save Profile"
+                ? t("common.save")
+                : t("common.saveProfile")
           }}
         </button>
       </div>
