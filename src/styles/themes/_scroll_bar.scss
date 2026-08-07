@@ -1,7 +1,8 @@
 @use "../abstracts/variables" as v;
 
 // ============================================================
-// Global Scrollbar
+// Global Scrollbar — uses runtime CSS variables so it matches
+// the active theme (dark or light).
 // ============================================================
 
 // Firefox
@@ -10,7 +11,7 @@
   scrollbar-color: transparent transparent;
 
   &:hover {
-    scrollbar-color: v.$color-border-strong transparent;
+    scrollbar-color: var(--color-border-strong, v.$color-border-strong) transparent;
   }
 }
 
@@ -31,11 +32,11 @@
 }
 
 *:hover::-webkit-scrollbar-thumb {
-  background: v.$color-border-strong;
+  background: var(--color-border-strong, v.$color-border-strong);
 }
 
 *:hover::-webkit-scrollbar-thumb:hover {
-  background: v.$color-primary;
+  background: var(--color-primary, v.$color-primary);
 }
 
 *::-webkit-scrollbar-corner {

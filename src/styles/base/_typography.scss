@@ -23,7 +23,7 @@ h3,
 h4 {
   font-weight: 700;
   line-height: 1.2;
-  color: $color-text;
+  color: var(--color-text, $color-text);
 }
 
 h1 {
@@ -38,13 +38,13 @@ h3 {
 
 small {
   font-size: 0.85rem;
-  color: $color-text-muted;
+  color: var(--color-text-muted, $color-text-muted);
 }
 
 a {
-  color: $color-primary;
+  color: var(--color-primary, $color-primary);
 
   &:hover {
-    color: $color-primary-hover;
+    color: var(--color-primary-hover, $color-primary-hover);
   }
 }
