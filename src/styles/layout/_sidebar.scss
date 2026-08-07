@@ -238,6 +238,12 @@
     color: var(--color-primary);
   }
 
+  // A menu whose submenu matches the current route — highlight + bold.
+  &.is-active.is-open {
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+  }
+
   &.is-open {
     color: var(--color-text);
   }
@@ -382,6 +388,24 @@
   &:hover {
     background: var(--color-surface-hover);
     color: var(--color-text);
+  }
+
+  // Current route submenu — filled tint + bold + left indicator.
+  &.is-active {
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+    font-weight: 700;
+
+    .submenu-icon {
+      opacity: 1;
+    }
+  }
+
+  &__dot {
+    margin-left: auto;
+    font-size: 0.4rem;
+    color: var(--color-primary);
+    flex-shrink: 0;
   }
 }
 

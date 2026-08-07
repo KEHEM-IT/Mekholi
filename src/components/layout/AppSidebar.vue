@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useTranslator } from "@/Translator";
 import { useAuth } from "@/composables/useAuth";
 import { useSidebar } from "@/composables/useSidebar";
@@ -16,6 +16,23 @@ const { user } = useAuth();
 const { isCollapsed, isMobileOpen, toggleCollapsed, closeMobile } = useSidebar();
 const { localized } = useTranslator();
 const router = useRouter();
+const route = useRoute();
+
+// Active-route tracking — highlight the submenu that matches the current
+// route, and keep its parent menu open after navigation.
+const activeRouteName = computed(() => route.name as string | undefined);
+
+/** True when a submenu's route is the current route. */
+function isSubActive(sub: NavSubMenu): boolean {
+  const routeName = SUBMENU_ROUTES[sub.name];
+  return !!routeName && routeName === activeRouteName.value;
+}
+
+/** True when any submenu of a menu matches the current route. */
+function isMenuActive(item: NavMenu): boolean {
+  return (item.sub_menus ?? []).some(isSubActive);
+}
+
 
 
 function menuLabel(item: NavMenu) {
@@ -49,11 +66,27 @@ const SUBMENU_ROUTES: Record<string, string> = {
 
 function onSubmenuClick(sub: NavSubMenu) {
   const routeName = SUBMENU_ROUTES[sub.name];
-  if (routeName) router.push({ name: routeName });
-  onNavigate();
+  if (!routeName) return;
+  router.push({ name: routeName });
+  // Keep the parent menu open so the user sees where they are.
+  const parent = menus.value.find((m) => (m.sub_menus ?? []).some((x) => x.name === sub.name));
+  if (parent && parent.menu !== 'Dashboard') openMenu.value = parent.menu;
+  closeMobile();
+  clearHoverCloseTimer();
 }
 
 const menus = computed<NavMenu[]>(() => (user.value ? (navigation[user.value.role] ?? []) : []));
+
+// Auto-open the parent menu of the current route (deep links / reloads).
+watch(
+  [menus, activeRouteName],
+  () => {
+    if (isCollapsed.value) return; // collapsed rail uses hover flyouts
+    const parent = menus.value.find((m) => (m.sub_menus ?? []).some(isSubActive));
+    if (parent && parent.menu !== 'Dashboard') openMenu.value = parent.menu;
+  },
+  { immediate: true },
+);
 
 // --- Search ---------------------------------------------------------------
 
@@ -363,7 +396,7 @@ onBeforeUnmount(() => {
             v-else
             type="button"
             class="nav-head"
-            :class="{ 'is-open': isMenuOpen(item.menu) }"
+            :class="{ 'is-open': isMenuOpen(item.menu), 'is-active': isMenuActive(item) }"
             :aria-expanded="isMenuOpen(item.menu)"
             :aria-controls="`submenu-${slugify(item.menu)}`"
             :title="item.menu"
@@ -383,9 +416,15 @@ onBeforeUnmount(() => {
           >
             <ul class="submenu">
               <li v-for="sub in item.sub_menus" :key="sub.name">
-                <button type="button" class="submenu-link" @click="onSubmenuClick(sub)">
+                <button
+                  type="button"
+                  class="submenu-link"
+                  :class="{ 'is-active': isSubActive(sub) }"
+                  @click="onSubmenuClick(sub)"
+                >
                   <i :class="['submenu-icon', sub.icon]" />
                   <span v-html="highlightMatch(subLabel(sub))" />
+                  <i v-if="isSubActive(sub)" class="fa-solid fa-circle submenu-link__dot" />
                 </button>
               </li>
             </ul>
