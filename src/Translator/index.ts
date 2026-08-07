@@ -150,7 +150,18 @@ export function useTranslator() {
     return preferences.uiLanguage === 'bn' ? bn : en
   }
 
-  return { t: translate, lang, pick, localized }
+  /**
+   * Which key holds the active language's label inside an option object
+   * (options are EN-BN pairs like { Name, NameInBangla, LookupText }):
+   *   const optLabelKey = computed(() => labelKey('Name', 'NameInBangla'))
+   *   <BaseCombobox :option-label="optLabelKey" ... />
+   * The stored value (LookupText "EN - BN") stays untouched.
+   */
+  function labelKey(enKey: string, bnKey: string): string {
+    return preferences.uiLanguage === 'bn' ? bnKey : enKey
+  }
+
+  return { t: translate, lang, pick, localized, labelKey }
 }
 
 /** Standalone pick (usable outside components). */

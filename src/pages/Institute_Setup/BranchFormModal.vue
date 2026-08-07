@@ -30,7 +30,9 @@ const emit = defineEmits<{
 }>()
 
 const toast = useToast()
-const { t } = useTranslator()
+const { t, labelKey } = useTranslator()
+const optLabelKey = computed(() => labelKey('Name', 'NameInBangla'))
+const geoLabelKey = computed(() => labelKey('name', 'bn_name'))
 
 const form = reactive<Branch>({ ...(props.branch ? JSON.parse(JSON.stringify(props.branch)) : empty()) })
 
@@ -101,7 +103,14 @@ import shiftCountsJson from '@/assets/jsons/shift_counts.json'
 const INSTITUTE_TYPE_OPTIONS = instituteTypesJson
 const SHIFT_OPTIONS = shiftCountsJson
 
-const comboOptions = (items: string[]) => items.map((v) => ({ Id: v, LookupText: v }))
+const comboOptions = (items: string[]) =>
+  items.map((v) => {
+    const sep = v.indexOf(' - ')
+    if (sep > 0) {
+      return { Id: v, Name: v.slice(0, sep).trim(), NameInBangla: v.slice(sep + 3).trim(), LookupText: v }
+    }
+    return { Id: v, Name: v, NameInBangla: v, LookupText: v }
+  })
 
 // ── Input helpers (same behaviour as the profile page) ─────────────────
 
@@ -253,7 +262,7 @@ function submit() {
           </div>
           <div class="form-field">
             <label>{{ t('branches.campusType') }}</label>
-            <BaseCombobox v-model="form.campus_type" :options="comboOptions(CAMPUS_TYPES)" option-value="LookupText" option-label="LookupText" :placeholder="t('common.select')" />
+            <BaseCombobox v-model="form.campus_type" :options="comboOptions(CAMPUS_TYPES)" option-value="LookupText" :option-label="optLabelKey" :placeholder="t('common.select')" />
           </div>
           <!-- Is Main toggle: hidden when adding a new branch while a main
                branch already exists (only one main branch is allowed). -->
@@ -274,19 +283,19 @@ function submit() {
         <div class="ipfp-grid">
           <div class="form-field">
             <label>{{ t('branches.division') }}</label>
-            <BaseCombobox v-model="form.division_id" :options="geoDivisionOptions" option-value="id" option-label="LookupText" :placeholder="t('common.select')" />
+            <BaseCombobox v-model="form.division_id" :options="geoDivisionOptions" option-value="id" :option-label="geoLabelKey" :placeholder="t('common.select')" />
           </div>
           <div class="form-field">
             <label>{{ t('branches.district') }}</label>
-            <BaseCombobox v-model="form.district_id" :options="geoDistrictOptions" option-value="id" option-label="LookupText" :placeholder="t('common.select')" :disabled="!form.division_id" />
+            <BaseCombobox v-model="form.district_id" :options="geoDistrictOptions" option-value="id" :option-label="geoLabelKey" :placeholder="t('common.select')" :disabled="!form.division_id" />
           </div>
           <div class="form-field">
             <label>{{ t('branches.upazila') }}</label>
-            <BaseCombobox v-model="form.upazila_id" :options="geoUpazilaOptions" option-value="id" option-label="LookupText" :placeholder="t('common.select')" :disabled="!form.district_id" />
+            <BaseCombobox v-model="form.upazila_id" :options="geoUpazilaOptions" option-value="id" :option-label="geoLabelKey" :placeholder="t('common.select')" :disabled="!form.district_id" />
           </div>
           <div class="form-field">
             <label>{{ t('branches.union') }}</label>
-            <BaseCombobox v-model="form.union_id" :options="geoUnionOptions" option-value="id" option-label="LookupText" :placeholder="t('common.select')" :disabled="!form.upazila_id" />
+            <BaseCombobox v-model="form.union_id" :options="geoUnionOptions" option-value="id" :option-label="geoLabelKey" :placeholder="t('common.select')" :disabled="!form.upazila_id" />
           </div>
           <div class="form-field">
             <label>{{ t('branches.village') }}</label>
@@ -332,7 +341,7 @@ function submit() {
           </div>
           <div class="form-field">
             <label>{{ t('branches.headDesignation') }}</label>
-            <BaseCombobox v-model="form.head_designation" :options="comboOptions(DESIGNATIONS)" option-value="LookupText" option-label="LookupText" :placeholder="t('common.select')" />
+            <BaseCombobox v-model="form.head_designation" :options="comboOptions(DESIGNATIONS)" option-value="LookupText" :option-label="optLabelKey" :placeholder="t('common.select')" />
           </div>
           <div class="form-field">
             <label>{{ t('branches.headPhone') }}</label>
@@ -355,15 +364,15 @@ function submit() {
           </div>
           <div class="form-field">
             <label>{{ t('branches.board') }}</label>
-            <BaseCombobox v-model="form.board" :options="comboOptions(BOARDS)" option-value="LookupText" option-label="LookupText" :placeholder="t('common.select')" />
+            <BaseCombobox v-model="form.board" :options="comboOptions(BOARDS)" option-value="LookupText" :option-label="optLabelKey" :placeholder="t('common.select')" />
           </div>
           <div class="form-field">
             <label>{{ t('branches.instituteType') }}</label>
-            <BaseCombobox v-model="form.institute_type" :options="INSTITUTE_TYPE_OPTIONS" option-value="LookupText" option-label="LookupText" :placeholder="t('common.select')" />
+            <BaseCombobox v-model="form.institute_type" :options="INSTITUTE_TYPE_OPTIONS" option-value="LookupText" :option-label="optLabelKey" :placeholder="t('common.select')" />
           </div>
           <div class="form-field">
             <label>{{ t('branches.shift') }}</label>
-            <BaseCombobox v-model="form.shift" :options="SHIFT_OPTIONS" option-value="LookupText" option-label="LookupText" :placeholder="t('common.select')" />
+            <BaseCombobox v-model="form.shift" :options="SHIFT_OPTIONS" option-value="LookupText" :option-label="optLabelKey" :placeholder="t('common.select')" />
           </div>
         </div>
       </div>
