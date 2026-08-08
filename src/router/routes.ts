@@ -158,8 +158,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'admission/merit-list',
         name: 'admission-merit-list',
-        component: () => import('@/pages/ComingSoonView.vue'),
-        meta: { title: 'Merit List', titleBn: 'মেধা তালিকা', icon: 'fa-duotone fa-trophy', module: 'Admission' },
+        component: () => import('@/pages/Admission/MeritList/MeritListView.vue'),
         beforeEnter: requireAuth,
       },
       {

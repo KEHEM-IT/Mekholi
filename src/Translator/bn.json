@@ -866,5 +866,20 @@
   "Please select a desired class first": "দয়া করে প্রথমে কাঙ্ক্ষিত শ্রেণি নির্বাচন করুন",
   "No eligible paid applicants found in the pool for this class.": "এই শ্রেণির জন্য ফি পরিশোধিত কোনো আবেদনকারী খুঁজে পাওয়া যায়নি।",
   "Digital Lottery Draw executed with 100% success!": "ডিজিটাল লটারি ড্র ১০০% সফলভাবে সম্পন্ন হয়েছে!",
-  "Please run the Digital Draw first before publishing results": "দয়া করে ফলাফল প্রকাশের পূর্বে ডিজিটাল লটারি ড্র সম্পন্ন করুন"
+  "Please run the Digital Draw first before publishing results": "দয়া করে ফলাফল প্রকাশের পূর্বে ডিজিটাল লটারি ড্র সম্পন্ন করুন",
+  "Select Ranking Scope & Capacity": "র‌্যাংকিংয়ের পরিধি ও আসন সংখ্যা নির্ধারণ করুন",
+  "Seat Intake Capacity (Winners Cap)": "আসন ধারণক্ষমতা (বিজয়ীর সর্বোচ্চ সংখ্যা)",
+  "Compile Merit Roster": "মেধা তালিকা প্রস্তুত করুন",
+  "Generate ranked selections based on cumulative written and viva scores, assign seats, and publish final winners.": "লিখিত ও ভাইভা পরীক্ষার নম্বরের ভিত্তিতে র‌্যাংকিং তৈরি করুন, আসন বরাদ্দ করুন এবং চূড়ান্ত বিজয়ীদের তালিকা প্রকাশ করুন।",
+  "Compile & Settings": "কম্পাইল ও সেটিংস",
+  "Lock & Publish List": "লক ও পাবলিশ করুন",
+  "Seats Capacity (Winners)": "আসন সংখ্যা (লটারিতে বিজয়ী)",
+  "No merit winners qualified or selected yet. Check test scores or compilation settings.": "এখনও কোনো মেধা তালিকা বিজয়ী নির্বাচিত হয়নি। পরীক্ষার নম্বর বা কম্পাইল সেটিংস চেক করুন।",
+  "No waitlisted candidates in the queue.": "অপেক্ষমান তালিকায় কোনো প্রার্থী নেই।",
+  "Successfully locked and published rosters!": "সফলভাবে তালিকা লক ও পাবলিশ করা হয়েছে!",
+  "Roster updates failed — is server.py running?": "তালিকা আপডেট ব্যর্থ হয়েছে — server.py সচল আছে কি?",
+  "Are you sure you want to lock and publish the merit list for \"{class}\"? This will update candidate application statuses.": "আপনি কি নিশ্চিত যে আপনি \"{class}\"-এর মেধা তালিকাটি লক ও পাবলিশ করতে চান? এটি শিক্ষার্থীদের আবেদনপত্রের অবস্থা আপডেট করবে।",
+  "Merit Rank": "মেধা ক্রম",
+  "Total Score": "সর্বমোট নম্বর",
+  "Merit roster compiled for class!": "শ্রেণির মেধা তালিকা সফলভাবে প্রস্তুত করা হয়েছে!"
 }

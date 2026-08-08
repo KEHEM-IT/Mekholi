@@ -1,0 +1,89 @@
+@use '../../abstracts' as *;
+
+// Admission Merit List Styles
+.merit-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
+  gap: $space-4;
+  margin-bottom: $space-6;
+}
+
+.merit-stat-card {
+  @include card;
+  @include flex(row, center, space-between, $space-3);
+  padding: $space-4 $space-4;
+
+  &__info {
+    @include flex(column, flex-start, center, 4px);
+  }
+
+  &__label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+  }
+
+  &__value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-text);
+  }
+
+  &__icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: $radius-md;
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+    font-size: 1.15rem;
+  }
+
+  &--success {
+    border-color: var(--color-success);
+    .merit-stat-card__icon {
+      background: var(--color-success-muted);
+      color: var(--color-success);
+    }
+  }
+
+  &--warning {
+    border-color: var(--color-warning);
+    .merit-stat-card__icon {
+      background: var(--color-warning-muted);
+      color: var(--color-warning);
+    }
+  }
+}
+
+.merit-tabs-header {
+  @include flex(row, center, flex-start, $space-3);
+  margin-bottom: $space-4;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.merit-tab-btn {
+  padding: $space-2 $space-4;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition:
+    border-color $transition-fast,
+    color $transition-fast;
+
+  &:hover {
+    color: var(--color-text);
+  }
+
+  &.is-active {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+}
