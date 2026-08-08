@@ -482,14 +482,9 @@ def _seed_admission_applications(conn):
             " phone, email, academic_year_id, desired_class, version, shift, previous_school,"
             " country, nationality, payment_status, payment_method, payment_transaction_id, application_status, remarks)"
             " VALUES (:application_no, :candidate_name, :candidate_name_bn, :guardian_name,"
-            " :phone, :email, ?, :desired_class, :version, :shift, :previous_school,"
+            " :phone, :email, :academic_year_id, :desired_class, :version, :shift, :previous_school,"
             " :country, :nationality, :payment_status, :payment_method, :payment_transaction_id, :application_status, :remarks)",
-            (
-                year_id, ap["application_no"], ap["candidate_name"], ap["candidate_name_bn"], ap["guardian_name"],
-                ap["phone"], ap["email"], ap["desired_class"], ap["version"], ap["shift"], ap["previous_school"],
-                ap["country"], ap["nationality"], ap["payment_status"], ap["payment_method"], ap["payment_transaction_id"],
-                ap["application_status"], ap["remarks"]
-            )
+            {**ap, "academic_year_id": year_id}
         )
         print(f"SQL: seeded default admission application — {ap['application_no']} ({ap['candidate_name']})")
 

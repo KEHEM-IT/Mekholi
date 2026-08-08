@@ -128,25 +128,25 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'admission/enquiries',
         name: 'admission-enquiries',
-        component: () => import('@/pages/Admission/AdmissionEnquiriesView.vue'),
+        component: () => import('@/pages/Admission/Enquiries/EnquiriesView.vue'),
         beforeEnter: requireAuth,
       },
       {
         path: 'admission/form-builder',
         name: 'admission-form-builder',
-        component: () => import('@/pages/Admission/OnlineFormBuilderView.vue'),
+        component: () => import('@/pages/Admission/FormBuilder/FormBuilderView.vue'),
         beforeEnter: requireAuth,
       },
       {
         path: 'admission/applications',
         name: 'admission-applications',
-        component: () => import('@/pages/Admission/ApplicationsView.vue'),
+        component: () => import('@/pages/Admission/Applications/ApplicationsView.vue'),
         beforeEnter: requireAuth,
       },
       {
         path: 'admission/tests',
         name: 'admission-tests',
-        component: () => import('@/pages/Admission/AdmissionTestsView.vue'),
+        component: () => import('@/pages/Admission/Tests/TestsView.vue'),
         beforeEnter: requireAuth,
       },
       {

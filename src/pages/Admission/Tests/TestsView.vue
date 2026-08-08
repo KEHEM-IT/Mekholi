@@ -22,7 +22,7 @@ import { fetchItems, type Room } from '@/composables/Institute_Setup/useRoomsBui
 import BaseModal from '@/components/ui/BaseModal.vue'
 import DataTable, { type TableColumn } from '@/components/ui/DataTable.vue'
 import BaseToggle from '@/components/ui/BaseToggle.vue'
-import AdmissionTestFormModal from './AdmissionTestFormModal.vue'
+import TestFormModal from './TestFormModal.vue'
 
 defineOptions({ name: 'AdmissionTestsView' })
 
@@ -338,7 +338,7 @@ async function onImportPicked(event: Event) {
       :close-on-overlay="false"
       @close="showForm = false"
     >
-      <AdmissionTestFormModal
+      <TestFormModal
         :test="editingTest"
         :years="years"
         @save="onSave"

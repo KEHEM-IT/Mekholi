@@ -21,7 +21,7 @@ import { fetchAcademicYears, type AcademicYear } from '@/composables/Institute_S
 import BaseModal from '@/components/ui/BaseModal.vue'
 import DataTable, { type TableColumn } from '@/components/ui/DataTable.vue'
 import BaseToggle from '@/components/ui/BaseToggle.vue'
-import AdmissionEnquiryFormModal from './AdmissionEnquiryFormModal.vue'
+import EnquiryFormModal from './EnquiryFormModal.vue'
 
 defineOptions({ name: 'AdmissionEnquiriesView' })
 
@@ -334,7 +334,7 @@ function getStatusBadgeClass(status: string): string {
       :close-on-overlay="false"
       @close="showForm = false"
     >
-      <AdmissionEnquiryFormModal
+      <EnquiryFormModal
         :enquiry="editingEnquiry"
         :years="years"
         @save="onSave"

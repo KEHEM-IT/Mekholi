@@ -20,7 +20,7 @@ import {
 import { fetchAcademicYears, type AcademicYear } from '@/composables/Institute_Setup/useAcademicYears'
 import BaseModal from '@/components/ui/BaseModal.vue'
 import DataTable, { type TableColumn } from '@/components/ui/DataTable.vue'
-import AdmissionApplicationFormModal from './AdmissionApplicationFormModal.vue'
+import ApplicationFormModal from './ApplicationFormModal.vue'
 
 defineOptions({ name: 'ApplicationsView' })
 
@@ -274,7 +274,7 @@ function getAppStatusBadgeClass(status: string): string {
       :close-on-overlay="false"
       @close="showForm = false"
     >
-      <AdmissionApplicationFormModal
+      <ApplicationFormModal
         :application="editingApplication"
         :years="years"
         @save="onSave"
