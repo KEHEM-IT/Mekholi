@@ -699,7 +699,7 @@ function getSelectedYearName(): string {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: $radius-md;
-  margin-bottom: $space-5;
+  margin-bottom: $space-4;
 
   i {
     color: var(--color-info);
