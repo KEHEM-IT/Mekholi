@@ -140,8 +140,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'admission/applications',
         name: 'admission-applications',
-        component: () => import('@/pages/ComingSoonView.vue'),
-        meta: { title: 'Applications', titleBn: 'আবেদনসমূহ', icon: 'fa-duotone fa-inbox', module: 'Admission' },
+        component: () => import('@/pages/Admission/ApplicationsView.vue'),
         beforeEnter: requireAuth,
       },
       {

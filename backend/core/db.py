@@ -420,6 +420,64 @@ def _seed_admission_forms(conn):
     print("SQL: seeded default admission form template")
 
 
+DEFAULT_APPLICATIONS = [
+    {
+        "application_no": "APP-2026-0001", "candidate_name": "Sadia Islam", "candidate_name_bn": "সাদিয়া ইসলাম",
+        "guardian_name": "Rafiqul Islam", "phone": "01711122233", "email": "sadia@gmail.com",
+        "desired_class": "Class 6", "version": "Bangla Version", "shift": "Morning",
+        "previous_school": "Sofir Uddin High School", "country": "Bangladesh", "nationality": "Bangladeshi",
+        "payment_status": "Paid", "payment_method": "bKash", "payment_transaction_id": "BKX9283JD0",
+        "application_status": "Submitted", "remarks": "Documents uploaded are complete."
+    },
+    {
+        "application_no": "APP-2026-0002", "candidate_name": "Abrar Fahim", "candidate_name_bn": "আবরার ফাহিম",
+        "guardian_name": "Jahangir Alam", "phone": "01911223344", "email": "abrar@example.com",
+        "desired_class": "Class 9", "version": "English Version", "shift": "Day",
+        "previous_school": "Sylhet Cantonment Public School", "country": "Bangladesh", "nationality": "Bangladeshi",
+        "payment_status": "Paid", "payment_method": "Nagad", "payment_transaction_id": "NGD10293J1",
+        "application_status": "Screening", "remarks": "Screened. Ready for written test."
+    },
+    {
+        "application_no": "APP-2026-0003", "candidate_name": "Yusuf Khan", "candidate_name_bn": "",
+        "guardian_name": "Farhan Khan", "phone": "+447123456789", "email": "farhan.khan@example.co.uk",
+        "desired_class": "Class 11", "version": "Cambridge (O/A-Level)", "shift": "Day",
+        "previous_school": "London Secondary College", "country": "United Kingdom", "nationality": "British",
+        "payment_status": "Paid", "payment_method": "SSLCommerz", "payment_transaction_id": "SSL91238KJ8",
+        "application_status": "Selected", "remarks": "Selected. Awaiting final payment."
+    }
+]
+
+
+def _seed_admission_applications(conn):
+    """Seed default applicant forms ONLY on an empty table."""
+    try:
+        count = conn.execute("SELECT COUNT(*) FROM admission_applications").fetchone()[0]
+    except sqlite3.OperationalError:
+        return
+    if count > 0:
+        return
+    # Resolve first available academic year
+    year = conn.execute("SELECT id FROM academic_years ORDER BY id DESC LIMIT 1").fetchone()
+    year_id = year["id"] if year else 0
+    
+    for ap in DEFAULT_APPLICATIONS:
+        conn.execute(
+            "INSERT INTO admission_applications (application_no, candidate_name, candidate_name_bn, guardian_name,"
+            " phone, email, academic_year_id, desired_class, version, shift, previous_school,"
+            " country, nationality, payment_status, payment_method, payment_transaction_id, application_status, remarks)"
+            " VALUES (:application_no, :candidate_name, :candidate_name_bn, :guardian_name,"
+            " :phone, :email, ?, :desired_class, :version, :shift, :previous_school,"
+            " :country, :nationality, :payment_status, :payment_method, :payment_transaction_id, :application_status, :remarks)",
+            (
+                year_id, ap["application_no"], ap["candidate_name"], ap["candidate_name_bn"], ap["guardian_name"],
+                ap["phone"], ap["email"], ap["desired_class"], ap["version"], ap["shift"], ap["previous_school"],
+                ap["country"], ap["nationality"], ap["payment_status"], ap["payment_method"], ap["payment_transaction_id"],
+                ap["application_status"], ap["remarks"]
+            )
+        )
+        print(f"SQL: seeded default admission application — {ap['application_no']} ({ap['candidate_name']})")
+
+
 def _seed_exam_terms(conn):
     """Seed the default BD exam terms ONLY on a fresh/empty table, so terms
     the user deletes stay deleted (no resurrection on restart)."""
@@ -831,6 +889,33 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        CREATE TABLE IF NOT EXISTS admission_applications (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            application_no TEXT UNIQUE NOT NULL,
+            candidate_name TEXT DEFAULT '',
+            candidate_name_bn TEXT DEFAULT '',
+            guardian_name TEXT DEFAULT '',
+            phone TEXT DEFAULT '',
+            email TEXT DEFAULT '',
+            academic_year_id INTEGER DEFAULT 0,
+            desired_class TEXT DEFAULT '',
+            version TEXT DEFAULT '',
+            shift TEXT DEFAULT '',
+            previous_school TEXT DEFAULT '',
+            country TEXT DEFAULT 'Bangladesh',
+            nationality TEXT DEFAULT 'Bangladeshi',
+            photo TEXT DEFAULT '',
+            birth_certificate TEXT DEFAULT '',
+            payment_status TEXT DEFAULT 'Pending',
+            payment_method TEXT DEFAULT '',
+            payment_transaction_id TEXT DEFAULT '',
+            application_status TEXT DEFAULT 'Submitted',
+            viva_marks REAL DEFAULT 0.0,
+            written_marks REAL DEFAULT 0.0,
+            remarks TEXT DEFAULT '',
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     _migrate(conn)
@@ -841,6 +926,7 @@ def init_db():
     _seed_academic_sessions(conn)
     _seed_admission_enquiries(conn)
     _seed_admission_forms(conn)
+    _seed_admission_applications(conn)
 
     # Seed a blank profile so the API always has something to return.
     if conn.execute("SELECT COUNT(*) FROM institute_profiles").fetchone()[0] == 0:
