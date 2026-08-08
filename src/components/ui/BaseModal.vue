@@ -43,7 +43,7 @@ function triggerClose() {
   isClosing.value = true
   setTimeout(() => {
     emit('close')
-  }, 220)
+  }, 1200)
 }
 
 function onKeydown(event: KeyboardEvent) {

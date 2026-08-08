@@ -20,10 +20,10 @@
   backdrop-filter: blur(3px);
   
   /* Fade-in transition on overlay */
-  animation: modal-fade-in 0.25s ease forwards;
+  animation: modal-fade-in 1s ease forwards;
 
   &.is-closing {
-    animation: modal-fade-out 0.2s ease forwards;
+    animation: modal-fade-out 1.2s ease forwards;
   }
 
   @media (max-width: #{$breakpoint-sm - 1px}) {
@@ -44,10 +44,10 @@
   overflow: hidden;
   
   /* Slide-up transition on modal panel */
-  animation: modal-slide-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: modal-slide-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
   &.is-closing {
-    animation: modal-slide-out 0.22s cubic-bezier(0.7, 0, 0.84, 0) forwards;
+    animation: modal-slide-out 1.2s cubic-bezier(0.7, 0, 0.84, 0) forwards;
   }
 
   @media (max-width: #{$breakpoint-sm - 1px}) {
