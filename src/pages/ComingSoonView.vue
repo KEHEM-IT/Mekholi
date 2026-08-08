@@ -242,7 +242,7 @@ const pipelineFeatures = computed<string[]>(() => {
     @include card;
     background: var(--color-surface);
     border-color: var(--color-border-strong);
-    padding: $space-5;
+    padding: $space-4;
     margin-bottom: $space-6;
 
     .pipeline-title {
