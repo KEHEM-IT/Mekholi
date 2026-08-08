@@ -211,6 +211,22 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        -- Boards & regulatory authorities: the registry of external boards
+        -- the institute reports to + per-board regulatory info (recognition/
+        -- registration/MPO). Institute-type mapping lives in
+        -- `institute_type_ids` (JSON, from institute_types.json).
+        CREATE TABLE IF NOT EXISTS boards (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            board_name TEXT DEFAULT '', board_name_bn TEXT DEFAULT '',
+            board_code TEXT DEFAULT '', board_type TEXT DEFAULT '',
+            institute_type_ids TEXT DEFAULT '[]',
+            website TEXT DEFAULT '', contact TEXT DEFAULT '', address TEXT DEFAULT '',
+            remarks TEXT DEFAULT '',
+            regulatory TEXT DEFAULT '{}',
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     # Seed a blank profile so the API always has something to return.

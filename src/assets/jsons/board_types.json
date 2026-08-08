@@ -1,0 +1,38 @@
+[
+  {
+    "Id": "General Education",
+    "Name": "General Education",
+    "Name_bn": "সাধারণ শিক্ষা",
+    "LookupText": "General Education - সাধারণ শিক্ষা"
+  },
+  {
+    "Id": "Madrasah Education",
+    "Name": "Madrasah Education",
+    "Name_bn": "মাদরাসা শিক্ষা",
+    "LookupText": "Madrasah Education - মাদরাসা শিক্ষা"
+  },
+  {
+    "Id": "Technical (BTEB)",
+    "Name": "Technical (BTEB)",
+    "Name_bn": "কারিগরি (বিটেব)",
+    "LookupText": "Technical (BTEB) - কারিগরি (বিটেব)"
+  },
+  {
+    "Id": "National University",
+    "Name": "National University",
+    "Name_bn": "জাতীয় বিশ্ববিদ্যালয়",
+    "LookupText": "National University - জাতীয় বিশ্ববিদ্যালয়"
+  },
+  {
+    "Id": "University",
+    "Name": "University",
+    "Name_bn": "বিশ্ববিদ্যালয়",
+    "LookupText": "University - বিশ্ববিদ্যালয়"
+  },
+  {
+    "Id": "Other",
+    "Name": "Other",
+    "Name_bn": "অন্যান্য",
+    "LookupText": "Other - অন্যান্য"
+  }
+]

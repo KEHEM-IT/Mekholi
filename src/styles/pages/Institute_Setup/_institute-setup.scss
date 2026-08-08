@@ -1120,3 +1120,49 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+// ── Board & Regulatory Setup ───────────────────────────────────────────
+
+.gs-reg-head {
+  @include flex(row, center, space-between, $space-2);
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  text-align: left;
+
+  &__title {
+    @include flex(row, center, flex-start, $space-2);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+
+    i {
+      color: var(--color-primary);
+    }
+  }
+
+  > i {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    transition: transform $transition-fast;
+  }
+
+  &.is-open > i {
+    transform: rotate(180deg);
+  }
+
+  &:hover &__title {
+    color: var(--color-text);
+  }
+}
+
+.gs-reg-body {
+  margin-top: $space-3;
+  padding-top: $space-3;
+  border-top: 1px solid var(--color-border);
+}

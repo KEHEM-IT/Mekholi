@@ -111,7 +111,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'institute-setup/boards',
         name: 'institute-setup-boards',
-        component: InstituteSetupPlaceholder,
+        component: () => import('@/pages/Institute_Setup/BoardsView.vue'),
         meta: { title: 'Board & Regulatory Setup', titleBn: 'বোর্ড ও নিয়ন্ত্রক সেটআপ' },
         beforeEnter: requireAuth,
       },
