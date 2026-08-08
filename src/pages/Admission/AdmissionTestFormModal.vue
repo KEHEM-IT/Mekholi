@@ -96,6 +96,10 @@ function validate(): boolean {
     toast.error(t('End time must be after start time'))
     return false
   }
+  if (!form.has_written && !form.has_mcq && !form.has_viva) {
+    toast.error(t('Please select at least one exam parameter (Written, MCQ, or VIVA)'))
+    return false
+  }
   return true
 }
 
@@ -183,16 +187,69 @@ function submit() {
       <div class="ipfp-section">
         <h4 class="ipfp-section__title">
           <i class="fa-duotone fa-ranking-star" />
-          {{ t('Exam Parameters') }}
+          {{ t('Exam Parameters & Marks') }} *
         </h4>
-        <div class="ipfp-grid">
-          <div class="form-field">
-            <label>{{ t('Max Written Marks') }}</label>
-            <input v-model.number="form.max_written_marks" type="number" min="0" :placeholder="t('e.g. 100')" />
+        <p class="fb-section-subtitle">
+          {{ t('Select which exam components are active (at least one) and define their maximum scores.') }}
+        </p>
+        
+        <div class="ipf-toggle-grid">
+          <!-- Written component -->
+          <div class="ipf-toggle-row">
+            <div class="ipf-toggle-row__label">
+              <i class="fa-duotone fa-pen-nib" />
+              <span>{{ t('Written Exam') }}</span>
+            </div>
+            <BaseToggle v-model="form.has_written" />
           </div>
-          <div class="form-field">
+          <!-- MCQ component -->
+          <div class="ipf-toggle-row">
+            <div class="ipf-toggle-row__label">
+              <i class="fa-duotone fa-list-check" />
+              <span>{{ t('MCQ Exam') }}</span>
+            </div>
+            <BaseToggle v-model="form.has_mcq" />
+          </div>
+          <!-- VIVA component -->
+          <div class="ipf-toggle-row">
+            <div class="ipf-toggle-row__label">
+              <i class="fa-duotone fa-comments" />
+              <span>{{ t('VIVA Interview') }}</span>
+            </div>
+            <BaseToggle v-model="form.has_viva" />
+          </div>
+        </div>
+
+        <div class="ipf-grid mt-4">
+          <div class="form-field" :class="{ 'is-disabled-opacity': !form.has_written }">
+            <label>{{ t('Max Written Marks') }}</label>
+            <input
+              v-model.number="form.max_written_marks"
+              type="number"
+              min="0"
+              :disabled="!form.has_written"
+              :placeholder="t('e.g. 100')"
+            />
+          </div>
+          <div class="form-field" :class="{ 'is-disabled-opacity': !form.has_mcq }">
+            <label>{{ t('Max MCQ Marks') }}</label>
+            <input
+              v-model.number="form.max_mcq_marks"
+              type="number"
+              min="0"
+              :disabled="!form.has_mcq"
+              :placeholder="t('e.g. 100')"
+            />
+          </div>
+          <div class="form-field" :class="{ 'is-disabled-opacity': !form.has_viva }">
             <label>{{ t('Max VIVA Marks') }}</label>
-            <input v-model.number="form.max_viva_marks" type="number" min="0" :placeholder="t('e.g. 50')" />
+            <input
+              v-model.number="form.max_viva_marks"
+              type="number"
+              min="0"
+              :disabled="!form.has_viva"
+              :placeholder="t('e.g. 50')"
+            />
           </div>
           <div class="form-field">
             <label>{{ t('Schedule Active') }}</label>

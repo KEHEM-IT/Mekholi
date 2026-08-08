@@ -11,13 +11,16 @@ from backend.core.db import get_db
 FIELDS = [
     "test_name", "test_name_bn", "academic_year_id", "class_name",
     "test_date", "start_time", "end_time", "room_id",
-    "max_written_marks", "max_viva_marks", "is_active",
+    "has_written", "has_mcq", "has_viva",
+    "max_written_marks", "max_mcq_marks", "max_viva_marks", "is_active",
 ]
+BOOLEAN_FIELDS = ("is_active", "has_written", "has_mcq", "has_viva")
 
 
 def _normalize(body, item_id=None):
     vals = {f: body.get(f, "") for f in FIELDS}
-    vals["is_active"] = 1 if body.get("is_active") else 0
+    for b in BOOLEAN_FIELDS:
+        vals[b] = 1 if body.get(b) else 0
     try:
         vals["academic_year_id"] = int(body.get("academic_year_id") or 0)
     except (TypeError, ValueError):
@@ -27,13 +30,17 @@ def _normalize(body, item_id=None):
     except (TypeError, ValueError):
         vals["room_id"] = 0
     try:
-        vals["max_written_marks"] = float(body.get("max_written_marks") or 100.0)
+        vals["max_written_marks"] = float(body.get("max_written_marks") or 0.0)
     except (TypeError, ValueError):
-        vals["max_written_marks"] = 100.0
+        vals["max_written_marks"] = 0.0
     try:
-        vals["max_viva_marks"] = float(body.get("max_viva_marks") or 50.0)
+        vals["max_mcq_marks"] = float(body.get("max_mcq_marks") or 0.0)
     except (TypeError, ValueError):
-        vals["max_viva_marks"] = 50.0
+        vals["max_mcq_marks"] = 0.0
+    try:
+        vals["max_viva_marks"] = float(body.get("max_viva_marks") or 0.0)
+    except (TypeError, ValueError):
+        vals["max_viva_marks"] = 0.0
 
     vals["id"] = item_id
     return vals

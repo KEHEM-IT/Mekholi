@@ -829,5 +829,12 @@
   "e.g. 100": "যেমন: ১০০",
   "e.g. 50": "যেমন: ৫০",
   "Venue / Room": "ভেন্যু / রুম",
-  "Test Date": "পরীক্ষার তারিখ"
+  "Test Date": "পরীক্ষার তারিখ",
+  "Exam Parameters & Marks": "পরীক্ষার উপাদান ও নম্বর",
+  "Select which exam components are active (at least one) and define their maximum scores.": "কোন পরীক্ষার উপাদানগুলো সক্রিয় তা নির্বাচন করুন (অন্তত একটি) এবং তাদের সর্বোচ্চ নম্বর নির্ধারণ করুন।",
+  "Written Exam": "লিখিত পরীক্ষা",
+  "MCQ Exam": "এমসিকিউ পরীক্ষা",
+  "VIVA Interview": "ভাইভা সাক্ষাৎকার",
+  "Max MCQ Marks": "সর্বোচ্চ এমসিকিউ নম্বর",
+  "Please select at least one exam parameter (Written, MCQ, or VIVA)": "দয়া করে অন্তত একটি পরীক্ষার উপাদান (লিখিত, এমসিকিউ বা ভাইভা) নির্বাচন করুন"
 }

@@ -42,7 +42,11 @@ const COLS: ColDef[] = [
   { header: 'Start Time', key: 'start_time', parse: normText },
   { header: 'End Time', key: 'end_time', parse: normText },
   { header: 'Room Id', key: 'room_id', parse: numOrNull },
+  { header: 'Has Written (Yes/No)', key: 'has_written', fmt: boolText, parse: parseBool },
+  { header: 'Has MCQ (Yes/No)', key: 'has_mcq', fmt: boolText, parse: parseBool },
+  { header: 'Has VIVA (Yes/No)', key: 'has_viva', fmt: boolText, parse: parseBool },
   { header: 'Max Written Marks', key: 'max_written_marks', parse: numOrNull },
+  { header: 'Max MCQ Marks', key: 'max_mcq_marks', parse: numOrNull },
   { header: 'Max VIVA Marks', key: 'max_viva_marks', parse: numOrNull },
   { header: 'Is Active (Yes/No)', key: 'is_active', fmt: boolText, parse: parseBool },
 ]

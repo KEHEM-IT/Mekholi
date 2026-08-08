@@ -18,7 +18,11 @@ export interface AdmissionTest {
   start_time: string
   end_time: string
   room_id: number | null
+  has_written: boolean
+  has_mcq: boolean
+  has_viva: boolean
   max_written_marks: number
+  max_mcq_marks: number
   max_viva_marks: number
   is_active: boolean
   created_at?: string
@@ -35,7 +39,11 @@ export function emptyTest(): AdmissionTest {
     start_time: '',
     end_time: '',
     room_id: null,
+    has_written: true,
+    has_mcq: false,
+    has_viva: true,
     max_written_marks: 100,
+    max_mcq_marks: 100,
     max_viva_marks: 50,
     is_active: true,
   }

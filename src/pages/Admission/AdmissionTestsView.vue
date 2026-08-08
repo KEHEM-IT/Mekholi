@@ -68,8 +68,9 @@ const tableColumns = computed<TableColumn[]>(() => [
   { key: 'test_date', label: t('Date'), sortable: true, render: (r) => formatDate((r as AdmissionTest).test_date) },
   { key: 'time', label: t('Time'), render: (r) => renderTime(r as AdmissionTest) },
   { key: 'room_id', label: t('Venue'), sortable: true, render: (r) => roomLabel.value((r as AdmissionTest).room_id) },
-  { key: 'max_written_marks', label: t('Written'), sortable: true, align: 'center', render: (r) => renderScore((r as AdmissionTest).max_written_marks) },
-  { key: 'max_viva_marks', label: t('VIVA'), sortable: true, align: 'center', render: (r) => renderScore((r as AdmissionTest).max_viva_marks) },
+  { key: 'max_written_marks', label: t('Written'), sortable: true, align: 'center', render: (r) => ((r as AdmissionTest).has_written ? renderScore((r as AdmissionTest).max_written_marks) : '—') },
+  { key: 'max_mcq_marks', label: t('MCQ'), sortable: true, align: 'center', render: (r) => ((r as AdmissionTest).has_mcq ? renderScore((r as AdmissionTest).max_mcq_marks) : '—') },
+  { key: 'max_viva_marks', label: t('VIVA'), sortable: true, align: 'center', render: (r) => ((r as AdmissionTest).has_viva ? renderScore((r as AdmissionTest).max_viva_marks) : '—') },
   { key: 'is_active', label: t('Active'), align: 'center', sortable: true },
 ])
 

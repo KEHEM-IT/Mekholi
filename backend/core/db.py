@@ -61,6 +61,22 @@ def _migrate(conn):
     except sqlite3.OperationalError:
         pass
 
+    # Migrate admission_tests: add exam parameter options
+    try:
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(admission_tests)").fetchall()]
+        if cols:
+            if "has_written" not in cols:
+                conn.execute("ALTER TABLE admission_tests ADD COLUMN has_written INTEGER DEFAULT 1")
+            if "has_mcq" not in cols:
+                conn.execute("ALTER TABLE admission_tests ADD COLUMN has_mcq INTEGER DEFAULT 0")
+            if "has_viva" not in cols:
+                conn.execute("ALTER TABLE admission_tests ADD COLUMN has_viva INTEGER DEFAULT 1")
+            if "max_mcq_marks" not in cols:
+                conn.execute("ALTER TABLE admission_tests ADD COLUMN max_mcq_marks REAL DEFAULT 100.0")
+            print("SQL: migrated admission_tests — added has_written, has_mcq, has_viva, max_mcq_marks")
+    except sqlite3.OperationalError:
+        pass
+
 
 # Built-in Bangladesh education boards (the official registry). Seeded once
 # on server start; marked is_builtin=1 so they can't be deleted from the UI
@@ -482,12 +498,14 @@ DEFAULT_TESTS = [
     {
         "test_name": "Class 6 Intake Written Exam", "test_name_bn": "৬ষ্ঠ শ্রেণি ভর্তি লিখিত পরীক্ষা",
         "class_name": "Class 6", "test_date": "2026-10-15", "start_time": "10:00 AM", "end_time": "12:00 PM",
-        "room_code": "BLK-01", "room_no": "101", "max_written_marks": 100.0, "max_viva_marks": 25.0
+        "room_code": "BLK-01", "room_no": "101", "has_written": 1, "has_mcq": 1, "has_viva": 0,
+        "max_written_marks": 100.0, "max_mcq_marks": 50.0, "max_viva_marks": 0.0
     },
     {
         "test_name": "Class 9 Science VIVA Interview", "test_name_bn": "৯ম শ্রেণি বিজ্ঞান ভাইভা সাক্ষাৎকার",
         "class_name": "Class 9", "test_date": "2026-10-18", "start_time": "11:00 AM", "end_time": "02:00 PM",
-        "room_code": "BLK-01", "room_no": "102", "max_written_marks": 0.0, "max_viva_marks": 50.0
+        "room_code": "BLK-01", "room_no": "102", "has_written": 0, "has_mcq": 0, "has_viva": 1,
+        "max_written_marks": 0.0, "max_mcq_marks": 0.0, "max_viva_marks": 50.0
     }
 ]
 
@@ -515,12 +533,14 @@ def _seed_admission_tests(conn):
         
         conn.execute(
             "INSERT INTO admission_tests (test_name, test_name_bn, academic_year_id, class_name,"
-            " test_date, start_time, end_time, room_id, max_written_marks, max_viva_marks, is_active)"
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)",
+            " test_date, start_time, end_time, room_id, has_written, has_mcq, has_viva,"
+            " max_written_marks, max_mcq_marks, max_viva_marks, is_active)"
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)",
             (
                 t["test_name"], t["test_name_bn"], year_id, t["class_name"],
                 t["test_date"], t["start_time"], t["end_time"], room_id,
-                t["max_written_marks"], t["max_viva_marks"]
+                t["has_written"], t["has_mcq"], t["has_viva"],
+                t["max_written_marks"], t["max_mcq_marks"], t["max_viva_marks"]
             )
         )
         print(f"SQL: seeded default admission test — {t['test_name']}")
@@ -974,7 +994,11 @@ def init_db():
             start_time TEXT DEFAULT '',
             end_time TEXT DEFAULT '',
             room_id INTEGER DEFAULT 0,
+            has_written INTEGER DEFAULT 1,
+            has_mcq INTEGER DEFAULT 0,
+            has_viva INTEGER DEFAULT 1,
             max_written_marks REAL DEFAULT 100.0,
+            max_mcq_marks REAL DEFAULT 100.0,
             max_viva_marks REAL DEFAULT 50.0,
             is_active INTEGER DEFAULT 1,
             created_at TEXT DEFAULT (datetime('now')),
