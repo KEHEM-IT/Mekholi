@@ -1,0 +1,17 @@
+[
+  { "Id": "Half Yearly", "bn": "অর্ধবার্ষিক", "type": "Academic" },
+  { "Id": "Annual Examination", "bn": "বার্ষিক পরীক্ষা", "type": "Academic" },
+  { "Id": "First Term Examination", "bn": "প্রথম সাময়িক পরীক্ষা", "type": "Academic" },
+  { "Id": "Second Term Examination", "bn": "দ্বিতীয় সাময়িক পরীক্ষা", "type": "Academic" },
+  { "Id": "Pre-Test Examination", "bn": "প্রি-টেস্ট পরীক্ষা", "type": "Board Model" },
+  { "Id": "Test Examination", "bn": "টেস্ট পরীক্ষা", "type": "Board Model" },
+  { "Id": "Model Test", "bn": "মডেল টেস্ট", "type": "Mock" },
+  { "Id": "Board Final (SSC)", "bn": "বোর্ড ফাইনাল (এসএসসি)", "type": "Board Model" },
+  { "Id": "Board Final (HSC)", "bn": "বোর্ড ফাইনাল (এইচএসসি)", "type": "Board Model" },
+  { "Id": "Dakhil Examination", "bn": "দাখিল পরীক্ষা", "type": "Board Model" },
+  { "Id": "Alim Examination", "bn": "আলিম পরীক্ষা", "type": "Board Model" },
+  { "Id": "JDC Examination", "bn": "জেডিসি পরীক্ষা", "type": "Board Model" },
+  { "Id": "SSC (Vocational) Exam", "bn": "এসএসসি (ভোকেশনাল) পরীক্ষা", "type": "Board Model" },
+  { "Id": "HSC (Vocational) Exam", "bn": "এইচএসসি (ভোকেশনাল) পরীক্ষা", "type": "Board Model" },
+  { "Id": "Admission Test", "bn": "ভর্তি পরীক্ষা", "type": "Admission" }
+]

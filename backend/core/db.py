@@ -190,6 +190,53 @@ def _seed_boards(conn):
         print(f"SQL: seeded built-in board — {b['board_name']}")
 
 
+# Built-in Bangladesh exam terms (standard BD exam calendar). Seeded once,
+# marked is_builtin=1 so they can't be deleted from the UI (editable + users
+# may add their own). Board resolved by name at seed time.
+BUILTIN_EXAMS = [
+    {"name": "Half Yearly", "bn": "অর্ধবার্ষিক", "type": "Academic", "board": "Dhaka Board"},
+    {"name": "Annual Examination", "bn": "বার্ষিক পরীক্ষা", "type": "Academic", "board": "Dhaka Board"},
+    {"name": "Pre-Test Examination", "bn": "প্রি-টেস্ট পরীক্ষা", "type": "Board Model", "board": "Dhaka Board"},
+    {"name": "Test Examination", "bn": "টেস্ট পরীক্ষা", "type": "Board Model", "board": "Dhaka Board"},
+    {"name": "Model Test", "bn": "মডেল টেস্ট", "type": "Mock", "board": "Dhaka Board"},
+    {"name": "Board Final (SSC)", "bn": "বোর্ড ফাইনাল (এসএসসি)", "type": "Board Model", "board": "Dhaka Board"},
+    {"name": "Board Final (HSC)", "bn": "বোর্ড ফাইনাল (এইচএসসি)", "type": "Board Model", "board": "Dhaka Board"},
+    {"name": "Dakhil Examination", "bn": "দাখিল পরীক্ষা", "type": "Board Model", "board": "Bangladesh Madrasah Education Board"},
+    {"name": "Alim Examination", "bn": "আলিম পরীক্ষা", "type": "Board Model", "board": "Bangladesh Madrasah Education Board"},
+    {"name": "SSC (Vocational) Exam", "bn": "এসএসসি (ভোকেশনাল) পরীক্ষা", "type": "Board Model", "board": "Bangladesh Technical Education Board"},
+    {"name": "HSC (Vocational) Exam", "bn": "এইচএসসি (ভোকেশনাল) পরীক্ষা", "type": "Board Model", "board": "Bangladesh Technical Education Board"},
+    {"name": "Admission Test", "bn": "ভর্তি পরীক্ষা", "type": "Admission", "board": "Dhaka Board"},
+]
+
+
+def _seed_exam_terms(conn):
+    """Insert the built-in Bangladesh exam terms once (idempotent by name)."""
+    try:
+        conn.execute("SELECT 1 FROM exam_terms LIMIT 1")
+    except sqlite3.OperationalError:
+        return
+    for e in BUILTIN_EXAMS:
+        board = conn.execute(
+            "SELECT id FROM boards WHERE TRIM(board_name) = TRIM(?) COLLATE NOCASE",
+            (e["board"],),
+        ).fetchone()
+        board_id = board["id"] if board else 0
+        found = conn.execute(
+            "SELECT id FROM exam_terms WHERE TRIM(exam_name) = TRIM(?) COLLATE NOCASE",
+            (e["name"],),
+        ).fetchone()
+        if found:
+            continue
+        conn.execute(
+            "INSERT INTO exam_terms (exam_name, exam_name_bn, exam_type, board_id,"
+            " term_id, class_ids, scheme_id, exam_start, exam_end,"
+            " publish_to_portal, is_board_exam, is_builtin, is_active)"
+            " VALUES (?, ?, ?, ?, 0, '[]', 0, '', '', 0, 0, 1, 1)",
+            (e["name"], e["bn"], e["type"], board_id),
+        )
+        print(f"SQL: seeded built-in exam term — {e['name']}")
+
+
 # Built-in Bangladesh subjects & curriculum (NCTB / BMEB / BTEB based).
 # Seeded once on server start, marked is_builtin=1 so they can't be deleted
 # from the UI (users may still edit them or add their own). `board` names
@@ -475,11 +522,31 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        -- Exam terms & types: the exam calendar configuration — which exams
+        -- happen when, for which classes, under which board's rules, with
+        -- which grading scheme. The Exam & Result module consumes these.
+        CREATE TABLE IF NOT EXISTS exam_terms (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            exam_name TEXT DEFAULT '', exam_name_bn TEXT DEFAULT '',
+            exam_type TEXT DEFAULT '',
+            board_id INTEGER DEFAULT 0,
+            term_id INTEGER DEFAULT 0,
+            class_ids TEXT DEFAULT '[]',
+            scheme_id INTEGER DEFAULT 0,
+            exam_start TEXT DEFAULT '', exam_end TEXT DEFAULT '',
+            publish_to_portal INTEGER DEFAULT 0,
+            is_board_exam INTEGER DEFAULT 0,
+            is_builtin INTEGER DEFAULT 0,
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     _migrate(conn)
     _seed_boards(conn)
     _seed_subjects(conn)
+    _seed_exam_terms(conn)
 
     # Seed a blank profile so the API always has something to return.
     if conn.execute("SELECT COUNT(*) FROM institute_profiles").fetchone()[0] == 0:

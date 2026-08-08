@@ -125,7 +125,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'institute-setup/exam-terms',
         name: 'institute-setup-exam-terms',
-        component: InstituteSetupPlaceholder,
+        component: () => import('@/pages/Institute_Setup/ExamTermsView.vue'),
         meta: { title: 'Exam Terms & Types', titleBn: 'পরীক্ষার শর্ত ও ধরন' },
         beforeEnter: requireAuth,
       },

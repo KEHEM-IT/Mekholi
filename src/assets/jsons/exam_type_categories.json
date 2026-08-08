@@ -1,0 +1,6 @@
+[
+  { "Id": "Academic", "Name": "Academic", "Name_bn": "একাডেমিক", "LookupText": "Academic - একাডেমিক" },
+  { "Id": "Board Model", "Name": "Board Model", "Name_bn": "বোর্ড মডেল", "LookupText": "Board Model - বোর্ড মডেল" },
+  { "Id": "Mock", "Name": "Mock", "Name_bn": "মক", "LookupText": "Mock - মক" },
+  { "Id": "Admission", "Name": "Admission", "Name_bn": "ভর্তি", "LookupText": "Admission - ভর্তি" }
+]
