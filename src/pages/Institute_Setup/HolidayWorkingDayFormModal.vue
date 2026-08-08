@@ -6,6 +6,7 @@ import { useTranslator } from '@/Translator'
 import { useToast } from '@/composables/useToast'
 import BaseCombobox from '@/components/ui/BaseCombobox.vue'
 import BaseDatePicker from '@/components/ui/BaseDatePicker.vue'
+import BaseTimePicker from '@/components/ui/BaseTimePicker.vue'
 import BaseToggle from '@/components/ui/BaseToggle.vue'
 import holidayTypesJson from '@/assets/jsons/holiday_types.json'
 import {
@@ -155,11 +156,11 @@ function submit() {
             </div>
             <div class="form-field">
               <label>{{ t('Start Time') }}</label>
-              <input v-model="form.open_time" type="time" />
+              <BaseTimePicker v-model="form.open_time" :placeholder="t('HH:MM AM/PM')" />
             </div>
             <div class="form-field">
               <label>{{ t('End Time') }}</label>
-              <input v-model="form.close_time" type="time" />
+              <BaseTimePicker v-model="form.close_time" :placeholder="t('HH:MM AM/PM')" />
             </div>
           </template>
 

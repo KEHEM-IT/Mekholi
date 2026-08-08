@@ -464,5 +464,9 @@
   "Date to must be on or after date from": "Date to must be on or after date from",
   "Close time must be after open time": "Close time must be after open time",
   "Fixed-date holidays repeat automatically (e.g. 21 Feb, 16 Dec)": "Fixed-date holidays repeat automatically (e.g. 21 Feb, 16 Dec)",
-  "A closed day that will remain open (e.g. Friday class)": "A closed day that will remain open (e.g. Friday class)"
+  "A closed day that will remain open (e.g. Friday class)": "A closed day that will remain open (e.g. Friday class)",
+  "HH:MM AM/PM": "HH:MM AM/PM",
+  "Now": "Now",
+  "Hour": "Hour",
+  "Minute": "Minute"
 }
