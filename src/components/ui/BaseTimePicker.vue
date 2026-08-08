@@ -159,9 +159,21 @@ function onInputKeydown(event: KeyboardEvent) {
 const HOURS = Array.from({ length: 12 }, (_, i) => i + 1) // 01..12
 const MINUTES = Array.from({ length: 12 }, (_, i) => i * 5) // 00,05..55
 
+// Which edge of the field the panel aligns to. Defaults to the left edge;
+// when the field sits near the right edge of the screen (e.g. the time
+// fields in the right half of a form modal), a left-anchored 16.5rem panel
+// would overflow past the viewport / modal edge and get clipped — in that
+// case it flips to right-aligned so it opens into the space on the left.
+const PANEL_WIDTH = 264 // 16.5rem
+const panelAlign = ref<'left' | 'right'>('left')
+
 /** Populate the popup draft from the stored value. */
 function open() {
   if (props.disabled || isOpen.value) return
+  if (root.value) {
+    const rect = root.value.getBoundingClientRect()
+    panelAlign.value = window.innerWidth - rect.right < PANEL_WIDTH + 8 ? 'right' : 'left'
+  }
   const m = props.modelValue?.match(TIME_RE)
   if (m) {
     const h24 = Number(m[1])
@@ -278,6 +290,7 @@ const preview = computed(() => {
     <div
       v-if="isOpen"
       class="timepicker__panel"
+      :class="{ 'is-right-aligned': panelAlign === 'right' }"
       role="dialog"
       @keydown="onPanelKeydown"
       @mousedown.prevent

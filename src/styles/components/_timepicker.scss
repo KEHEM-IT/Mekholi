@@ -130,6 +130,13 @@
   border-radius: $radius-md;
   box-shadow: var(--shadow-card);
   padding: $space-3;
+
+  // Flip to the right edge when the field is near the right side of the
+  // screen — a left-anchored panel would overflow and get clipped there.
+  &.is-right-aligned {
+    left: auto;
+    right: 0;
+  }
 }
 
 .timepicker__preview {
