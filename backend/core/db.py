@@ -195,6 +195,22 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        -- Grading schemes: a named set of grade rows + scale (GPA/percentage/
+        -- pass-fail), assigned to class levels. Grade rows live in the `grades`
+        -- JSON column (same repeatable-row pattern as `classifications`).
+        CREATE TABLE IF NOT EXISTS grading_schemes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            scheme_name TEXT DEFAULT '', scheme_name_bn TEXT DEFAULT '',
+            grading_type TEXT DEFAULT '',
+            class_level_ids TEXT DEFAULT '[]',
+            board_id TEXT DEFAULT '',
+            pass_marks INTEGER DEFAULT 0,
+            grades TEXT DEFAULT '[]',
+            is_default INTEGER DEFAULT 0,
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     # Seed a blank profile so the API always has something to return.

@@ -104,7 +104,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'institute-setup/grading',
         name: 'institute-setup-grading',
-        component: InstituteSetupPlaceholder,
+        component: () => import('@/pages/Institute_Setup/GradingSchemesView.vue'),
         meta: { title: 'Grading Scheme', titleBn: 'গ্রেডিং পদ্ধতি' },
         beforeEnter: requireAuth,
       },

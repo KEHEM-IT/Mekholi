@@ -1,0 +1,26 @@
+[
+  {
+    "Id": "GPA 5.00",
+    "Name": "GPA 5.00",
+    "Name_bn": "জিপিএ ৫.০০",
+    "LookupText": "GPA 5.00 - জিপিএ ৫.০০"
+  },
+  {
+    "Id": "CGPA 4.00",
+    "Name": "CGPA 4.00",
+    "Name_bn": "সিজিপিএ ৪.০০",
+    "LookupText": "CGPA 4.00 - সিজিপিএ ৪.০০"
+  },
+  {
+    "Id": "Percentage",
+    "Name": "Percentage",
+    "Name_bn": "শতকরা",
+    "LookupText": "Percentage - শতকরা"
+  },
+  {
+    "Id": "Pass/Fail",
+    "Name": "Pass/Fail",
+    "Name_bn": "পাস/ফেল",
+    "LookupText": "Pass/Fail - পাস/ফেল"
+  }
+]

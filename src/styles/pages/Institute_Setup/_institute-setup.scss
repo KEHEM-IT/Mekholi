@@ -1049,3 +1049,74 @@
     max-width: 26rem;
   }
 }
+
+// ── Grading Scheme ──────────────────────────────────────────────────────
+
+.ipfp-section__title-row {
+  @include flex(row, center, space-between, $space-2);
+  margin-bottom: $space-1;
+}
+
+.gs-grades {
+  @include flex(column, stretch, flex-start, $space-3);
+  margin-top: $space-3;
+}
+
+.gs-grade-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) auto;
+  gap: $space-2 $space-3;
+  align-items: end;
+  padding: $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-surface);
+  min-width: 0;
+
+  .form-field {
+    min-width: 0;
+  }
+
+  &__remove {
+    @include flex(row, center, center);
+    width: 2.2rem;
+    height: 2.2rem;
+    border: none;
+    border-radius: $radius-sm;
+    background: transparent;
+    color: var(--color-danger);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition:
+      background-color $transition-fast,
+      color $transition-fast;
+
+    &:hover {
+      background: var(--color-danger-muted);
+      color: var(--color-danger);
+    }
+  }
+}
+
+.gs-grades-empty {
+  @include flex(column, center, center, $space-2);
+  margin-top: $space-3;
+  padding: $space-6;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: $radius-md;
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+  text-align: center;
+
+  i {
+    font-size: 1.6rem;
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 900px) {
+  .gs-grade-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
