@@ -20,13 +20,14 @@ interface SubjectPreset {
   code: string
   type: string
   board: string
+  bn?: string
 }
 
 const props = defineProps<{
   subject: Subject | null
-  boards: { id?: number; board_name: string; board_type?: string }[]
-  groups: { id?: number; group_name?: string }[]
-  classes: { id?: number; class_name?: string }[]
+  boards: { id?: number; board_name: string; board_name_bn?: string; board_type?: string }[]
+  groups: { id?: number; group_name?: string; group_name_bn?: string }[]
+  classes: { id?: number; class_name?: string; class_name_bn?: string }[]
 }>()
 
 const emit = defineEmits<{
@@ -45,7 +46,10 @@ const form = reactive<Subject>({
 // ── Combobox options ───────────────────────────────────────────────────
 
 const VERSIONS = ['Bangla', 'English', 'Both']
-const versionOptions = computed(() => VERSIONS.map((v) => ({ Id: v, LookupText: v, DisplayText: v })))
+const VERSION_BN: Record<string, string> = { Bangla: 'বাংলা', English: 'ইংরেজি', Both: 'উভয়' }
+const versionOptions = computed(() =>
+  VERSIONS.map((v) => ({ Id: v, LookupText: `${v} - ${VERSION_BN[v]}`, DisplayText: `${v} - ${VERSION_BN[v]}` })),
+)
 
 const typeOptions = computed(() =>
   (subjectTypesJson as { Id: string; LookupText: string }[]).map((x) => ({
@@ -58,34 +62,40 @@ const typeOptions = computed(() =>
 const boardOptions = computed(() =>
   props.boards.map((b) => ({
     Id: Number(b.id),
-    LookupText: String(b.board_name),
-    DisplayText: String(b.board_name),
+    LookupText: `${b.board_name}${b.board_name_bn ? ` - ${b.board_name_bn}` : ''}`,
+    DisplayText: `${b.board_name}${b.board_name_bn ? ` - ${b.board_name_bn}` : ''}`,
   })),
 )
 
 const groupOptions = computed(() => [
   { Id: 0, LookupText: t('All Groups'), DisplayText: t('All Groups') },
-  ...props.groups.map((g) => ({
-    Id: Number(g.id),
-    LookupText: String(g.group_name ?? ''),
-    DisplayText: String(g.group_name ?? ''),
-  })),
+  ...props.groups.map((g) => {
+    const r = g as unknown as { group_name?: string; group_name_bn?: string }
+    return {
+      Id: Number(g.id),
+      LookupText: `${r.group_name ?? ''}${r.group_name_bn ? ` - ${r.group_name_bn}` : ''}`,
+      DisplayText: `${r.group_name ?? ''}${r.group_name_bn ? ` - ${r.group_name_bn}` : ''}`,
+    }
+  }),
 ])
 
 const classOptions = computed(() =>
-  props.classes.map((c) => ({
-    Id: Number(c.id),
-    LookupText: String(c.class_name ?? ''),
-    DisplayText: String(c.class_name ?? ''),
-  })),
+  props.classes.map((c) => {
+    const r = c as unknown as { class_name?: string; class_name_bn?: string }
+    return {
+      Id: Number(c.id),
+      LookupText: `${r.class_name ?? ''}${r.class_name_bn ? ` - ${r.class_name_bn}` : ''}`,
+      DisplayText: `${r.class_name ?? ''}${r.class_name_bn ? ` - ${r.class_name_bn}` : ''}`,
+    }
+  }),
 )
 
 // Subject Name — combobox of the Bangladesh curriculum presets.
 const nameOptions = computed(() => {
   const presets = (subjectsJson as SubjectPreset[]).map((x) => ({
     Id: x.Id,
-    LookupText: x.Id,
-    DisplayText: x.Id,
+    LookupText: `${x.Id}${x.bn ? ` - ${x.bn}` : ''}`,
+    DisplayText: `${x.Id}${x.bn ? ` - ${x.bn}` : ''}`,
   }))
   if (form.subject_name && !presets.some((o) => o.Id === form.subject_name)) {
     presets.unshift({ Id: form.subject_name, LookupText: form.subject_name, DisplayText: form.subject_name })
