@@ -1,9 +1,9 @@
-# Institute Setup — Module Abstraction & Form Field Specifications
+# Institute Setup — Module Guide & Implementation Map
 
-> **Purpose:** This document is the implementation blueprint for the **Institute Setup** module.
-> It describes what each subcategory *means* (abstraction), exactly which fields belong on each
-> form (with keys, input types, option sources, bilingual labels), and how each entity feeds the
-> rest of the ERP.
+> **Purpose:** This document is the living reference for the **Institute Setup** module.
+> It describes what each subcategory *means* (abstraction), the exact fields on each form,
+> and — most importantly — **where everything lives**: the page views, form modals, composables,
+> JSON option lists, backend controllers/routes and DB tables behind each page.
 >
 > Target institutes: **School, Alim/Madrasah, Vocational (SSC/HSC), College, School & College**
 > (i.e. any institute type under Bangladesh's General / Madrasah / BTEB / University boards).
@@ -15,35 +15,42 @@
 1. [Conventions & Building Blocks](#conventions--building-blocks)
 2. [Data Design Principles](#data-design-principles)
 3. [Subcategory Specifications](#subcategory-specifications)
-   - 1. Institute Dashboard *(done)*
-   - 2. Institute Profile *(done)*
-   - 3. Branches / Campus
-   - 4. Academic Year
-   - 5. Class / Section / Group / Shift
-   - 6. Holidays & Working Days
-   - 7. Grading Scheme
-   - 8. Board & Regulatory Setup
-   - 9. Subjects & Curriculum
-   - 10. Exam Terms & Types
-   - 11. Classrooms / Rooms / Buildings
-   - 12. Academic Sessions & Terms
-4. [Route Table](#route-table)
-5. [Suggested Implementation Order](#suggested-implementation-order)
+   - 1. Institute Dashboard *(implemented)*
+   - 2. Institute Profile *(implemented)*
+   - 3. Branches / Campus *(implemented)*
+   - 4. Academic Year *(implemented)*
+   - 5. Class / Section / Group / Shift *(implemented)*
+   - 6. Holidays & Working Days *(implemented)*
+   - 7. Grading Scheme *(implemented)*
+   - 8. Board & Regulatory Setup *(implemented)*
+   - 9. Subjects & Curriculum *(implemented)*
+   - 10. Exam Terms & Types *(implemented)*
+   - 11. Classrooms / Rooms / Buildings *(implemented)*
+   - 12. Academic Sessions & Terms *(implemented)*
+4. [Implementation Map — Pages & Files](#implementation-map--pages--files)
+5. [Route Table](#route-table)
+6. [Shared UI Components](#shared-ui-components)
+7. [Backend & Database](#backend--database)
+8. [Suggested Implementation Order](#suggested-implementation-order)
 
 ---
 
 ## Conventions & Building Blocks
 
-Reuse the exact patterns already established in **InstituteProfileView.vue**:
+Every page follows the same proven pattern (start from any existing view to copy it):
 
 | Piece | Where | Notes |
 |---|---|---|
-| UI components | `src/components/ui/` | `BaseCombobox` (single + `multiple` chips), `BaseDatePicker` (ISO storage, DD/MM/YYYY display), `BaseToggle` (bulb switch), `BaseModal` |
-| Bilingual labels | inline `t('EN','বাংলা')` + `isBn` | every label / placeholder / title must have both languages |
-| Static option lists | `src/assets/jsons/*.json` | shape `{ Id, Name, NameInBangla, LookupText }` |
-| Form pattern | `reactive({...})` + `computed` + `watch` | dirty-guard via `useFormDirtyGuard`, save via `saveProfile`/`useToast` |
-| Backend pattern | `backend/api/v1/routes|controllers/` + `backend/core/db.py` | one route + one controller per resource; auto-migrations in `core/db.py` |
-| Save UX | Ctrl+S + Save button; toast feedback | `0` → placeholder for numeric fields; text normalized (trim + collapse spaces) |
+| Page views | `src/pages/Institute_Setup/<Name>View.vue` | skeleton (2s min) → header (title/subtitle + Add/Export/Import buttons) → DataTable |
+| Form modals | `src/pages/Institute_Setup/<Name>FormModal.vue` | `BaseModal` (wide) + `<Name>FormModal`, `panel-class` for scoped height |
+| API helpers | `src/composables/Institute_Setup/use<Name>.ts` | fetch / save / delete + `import<Name>` upsert |
+| Excel helpers | `src/composables/Institute_Setup/use<Name>Excel.ts` | `export<Name>ToExcel` / `import<Name>FromExcel` via `xlsx` |
+| UI components | `src/components/ui/` | `BaseCombobox`, `BaseDatePicker`, `BaseTimePicker`, `BaseToggle`, `BaseModal`, `DataTable` |
+| Bilingual labels | `src/Translator/` | `t('English text')` (EN-keyed dictionary, EN + BN); combobox options show **"EN - বাংলা"** via `bilingualLabel` / DisplayText |
+| Static option lists | `src/assets/jsons/*.json` | shape `{ Id, Name, NameInBangla/bn, LookupText }` |
+| Backend | `backend/api/v1/routes|controllers/` + `backend/core/db.py` | one route + one controller per resource; tables auto-created in `core/db.py` |
+| Toast | `useToast()` | `success` / `error` / `action(message, { label: 'Undo', onClick })` (5s undoable delete) |
+| Scoped modal height | `panel-class="<xx>-form-modal"` + `<style>` block in the view | **never** touch global `_modal.scss` (`.modal-panel--tall` was moved into views) |
 
 **Field table legend**
 
@@ -381,12 +388,100 @@ class; College: `Semester 1..6`.
 
 ---
 
+## Implementation Map — Pages & Files
+
+> All 12 subcategories are **fully implemented**. Below is the exact file inventory per page.
+> Every page follows: `View.vue` (page) + `FormModal.vue` (add/edit) + `use<X>.ts` (API) +
+> `use<X>Excel.ts` (Excel) + backend controller/routes + DB table.
+
+### 1. Institute Dashboard — `/institute-setup`
+- **View:** `src/pages/Institute_Setup/Index.vue` — progress checklist of all 12 steps (maps `STEP_ROUTES`), EMIS import dropzone
+- **Backend:** uses `useInstituteProfile` / `useInstituteSetupImport`
+- **JSON:** none (progress derives from the other entities' counts)
+
+### 2. Institute Profile — `/institute-setup/profile`
+- **View:** `InstituteProfileView.vue` (big form: identity, contact, head, staff, committee members, classifications, facilities, branding w/ logo upload)
+- **Modals:** `InstituteProfilePreviewModal.vue`
+- **Composables:** `useInstituteProfile.ts`, `useInstituteProfileExcel.ts` (Excel export/import with `EN - BN` values)
+- **Backend:** `profile_controller.py` / `profile_routes.py` — tables `institute_profiles`, `committee_members`, `facilities`
+- **JSON:** `committee_positions.json`, `institute_types.json`, `genders.json`, `banks.json`, `account_types.json`, `account_purposes.json`, `geographical_location.json`, `location_type.json`, `management_type.json`, `parliamentary_seat.json`, `school_expenses.json`, `student_types.json`, `classes.json`
+
+### 3. Branches / Campus — `/institute-setup/branches`
+- **Views:** `BranchesView.vue` (card grid) · **Modals:** `BranchFormModal.vue`, `BranchPreviewModal.vue`
+- **Composables:** `useBranches.ts`, `useBranchesExcel.ts` (4-sheet workbook)
+- **Backend:** `branch_controller.py` / `branch_routes.py` — table `branches` (multi-campus, `is_main` demotes others)
+- **Sample:** `branch_import_sample.xlsx`
+
+### 4. Academic Year — `/institute-setup/academic-year`
+- **Views:** `AcademicYearsView.vue` (card grid) · **Modals:** `AcademicYearFormModal.vue`, `AcademicYearPreviewModal.vue`
+- **Composables:** `useAcademicYears.ts`, `useAcademicYearsExcel.ts`
+- **Backend:** `academic_year_controller.py` / `academic_year_routes.py` — table `academic_years` (`is_current` demotes others)
+- **Sample:** `academic_year_import_sample.xlsx`
+
+### 5. Class / Section / Group / Shift — `/institute-setup/classes`
+- **Views:** `ClassesView.vue` (4 tabs) · **Modal:** `ClassSetupFormModal.vue` (generic per-entity form, class-name preset combobox from `class_names.json`, phase auto-fill + red-border rule)
+- **Composables:** `useClassesSetup.ts` (CRUD + `importClassSetupAll`), `useClassesSetupExcel.ts` (4 sheets, one-click import)
+- **Backend:** `class_setup_controller.py` / `class_setup_routes.py` — tables `classes`, `sections`, `groups`, `shifts`; import match keys: classes = name+year+branch, sections = name+class+shift, groups = name, shifts = name
+- **JSON:** `class_names.json`, `groups.json`, `shift_counts.json`
+- **Samples:** `class_import_sample.xlsx`, `class_setup_max_sample.xlsx`
+
+### 6. Holidays & Working Days — `/institute-setup/holidays`
+- **Views:** `HolidaysWorkingDaysView.vue` (2 tabs) · **Modal:** `HolidayWorkingDayFormModal.vue` (Date To auto-follows From)
+- **Composables:** `useHolidaysWorkingDays.ts` (+ `importHolidaysAll`), `useHolidaysWorkingDaysExcel.ts` (2 sheets)
+- **Backend:** `holiday_controller.py` / `holiday_routes.py` — tables `working_days`, `holidays`; import match: day_of_week / holiday name+date_from
+- **JSON:** `holiday_types.json` (Govt./Religious/Institute/Sports/Exam/Other)
+- **Sample:** `holidays_working_days_import_sample.xlsx`
+
+### 7. Grading Scheme — `/institute-setup/grading`
+- **Views:** `GradingSchemesView.vue` · **Modal:** `GradingSchemeFormModal.vue` (scheme-name combobox → auto-fills grading type/board/pass marks/grade rows; repeatable grade rows with type presets)
+- **Composables:** `useGradingSchemes.ts` (+ `importSchemes`), `useGradingSchemesExcel.ts` (grades serialized `Name|BN|Point|Min|Max|Remarks ; …`)
+- **Backend:** `grading_scheme_controller.py` / `grading_scheme_routes.py` — table `grading_schemes` (grades + class_level_ids as JSON columns, `is_default` demotes)
+- **JSON:** `grading_types.json` (GPA 5.00 / CGPA 4.00 / Percentage / Pass-Fail), `scheme_names.json` (14 BD scheme presets)
+- **Sample:** `grading_scheme_import_sample.xlsx`
+
+### 8. Board & Regulatory Setup — `/institute-setup/boards`
+- **Views:** `BoardsView.vue` · **Modal:** `BoardSetupFormModal.vue` (collapsed regulatory block: recognition/registration/MPO/attachment)
+- **Composables:** `useBoards.ts` (+ `importBoards`), `useBoardsExcel.ts` (15 cols incl. flattened regulatory)
+- **Backend:** `board_controller.py` / `board_routes.py` — table `boards` (regulatory + institute_type_ids JSON)
+- **Seed:** `_seed_boards` → **13 official BD boards** (9 regional BISE + Madrasah + BTEB + NU + IAU) with official codes DHA/RAJ/COM/CHI/BAR/JES/SYL/DIN/MYM/MAD/TEC/NU/IAU — `is_builtin` protects from deletion
+- **JSON:** `board_types.json`, `institute_types.json`
+
+### 9. Subjects & Curriculum — `/institute-setup/subjects`
+- **Views:** `SubjectsView.vue` · **Modal:** `SubjectFormModal.vue` (comboboxes everywhere: name → auto-fills code+type+board; code; type; board; group; version; classes multi)
+- **Composables:** `useSubjects.ts` (+ `importSubjects`), `useSubjectsExcel.ts` (marks rows `ClassId|Theory|Practical|CA|Pass|Periods|Books ; …`)
+- **Backend:** `subject_controller.py` / `subject_routes.py` — table `subjects` (marks_distribution + class_level_ids JSON); import match: name+board
+- **Seed:** `_seed_subjects` → **52 default BD subjects** (33 NCTB general, 5 BMEB madrasah, 14 BTEB vocational) with real codes 101–194 — deleted rows never resurrect (seed on empty table only)
+- **JSON:** `subject_types.json`, `subjects.json` (52 presets with `bn` names for "EN - বাংলা" options)
+
+### 10. Exam Terms & Types — `/institute-setup/exam-terms`
+- **Views:** `ExamTermsView.vue` · **Modal:** `ExamTermFormModal.vue` (exam-name combobox → auto-fills type; board/term/scheme combos, classes multi, dates, publish/board-exam toggles)
+- **Composables:** `useExamTerms.ts` (+ `importExamTerms`), `useExamTermsExcel.ts`
+- **Backend:** `exam_term_controller.py` / `exam_term_routes.py` — table `exam_terms` (class_ids JSON); import match: exam name
+- **Seed:** `_seed_exam_terms` → **12 default BD exam terms** (Half Yearly, Annual, Pre-Test, Test, Model Test, Board Final SSC/HSC, Dakhil, Alim, SSC/HSC Vocational, Admission) — deleted terms stay deleted
+- **JSON:** `exam_names.json` (15 presets w/ bn), `exam_type_categories.json` (Academic/Board Model/Mock/Admission), `exam_types.json` (legacy)
+
+### 11. Classrooms / Rooms / Buildings — `/institute-setup/rooms`
+- **Views:** `RoomsBuildingsView.vue` (2 tabs: Buildings + Rooms) · **Modal:** `RoomBuildingFormModal.vue` (building combo, floor, room-type combo, capacity, **facilities toggle list**, Active/Maintenance status)
+- **Composables:** `useRoomsBuildings.ts` (+ `importRoomsAll`), `useRoomsBuildingsExcel.ts` (2 sheets, one-click import)
+- **Backend:** `room_controller.py` / `room_routes.py` — tables `buildings`, `rooms` (facilities JSON); import match: building code / room no+building
+- **Seed:** `_seed_buildings_rooms` → **3 default buildings** (Main/Science/Admin, BLK-01..03) + **13 default rooms** (classrooms, labs, library, office, auditorium, store) with facilities & status — deleted stay deleted
+- **JSON:** `room_types.json` (9 types EN-BN)
+- **Sample:** `rooms_buildings_import_sample.xlsx`
+
+### 12. Academic Sessions & Terms — `/institute-setup/sessions`
+- **Views:** `AcademicSessionsView.vue` (Current-term chip 🟢) · **Modal:** `AcademicSessionFormModal.vue` (session-name combo → auto-fills year; term combo → auto-fills order; Academic Year defaults to **current year**; no Bangla text inputs — comboboxes show "EN - বাংলা")
+- **Composables:** `useAcademicSessions.ts` (+ `importSessions`), `useAcademicSessionsExcel.ts`
+- **Backend:** `academic_session_controller.py` / `academic_session_routes.py` — table `academic_sessions` (`is_current` single-term demote); import match: session+term
+- **Seed:** `_seed_academic_sessions` → **2026 Session × Term 1/2/3** (Term 2 current) — deleted stay deleted
+- **JSON:** `result_types.json` (Annual / Average of Terms / Cumulative)
+
+---
+
 ## Route Table
 
 All sub-menus are routed under the `/institute-setup` parent (inside the `DefaultLayout`
-children in `src/router/routes.ts`). Unbuilt pages share an inline **placeholder component**
-(no separate `.vue` file) that shows a styled "under construction" card using the bilingual
-`meta` title — building a real page is a one-line swap of the `component`.
+children in `src/router/routes.ts`). Every route is wired to a real page and registered in
+`Index.vue`'s `STEP_ROUTES` so the dashboard checklist lights up.
 
 | # | Subcategory (nav name) | Route path | Route name | Status |
 |---|---|---|---|---|
@@ -395,24 +490,73 @@ children in `src/router/routes.ts`). Unbuilt pages share an inline **placeholder
 | 3 | Branches/Campus | `/institute-setup/branches` | `institute-setup-branches` | ✅ implemented |
 | 4 | Academic Year | `/institute-setup/academic-year` | `institute-setup-academic-year` | ✅ implemented |
 | 5 | Class/Section/Group/Shift | `/institute-setup/classes` | `institute-setup-classes` | ✅ implemented |
-| 6 | Holidays & Working Days | `/institute-setup/holidays` | `institute-setup-holidays` | 🚧 placeholder |
-| 7 | Grading Scheme | `/institute-setup/grading` | `institute-setup-grading` | 🚧 placeholder |
-| 8 | Board & Regulatory Setup | `/institute-setup/boards` | `institute-setup-boards` | 🚧 placeholder |
-| 9 | Subjects & Curriculum | `/institute-setup/subjects` | `institute-setup-subjects` | 🚧 placeholder |
-| 10 | Exam Terms & Types | `/institute-setup/exam-terms` | `institute-setup-exam-terms` | 🚧 placeholder |
-| 11 | Classrooms / Rooms / Buildings | `/institute-setup/rooms` | `institute-setup-rooms` | 🚧 placeholder |
-| 12 | Academic Sessions & Terms | `/institute-setup/sessions` | `institute-setup-sessions` | 🚧 placeholder |
+| 6 | Holidays & Working Days | `/institute-setup/holidays` | `institute-setup-holidays` | ✅ implemented |
+| 7 | Grading Scheme | `/institute-setup/grading` | `institute-setup-grading` | ✅ implemented |
+| 8 | Board & Regulatory Setup | `/institute-setup/boards` | `institute-setup-boards` | ✅ implemented |
+| 9 | Subjects & Curriculum | `/institute-setup/subjects` | `institute-setup-subjects` | ✅ implemented |
+| 10 | Exam Terms & Types | `/institute-setup/exam-terms` | `institute-setup-exam-terms` | ✅ implemented |
+| 11 | Classrooms / Rooms / Buildings | `/institute-setup/rooms` | `institute-setup-rooms` | ✅ implemented |
+| 12 | Academic Sessions & Terms | `/institute-setup/sessions` | `institute-setup-sessions` | ✅ implemented |
 
-**Checklist wiring:** `Index.vue` maps each nav step name → route name in `STEP_ROUTES`, so a
-card becomes clickable as soon as its route exists. When building a new page:
-
+**When adding a future page:**
 1. Create `<Name>View.vue` in `src/pages/Institute_Setup/`
-2. Swap the placeholder's `component` for the real view (keep the route name)
-3. The dashboard checklist lights up automatically — no other change needed
+2. Add the route in `src/router/routes.ts` (`name: '<kebab>'`, auth guard)
+3. Register the step in `Index.vue`'s `STEP_ROUTES` — the dashboard checklist lights up automatically
+
+---
+
+## Shared UI Components
+
+| Component | File | Notes |
+|---|---|---|
+| `BaseCombobox` | `src/components/ui/BaseCombobox.vue` | single + `multiple` chips, search, `clearable`, `invalid`; **strict `===` matching** on `optionValue` — pass matching value types (String vs Number) |
+| `BaseDatePicker` | `src/components/ui/BaseDatePicker.vue` | stores ISO `YYYY-MM-DD`, displays `DD/MM/YYYY`, editable masked input, Today/Clear |
+| `BaseTimePicker` | `src/components/ui/BaseTimePicker.vue` | editable `HH:MM AM/PM` (24h also accepted), stores 24h `HH:MM`, AM/PM hour+minute grid, Now/Clear; panel flips right-aligned near screen edge |
+| `BaseToggle` | `src/components/ui/BaseToggle.vue` | bulb switch, `yes-label`/`no-label` |
+| `BaseModal` | `src/components/ui/BaseModal.vue` | teleports to `<body>`; props `wide`, `closeOnOverlay` (false for forms), `panelClass` (scoped sizing). Panel height rules live in **each view's own `<style>` block**, never global `_modal.scss` |
+| `DataTable` | `src/components/ui/DataTable.vue` | sticky header, scrollable body (capped `min(60vh, 32rem)`), **sortable headers** (`sortable`, `sortValue` for resolved names), cell slots keyed by column key (`#is_active`), actions slot; emits `sort-change` |
+
+---
+
+## Backend & Database
+
+**Server:** `backend/server.py` (Python 3, stdlib `http.server` + `ThreadingMixIn` from `socketserver`),
+CORS with `DELETE`. Run: `python3 backend/server.py` (port 5000 default).
+
+**Layer split:** `backend/api/v1/controllers/` (business logic) · `backend/api/v1/routes/`
+(URL dispatch) · `backend/core/db.py` (schema + idempotent migrations + seeders) ·
+`backend/utils/response.py` (JSON + CORS).
+
+**Tables (auto-created in `core/db.py`):**
+
+| Table | Purpose | JSON columns |
+|---|---|---|
+| `institute_profiles` / `committee_members` / `facilities` | profile + child rows | classifications |
+| `branches` | multi-campus | — |
+| `academic_years` | year registry (`is_current`) | — |
+| `classes` / `sections` / `groups` / `shifts` | academic structure | groups.class_ids |
+| `working_days` / `holidays` | calendar | — |
+| `grading_schemes` | grade sets | grades, class_level_ids |
+| `boards` | BD board registry | institute_type_ids, regulatory |
+| `subjects` | BD curriculum | marks_distribution, class_level_ids |
+| `exam_terms` | exam calendar | class_ids |
+| `buildings` / `rooms` | infrastructure | rooms.facilities |
+| `academic_sessions` | terms of a year | — |
+
+**Import = cross-check upsert.** Every import endpoint (`POST /api/<entity>/import`) matches
+rows by a natural key (e.g. branch name, subject name+board, room no+building) — existing rows
+are skipped and counted, only new rows are stored. Toasts report `X added · Y already existed`.
+
+**Default seed data** (seeded only on **empty** tables so user deletions stick — no
+resurrection on restart): 13 BD boards, 52 subjects, 12 exam terms, 3 buildings + 13 rooms,
+2026 session × 3 terms.
 
 ---
 
 ## Suggested Implementation Order
+
+> ✅ **All steps are complete** — this was the build order used, in case the module is ever
+> rebuilt from scratch or extended.
 
 ```
 1. Board & Regulatory Setup   → everything else filters by board
@@ -427,7 +571,7 @@ card becomes clickable as soon as its route exists. When building a new page:
 10. Holidays & Working Days   (independent — can be built anytime)
 ```
 
-Each page follows the **InstituteProfileView pattern**: `src/pages/Institute_Setup/<Name>View.vue`
-+ `use<Name>.ts` composable + backend `routes/` + `controllers/` + DB table + Excel export/import
-(only where the entity is bulk-editable). Add the route to the router with `name: '<kebab>'` and
-register the step in `Index.vue`'s `STEP_ROUTES` so the dashboard checklist lights up.
+Each page follows the same pattern: `src/pages/Institute_Setup/<Name>View.vue` (skeleton →
+header → DataTable) + `<Name>FormModal.vue` + `use<Name>.ts` composable + `use<Name>Excel.ts`
++ backend `routes/` + `controllers/` + DB table + optional seed data + JSON option lists.
+Add the route to `src/router/routes.ts` and register the step in `Index.vue`'s `STEP_ROUTES`.
