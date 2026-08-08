@@ -15,11 +15,10 @@
 .dt__scroll {
   width: 100%;
   overflow: auto; /* both axes — horizontal on narrow screens */
-  /* Cap the table so it never eats the whole page height: at most ~12 rows
-     (32rem) on tall screens, less on short ones (60vh). Longer datasets
-     scroll inside; sticky header + internal scroll still apply. */
-  max-height: min(60vh, 32rem);
-  min-height: 10rem;
+  /* Dynamically scale the table height so it extends toward the bottom
+     of the page on all viewports, leaving room for headers and safe margins. */
+  max-height: calc(100vh - 18rem);
+  min-height: 12rem;
 }
 
 .dt__table {
