@@ -305,6 +305,67 @@ def _seed_academic_sessions(conn):
         print(f"SQL: seeded default session term — {sname} / {tname}")
 
 
+DEFAULT_ENQUIRIES = [
+    {
+        "candidate_name": "Mehedi Hasan", "candidate_name_bn": "মেহেদী হাসান",
+        "guardian_name": "Abul Hasan", "phone": "01712345678", "email": "mehedi@gmail.com",
+        "desired_class": "Class 9", "version": "Bangla Version", "shift": "Morning",
+        "previous_school": "Rajshahi Government Lab School", "nationality": "Bangladeshi",
+        "country": "Bangladesh", "enquiry_date": "2026-08-01", "source": "Walk-in", "status": "New",
+        "remarks": "Wants to enroll in Science group."
+    },
+    {
+        "candidate_name": "Zarah Ahmed", "candidate_name_bn": "জারা আহমেদ",
+        "guardian_name": "Dr. Imtiaz Ahmed", "phone": "01819876543", "email": "zarah@gmail.com",
+        "desired_class": "Class 6", "version": "English Version", "shift": "Day",
+        "previous_school": "Scholastica School", "nationality": "Bangladeshi",
+        "country": "Bangladesh", "enquiry_date": "2026-08-03", "source": "Website", "status": "Follow-up",
+        "remarks": "Inquired about Cambridge curriculum compatibility."
+    },
+    {
+        "candidate_name": "Siddharth Sharma", "candidate_name_bn": "",
+        "guardian_name": "Rajesh Sharma", "phone": "+919876543210", "email": "sharma@example.com",
+        "desired_class": "Class 11", "version": "English Version", "shift": "Day",
+        "previous_school": "Delhi Public School", "nationality": "Indian",
+        "country": "India", "enquiry_date": "2026-08-05", "source": "Phone Call", "status": "New",
+        "remarks": "Wants hostel and transport facilities."
+    },
+    {
+        "candidate_name": "John Doe", "candidate_name_bn": "",
+        "guardian_name": "Robert Doe", "phone": "+15550199", "email": "robert.doe@example.com",
+        "desired_class": "Class 10", "version": "English Version", "shift": "Day",
+        "previous_school": "Boston High School", "nationality": "American",
+        "country": "United States", "enquiry_date": "2026-08-06", "source": "Website", "status": "Converted",
+        "remarks": "Admitted in Class 10. Documents verified."
+    }
+]
+
+
+def _seed_admission_enquiries(conn):
+    """Seed default national and international enquiries ONLY on a fresh/empty table."""
+    try:
+        count = conn.execute("SELECT COUNT(*) FROM admission_enquiries").fetchone()[0]
+    except sqlite3.OperationalError:
+        return
+    if count > 0:
+        return
+    # Resolve first available academic year
+    year = conn.execute("SELECT id FROM academic_years ORDER BY id DESC LIMIT 1").fetchone()
+    year_id = year["id"] if year else 0
+    
+    for eq in DEFAULT_ENQUIRIES:
+        conn.execute(
+            "INSERT INTO admission_enquiries (candidate_name, candidate_name_bn, guardian_name,"
+            " phone, email, academic_year_id, desired_class, version, shift, previous_school,"
+            " nationality, country, enquiry_date, source, status, remarks, is_active)"
+            " VALUES (:candidate_name, :candidate_name_bn, :guardian_name,"
+            " :phone, :email, :academic_year_id, :desired_class, :version, :shift, :previous_school,"
+            " :nationality, :country, :enquiry_date, :source, :status, :remarks, 1)",
+            {**eq, "academic_year_id": year_id}
+        )
+        print(f"SQL: seeded default admission enquiry — {eq['candidate_name']}")
+
+
 def _seed_exam_terms(conn):
     """Seed the default BD exam terms ONLY on a fresh/empty table, so terms
     the user deletes stay deleted (no resurrection on restart)."""
@@ -677,6 +738,28 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        CREATE TABLE IF NOT EXISTS admission_enquiries (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            candidate_name TEXT DEFAULT '',
+            candidate_name_bn TEXT DEFAULT '',
+            guardian_name TEXT DEFAULT '',
+            phone TEXT DEFAULT '',
+            email TEXT DEFAULT '',
+            academic_year_id INTEGER DEFAULT 0,
+            desired_class TEXT DEFAULT '',
+            version TEXT DEFAULT '',
+            shift TEXT DEFAULT '',
+            previous_school TEXT DEFAULT '',
+            nationality TEXT DEFAULT 'Bangladeshi',
+            country TEXT DEFAULT 'Bangladesh',
+            enquiry_date TEXT DEFAULT '',
+            source TEXT DEFAULT 'Walk-in',
+            status TEXT DEFAULT 'New',
+            remarks TEXT DEFAULT '',
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     _migrate(conn)
@@ -685,6 +768,7 @@ def init_db():
     _seed_exam_terms(conn)
     _seed_buildings_rooms(conn)
     _seed_academic_sessions(conn)
+    _seed_admission_enquiries(conn)
 
     # Seed a blank profile so the API always has something to return.
     if conn.execute("SELECT COUNT(*) FROM institute_profiles").fetchone()[0] == 0:
