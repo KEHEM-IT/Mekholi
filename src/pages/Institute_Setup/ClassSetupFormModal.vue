@@ -5,6 +5,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useTranslator } from '@/Translator'
 import { useToast } from '@/composables/useToast'
 import BaseCombobox from '@/components/ui/BaseCombobox.vue'
+import BaseTimePicker from '@/components/ui/BaseTimePicker.vue'
 import BaseToggle from '@/components/ui/BaseToggle.vue'
 import classNamesJson from '@/assets/jsons/class_names.json'
 import {
@@ -284,11 +285,11 @@ const isGroups = computed(() => props.entity === 'groups')
             </div>
             <div class="form-field">
               <label>{{ t('Start Time') }}</label>
-              <input v-model="form.start_time" type="time" />
+              <BaseTimePicker v-model="form.start_time" :placeholder="t('HH:MM AM/PM')" />
             </div>
             <div class="form-field">
               <label>{{ t('End Time') }}</label>
-              <input v-model="form.end_time" type="time" />
+              <BaseTimePicker v-model="form.end_time" :placeholder="t('HH:MM AM/PM')" />
             </div>
             <div class="form-field">
               <label>{{ t('Active') }}</label>

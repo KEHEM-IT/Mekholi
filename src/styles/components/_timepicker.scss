@@ -1,0 +1,269 @@
+@use '../abstracts' as *;
+
+// Time picker — see components/ui/BaseTimePicker.vue.
+// Markup:
+//   .timepicker[.is-open][.is-disabled]
+//     .timepicker__control[.is-error]
+//       i.fa-clock + .timepicker__input + .timepicker__actions > .timepicker__clear + .timepicker__caret
+//     .timepicker__panel
+//       .timepicker__preview
+//       .timepicker__meridiem > .timepicker__meridiem-btn[.is-active]
+//       .timepicker__grids
+//         .timepicker__grid > .timepicker__grid-label + .timepicker__cells > .timepicker__cell[.is-active]
+//       .timepicker__footer > .timepicker__now + .timepicker__clearbtn
+
+.timepicker {
+  position: relative;
+  width: 100%;
+}
+
+.timepicker__control {
+  @include flex(row, center, space-between, $space-2);
+  width: 100%;
+  background: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  border-radius: $radius-md;
+  padding: 0 $space-3;
+  color: var(--color-text);
+  font-family: var(--font-family-base);
+  font-size: $font-size-base;
+  text-align: left;
+  transition:
+    border-color $transition-fast,
+    background-color $transition-fast;
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-border-strong);
+  }
+
+  &:focus-within {
+    border-color: var(--color-input-border-focus);
+  }
+
+  &.is-error {
+    border-color: var(--color-danger);
+  }
+}
+
+.timepicker.is-open .timepicker__control {
+  border-color: var(--color-input-border-focus);
+}
+
+.timepicker__clock-icon {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.timepicker__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  background: transparent !important;
+  border: none !important;
+  padding: $space-2 0 !important;
+  color: var(--color-text);
+  font-family: var(--font-family-base);
+  font-size: $font-size-base;
+
+  &::placeholder {
+    color: var(--color-input-placeholder);
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled {
+    background: transparent !important;
+    color: var(--color-text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.timepicker__actions {
+  @include flex(row, center, flex-end, $space-2);
+  flex-shrink: 0;
+}
+
+.timepicker__clear {
+  @include flex(row, center, center);
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+  transition:
+    background-color $transition-fast,
+    color $transition-fast;
+
+  &:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+  }
+}
+
+.timepicker__caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--color-text-muted);
+  transition: transform $transition-fast;
+}
+
+.timepicker.is-open .timepicker__caret {
+  transform: rotate(180deg);
+}
+
+// Dropdown panel — same elevated surface + shadow as the datepicker popover.
+.timepicker__panel {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + #{$space-1});
+  left: 0;
+  width: 16.5rem;
+  max-width: calc(100vw - #{$space-6});
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-md;
+  box-shadow: var(--shadow-card);
+  padding: $space-3;
+}
+
+.timepicker__preview {
+  @include flex(row, center, center);
+  margin-bottom: $space-2;
+  padding: $space-1 $space-2;
+  border-radius: $radius-sm;
+  background: var(--color-primary-muted);
+  color: var(--color-primary);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+// AM / PM segmented switch ------------------------------------------------
+
+.timepicker__meridiem {
+  @include flex(row, center, stretch, 2px);
+  margin-bottom: $space-3;
+  padding: 2px;
+  border-radius: $radius-sm;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.timepicker__meridiem-btn {
+  flex: 1 1 0;
+  padding: $space-1 0;
+  border: none;
+  border-radius: $radius-sm - 2px;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color $transition-fast,
+    color $transition-fast;
+
+  &:hover {
+    color: var(--color-text);
+  }
+
+  &.is-active {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast, #fff);
+  }
+}
+
+// Hour / minute grids ------------------------------------------------------
+
+.timepicker__grids {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-3;
+}
+
+.timepicker__grid-label {
+  display: block;
+  margin-bottom: $space-1;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.timepicker__cells {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  max-height: 9.5rem;
+  overflow-y: auto;
+}
+
+.timepicker__cell {
+  @include flex(row, center, center);
+  height: 2rem;
+  border: none;
+  border-radius: $radius-sm;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    background-color $transition-fast,
+    color $transition-fast;
+
+  &:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-primary);
+  }
+
+  &.is-active {
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+    font-weight: 800;
+  }
+}
+
+// Footer -------------------------------------------------------------------
+
+.timepicker__footer {
+  @include flex(row, center, space-between, $space-2);
+  margin-top: $space-3;
+  padding-top: $space-2;
+  border-top: 1px solid var(--color-border);
+}
+
+.timepicker__now,
+.timepicker__clearbtn {
+  border: none;
+  background: transparent;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+.timepicker__now {
+  color: var(--color-primary);
+}
+
+.timepicker__clearbtn {
+  color: var(--color-text-muted);
+
+  &:hover {
+    color: var(--color-danger);
+  }
+}

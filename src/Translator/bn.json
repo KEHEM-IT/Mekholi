@@ -464,5 +464,9 @@
   "Date to must be on or after date from": "শেষ তারিখ অবশ্যই শুরুর তারিখের সমান বা পরে হতে হবে",
   "Close time must be after open time": "সমাপ্তির সময় শুরুর সময়ের পরে হতে হবে",
   "Fixed-date holidays repeat automatically (e.g. 21 Feb, 16 Dec)": "নির্দিষ্ট তারিখের ছুটি স্বয়ংক্রিয়ভাবে প্রতি বছর পুনরাবৃত্তি হয় (যেমন: ২১ ফেব্রুয়ারি, ১৬ ডিসেম্বর)",
-  "A closed day that will remain open (e.g. Friday class)": "একটি বন্ধ দিন যা খোলা থাকবে (যেমন: শুক্রবারের ক্লাস)"
+  "A closed day that will remain open (e.g. Friday class)": "একটি বন্ধ দিন যা খোলা থাকবে (যেমন: শুক্রবারের ক্লাস)",
+  "HH:MM AM/PM": "ঘণ্টা:মিনিট AM/PM",
+  "Now": "এখন",
+  "Hour": "ঘণ্টা",
+  "Minute": "মিনিট"
 }
