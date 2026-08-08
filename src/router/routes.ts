@@ -132,7 +132,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'institute-setup/rooms',
         name: 'institute-setup-rooms',
-        component: InstituteSetupPlaceholder,
+        component: () => import('@/pages/Institute_Setup/RoomsBuildingsView.vue'),
         meta: { title: 'Classrooms / Rooms / Buildings', titleBn: 'ক্লাসরুম / কক্ষ / ভবন' },
         beforeEnter: requireAuth,
       },

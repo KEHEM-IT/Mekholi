@@ -1201,3 +1201,51 @@
 .gs-grade-row__books {
   min-width: 8rem;
 }
+
+// ── Classrooms / Rooms / Buildings ─────────────────────────────────────
+
+// Facility toggle list (room form)
+.rm-facilities {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(13rem, 100%), 1fr));
+  gap: $space-2 $space-3;
+  padding: $space-2 $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-surface);
+}
+
+.rm-facility {
+  @include flex(row, center, flex-start, $space-2);
+  min-width: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+
+  &.is-on {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+}
+
+// Room status chip in the table
+.rm-status {
+  @include flex(row, center, center);
+  padding: 1px 10px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+
+  &--active {
+    background: var(--color-success-muted);
+    color: var(--color-success);
+  }
+
+  &--maint {
+    background: var(--color-warning-muted);
+    color: var(--color-warning);
+  }
+}

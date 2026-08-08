@@ -1,0 +1,56 @@
+[
+  {
+    "Id": "Classroom",
+    "Name": "Classroom",
+    "Name_bn": "ক্লাসরুম",
+    "LookupText": "Classroom - ক্লাসরুম"
+  },
+  {
+    "Id": "Lab",
+    "Name": "Lab",
+    "Name_bn": "ল্যাব",
+    "LookupText": "Lab - ল্যাব"
+  },
+  {
+    "Id": "Library",
+    "Name": "Library",
+    "Name_bn": "লাইব্রেরি",
+    "LookupText": "Library - লাইব্রেরি"
+  },
+  {
+    "Id": "Office",
+    "Name": "Office",
+    "Name_bn": "অফিস",
+    "LookupText": "Office - অফিস"
+  },
+  {
+    "Id": "Staff Room",
+    "Name": "Staff Room",
+    "Name_bn": "শিক্ষক মিলনায়তন",
+    "LookupText": "Staff Room - শিক্ষক মিলনায়তন"
+  },
+  {
+    "Id": "Auditorium",
+    "Name": "Auditorium",
+    "Name_bn": "অডিটোরিয়াম",
+    "LookupText": "Auditorium - অডিটোরিয়াম"
+  },
+  {
+    "Id": "Store",
+    "Name": "Store",
+    "Name_bn": "গোদাম",
+    "LookupText": "Store - গোদাম"
+  },
+  {
+    "Id": "Washroom",
+    "Name": "Washroom",
+    "Name_bn": "ওয়াশরুম",
+    "LookupText": "Washroom - ওয়াশরুম"
+  },
+  {
+    "Id": "Others",
+    "Name": "Others",
+    "Name_bn": "অন্যান্য",
+    "LookupText": "Others - অন্যান্য"
+  }
+]

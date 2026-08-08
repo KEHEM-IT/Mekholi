@@ -541,6 +541,30 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        -- Physical infrastructure: buildings → floors → rooms. Timetable
+        -- allocates rooms; sections may claim a home room.
+        CREATE TABLE IF NOT EXISTS buildings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            building_name TEXT DEFAULT '', building_name_bn TEXT DEFAULT '',
+            building_code TEXT DEFAULT '',
+            floor_count INTEGER DEFAULT 0,
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
+        CREATE TABLE IF NOT EXISTS rooms (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            room_no TEXT DEFAULT '', room_no_bn TEXT DEFAULT '',
+            building_id INTEGER DEFAULT 0,
+            floor_no INTEGER DEFAULT 0,
+            room_type TEXT DEFAULT '',
+            capacity INTEGER DEFAULT 0,
+            facilities TEXT DEFAULT '[]',
+            status TEXT DEFAULT 'Active',
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     _migrate(conn)
