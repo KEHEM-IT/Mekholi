@@ -57,11 +57,7 @@ def handle_delete(handler):
     if not item_id:
         res.error(handler, 400, "id is required")
         return
-    try:
-        deleted = subject_controller.delete_subject(item_id)
-    except PermissionError:
-        res.error(handler, 400, "Built-in subjects cannot be deleted")
-        return
+    deleted = subject_controller.delete_subject(item_id)
     if not deleted:
         res.error(handler, 404, "Subject not found")
         return

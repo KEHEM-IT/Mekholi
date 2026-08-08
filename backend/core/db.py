@@ -298,11 +298,14 @@ BUILTIN_SUBJECTS = [
 
 
 def _seed_subjects(conn):
-    """Insert the built-in Bangladesh subjects once (idempotent by name+board)."""
+    """Seed the default BD subjects ONLY on a fresh/empty table, so subjects
+    the user deletes stay deleted (no resurrection on restart)."""
     try:
-        conn.execute("SELECT 1 FROM subjects LIMIT 1")
+        count = conn.execute("SELECT COUNT(*) FROM subjects").fetchone()[0]
     except sqlite3.OperationalError:
-        return  # subjects table not created yet — nothing to seed
+        return  # table not created yet
+    if count > 0:
+        return
     for s in BUILTIN_SUBJECTS:
         board = conn.execute(
             "SELECT id FROM boards WHERE TRIM(board_name) = TRIM(?) COLLATE NOCASE",

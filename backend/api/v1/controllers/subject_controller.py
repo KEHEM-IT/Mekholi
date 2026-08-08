@@ -110,17 +110,9 @@ def update_subject(item_id, body):
 def delete_subject(item_id):
     conn = get_db()
     try:
-        row = conn.execute("SELECT is_builtin FROM subjects WHERE id=?", (item_id,)).fetchone()
-        if not row:
-            return False
-        # Built-in BD curriculum subjects are part of the registry — never deletable.
-        if row["is_builtin"]:
-            raise PermissionError("Built-in subjects cannot be deleted")
         cur = conn.execute("DELETE FROM subjects WHERE id=?", (item_id,))
         conn.commit()
         return cur.rowcount > 0
-    except PermissionError:
-        raise
     finally:
         conn.close()
 

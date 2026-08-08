@@ -134,11 +134,6 @@ async function onSave(subject: Subject) {
 }
 
 async function onDelete(item: Subject) {
-  // Built-in BD curriculum subjects are part of the registry — not deletable.
-  if (item.is_builtin) {
-    toast.error(t('Built-in subjects cannot be deleted'))
-    return
-  }
   const id = item.id
   if (!id) return
   const ok = window.confirm(t('Delete "{name}"?', { name: item.subject_name }))
@@ -288,10 +283,7 @@ async function onImportPicked(event: Event) {
       :empty-text="t('No subjects yet. Click “Add Subject” to create the first one.')"
     >
       <template #subject_name="{ row }">
-        <span class="brd-name">
-          {{ f(row, 'subject_name') }}
-          <span v-if="f(row, 'is_builtin')" class="brd-badge">{{ t('Built-in') }}</span>
-        </span>
+        {{ f(row, 'subject_name') }}
       </template>
 
       <template #is_active="{ row }">
@@ -308,7 +300,6 @@ async function onImportPicked(event: Event) {
           <i class="fa-duotone fa-pen" /> {{ t('Edit') }}
         </button>
         <button
-          v-if="!f(row, 'is_builtin')"
           type="button"
           class="btn btn--ghost br-card__btn br-card__btn--danger"
           @click="onDelete(row as Subject)"
