@@ -363,6 +363,7 @@ async function onImportPicked(event: Event) {
 -->
 <style>
 .brd-form-modal {
+  width: 80%;
   min-height: 65vh;
   max-height: 100vh;
 }
