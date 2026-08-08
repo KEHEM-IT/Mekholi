@@ -18,6 +18,13 @@ const { localized } = useTranslator();
 const router = useRouter();
 const route = useRoute();
 
+// Accordion / flyout submenu state — one open sub-menu at a time.
+// Declared BEFORE the route watcher below (which opens the parent menu of
+// the current route immediately on setup); a `const` below it would hit the
+// temporal dead zone and throw "Cannot access 'openMenu' before
+// initialization" from the immediate watcher callback.
+const openMenu = ref<string | null>(null);
+
 // Active-route tracking — highlight the submenu that matches the current
 // route, and keep its parent menu open after navigation.
 const activeRouteName = computed(() => route.name as string | undefined);
@@ -200,7 +207,7 @@ function highlightMatch(text: string) {
 // Collapsed sidebar (desktop): flyout panel to the right of the icon,
 // positioned via JS (fixed) so it can escape the sidebar's overflow clipping
 // instead of being invisibly cut off at the sidebar's edge.
-const openMenu = ref<string | null>(null);
+// (openMenu itself is declared at the top of the script — see above.)
 // Last known flyout position per menu, keyed by menu name. Deliberately
 // never deleted on close - the panel fades out via the `is-open` class
 // instead, and if an entry vanished the instant its menu closed, the
