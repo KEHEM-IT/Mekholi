@@ -438,6 +438,10 @@ function getSelectedYearName(): string {
   gap: $space-6;
   align-items: start;
 
+  @include respond-to(lg) {
+    grid-template-columns: minmax(0, 1fr) 380px;
+  }
+
   @include respond-to(xl) {
     grid-template-columns: minmax(0, 1fr) 480px;
   }
@@ -470,6 +474,12 @@ function getSelectedYearName(): string {
   padding: $space-3 $space-4;
   border-bottom: 1px solid var(--color-border);
   align-items: center;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr 4.5rem 4.5rem;
+    padding: $space-2 $space-2;
+    font-size: 0.8rem;
+  }
 
   &:last-child {
     border-bottom: none;
