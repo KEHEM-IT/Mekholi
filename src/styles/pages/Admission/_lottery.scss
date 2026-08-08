@@ -1,0 +1,80 @@
+@use '../../abstracts' as *;
+
+// Digital Lottery Draw Styles
+.lottery-form-modal {
+  min-height: calc(100vh - 12rem);
+  max-height: 100vh;
+}
+
+.lottery-winners-card {
+  @include card;
+  background: var(--color-surface);
+  border-color: var(--color-border-strong);
+  padding: $space-4;
+  margin-top: $space-4;
+}
+
+.winners-list-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: $space-4;
+  @include flex(row, center, flex-start, $space-2);
+
+  i {
+    color: var(--color-success);
+  }
+}
+
+.winners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(12rem, 100%), 1fr));
+  gap: $space-3;
+}
+
+.winner-card {
+  @include flex(row, center, flex-start, $space-3);
+  padding: $space-2 $space-3;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+
+  &__rank {
+    @include flex(row, center, center);
+    width: 2rem;
+    height: 2rem;
+    background: var(--color-success-muted);
+    color: var(--color-success);
+    border-radius: 50%;
+    font-weight: 800;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  &__info {
+    @include flex(column, flex-start, center, 2px);
+    min-width: 0;
+  }
+
+  &__name {
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--color-text);
+    @include truncate;
+  }
+
+  &__meta {
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    @include truncate;
+  }
+
+  &--wait {
+    .winner-card__rank {
+      background: var(--color-warning-muted);
+      color: var(--color-warning);
+    }
+  }
+}

@@ -152,8 +152,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'admission/digital-lottery',
         name: 'admission-digital-lottery',
-        component: () => import('@/pages/ComingSoonView.vue'),
-        meta: { title: 'Digital Lottery Draw', titleBn: 'ডিজিটাল লটারি ড্র', icon: 'fa-duotone fa-ticket-simple', module: 'Admission' },
+        component: () => import('@/pages/Admission/DigitalLottery/DigitalLotteryView.vue'),
         beforeEnter: requireAuth,
       },
       {

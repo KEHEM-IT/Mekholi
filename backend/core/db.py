@@ -556,6 +556,40 @@ def _seed_admission_tests(conn):
         print(f"SQL: seeded default admission test — {t['test_name']}")
 
 
+DEFAULT_QUOTA_CONFIG = {
+    "general": 80, "freedom_fighter": 10, "disabled": 5, "staff": 5
+}
+
+
+def _seed_admission_lotteries(conn):
+    """Seed a default Admission Lottery Draw result ONLY on an empty table."""
+    try:
+        count = conn.execute("SELECT COUNT(*) FROM admission_lotteries").fetchone()[0]
+    except sqlite3.OperationalError:
+        return
+    if count > 0:
+        return
+    # Resolve first available academic year
+    year = conn.execute("SELECT id FROM academic_years ORDER BY id DESC LIMIT 1").fetchone()
+    year_id = year["id"] if year else 0
+    
+    conn.execute(
+        "INSERT INTO admission_lotteries (academic_year_id, class_name, total_seats, quota_config,"
+        " selected_applicant_ids, waiting_applicant_ids, draw_date, is_published, is_active)"
+        " VALUES (?, ?, ?, ?, ?, ?, ?, 1, 1)",
+        (
+            year_id,
+            "Class 6",
+            20,
+            json.dumps(DEFAULT_QUOTA_CONFIG),
+            json.dumps([1, 3]), # Applicants 1 & 3 selected
+            json.dumps([2]),    # Applicant 2 waitlisted
+            "2026-08-05"
+        )
+    )
+    print("SQL: seeded default admission lottery draw result")
+
+
 def _seed_exam_terms(conn):
     """Seed the default BD exam terms ONLY on a fresh/empty table, so terms
     the user deletes stay deleted (no resurrection on restart)."""
@@ -1014,6 +1048,20 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        CREATE TABLE IF NOT EXISTS admission_lotteries (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            academic_year_id INTEGER REFERENCES academic_years(id) ON DELETE SET NULL,
+            class_name TEXT DEFAULT '',
+            total_seats INTEGER DEFAULT 0,
+            quota_config TEXT DEFAULT '{}',
+            selected_applicant_ids TEXT DEFAULT '[]',
+            waiting_applicant_ids TEXT DEFAULT '[]',
+            draw_date TEXT DEFAULT '',
+            is_published INTEGER DEFAULT 0,
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     _migrate(conn)
@@ -1027,6 +1075,7 @@ def init_db():
     _seed_admission_forms(conn)
     _seed_admission_applications(conn)
     _seed_admission_tests(conn)
+    _seed_admission_lotteries(conn)
 
     # Seed a blank profile so the API always has something to return.
     if conn.execute("SELECT COUNT(*) FROM institute_profiles").fetchone()[0] == 0:
