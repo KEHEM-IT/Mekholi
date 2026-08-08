@@ -1,0 +1,20 @@
+[
+  {
+    "Id": "Annual",
+    "Name": "Annual",
+    "Name_bn": "বাৎসরিক",
+    "LookupText": "Annual - বাৎসরিক"
+  },
+  {
+    "Id": "Average of Terms",
+    "Name": "Average of Terms",
+    "Name_bn": "টার্মগুলোর গড়",
+    "LookupText": "Average of Terms - টার্মগুলোর গড়"
+  },
+  {
+    "Id": "Cumulative",
+    "Name": "Cumulative",
+    "Name_bn": "ক্রমযোজিত",
+    "LookupText": "Cumulative - ক্রমযোজিত"
+  }
+]

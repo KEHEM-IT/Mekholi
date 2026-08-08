@@ -139,7 +139,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'institute-setup/sessions',
         name: 'institute-setup-sessions',
-        component: InstituteSetupPlaceholder,
+        component: () => import('@/pages/Institute_Setup/AcademicSessionsView.vue'),
         meta: { title: 'Academic Sessions & Terms', titleBn: 'একাডেমিক সেশন ও টার্ম' },
         beforeEnter: requireAuth,
       },

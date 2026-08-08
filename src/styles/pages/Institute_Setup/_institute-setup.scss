@@ -1249,3 +1249,28 @@
     color: var(--color-warning);
   }
 }
+
+// ── Academic Sessions & Terms ──────────────────────────────────────────
+
+// Current-term chip in the table
+.as-current-chip {
+  @include flex(row, center, center, 4px);
+  padding: 1px 10px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  background: var(--color-success-muted);
+  color: var(--color-success);
+
+  &--off {
+    background: transparent;
+    color: var(--color-text-muted);
+  }
+
+  i {
+    font-size: 0.7rem;
+  }
+}

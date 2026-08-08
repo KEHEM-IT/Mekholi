@@ -26,7 +26,7 @@ from socketserver import ThreadingMixIn
 # Allow running both `python3 backend/server.py` and `python3 server.py`.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from backend.api.v1.routes import academic_year_routes, board_routes, branch_routes, class_setup_routes, exam_term_routes, grading_scheme_routes, holiday_routes, profile_routes, room_routes, subject_routes  # noqa: E402
+from backend.api.v1.routes import academic_session_routes, academic_year_routes, board_routes, branch_routes, class_setup_routes, exam_term_routes, grading_scheme_routes, holiday_routes, profile_routes, room_routes, subject_routes  # noqa: E402
 from backend.core.db import init_db  # noqa: E402
 from backend.utils import response as res  # noqa: E402
 
@@ -64,6 +64,8 @@ class Handler(BaseHTTPRequestHandler):
         if exam_term_routes.register_exam_term_routes(self, method, path):
             return True
         if room_routes.register_room_routes(self, method, path):
+            return True
+        if academic_session_routes.register_academic_session_routes(self, method, path):
             return True
 
         res.error(self, 404, "Not found")

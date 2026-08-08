@@ -271,6 +271,40 @@ def _seed_buildings_rooms(conn):
             print(f"SQL: seeded default room — {no} ({rtype}, {code})")
 
 
+# Default BD academic sessions & terms (one row per term of a session).
+# Seeded ONLY on an empty table, so rows the user deletes stay deleted.
+# Academic year resolved by name at seed time.
+DEFAULT_SESSIONS = [
+    # (session_name, session_name_bn, year_name, term_name, term_name_bn, order, start, end, is_current, result_type)
+    ("2026 Session", "২০২৬ সেশন", "2026", "Term 1", "প্রথম সাময়িক", 1, "2026-01-01", "2026-04-30", 0, "Annual"),
+    ("2026 Session", "২০২৬ সেশন", "2026", "Term 2", "দ্বিতীয় সাময়িক", 2, "2026-05-01", "2026-08-31", 1, "Annual"),
+    ("2026 Session", "২০২৬ সেশন", "2026", "Term 3", "তৃতীয় সাময়িক", 3, "2026-09-01", "2026-12-31", 0, "Annual"),
+]
+
+
+def _seed_academic_sessions(conn):
+    """Seed the default BD sessions & terms ONLY on an empty table."""
+    try:
+        count = conn.execute("SELECT COUNT(*) FROM academic_sessions").fetchone()[0]
+    except sqlite3.OperationalError:
+        return  # table not created yet
+    if count > 0:
+        return
+    for (sname, sbn, year_name, tname, tbn, order, start, end, current, rtype) in DEFAULT_SESSIONS:
+        year = conn.execute(
+            "SELECT id FROM academic_years WHERE TRIM(year_name) = TRIM(?) COLLATE NOCASE",
+            (year_name,),
+        ).fetchone()
+        year_id = year["id"] if year else 0
+        conn.execute(
+            "INSERT INTO academic_sessions (session_name, session_name_bn, academic_year_id,"
+            " term_name, term_name_bn, term_order, term_start, term_end,"
+            " is_current, result_type, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)",
+            (sname, sbn, year_id, tname, tbn, order, start, end, current, rtype),
+        )
+        print(f"SQL: seeded default session term — {sname} / {tname}")
+
+
 def _seed_exam_terms(conn):
     """Seed the default BD exam terms ONLY on a fresh/empty table, so terms
     the user deletes stay deleted (no resurrection on restart)."""
@@ -627,6 +661,22 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        -- Academic sessions & terms: splits an academic year into named
+        -- terms used by exams, fees and promotion. One row per term of a
+        -- session (e.g. "2026 Session" × Term 1/2/3).
+        CREATE TABLE IF NOT EXISTS academic_sessions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_name TEXT DEFAULT '', session_name_bn TEXT DEFAULT '',
+            academic_year_id INTEGER DEFAULT 0,
+            term_name TEXT DEFAULT '', term_name_bn TEXT DEFAULT '',
+            term_order INTEGER DEFAULT 0,
+            term_start TEXT DEFAULT '', term_end TEXT DEFAULT '',
+            is_current INTEGER DEFAULT 0,
+            result_type TEXT DEFAULT '',
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     _migrate(conn)
@@ -634,6 +684,7 @@ def init_db():
     _seed_subjects(conn)
     _seed_exam_terms(conn)
     _seed_buildings_rooms(conn)
+    _seed_academic_sessions(conn)
 
     # Seed a blank profile so the API always has something to return.
     if conn.execute("SELECT COUNT(*) FROM institute_profiles").fetchone()[0] == 0:
