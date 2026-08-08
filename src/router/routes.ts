@@ -1,25 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router'
-import { defineComponent, h } from 'vue'
-import { useRoute } from 'vue-router'
 import { requireAuth } from '@/middleware/auth'
 import { requireGuest } from '@/middleware/guest'
-
-// Inline "under construction" placeholder used by Institute Setup sub-menus
-// that don't have real pages yet. No separate .vue file needed — each route
-// carries its bilingual title via meta, and the dashboard card routes here.
-const InstituteSetupPlaceholder = defineComponent({
-  name: 'InstituteSetupPlaceholder',
-  setup() {
-    const route = useRoute()
-    return () =>
-      h('section', { class: 'isp-placeholder' }, [
-        h('div', { class: 'isp-placeholder__icon' }, [h('i', { class: 'fa-duotone fa-hammer' })]),
-        h('h2', String(route.meta.title ?? 'Coming Soon')),
-        h('p', String(route.meta.titleBn ?? 'এই মডিউলটি নির্মাণাধীন')),
-        h('p', { class: 'isp-placeholder__hint' }, 'This module is under construction — it will be built following the Institute Profile pattern.'),
-      ])
-  },
-})
 
 export const routes: RouteRecordRaw[] = [
   {

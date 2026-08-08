@@ -13,7 +13,7 @@ import { computed, ref } from 'vue'
 export const isSaving = ref(false)
 export const isLoadedFromApi = ref(false)
 
-const API_BASE = 'http://localhost:5000'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
 
 // Shared snapshot of the currently saved/loaded institute profile. The
 // Institute Setup dashboard (Index.vue) derives its completion progress

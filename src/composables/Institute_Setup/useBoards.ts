@@ -7,7 +7,7 @@
 //   DELETE /api/boards?id=N      → delete → { ok }
 //   POST   /api/boards/import    → bulk upsert with cross-check
 
-const API_BASE = 'http://localhost:5000'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
 
 export interface BoardRegulatory {
   recognition_no: string

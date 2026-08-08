@@ -6,7 +6,7 @@
 //   DELETE /api/grading-schemes?id=N      → delete → { ok }
 //   POST   /api/grading-schemes/import    → bulk upsert with cross-check
 
-const API_BASE = 'http://localhost:5000'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
 
 export interface GradeRow {
   grade_name: string

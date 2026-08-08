@@ -7,7 +7,7 @@
 //   DELETE /api/{entity}?id=N      → delete → { ok }
 //   POST   /api/holidays/import    → bulk upsert with cross-check
 
-const API_BASE = 'http://localhost:5000'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
 
 export type HolidayEntity = 'working_days' | 'holidays'
 

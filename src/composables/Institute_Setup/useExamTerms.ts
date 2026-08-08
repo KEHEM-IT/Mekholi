@@ -6,7 +6,7 @@
 //   DELETE /api/exam-terms?id=N      → delete → { ok }
 //   POST   /api/exam-terms/import    → bulk upsert with cross-check
 
-const API_BASE = 'http://localhost:5000'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
 
 export interface ExamTerm {
   id?: number
