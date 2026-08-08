@@ -129,11 +129,12 @@ function onInputChange(event: Event) {
 function onInputBlur() {
   isFocused.value = false
   // Incomplete but non-empty → red flash; the stored value shows again.
+  // (Does NOT close the popup — clicking a cell moves focus off the input,
+  // and the panel must stay open while the user picks hour → minute.)
   if (draft.value && parseTime(draft.value) === null && draft.value.trim() !== '') {
     showInputError.value = true
   }
   draft.value = ''
-  close()
 }
 
 function onInputKeydown(event: KeyboardEvent) {
@@ -189,6 +190,8 @@ function commitDraft() {
     emit('update:modelValue', iso)
     emit('change', iso)
   }
+  // Keep the focused input in sync with what was just picked.
+  if (isFocused.value) draft.value = to12h(iso)
 }
 
 function pickHour(h: number) {
@@ -209,6 +212,7 @@ function pickNow() {
   const iso = `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`
   emit('update:modelValue', iso)
   emit('change', iso)
+  if (isFocused.value) draft.value = to12h(iso)
   close()
 }
 
@@ -216,6 +220,7 @@ function clearTime(event: Event) {
   event.stopPropagation()
   emit('update:modelValue', '')
   emit('change', '')
+  if (isFocused.value) draft.value = ''
   close()
 }
 
@@ -239,7 +244,7 @@ const preview = computed(() => {
 
 <template>
   <div ref="root" class="timepicker" :class="{ 'is-open': isOpen, 'is-disabled': disabled }">
-    <div class="timepicker__control" :class="{ 'is-error': showInputError }">
+    <div class="timepicker__control" :class="{ 'is-error': showInputError }" @click="open">
       <i class="fa-duotone fa-clock timepicker__clock-icon" aria-hidden="true" />
       <input
         type="text"
@@ -253,7 +258,6 @@ const preview = computed(() => {
         @focus="onInputFocus"
         @input="onInputChange"
         @blur="onInputBlur"
-        @click="open"
         @keydown="onInputKeydown"
       />
       <span class="timepicker__actions">
@@ -271,7 +275,13 @@ const preview = computed(() => {
       </span>
     </div>
 
-    <div v-if="isOpen" class="timepicker__panel" role="dialog" @keydown="onPanelKeydown">
+    <div
+      v-if="isOpen"
+      class="timepicker__panel"
+      role="dialog"
+      @keydown="onPanelKeydown"
+      @mousedown.prevent
+    >
       <div class="timepicker__preview">{{ preview }}</div>
 
       <!-- AM / PM switch -->
