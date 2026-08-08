@@ -21,7 +21,7 @@ import { fetchItems, type ClassSetupItem } from '@/composables/Institute_Setup/u
 import BaseModal from '@/components/ui/BaseModal.vue'
 import DataTable, { type TableColumn } from '@/components/ui/DataTable.vue'
 import BaseToggle from '@/components/ui/BaseToggle.vue'
-import GradingSchemeFormModal from './GradingSchemeFormModal.vue'
+import GradingFormModal from './GradingFormModal.vue'
 import gradingTypesJson from '@/assets/jsons/grading_types.json'
 
 defineOptions({ name: 'GradingSchemesView' })
@@ -317,7 +317,7 @@ async function onImportPicked(event: Event) {
       :close-on-overlay="false"
       @close="showForm = false"
     >
-      <GradingSchemeFormModal
+      <GradingFormModal
         :scheme="editingScheme"
         :classes="classes"
         @save="onSave"

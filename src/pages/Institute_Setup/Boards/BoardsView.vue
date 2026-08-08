@@ -21,7 +21,7 @@ import {
 import BaseModal from '@/components/ui/BaseModal.vue'
 import DataTable, { type TableColumn } from '@/components/ui/DataTable.vue'
 import BaseToggle from '@/components/ui/BaseToggle.vue'
-import BoardSetupFormModal from './BoardSetupFormModal.vue'
+import BoardFormModal from './BoardFormModal.vue'
 import boardTypesJson from '@/assets/jsons/board_types.json'
 import instituteTypesJson from '@/assets/jsons/institute_types.json'
 
@@ -347,7 +347,7 @@ async function onImportPicked(event: Event) {
       :close-on-overlay="false"
       @close="showForm = false"
     >
-      <BoardSetupFormModal
+      <BoardFormModal
         :board="editingBoard"
         @save="onSave"
         @close="showForm = false"

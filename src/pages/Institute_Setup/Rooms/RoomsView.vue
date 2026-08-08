@@ -21,7 +21,7 @@ import {
 import BaseModal from '@/components/ui/BaseModal.vue'
 import DataTable, { type TableColumn } from '@/components/ui/DataTable.vue'
 import BaseToggle from '@/components/ui/BaseToggle.vue'
-import RoomBuildingFormModal from './RoomBuildingFormModal.vue'
+import RoomFormModal from './RoomFormModal.vue'
 import roomTypesJson from '@/assets/jsons/room_types.json'
 
 defineOptions({ name: 'RoomsBuildingsView' })
@@ -391,7 +391,7 @@ async function onImportPicked(event: Event) {
       :close-on-overlay="false"
       @close="showForm = false"
     >
-      <RoomBuildingFormModal
+      <RoomFormModal
         :entity="activeTab"
         :item="editingItem"
         :buildings="lists.buildings as { id?: number; building_name: string; building_name_bn?: string }[]"

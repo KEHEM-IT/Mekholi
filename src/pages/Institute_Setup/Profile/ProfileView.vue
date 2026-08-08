@@ -15,7 +15,7 @@ import BaseCombobox from "@/components/ui/BaseCombobox.vue";
 import BaseDatePicker from "@/components/ui/BaseDatePicker.vue";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import BaseToggle from "@/components/ui/BaseToggle.vue";
-import InstituteProfilePreviewModal from "./InstituteProfilePreviewModal.vue";
+import ProfilePreviewModal from './ProfilePreviewModal.vue'
 import { FACILITY_ICONS, FACILITY_HELP } from "./facilityMeta";
 import banksJson from "@/assets/jsons/banks.json";
 import gendersJson from "@/assets/jsons/genders.json";
@@ -1398,7 +1398,7 @@ function removeCommittee(i: number) {
       wide
       @close="showPreview = false"
     >
-      <InstituteProfilePreviewModal :form="form as unknown as Record<string, unknown>" />
+      <ProfilePreviewModal :form="form as unknown as Record<string, unknown>" />
       <template #footer>
         <button type="button" class="btn btn--primary" @click="showPreview = false">
           <i class="fa-duotone fa-xmark" /> {{ t("Close") }}

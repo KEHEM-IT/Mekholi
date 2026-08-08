@@ -4,7 +4,7 @@
 import { computed } from 'vue'
 import { useTranslator } from '@/Translator'
 import { BD_GEO_DIVISIONS, BD_GEO_DISTRICTS, BD_GEO_UPAZILAS, BD_GEO_UNIONS } from '@/utils/bdGeo'
-import { FACILITY_ICONS, FACILITY_KEYS, FACILITY_LABELS } from '@/pages/Institute_Setup/facilityMeta'
+import { FACILITY_ICONS, FACILITY_KEYS, FACILITY_LABELS } from './facilityMeta'
 
 const props = defineProps<{
   form: Record<string, unknown>

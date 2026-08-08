@@ -1,8 +1,7 @@
-<!-- Institute Setup > Holidays & Working Days -->
+<!-- Institute Setup > Class / Section / Group / Shift -->
 <script setup lang="ts">
-// Two-tab page: Working Days (weekly calendar) + Holidays (closed days).
-// Each tab: DataTable + Add/Edit modal + Active toggle + Excel export/import
-// with cross-check (only NEW rows are stored).
+// Four-entity management page with tabs: Classes · Sections · Groups · Shifts.
+// Each tab: card grid + Add/Edit/Delete + View + Excel export/import.
 import { computed, onMounted, ref } from 'vue'
 import { useTranslator } from '@/Translator'
 import { useToast } from '@/composables/useToast'
@@ -10,116 +9,126 @@ import {
   fetchItems,
   saveItem,
   deleteItem,
-  importHolidaysAll,
-  type HolidayEntity,
-  type HolidayItem,
-} from '@/composables/Institute_Setup/useHolidaysWorkingDays'
-import {
-  exportHolidaysToExcel,
-  importHolidaysFromExcel,
-} from '@/composables/Institute_Setup/useHolidaysWorkingDaysExcel'
+  importClassSetupAll,
+  type ClassSetupEntity,
+  type ClassSetupItem,
+} from '@/composables/Institute_Setup/useClassesSetup'
+import { exportClassesSetupToExcel, importAllClassesSetupSheets } from '@/composables/Institute_Setup/useClassesSetupExcel'
+import { fetchAcademicYears, type AcademicYear } from '@/composables/Institute_Setup/useAcademicYears'
 import { fetchBranches, type Branch } from '@/composables/Institute_Setup/useBranches'
 import BaseModal from '@/components/ui/BaseModal.vue'
 import DataTable, { type TableColumn } from '@/components/ui/DataTable.vue'
 import BaseToggle from '@/components/ui/BaseToggle.vue'
-import HolidayWorkingDayFormModal from './HolidayWorkingDayFormModal.vue'
-import holidayTypesJson from '@/assets/jsons/holiday_types.json'
+import ClassFormModal from './ClassFormModal.vue'
 
-defineOptions({ name: 'HolidaysWorkingDaysView' })
+defineOptions({ name: 'ClassesView' })
 
 const { t } = useTranslator()
 const toast = useToast()
 
-const TABS: { key: HolidayEntity; icon: string }[] = [
-  { key: 'working_days', icon: 'fa-calendar-days' },
-  { key: 'holidays', icon: 'fa-umbrella-beach' },
+const TABS: { key: ClassSetupEntity; icon: string }[] = [
+  { key: 'classes', icon: 'fa-layer-group' },
+  { key: 'sections', icon: 'fa-table-columns' },
+  { key: 'groups', icon: 'fa-object-group' },
+  { key: 'shifts', icon: 'fa-clock' },
 ]
-const activeTab = ref<HolidayEntity>('working_days')
+const activeTab = ref<ClassSetupEntity>('classes')
 
-const lists = ref<Record<HolidayEntity, HolidayItem[]>>({ working_days: [], holidays: [] })
+const lists = ref<Record<ClassSetupEntity, ClassSetupItem[]>>({ classes: [], sections: [], groups: [], shifts: [] })
+const years = ref<AcademicYear[]>([])
 const branches = ref<Branch[]>([])
 
 const isPageLoading = ref(true)
 const MIN_SKELETON_MS = 2000
 
 const showForm = ref(false)
-const editingItem = ref<HolidayItem | null>(null)
+const editingItem = ref<ClassSetupItem | null>(null)
 const isImporting = ref(false)
 const excelInput = ref<HTMLInputElement | null>(null)
 
-// Confirm modal for turning a holiday OFF.
+// Confirm modal for toggling an item OFF.
 const showActiveConfirm = ref(false)
-const activeToggleTarget = ref<HolidayItem | null>(null)
-
-const WEEKDAYS: Record<string, { en: string; bn: string }> = {
-  Sunday: { en: 'Sunday', bn: 'রবিবার' },
-  Monday: { en: 'Monday', bn: 'সোমবার' },
-  Tuesday: { en: 'Tuesday', bn: 'মঙ্গলবার' },
-  Wednesday: { en: 'Wednesday', bn: 'বুধবার' },
-  Thursday: { en: 'Thursday', bn: 'বৃহস্পতিবার' },
-  Friday: { en: 'Friday', bn: 'শুক্রবার' },
-  Saturday: { en: 'Saturday', bn: 'শনিবার' },
-}
-const DAY_ORDER = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-
-const typeLabel = computed(() => {
-  const map = new Map(
-    (holidayTypesJson as { Id: string; Name: string; Name_bn: string }[]).map((x) => [x.Id, x.Name]),
-  )
-  return (id: unknown) => map.get(String(id ?? '')) ?? String(id ?? '')
-})
+const activeToggleTarget = ref<ClassSetupItem | null>(null)
 
 const activeItems = computed(() => lists.value[activeTab.value])
 
-// ── Table columns ──────────────────────────────────────────────────────
+// ── Table column definitions per tab ───────────────────────────────────
 const tableColumns = computed<Record<string, TableColumn[]>>(() => ({
-  working_days: [
-    { key: 'day_of_week', label: t('Day of Week'), sortable: true, sortValue: (r) => DAY_ORDER.indexOf(String((r as Record<string, unknown>).day_of_week ?? '')) },
-    { key: 'is_working', label: t('Is Working'), align: 'center', sortable: true },
-    { key: 'open_time', label: t('Start'), sortable: true, render: (r) => String((r as Record<string, unknown>).open_time ?? '') || '—' },
-    { key: 'close_time', label: t('End'), sortable: true, render: (r) => String((r as Record<string, unknown>).close_time ?? '') || '—' },
-  ],
-  holidays: [
-    { key: 'holiday_name', label: t('Holiday Name'), sortable: true },
-    { key: 'holiday_name_bn', label: t('Bangla'), sortable: true },
-    { key: 'date_from', label: t('From'), sortable: true },
-    { key: 'date_to', label: t('To'), sortable: true, render: (r) => String((r as Record<string, unknown>).date_to ?? '') || '—' },
-    { key: 'holiday_type', label: t('Type'), sortable: true, sortValue: (r) => typeLabel.value((r as Record<string, unknown>).holiday_type), render: (r) => typeLabel.value((r as Record<string, unknown>).holiday_type) },
+  classes: [
+    { key: 'sort_order', label: '#', width: '3.5rem', align: 'center', sortable: true },
+    { key: 'class_name', label: t('Class Name'), sortable: true },
+    { key: 'class_name_bn', label: t('Bangla'), sortable: true },
+    { key: 'phase', label: t('Phase / Level'), sortable: true },
+    { key: 'academic_year_id', label: t('Year'), sortable: true, sortValue: (r) => yearLabel((r as Record<string, unknown>).academic_year_id), render: (r) => yearLabel((r as Record<string, unknown>).academic_year_id) },
     { key: 'branch_id', label: t('Branch'), sortable: true, sortValue: (r) => branchLabel((r as Record<string, unknown>).branch_id), render: (r) => branchLabel((r as Record<string, unknown>).branch_id) },
-    { key: 'is_recurring', label: t('Repeats'), align: 'center', sortable: true, render: (r) => ((r as Record<string, unknown>).is_recurring ? t('Yes') : t('No')) },
-    { key: 'is_working_override', label: t('Special Day'), align: 'center', sortable: true, render: (r) => ((r as Record<string, unknown>).is_working_override ? t('Yes') : t('No')) },
+    { key: 'is_active', label: t('Active'), align: 'center', sortable: true, render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
+  ],
+  sections: [
+    { key: 'id', label: '#', width: '3.5rem', align: 'center', sortable: true },
+    { key: 'section_name', label: t('Section'), sortable: true },
+    { key: 'section_name_bn', label: t('Bangla'), sortable: true },
+    { key: 'class_id', label: t('Class'), sortable: true, sortValue: (r) => classLabel((r as Record<string, unknown>).class_id), render: (r) => classLabel((r as Record<string, unknown>).class_id) },
+    { key: 'shift_id', label: t('Shift'), sortable: true, sortValue: (r) => shiftLabel((r as Record<string, unknown>).shift_id), render: (r) => shiftLabel((r as Record<string, unknown>).shift_id) },
+    { key: 'capacity', label: t('Capacity'), align: 'right', sortable: true },
+    { key: 'is_active', label: t('Active'), align: 'center', sortable: true, render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
+  ],
+  groups: [
+    { key: 'group_name', label: t('Group Name'), sortable: true },
+    { key: 'group_name_bn', label: t('Bangla'), sortable: true },
+    { key: 'class_ids', label: t('Classes'), sortable: true, sortValue: (r) => (f(r, 'class_ids') as number[] | undefined)?.map((id) => classLabel(id)).join(', ') ?? '—', render: (r) => (f(r, 'class_ids') as number[] | undefined)?.map((id) => classLabel(id)).join(', ') ?? '—' },
+    { key: 'version', label: t('Version'), sortable: true },
+    { key: 'group_type', label: t('Group Type'), sortable: true },
+    { key: 'is_active', label: t('Active'), align: 'center', sortable: true, render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
+  ],
+  shifts: [
+    { key: 'shift_name', label: t('Shift Name'), sortable: true },
+    { key: 'shift_name_bn', label: t('Bangla'), sortable: true },
+    { key: 'start_time', label: t('Start'), sortable: true },
+    { key: 'end_time', label: t('End'), sortable: true },
     { key: 'is_active', label: t('Active'), align: 'center', sortable: true, render: (r) => ((r as Record<string, unknown>).is_active ? t('Yes') : t('No')) },
   ],
 }))
 
+/** Default sort per tab (empty = natural order). */
 const defaultSortForTab = computed(() =>
-  activeTab.value === 'working_days' ? { key: 'day_of_week', dir: 'asc' as const }
-  : activeTab.value === 'holidays' ? { key: 'date_from', dir: 'asc' as const }
+  activeTab.value === 'classes' ? { key: 'sort_order', dir: 'asc' as const }
+  : activeTab.value === 'sections' ? { key: 'id', dir: 'asc' as const }
   : { key: '', dir: 'asc' as const },
 )
 
-// ── Data helpers ───────────────────────────────────────────────────────
-
+function yearLabel(id: unknown): string {
+  const n = Number(id)
+  const y = years.value.find((x) => x.id === n)
+  return y?.year_name ?? String(id ?? '')
+}
+function branchLabel(id: unknown): string {
+  const n = Number(id)
+  const b = branches.value.find((x) => x.id === n)
+  return b?.branch_name ?? String(id ?? '')
+}
+function classLabel(id: unknown): string {
+  const n = Number(id)
+  const c = lists.value.classes.find((x) => x.id === n) as unknown as { class_name?: string } | undefined
+  return c?.class_name ?? String(id ?? '')
+}
+function shiftLabel(id: unknown): string {
+  const n = Number(id)
+  const sh = lists.value.shifts.find((x) => x.id === n) as unknown as { shift_name?: string } | undefined
+  return sh?.shift_name ?? String(id ?? '')
+}
+/** Read a field from an item (avoids `as any` in templates/computeds). */
 function f(item: unknown, key: string): unknown {
   return (item as Record<string, unknown>)[key]
 }
 
-function dayLabel(id: unknown): string {
-  const d = WEEKDAYS[String(id ?? '')]
-  return d ? `${d.en} - ${d.bn}` : String(id ?? '')
-}
-
-function branchLabel(id: unknown): string {
-  const n = Number(id)
-  if (!n) return t('All Branches')
-  const b = branches.value.find((x) => x.id === n)
-  return b?.branch_name ?? String(id ?? '')
-}
-
 async function loadAll() {
-  const [wd, hd, br] = await Promise.all([fetchItems('working_days'), fetchItems('holidays'), fetchBranches()])
-  lists.value = { working_days: wd, holidays: hd }
-  branches.value = br
+  const [c, s, g, sh, y, b] = await Promise.all([
+    fetchItems('classes'), fetchItems('sections'), fetchItems('groups'), fetchItems('shifts'),
+    fetchAcademicYears(), fetchBranches(),
+  ])
+  lists.value = { classes: c, sections: s, groups: g, shifts: sh }
+  years.value = y
+  branches.value = b
 }
 
 onMounted(async () => {
@@ -128,23 +137,23 @@ onMounted(async () => {
   isPageLoading.value = false
 })
 
-function tabLabel(key: HolidayEntity): string {
-  return key === 'working_days' ? t('Working Days') : t('Holidays')
+function tabLabel(key: ClassSetupEntity): string {
+  return key === 'classes' ? t('Classes') : key === 'sections' ? t('Sections') : key === 'groups' ? t('Groups') : t('Shifts')
 }
-function addLabel(key: HolidayEntity): string {
-  return key === 'working_days' ? t('Add Working Day') : t('Add Holiday')
+function addLabel(key: ClassSetupEntity): string {
+  return key === 'classes' ? t('Add Class') : key === 'sections' ? t('Add Section') : key === 'groups' ? t('Add Group') : t('Add Shift')
 }
 
 function openAdd() {
   editingItem.value = null
   showForm.value = true
 }
-function openEdit(item: HolidayItem) {
+function openEdit(item: ClassSetupItem) {
   editingItem.value = item
   showForm.value = true
 }
 
-async function onSave(item: HolidayItem) {
+async function onSave(item: ClassSetupItem) {
   const saved = await saveItem(activeTab.value, item)
   if (saved) {
     toast.success(item.id ? t('Updated') : t('Added'))
@@ -155,14 +164,10 @@ async function onSave(item: HolidayItem) {
   }
 }
 
-async function onDelete(item: HolidayItem) {
+async function onDelete(item: ClassSetupItem) {
   const id = item.id
   if (!id) return
-  const name = String(
-    activeTab.value === 'working_days'
-      ? dayLabel(f(item, 'day_of_week'))
-      : (f(item, 'holiday_name') ?? ''),
-  )
+  const name = String((item as unknown as Record<string, unknown>)[nameField(activeTab.value)] ?? '')
   const ok = window.confirm(t('Delete "{name}"?', { name }))
   if (!ok) return
   const deleted = await deleteItem(activeTab.value, id)
@@ -185,19 +190,22 @@ async function onDelete(item: HolidayItem) {
   }
 }
 
-/** Holidays: Active toggle — turning OFF asks for confirmation. */
-function onToggleActive(item: HolidayItem) {
+/** Called when the Active toggle is clicked — opens confirm when turning OFF. */
+function onToggleActive(item: ClassSetupItem) {
+  const target = { ...item }
   const currentlyOn = Boolean(f(item, 'is_active'))
   if (currentlyOn) {
-    activeToggleTarget.value = { ...item }
+    // Turning OFF → ask for confirmation first.
+    activeToggleTarget.value = target
     showActiveConfirm.value = true
   } else {
-    void applyActive({ ...item }, true)
+    // Turning back ON → apply immediately.
+    void applyActive(target, true)
   }
 }
 
-async function applyActive(item: HolidayItem, value: boolean) {
-  const updated = { ...item, is_active: value } as HolidayItem
+async function applyActive(item: ClassSetupItem, value: boolean) {
+  const updated = { ...item, is_active: value } as ClassSetupItem
   const saved = await saveItem(activeTab.value, updated)
   if (saved) {
     toast.success(t('Updated'))
@@ -214,23 +222,17 @@ function confirmDeactivate() {
   activeToggleTarget.value = null
 }
 
-/** Working days: Is Working toggle applies instantly. */
-async function onToggleWorking(item: HolidayItem, value: boolean) {
-  const updated = { ...item, is_working: value } as HolidayItem
-  const saved = await saveItem(activeTab.value, updated)
-  if (saved) {
-    toast.success(t('Updated'))
-    await loadAll()
-  } else {
-    toast.error(t('Save failed — is server.py running?'))
-  }
+function nameField(entity: ClassSetupEntity): string {
+  return entity === 'classes' ? 'class_name' : entity === 'sections' ? 'section_name' : entity === 'groups' ? 'group_name' : 'shift_name'
 }
+
+// ── Card display helpers ───────────────────────────────────────────────
 
 // ── Excel ──────────────────────────────────────────────────────────────
 
 function handleExport() {
   try {
-    exportHolidaysToExcel(lists.value)
+    exportClassesSetupToExcel(lists.value)
     toast.success(t('Excel downloaded'))
   } catch (err) {
     toast.error(t('Export failed: {error}', { error: err instanceof Error ? err.message : 'unknown' }))
@@ -247,10 +249,10 @@ async function onImportPicked(event: Event) {
   if (!file) return
   isImporting.value = true
   try {
-    // One click imports BOTH sheets. Import = cross-check + add only NEW
-    // rows; existing ones (by natural key) are kept as-is.
-    const imported = await importHolidaysFromExcel(file)
-    const result = await importHolidaysAll(imported)
+    // One click imports ALL sheets: classes + sections + groups + shifts.
+    // Import = cross-check + add only NEW rows; existing ones are kept as-is.
+    const imported = await importAllClassesSetupSheets(file)
+    const result = await importClassSetupAll(imported)
     if (!result.ok) throw new Error('server')
     const total = Object.values(result.inserted).reduce((a, b) => a + b, 0)
     const totalSkipped = Object.values(result.skipped).reduce((a, list) => a + list.length, 0)
@@ -274,7 +276,7 @@ async function onImportPicked(event: Event) {
 </script>
 
 <template>
-  <!-- Skeleton — mirrors the real page: header + tabs + table -->
+  <!-- Skeleton -->
   <section v-if="isPageLoading" class="ipf-skeleton" aria-busy="true">
     <div class="ipf-skeleton__header">
       <div class="ipf-skeleton__titles">
@@ -293,13 +295,28 @@ async function onImportPicked(event: Event) {
         <span v-for="m in 6" :key="m" class="skeleton ipf-sk-field" />
       </div>
     </div>
+    <div class="ay-grid">
+      <div v-for="n in 4" :key="n" class="skeleton skeleton--card br-sk-card">
+        <div class="br-sk-head">
+          <span class="skeleton br-sk-logo" />
+          <div class="br-sk-titles">
+            <span class="skeleton br-sk-name" />
+            <span class="skeleton br-sk-namebn" />
+          </div>
+        </div>
+        <div class="br-sk-foot">
+          <span class="skeleton br-sk-btn" />
+          <span class="skeleton br-sk-btn" />
+        </div>
+      </div>
+    </div>
   </section>
 
   <section v-else class="ipf reveal-content">
     <header class="ipf-header">
       <div class="ipf-header__titles">
-        <h1>{{ t('Holidays & Working Days') }}</h1>
-        <p>{{ t('Set the weekly working calendar and the closed days of the institute.') }}</p>
+        <h1>{{ t('Class / Section / Group / Shift') }}</h1>
+        <p>{{ t('Define class levels, sections, groups and shifts — the building blocks of your timetable.') }}</p>
       </div>
       <div class="ipf-header__actions">
         <button type="button" class="btn btn--primary" @click="openAdd">
@@ -332,7 +349,7 @@ async function onImportPicked(event: Event) {
       </button>
     </div>
 
-    <!-- Data table (reusable, sticky head, sortable) -->
+    <!-- Data table (reusable, sticky head, scrollable body) -->
     <DataTable
       :key="activeTab"
       :columns="tableColumns[activeTab]"
@@ -342,41 +359,26 @@ async function onImportPicked(event: Event) {
       :default-sort-dir="defaultSortForTab.dir"
       :empty-text="t('No {entity} yet', { entity: tabLabel(activeTab) })"
     >
-      <template #day_of_week="{ row }">
-        {{ dayLabel(f(row, 'day_of_week')) }}
-      </template>
-
-      <!-- Working days: Is Working bulb (instant, no confirm) -->
-      <template v-if="activeTab === 'working_days'" #is_working="{ row }">
-        <BaseToggle
-          :model-value="Boolean(f(row, 'is_working'))"
-          :yes-label="t('Yes')"
-          :no-label="t('No')"
-          @update:model-value="onToggleWorking(row as HolidayItem, $event)"
-        />
-      </template>
-
-      <!-- Holidays: Active bulb (turning OFF opens confirm) -->
-      <template v-if="activeTab === 'holidays'" #is_active="{ row }">
+      <template #is_active="{ row }">
         <BaseToggle
           :model-value="Boolean(f(row, 'is_active'))"
           :yes-label="t('Yes')"
           :no-label="t('No')"
-          @update:model-value="onToggleActive(row as HolidayItem)"
+          @update:model-value="onToggleActive(row as ClassSetupItem)"
         />
       </template>
 
       <template #actions="{ row }">
-        <button type="button" class="btn btn--ghost br-card__btn" @click="openEdit(row as HolidayItem)">
+        <button type="button" class="btn btn--ghost br-card__btn" @click="openEdit(row as ClassSetupItem)">
           <i class="fa-duotone fa-pen" /> {{ t('Edit') }}
         </button>
-        <button type="button" class="btn btn--ghost br-card__btn br-card__btn--danger" @click="onDelete(row as HolidayItem)">
+        <button type="button" class="btn btn--ghost br-card__btn br-card__btn--danger" @click="onDelete(row as ClassSetupItem)">
           <i class="fa-duotone fa-trash" /> {{ t('Delete') }}
         </button>
       </template>
     </DataTable>
 
-    <!-- Warning modal: confirm deactivating a holiday -->
+    <!-- Warning modal: confirm turning an item OFF -->
     <BaseModal
       v-if="showActiveConfirm"
       :title="t('Deactivate item')"
@@ -387,7 +389,7 @@ async function onImportPicked(event: Event) {
         <p class="cm-confirm__text">
           {{
             t('Are you sure you want to deactivate "{name}"? It will be hidden from new selections.', {
-              name: activeToggleTarget ? String(f(activeToggleTarget, 'holiday_name') ?? '') : '',
+              name: activeToggleTarget ? String(f(activeToggleTarget, nameField(activeTab)) || '') : '',
             })
           }}
         </p>
@@ -402,18 +404,21 @@ async function onImportPicked(event: Event) {
       </template>
     </BaseModal>
 
-    <!-- Form modal (Add/Edit Working Day · Holiday) -->
+    <!-- Form modal (Add/Edit Class · Section · Group · Shift) -->
     <BaseModal
       v-if="showForm"
       :title="editingItem ? t('Edit') : t('Add')"
       wide
-      panel-class="hw-form-modal"
+      panel-class="cs-form-modal"
       :close-on-overlay="false"
       @close="showForm = false"
     >
-      <HolidayWorkingDayFormModal
+      <ClassFormModal
         :entity="activeTab"
         :item="editingItem"
+        :classes="lists.classes"
+        :shifts="lists.shifts"
+        :years="years"
         :branches="branches"
         @save="onSave"
         @close="showForm = false"
@@ -423,14 +428,12 @@ async function onImportPicked(event: Event) {
 </template>
 
 <!--
-  Scoped panel sizing for THIS page's Add/Edit form modal only.
-  Lives here (not in the global modal css) so other modals keep their
-  natural height and the rule can't be lost in shared styles.
-  (Unscoped on purpose — BaseModal teleports to <body>, so a page-scoped
-  data attribute wouldn't reach the panel; the unique class scopes it.)
+  Scoped panel sizing for THIS page's Add/Edit form modal only — lives here,
+  not in the global modal css (unscoped on purpose: BaseModal teleports to
+  <body>, so the unique class is what scopes it to this page's modal).
 -->
 <style>
-.hw-form-modal {
+.cs-form-modal {
   min-height: 65vh;
   max-height: 100vh;
 }

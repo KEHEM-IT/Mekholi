@@ -15,7 +15,7 @@ import {
   BD_GEO_UPAZILAS,
   BD_GEO_UNIONS,
 } from '@/utils/bdGeo'
-import { FACILITY_KEYS, FACILITY_LABELS } from '@/pages/Institute_Setup/facilityMeta'
+import { FACILITY_KEYS, FACILITY_LABELS } from '@/pages/Institute_Setup/Profile/facilityMeta'
 
 // ── Field metadata ──────────────────────────────────────────────────────
 
@@ -280,11 +280,11 @@ export interface ImportedProfile {
 /** Match an English/Bangla facility label to its key (case-insensitive). */
 function facilityKeyFromLabel(label: string): string | null {
   const lower = label.toLowerCase()
-  const entry = Object.entries(FACILITY_LABELS).find(
+  const entry = (Object.entries(FACILITY_LABELS) as [string, { en: string; bn: string }][]).find(
     ([, v]) => v.en.toLowerCase() === lower || v.bn === label,
   )
   if (entry) return entry[0]
-  return FACILITY_KEYS.find((k) => k.replace(/_/g, ' ').toLowerCase() === lower) ?? null
+  return (FACILITY_KEYS as readonly string[]).find((k: string) => k.replace(/_/g, ' ').toLowerCase() === lower) ?? null
 }
 
 /** Parse an Institute Profile Excel file into a partial form. */
