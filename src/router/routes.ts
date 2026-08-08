@@ -118,7 +118,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'institute-setup/subjects',
         name: 'institute-setup-subjects',
-        component: InstituteSetupPlaceholder,
+        component: () => import('@/pages/Institute_Setup/SubjectsView.vue'),
         meta: { title: 'Subjects & Curriculum', titleBn: 'বিষয় ও কারিকুলাম' },
         beforeEnter: requireAuth,
       },

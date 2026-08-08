@@ -190,6 +190,96 @@ def _seed_boards(conn):
         print(f"SQL: seeded built-in board — {b['board_name']}")
 
 
+# Built-in Bangladesh subjects & curriculum (NCTB / BMEB / BTEB based).
+# Seeded once on server start, marked is_builtin=1 so they can't be deleted
+# from the UI (users may still edit them or add their own). `board` names
+# are resolved to board ids at seed time (must match BUILTIN_BOARDS above).
+BUILTIN_SUBJECTS = [
+    # ── General stream (SSC / HSC — NCTB subject codes) ────────────────
+    {"name": "Bangla", "code": "101", "type": "Compulsory", "board": "Dhaka Board"},
+    {"name": "Bangla 2nd Paper", "code": "102", "type": "Compulsory", "board": "Dhaka Board"},
+    {"name": "English", "code": "107", "type": "Compulsory", "board": "Dhaka Board"},
+    {"name": "English 2nd Paper", "code": "108", "type": "Compulsory", "board": "Dhaka Board"},
+    {"name": "Mathematics", "code": "109", "type": "Compulsory", "board": "Dhaka Board"},
+    {"name": "Higher Mathematics", "code": "110", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "General Science", "code": "117", "type": "Compulsory", "board": "Dhaka Board"},
+    {"name": "Bangladesh & Global Studies", "code": "129", "type": "Compulsory", "board": "Dhaka Board"},
+    {"name": "ICT", "code": "134", "type": "Compulsory", "board": "Dhaka Board"},
+    {"name": "Physics", "code": "136", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "Chemistry", "code": "137", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "Biology", "code": "138", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "Agricultural Studies", "code": "139", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "Home Science", "code": "140", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "Accounting", "code": "141", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "Finance & Banking", "code": "142", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "Business Studies", "code": "143", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "Business Entrepreneurship", "code": "144", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "Geography", "code": "145", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "History", "code": "146", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "Civics & Citizenship", "code": "147", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "Economics", "code": "148", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "Islamic History & Culture", "code": "149", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "Islamic Studies", "code": "150", "type": "Compulsory", "board": "Dhaka Board"},
+    {"name": "Hindu Religion", "code": "151", "type": "Compulsory", "board": "Dhaka Board"},
+    {"name": "Buddhist Religion", "code": "152", "type": "Compulsory", "board": "Dhaka Board"},
+    {"name": "Christian Religion", "code": "153", "type": "Compulsory", "board": "Dhaka Board"},
+    {"name": "Social Science", "code": "154", "type": "Compulsory", "board": "Dhaka Board"},
+    {"name": "Sociology", "code": "155", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "Logic", "code": "156", "type": "Elective", "board": "Dhaka Board"},
+    {"name": "Physical Education & Health", "code": "161", "type": "Compulsory", "board": "Dhaka Board"},
+    {"name": "Work & Life Oriented Education", "code": "165", "type": "Compulsory", "board": "Dhaka Board"},
+    {"name": "Career Studies", "code": "167", "type": "Compulsory", "board": "Dhaka Board"},
+    # ── Madrasah stream (Dakhil / Alim — BMEB) ──────────────────────────
+    {"name": "Quran Majid & Tajweed", "code": "190", "type": "Madrasah Subject", "board": "Bangladesh Madrasah Education Board"},
+    {"name": "Hadith & Usole Hadith", "code": "191", "type": "Madrasah Subject", "board": "Bangladesh Madrasah Education Board"},
+    {"name": "Aqaid & Fiqh", "code": "192", "type": "Madrasah Subject", "board": "Bangladesh Madrasah Education Board"},
+    {"name": "Islamic History", "code": "193", "type": "Madrasah Subject", "board": "Bangladesh Madrasah Education Board"},
+    {"name": "Arabic", "code": "194", "type": "Madrasah Subject", "board": "Bangladesh Madrasah Education Board"},
+    # ── Technical stream (SSC/HSC Vocational — BTEB) ────────────────────
+    {"name": "Computer Office Application", "code": "175", "type": "Vocational Trade", "board": "Bangladesh Technical Education Board"},
+    {"name": "Electrical Works", "code": "176", "type": "Vocational Trade", "board": "Bangladesh Technical Education Board"},
+    {"name": "General Mechanics", "code": "177", "type": "Vocational Trade", "board": "Bangladesh Technical Education Board"},
+    {"name": "Electronics", "code": "178", "type": "Vocational Trade", "board": "Bangladesh Technical Education Board"},
+    {"name": "Welding & Fabrication", "code": "179", "type": "Vocational Trade", "board": "Bangladesh Technical Education Board"},
+    {"name": "Garments & Tailoring", "code": "180", "type": "Vocational Trade", "board": "Bangladesh Technical Education Board"},
+    {"name": "Food & Nutrition", "code": "181", "type": "Vocational Trade", "board": "Bangladesh Technical Education Board"},
+    {"name": "Nursing & Midwifery", "code": "182", "type": "Vocational Trade", "board": "Bangladesh Technical Education Board"},
+    {"name": "Agricultural Science", "code": "183", "type": "Vocational Trade", "board": "Bangladesh Technical Education Board"},
+    {"name": "Fish Culture", "code": "184", "type": "Vocational Trade", "board": "Bangladesh Technical Education Board"},
+    {"name": "Dairy Farming", "code": "185", "type": "Vocational Trade", "board": "Bangladesh Technical Education Board"},
+    {"name": "Poultry Rearing", "code": "186", "type": "Vocational Trade", "board": "Bangladesh Technical Education Board"},
+    {"name": "Nursery & Horticulture", "code": "187", "type": "Vocational Trade", "board": "Bangladesh Technical Education Board"},
+    {"name": "Engineering Drawing", "code": "188", "type": "Vocational Trade", "board": "Bangladesh Technical Education Board"},
+]
+
+
+def _seed_subjects(conn):
+    """Insert the built-in Bangladesh subjects once (idempotent by name+board)."""
+    try:
+        conn.execute("SELECT 1 FROM subjects LIMIT 1")
+    except sqlite3.OperationalError:
+        return  # subjects table not created yet — nothing to seed
+    for s in BUILTIN_SUBJECTS:
+        board = conn.execute(
+            "SELECT id FROM boards WHERE TRIM(board_name) = TRIM(?) COLLATE NOCASE",
+            (s["board"],),
+        ).fetchone()
+        board_id = board["id"] if board else 0
+        found = conn.execute(
+            "SELECT id FROM subjects WHERE TRIM(subject_name) = TRIM(?) COLLATE NOCASE AND board_id = ?",
+            (s["name"], board_id),
+        ).fetchone()
+        if found:
+            continue
+        conn.execute(
+            "INSERT INTO subjects (subject_name, subject_code, subject_type, board_id,"
+            " group_id, version, class_level_ids, marks_distribution, is_builtin, is_active)"
+            " VALUES (?, ?, ?, ?, 0, '', '[]', '[]', 1, 1)",
+            (s["name"], s["code"], s["type"], board_id),
+        )
+        print(f"SQL: seeded built-in subject — {s['name']} ({s['board']})")
+
+
 def init_db():
     """Create tables if missing, seed a blank profile, run migrations."""
     conn = get_db()
@@ -366,10 +456,30 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        -- Subjects & curriculum: the subject catalogue per board × class
+        -- level × group × version, with per-class marks distribution rows.
+        -- `marks_distribution` is a JSON array:
+        --   [{ class_id, full_marks_theory, full_marks_practical,
+        --      full_marks_ca, pass_marks, periods_week, book_names }]
+        CREATE TABLE IF NOT EXISTS subjects (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            subject_name TEXT DEFAULT '', subject_code TEXT DEFAULT '',
+            subject_type TEXT DEFAULT '',
+            board_id INTEGER DEFAULT 0,
+            group_id INTEGER DEFAULT 0,
+            version TEXT DEFAULT '',
+            class_level_ids TEXT DEFAULT '[]',
+            marks_distribution TEXT DEFAULT '[]',
+            is_builtin INTEGER DEFAULT 0,
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     _migrate(conn)
     _seed_boards(conn)
+    _seed_subjects(conn)
 
     # Seed a blank profile so the API always has something to return.
     if conn.execute("SELECT COUNT(*) FROM institute_profiles").fetchone()[0] == 0:

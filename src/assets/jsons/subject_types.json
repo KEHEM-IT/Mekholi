@@ -1,0 +1,32 @@
+[
+  {
+    "Id": "Compulsory",
+    "Name": "Compulsory",
+    "LookupText": "Compulsory"
+  },
+  {
+    "Id": "Optional",
+    "Name": "Optional",
+    "LookupText": "Optional"
+  },
+  {
+    "Id": "Elective",
+    "Name": "Elective",
+    "LookupText": "Elective"
+  },
+  {
+    "Id": "Vocational Trade",
+    "Name": "Vocational Trade",
+    "LookupText": "Vocational Trade"
+  },
+  {
+    "Id": "Madrasah Subject",
+    "Name": "Madrasah Subject",
+    "LookupText": "Madrasah Subject"
+  },
+  {
+    "Id": "Language",
+    "Name": "Language",
+    "LookupText": "Language"
+  }
+]

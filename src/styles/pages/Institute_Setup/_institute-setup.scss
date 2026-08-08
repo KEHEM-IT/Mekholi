@@ -1196,3 +1196,8 @@
   max-width: 100%;
   @include truncate;
 }
+
+// Marks distribution row — books field spans the rest of the row
+.gs-grade-row__books {
+  min-width: 8rem;
+}
