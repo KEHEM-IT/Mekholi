@@ -478,6 +478,54 @@ def _seed_admission_applications(conn):
         print(f"SQL: seeded default admission application — {ap['application_no']} ({ap['candidate_name']})")
 
 
+DEFAULT_TESTS = [
+    {
+        "test_name": "Class 6 Intake Written Exam", "test_name_bn": "৬ষ্ঠ শ্রেণি ভর্তি লিখিত পরীক্ষা",
+        "class_name": "Class 6", "test_date": "2026-10-15", "start_time": "10:00 AM", "end_time": "12:00 PM",
+        "room_code": "BLK-01", "room_no": "101", "max_written_marks": 100.0, "max_viva_marks": 25.0
+    },
+    {
+        "test_name": "Class 9 Science VIVA Interview", "test_name_bn": "৯ম শ্রেণি বিজ্ঞান ভাইভা সাক্ষাৎকার",
+        "class_name": "Class 9", "test_date": "2026-10-18", "start_time": "11:00 AM", "end_time": "02:00 PM",
+        "room_code": "BLK-01", "room_no": "102", "max_written_marks": 0.0, "max_viva_marks": 50.0
+    }
+]
+
+
+def _seed_admission_tests(conn):
+    """Seed default admission test schedules ONLY on an empty table."""
+    try:
+        count = conn.execute("SELECT COUNT(*) FROM admission_tests").fetchone()[0]
+    except sqlite3.OperationalError:
+        return
+    if count > 0:
+        return
+    # Resolve first available academic year
+    year = conn.execute("SELECT id FROM academic_years ORDER BY id DESC LIMIT 1").fetchone()
+    year_id = year["id"] if year else 0
+    
+    for t in DEFAULT_TESTS:
+        # Resolve room_id based on room_no and building code
+        room_row = conn.execute(
+            "SELECT r.id FROM rooms r JOIN buildings b ON r.building_id = b.id "
+            "WHERE TRIM(r.room_no) = TRIM(?) AND TRIM(b.building_code) = TRIM(?)",
+            (t["room_no"], t["room_code"])
+        ).fetchone()
+        room_id = room_row["id"] if room_row else 0
+        
+        conn.execute(
+            "INSERT INTO admission_tests (test_name, test_name_bn, academic_year_id, class_name,"
+            " test_date, start_time, end_time, room_id, max_written_marks, max_viva_marks, is_active)"
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)",
+            (
+                t["test_name"], t["test_name_bn"], year_id, t["class_name"],
+                t["test_date"], t["start_time"], t["end_time"], room_id,
+                t["max_written_marks"], t["max_viva_marks"]
+            )
+        )
+        print(f"SQL: seeded default admission test — {t['test_name']}")
+
+
 def _seed_exam_terms(conn):
     """Seed the default BD exam terms ONLY on a fresh/empty table, so terms
     the user deletes stay deleted (no resurrection on restart)."""
@@ -916,6 +964,22 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        CREATE TABLE IF NOT EXISTS admission_tests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            test_name TEXT DEFAULT '',
+            test_name_bn TEXT DEFAULT '',
+            academic_year_id INTEGER DEFAULT 0,
+            class_name TEXT DEFAULT '',
+            test_date TEXT DEFAULT '',
+            start_time TEXT DEFAULT '',
+            end_time TEXT DEFAULT '',
+            room_id INTEGER DEFAULT 0,
+            max_written_marks REAL DEFAULT 100.0,
+            max_viva_marks REAL DEFAULT 50.0,
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     _migrate(conn)
@@ -927,6 +991,7 @@ def init_db():
     _seed_admission_enquiries(conn)
     _seed_admission_forms(conn)
     _seed_admission_applications(conn)
+    _seed_admission_tests(conn)
 
     # Seed a blank profile so the API always has something to return.
     if conn.execute("SELECT COUNT(*) FROM institute_profiles").fetchone()[0] == 0:

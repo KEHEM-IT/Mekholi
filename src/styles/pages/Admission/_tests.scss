@@ -1,0 +1,7 @@
+@use '../../abstracts' as *;
+
+// Admission Tests Styles
+.test-form-modal {
+  min-height: calc(100vh - 12rem);
+  max-height: 100vh;
+}
