@@ -1,13 +1,14 @@
 <script setup lang="ts">
 // Add / edit modal for an Admission Enquiry — supports national (Bangladesh)
 // and international structures with bilingually translated options.
-import { computed, reactive, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useTranslator } from '@/Translator'
 import { useToast } from '@/composables/useToast'
 import BaseCombobox from '@/components/ui/BaseCombobox.vue'
 import BaseDatePicker from '@/components/ui/BaseDatePicker.vue'
 import BaseToggle from '@/components/ui/BaseToggle.vue'
 import classNamesJson from '@/assets/jsons/class_names.json'
+import countriesJson from '@/assets/jsons/countries.json'
 import { emptyEnquiry, type AdmissionEnquiry } from '@/composables/Admission/useAdmissionEnquiries'
 
 const props = defineProps<{
@@ -33,15 +34,39 @@ if (!form.id && props.years.length > 0 && !form.academic_year_id) {
   form.academic_year_id = Number(props.years[0].id)
 }
 
+// Local state for the date picker of Academic Intake Year
+const intakeDate = ref('')
+
+// Initialize intakeDate from existing academic_year_id
+if (form.academic_year_id) {
+  const yearObj = props.years.find(y => Number(y.id) === Number(form.academic_year_id))
+  if (yearObj) {
+    intakeDate.value = `${yearObj.year_name}-01-01`
+  }
+} else if (props.years.length > 0) {
+  const defaultYear = props.years[0]
+  intakeDate.value = `${defaultYear.year_name}-01-01`
+  form.academic_year_id = Number(defaultYear.id)
+}
+
+// Watch intakeDate: when it changes, find the matching academic_year_id
+watch(intakeDate, (newVal) => {
+  if (!newVal) {
+    form.academic_year_id = null
+    return
+  }
+  const yearStr = newVal.split('-')[0] // Get "YYYY"
+  const matched = props.years.find((y) => String(y.year_name) === yearStr)
+  if (matched) {
+    form.academic_year_id = Number(matched.id)
+  } else {
+    form.academic_year_id = null
+  }
+})
+
 // ── Option Lists ────────────────────────────────────────────────────────
 
-const yearOptions = computed(() =>
-  props.years.map((y) => ({
-    Id: Number(y.id),
-    LookupText: String(y.year_name),
-    DisplayText: String(y.year_name),
-  })),
-)
+
 
 // Presets for desired classes (Bangla + English support)
 const classOptions = computed(() =>
@@ -49,6 +74,15 @@ const classOptions = computed(() =>
     Id: String(c.Name),
     LookupText: `${c.Name} - ${c.NameInBangla}`,
     DisplayText: `${c.Name} - ${c.NameInBangla}`,
+  })),
+)
+
+// Country options loaded from countries.json
+const countryOptions = computed(() =>
+  countriesJson.map((c) => ({
+    Id: c.name,
+    LookupText: c.name,
+    DisplayText: c.name,
   })),
 )
 
@@ -256,13 +290,7 @@ function submit() {
           </div>
           <div class="form-field">
             <label>{{ t('Academic Intake Year') }} *</label>
-            <BaseCombobox
-              v-model="form.academic_year_id"
-              :options="yearOptions"
-              option-value="Id"
-              option-label="DisplayText"
-              :placeholder="t('Select year')"
-            />
+            <BaseDatePicker v-model="intakeDate" :placeholder="t('DD/MM/YYYY')" />
           </div>
         </div>
       </div>
@@ -276,7 +304,13 @@ function submit() {
         <div class="ipfp-grid">
           <div class="form-field">
             <label>{{ t('Country of Residence') }}</label>
-            <input v-model="form.country" type="text" :placeholder="t('e.g. Bangladesh')" />
+            <BaseCombobox
+              v-model="form.country"
+              :options="countryOptions"
+              option-value="Id"
+              option-label="DisplayText"
+              :placeholder="t('Select country')"
+            />
           </div>
           <div class="form-field">
             <label>{{ t('Nationality') }}</label>
