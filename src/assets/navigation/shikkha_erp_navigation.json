@@ -238,6 +238,11 @@
     "icon": "fa-duotone fa-user-graduate",
     "sub_menus": [
      {
+      "name": "Admission Enquiries",
+      "name_bn": "ভর্তি অনুসন্ধান",
+      "icon": "fa-duotone fa-clipboard-question"
+     },
+     {
       "name": "Online Form Builder",
       "name_bn": "অনলাইন ফরম বিল্ডার",
       "icon": "fa-duotone fa-file-pen"
@@ -253,9 +258,19 @@
       "icon": "fa-duotone fa-pen-to-square"
      },
      {
+      "name": "Digital Lottery Draw",
+      "name_bn": "ডিজিটাল লটারি ড্র",
+      "icon": "fa-duotone fa-ticket-simple"
+     },
+     {
       "name": "Merit List",
       "name_bn": "মেধা তালিকা",
       "icon": "fa-duotone fa-trophy"
+     },
+     {
+      "name": "Waiting List",
+      "name_bn": "অপেক্ষমান তালিকা",
+      "icon": "fa-duotone fa-user-clock"
      },
      {
       "name": "Document Verification",

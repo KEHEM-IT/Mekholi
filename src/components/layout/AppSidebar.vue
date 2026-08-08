@@ -67,6 +67,17 @@ const SUBMENU_ROUTES: Record<string, string> = {
   "Exam Terms & Types": "institute-setup-exam-terms",
   "Classrooms / Rooms / Buildings": "institute-setup-rooms",
   "Academic Sessions & Terms": "institute-setup-sessions",
+  // Admission
+  "Admission Enquiries": "admission-enquiries",
+  "Online Form Builder": "admission-form-builder",
+  "Applications": "admission-applications",
+  "Admission Tests": "admission-tests",
+  "Digital Lottery Draw": "admission-digital-lottery",
+  "Merit List": "admission-merit-list",
+  "Waiting List": "admission-waiting-list",
+  "Document Verification": "admission-document-verification",
+  "Seat/Quota": "admission-seat-quota",
+  "Admission Settings": "admission-settings",
 };
 
 function onSubmenuClick(sub: NavSubMenu) {
