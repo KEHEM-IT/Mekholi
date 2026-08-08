@@ -340,7 +340,7 @@ async function onImportPicked(event: Event) {
 -->
 <style>
 .as-form-modal {
-  min-height: 65vh;
+  min-height: calc(100vh - 15rem);
   max-height: 100vh;
 }
 </style>

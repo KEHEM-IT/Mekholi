@@ -164,11 +164,7 @@ function submit() {
               :placeholder="t('Select session name')"
               @change="onSessionChange"
             />
-            <small class="form-hint">{{ t('Auto-fills Bangla name and academic year — you can change them.') }}</small>
-          </div>
-          <div class="form-field">
-            <label>{{ t('Session Name (Bangla)') }}</label>
-            <input v-model="form.session_name_bn" type="text" :placeholder="t('e.g. ২০২৬ সেশন')" />
+            <small class="form-hint">{{ t('Auto-fills the academic year — you can change it.') }}</small>
           </div>
           <div class="form-field">
             <label>{{ t('Academic Year') }} *</label>
@@ -190,10 +186,6 @@ function submit() {
               :placeholder="t('Select term')"
               @change="onTermChange"
             />
-          </div>
-          <div class="form-field">
-            <label>{{ t('Term Name (Bangla)') }}</label>
-            <input v-model="form.term_name_bn" type="text" :placeholder="t('e.g. প্রথম সাময়িক')" />
           </div>
           <div class="form-field">
             <label>{{ t('Term Order') }} *</label>
