@@ -268,12 +268,16 @@ function getSelectedYearName(): string {
                 {{ lang === 'bn' && f.labelBn ? f.labelBn : f.label }}
               </span>
               <span class="align-center">
-                <BaseToggle v-model="form.fields_config[f.key].visible" />
+                <BaseToggle
+                  v-if="form.fields_config && form.fields_config[f.key]"
+                  v-model="form.fields_config[f.key].visible"
+                />
               </span>
               <span class="align-center">
                 <BaseToggle
+                  v-if="form.fields_config && form.fields_config[f.key]"
                   v-model="form.fields_config[f.key].required"
-                  :disabled="!form.fields_config[f.key].visible"
+                  :disabled="!form.fields_config[f.key]?.visible"
                 />
               </span>
             </div>

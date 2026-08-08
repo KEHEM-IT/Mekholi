@@ -34,18 +34,33 @@ export interface AdmissionFormConfig {
 }
 
 export function emptyFormConfig(): AdmissionFormConfig {
+  const fields_config: Record<string, AdmissionFormField> = {
+    candidate_name: { visible: true, required: true },
+    candidate_name_bn: { visible: true, required: false },
+    guardian_name: { visible: true, required: true },
+    phone: { visible: true, required: true },
+    email: { visible: true, required: false },
+    desired_class: { visible: true, required: true },
+    version: { visible: true, required: false },
+    shift: { visible: true, required: false },
+    previous_school: { visible: true, required: false },
+    country: { visible: true, required: false },
+    nationality: { visible: true, required: false },
+    photo: { visible: true, required: true },
+    birth_certificate: { visible: true, required: true }
+  }
   return {
-    form_title: '',
-    form_title_bn: '',
+    form_title: 'Online Student Admission',
+    form_title_bn: 'অনলাইন ভর্তি ফরম',
     academic_year_id: null,
-    application_fee: 0,
+    application_fee: 200,
     open_date: '',
     close_date: '',
-    fields_config: {},
+    fields_config,
     custom_fields: [],
     status: 'Draft',
-    instructions: '',
-    instructions_bn: '',
+    instructions: 'Please fill out all the fields and upload candidate passport photo + birth certificate to submit your admission form. An application fee of 200 BDT applies.',
+    instructions_bn: 'দয়া করে সবগুলো তথ্য পূরণ করুন এবং প্রার্থীর পাসপোর্ট সাইজের ছবি ও জন্ম নিবন্ধন সনদ আপলোড করে সাবমিট করুন। আবেদন ফি ২০০ টাকা প্রযোজ্য।',
     is_active: true,
   }
 }
