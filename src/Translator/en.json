@@ -549,5 +549,7 @@
   "e.g. https://…/recognition.pdf": "e.g. https://…/recognition.pdf",
   "Code": "Code",
   "MPO": "MPO",
-  "No boards yet. Click “Add Board” to create the first one.": "No boards yet. Click “Add Board” to create the first one."
+  "No boards yet. Click “Add Board” to create the first one.": "No boards yet. Click “Add Board” to create the first one.",
+  "Built-in": "Built-in",
+  "Built-in boards cannot be deleted": "Built-in boards cannot be deleted"
 }

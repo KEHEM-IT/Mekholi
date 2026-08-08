@@ -1166,3 +1166,21 @@
   padding-top: $space-3;
   border-top: 1px solid var(--color-border);
 }
+
+// Built-in board badge + name cell
+.brd-name {
+  @include flex(row, center, flex-start, $space-2);
+}
+
+.brd-badge {
+  @include flex(row, center, center);
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--color-primary-muted);
+  color: var(--color-primary);
+  white-space: nowrap;
+}

@@ -15,10 +15,10 @@ from backend.core.db import get_db
 FIELDS = [
     "board_name", "board_name_bn", "board_code", "board_type",
     "institute_type_ids", "website", "contact", "address", "remarks",
-    "regulatory", "is_active",
+    "regulatory", "is_builtin", "is_active",
 ]
 JSON_FIELDS = ("institute_type_ids", "regulatory")
-BOOLEAN_FIELDS = ("is_active",)
+BOOLEAN_FIELDS = ("is_builtin", "is_active")
 
 DEFAULT_REGULATORY = {
     "recognition_no": "",
@@ -121,9 +121,17 @@ def update_board(item_id, body):
 def delete_board(item_id):
     conn = get_db()
     try:
+        row = conn.execute("SELECT is_builtin FROM boards WHERE id=?", (item_id,)).fetchone()
+        if not row:
+            return False
+        # Built-in BD boards are part of the registry — never deletable.
+        if row["is_builtin"]:
+            raise PermissionError("Built-in boards cannot be deleted")
         cur = conn.execute("DELETE FROM boards WHERE id=?", (item_id,))
         conn.commit()
         return cur.rowcount > 0
+    except PermissionError:
+        raise
     finally:
         conn.close()
 

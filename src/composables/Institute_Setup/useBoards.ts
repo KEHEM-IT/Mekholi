@@ -29,6 +29,7 @@ export interface Board {
   address: string
   remarks: string
   regulatory: BoardRegulatory
+  is_builtin: boolean
   is_active: boolean
 }
 
@@ -44,6 +45,7 @@ export function emptyBoard(): Board {
     address: '',
     remarks: '',
     regulatory: { recognition_no: '', recognition_date: '', registration_no: '', mpo_no: '', document: '' },
+    is_builtin: false,
     is_active: true,
   }
 }

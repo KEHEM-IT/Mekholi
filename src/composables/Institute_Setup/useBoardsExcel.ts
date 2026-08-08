@@ -46,6 +46,7 @@ const COLS: ColDef[] = [
   { header: 'Registration No', key: 'registration_no', parse: normText },
   { header: 'MPO No', key: 'mpo_no', parse: normText },
   { header: 'Document (URL)', key: 'document', parse: normText },
+  { header: 'Built-in (Yes/No)', key: 'is_builtin', fmt: boolText },
   { header: 'Is Active (Yes/No)', key: 'is_active', fmt: boolText, parse: parseBool },
 ]
 
@@ -97,6 +98,9 @@ export async function importBoardsFromExcel(file: File): Promise<{ boards: Board
       }
     }
     board.board_name = name
+    // Imported rows are always user boards — the built-in registry is
+    // seeded from the backend only, never via Excel.
+    board.is_builtin = false
     boards.push(board)
   }
   return { boards, skipped }

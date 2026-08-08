@@ -112,6 +112,12 @@ async function onSave(board: Board) {
 }
 
 async function onDelete(item: Board) {
+  // Built-in BD boards are part of the registry — they can't be deleted
+  // (the backend enforces this too); users can only add their own boards.
+  if (item.is_builtin) {
+    toast.error(t('Built-in boards cannot be deleted'))
+    return
+  }
   const id = item.id
   if (!id) return
   const ok = window.confirm(t('Delete "{name}"?', { name: item.board_name }))
@@ -269,11 +275,23 @@ async function onImportPicked(event: Event) {
         />
       </template>
 
+      <template #board_name="{ row }">
+        <span class="brd-name">
+          {{ f(row, 'board_name') }}
+          <span v-if="f(row, 'is_builtin')" class="brd-badge">{{ t('Built-in') }}</span>
+        </span>
+      </template>
+
       <template #actions="{ row }">
         <button type="button" class="btn btn--ghost br-card__btn" @click="openEdit(row as Board)">
           <i class="fa-duotone fa-pen" /> {{ t('Edit') }}
         </button>
-        <button type="button" class="btn btn--ghost br-card__btn br-card__btn--danger" @click="onDelete(row as Board)">
+        <button
+          v-if="!f(row, 'is_builtin')"
+          type="button"
+          class="btn btn--ghost br-card__btn br-card__btn--danger"
+          @click="onDelete(row as Board)"
+        >
           <i class="fa-duotone fa-trash" /> {{ t('Delete') }}
         </button>
       </template>

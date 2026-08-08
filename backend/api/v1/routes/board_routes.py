@@ -57,7 +57,11 @@ def handle_delete(handler):
     if not item_id:
         res.error(handler, 400, "id is required")
         return
-    deleted = board_controller.delete_board(item_id)
+    try:
+        deleted = board_controller.delete_board(item_id)
+    except PermissionError:
+        res.error(handler, 400, "Built-in boards cannot be deleted")
+        return
     if not deleted:
         res.error(handler, 404, "Board not found")
         return

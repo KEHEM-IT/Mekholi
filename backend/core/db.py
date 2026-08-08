@@ -51,6 +51,144 @@ def _migrate(conn):
         )
         print("SQL: migrated institute_profiles — staff model v2 (total/mpo/nonmpo) + backfill")
 
+    # Boards: add is_builtin (protects the built-in BD board registry from
+    # deletion). Safe to skip when the table doesn't exist yet.
+    try:
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(boards)").fetchall()]
+        if cols and "is_builtin" not in cols:
+            conn.execute("ALTER TABLE boards ADD COLUMN is_builtin INTEGER DEFAULT 0")
+            print("SQL: migrated boards — added is_builtin column")
+    except sqlite3.OperationalError:
+        pass
+
+
+# Built-in Bangladesh education boards (the official registry). Seeded once
+# on server start; marked is_builtin=1 so they can't be deleted from the UI
+# (users may still edit them or add their own boards).
+# Board codes are the official SMS/result codes used across Bangladesh.
+BUILTIN_BOARDS = [
+    # 9 regional Boards of Intermediate & Secondary Education
+    {
+        "board_name": "Dhaka Board", "board_name_bn": "ঢাকা বোর্ড",
+        "board_code": "DHA", "board_type": "General Education",
+        "institute_type_ids": [2, 3, 4, 17],
+        "website": "https://dhakaeducationboard.gov.bd",
+        "remarks": "Board of Intermediate & Secondary Education, Dhaka",
+    },
+    {
+        "board_name": "Rajshahi Board", "board_name_bn": "রাজশাহী বোর্ড",
+        "board_code": "RAJ", "board_type": "General Education",
+        "institute_type_ids": [2, 3, 4, 17],
+        "website": "https://rajshahiboard.gov.bd",
+        "remarks": "Board of Intermediate & Secondary Education, Rajshahi",
+    },
+    {
+        "board_name": "Cumilla Board", "board_name_bn": "কুমিল্লা বোর্ড",
+        "board_code": "COM", "board_type": "General Education",
+        "institute_type_ids": [2, 3, 4, 17],
+        "website": "https://comillaboard.gov.bd",
+        "remarks": "Board of Intermediate & Secondary Education, Cumilla",
+    },
+    {
+        "board_name": "Chattogram Board", "board_name_bn": "চট্টগ্রাম বোর্ড",
+        "board_code": "CHI", "board_type": "General Education",
+        "institute_type_ids": [2, 3, 4, 17],
+        "website": "https://bise-ctg.gov.bd",
+        "remarks": "Board of Intermediate & Secondary Education, Chattogram",
+    },
+    {
+        "board_name": "Barishal Board", "board_name_bn": "বরিশাল বোর্ড",
+        "board_code": "BAR", "board_type": "General Education",
+        "institute_type_ids": [2, 3, 4, 17],
+        "website": "https://barisalboard.gov.bd",
+        "remarks": "Board of Intermediate & Secondary Education, Barishal",
+    },
+    {
+        "board_name": "Jashore Board", "board_name_bn": "যশোর বোর্ড",
+        "board_code": "JES", "board_type": "General Education",
+        "institute_type_ids": [2, 3, 4, 17],
+        "website": "https://jessoreboard.gov.bd",
+        "remarks": "Board of Intermediate & Secondary Education, Jashore",
+    },
+    {
+        "board_name": "Sylhet Board", "board_name_bn": "সিলেট বোর্ড",
+        "board_code": "SYL", "board_type": "General Education",
+        "institute_type_ids": [2, 3, 4, 17],
+        "website": "https://sylhetboard.gov.bd",
+        "remarks": "Board of Intermediate & Secondary Education, Sylhet",
+    },
+    {
+        "board_name": "Dinajpur Board", "board_name_bn": "দিনাজপুর বোর্ড",
+        "board_code": "DIN", "board_type": "General Education",
+        "institute_type_ids": [2, 3, 4, 17],
+        "website": "https://dinajpurboard.gov.bd",
+        "remarks": "Board of Intermediate & Secondary Education, Dinajpur",
+    },
+    {
+        "board_name": "Mymensingh Board", "board_name_bn": "ময়মনসিংহ বোর্ড",
+        "board_code": "MYM", "board_type": "General Education",
+        "institute_type_ids": [2, 3, 4, 17],
+        "website": "https://mymensingheducationboard.gov.bd",
+        "remarks": "Board of Intermediate & Secondary Education, Mymensingh",
+    },
+    # Specialized boards
+    {
+        "board_name": "Bangladesh Madrasah Education Board", "board_name_bn": "বাংলাদেশ মাদরাসা শিক্ষা বোর্ড",
+        "board_code": "MAD", "board_type": "Madrasah Education",
+        "institute_type_ids": [5, 6],
+        "website": "https://ebmeb.gov.bd",
+        "remarks": "Dakhil, Alim and higher madrasah examinations",
+    },
+    {
+        "board_name": "Bangladesh Technical Education Board", "board_name_bn": "বাংলাদেশ কারিগরি শিক্ষা বোর্ড (বিটেব)",
+        "board_code": "TEC", "board_type": "Technical (BTEB)",
+        "institute_type_ids": [9, 10, 11, 12, 13, 14],
+        "website": "https://bteb.gov.bd",
+        "remarks": "SSC/HSC (Vocational), BM, Diploma in Engineering etc.",
+    },
+    # Higher-education authorities
+    {
+        "board_name": "National University", "board_name_bn": "জাতীয় বিশ্ববিদ্যালয়",
+        "board_code": "NU", "board_type": "National University",
+        "institute_type_ids": [17],
+        "website": "https://nu.ac.bd",
+        "remarks": "Degree (Pass) and Honours colleges",
+    },
+    {
+        "board_name": "Islamic Arabic University", "board_name_bn": "ইসলামি আরবি বিশ্ববিদ্যালয়",
+        "board_code": "IAU", "board_type": "University",
+        "institute_type_ids": [7, 8],
+        "website": "https://iau.edu.bd",
+        "remarks": "Fazil and Kamil examinations",
+    },
+]
+
+
+def _seed_boards(conn):
+    """Insert the built-in Bangladesh boards once (idempotent by name)."""
+    try:
+        conn.execute("SELECT 1 FROM boards LIMIT 1")
+    except sqlite3.OperationalError:
+        return  # boards table not created yet — nothing to seed
+    for b in BUILTIN_BOARDS:
+        found = conn.execute(
+            "SELECT id FROM boards WHERE TRIM(board_name) = TRIM(?) COLLATE NOCASE",
+            (b["board_name"],),
+        ).fetchone()
+        if found:
+            continue
+        conn.execute(
+            "INSERT INTO boards (board_name, board_name_bn, board_code, board_type,"
+            " institute_type_ids, website, remarks, regulatory, is_builtin, is_active)"
+            " VALUES (:board_name, :board_name_bn, :board_code, :board_type,"
+            " :institute_type_ids, :website, :remarks, '{}', 1, 1)",
+            {
+                **b,
+                "institute_type_ids": json.dumps(b["institute_type_ids"]),
+            },
+        )
+        print(f"SQL: seeded built-in board — {b['board_name']}")
+
 
 def init_db():
     """Create tables if missing, seed a blank profile, run migrations."""
@@ -223,11 +361,15 @@ def init_db():
             website TEXT DEFAULT '', contact TEXT DEFAULT '', address TEXT DEFAULT '',
             remarks TEXT DEFAULT '',
             regulatory TEXT DEFAULT '{}',
+            is_builtin INTEGER DEFAULT 0,
             is_active INTEGER DEFAULT 1,
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
     """)
+
+    _migrate(conn)
+    _seed_boards(conn)
 
     # Seed a blank profile so the API always has something to return.
     if conn.execute("SELECT COUNT(*) FROM institute_profiles").fetchone()[0] == 0:
@@ -240,7 +382,6 @@ def init_db():
             )
         print("SQL: seeded blank profile (EIIN: 130430)")
 
-    _migrate(conn)
     conn.commit()
     conn.close()
 
