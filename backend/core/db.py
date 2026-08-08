@@ -24,6 +24,7 @@ def get_db():
     conn = sqlite3.connect(str(DB_PATH))
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA foreign_keys = ON")
     return conn
 
 
@@ -178,6 +179,20 @@ BUILTIN_BOARDS = [
         "remarks": "Fazil and Kamil examinations",
     },
 ]
+
+
+def _seed_academic_years(conn):
+    """Seed a default academic year if the table is empty (makes foreign keys safe)."""
+    try:
+        count = conn.execute("SELECT COUNT(*) FROM academic_years").fetchone()[0]
+    except sqlite3.OperationalError:
+        return
+    if count == 0:
+        conn.execute(
+            "INSERT INTO academic_years (year_name, year_name_bn, start_date, end_date, is_current, is_active) "
+            "VALUES ('2026', '২০২৬', '2026-01-01', '2026-12-31', 1, 1)"
+        )
+        print("SQL: seeded default academic year — 2026")
 
 
 def _seed_boards(conn):
@@ -920,7 +935,7 @@ def init_db():
             guardian_name TEXT DEFAULT '',
             phone TEXT DEFAULT '',
             email TEXT DEFAULT '',
-            academic_year_id INTEGER DEFAULT 0,
+            academic_year_id INTEGER REFERENCES academic_years(id) ON DELETE SET NULL,
             desired_class TEXT DEFAULT '',
             version TEXT DEFAULT '',
             shift TEXT DEFAULT '',
@@ -939,7 +954,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             form_title TEXT DEFAULT '',
             form_title_bn TEXT DEFAULT '',
-            academic_year_id INTEGER DEFAULT 0,
+            academic_year_id INTEGER REFERENCES academic_years(id) ON DELETE SET NULL,
             application_fee REAL DEFAULT 0.0,
             open_date TEXT DEFAULT '',
             close_date TEXT DEFAULT '',
@@ -960,7 +975,7 @@ def init_db():
             guardian_name TEXT DEFAULT '',
             phone TEXT DEFAULT '',
             email TEXT DEFAULT '',
-            academic_year_id INTEGER DEFAULT 0,
+            academic_year_id INTEGER REFERENCES academic_years(id) ON DELETE SET NULL,
             desired_class TEXT DEFAULT '',
             version TEXT DEFAULT '',
             shift TEXT DEFAULT '',
@@ -983,12 +998,12 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             test_name TEXT DEFAULT '',
             test_name_bn TEXT DEFAULT '',
-            academic_year_id INTEGER DEFAULT 0,
+            academic_year_id INTEGER REFERENCES academic_years(id) ON DELETE SET NULL,
             class_name TEXT DEFAULT '',
             test_date TEXT DEFAULT '',
             start_time TEXT DEFAULT '',
             end_time TEXT DEFAULT '',
-            room_id INTEGER DEFAULT 0,
+            room_id INTEGER REFERENCES rooms(id) ON DELETE SET NULL,
             has_written INTEGER DEFAULT 1,
             has_mcq INTEGER DEFAULT 0,
             has_viva INTEGER DEFAULT 1,
@@ -1002,6 +1017,7 @@ def init_db():
     """)
 
     _migrate(conn)
+    _seed_academic_years(conn)
     _seed_boards(conn)
     _seed_subjects(conn)
     _seed_exam_terms(conn)
