@@ -19,6 +19,10 @@
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(3px);
   animation: modal-fade-in 0.18s ease;
+
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    padding: $space-2;
+  }
 }
 
 .modal-panel {
@@ -32,6 +36,10 @@
   overflow: hidden;
   animation: modal-pop-in 0.2s ease;
 
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    border-radius: $radius-md;
+  }
+
   &--wide {
     width: min(56rem, 100%);
   }
@@ -43,6 +51,10 @@
   padding: $space-4 $space-6;
   border-bottom: 1px solid var(--color-border);
   background: var(--color-surface);
+
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    padding: $space-3 $space-4;
+  }
 }
 
 .modal-panel__title {
@@ -84,6 +96,10 @@
   min-height: 0;
   overflow-y: auto;
   padding: $space-6;
+
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    padding: $space-4;
+  }
 }
 
 .modal-panel__foot {
@@ -92,6 +108,10 @@
   padding: $space-3 $space-6;
   border-top: 1px solid var(--color-border);
   background: var(--color-surface-alt);
+
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    padding: $space-3 $space-4;
+  }
 }
 
 @keyframes modal-fade-in {

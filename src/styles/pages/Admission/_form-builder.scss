@@ -1,0 +1,365 @@
+@use '../../abstracts' as *;
+
+// Online Form Builder Styles — scoped to .fb- and mockup- classes
+.fb-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: $space-6;
+  align-items: start;
+
+  @include respond-to(lg) {
+    grid-template-columns: minmax(0, 1fr) 380px;
+  }
+
+  @include respond-to(xl) {
+    grid-template-columns: minmax(0, 1fr) 480px;
+  }
+}
+
+.fb-column {
+  @include flex(column, stretch, flex-start, $space-6);
+  min-width: 0;
+}
+
+.fb-section-subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  margin-top: -10px;
+  margin-bottom: $space-3;
+}
+
+// ── Standard Fields Config Table ───────────────────────────────────────
+.fb-fields-table {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.fb-fields-row {
+  display: grid;
+  grid-template-columns: 1fr 6rem 6rem;
+  padding: $space-3 $space-4;
+  border-bottom: 1px solid var(--color-border);
+  align-items: center;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr 4.5rem 4.5rem;
+    padding: $space-2 $space-2;
+    font-size: 0.8rem;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &--header {
+    background: var(--color-surface-alt);
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+  }
+
+  .field-label-text {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .align-center {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+// ── Custom Fields List ─────────────────────────────────────────────────
+.fb-custom-list {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.fb-custom-item {
+  @include flex(row, center, space-between, $space-3);
+  padding: $space-3 $space-4;
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .cf-info {
+    @include flex(row, center, flex-start, $space-2);
+    flex-wrap: wrap;
+    font-size: 0.88rem;
+
+    strong {
+      font-weight: 700;
+      color: var(--color-text);
+    }
+  }
+
+  .cf-type-badge,
+  .cf-req-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 1px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+  }
+
+  .cf-type-badge {
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border-strong);
+    color: var(--color-text-secondary);
+  }
+
+  .cf-req-badge {
+    background: var(--color-danger-muted);
+    border: 1px solid var(--color-danger);
+    color: var(--color-danger);
+  }
+}
+
+.fb-cf-remove {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: $radius-sm;
+
+  &:hover {
+    color: var(--color-danger);
+    background: var(--color-danger-muted);
+  }
+}
+
+.fb-custom-empty {
+  @include flex(column, center, center, $space-2);
+  width: 100%;
+  padding: $space-8;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: $radius-md;
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  text-align: center;
+
+  i {
+    font-size: 1.8rem;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+}
+
+.fb-cf-form {
+  width: 100%;
+  border-top: 1px solid var(--color-border-strong);
+  margin-top: $space-4;
+  padding-top: $space-4;
+
+  h5 {
+    font-size: 0.88rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-secondary);
+    margin-bottom: $space-3;
+  }
+}
+
+// ── Mockup Preview Panel ───────────────────────────────────────────────
+.mockup-sticky {
+  position: sticky;
+  top: 6rem;
+  z-index: 10;
+}
+
+.mockup-browser {
+  width: 100%;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  max-height: calc(100vh - 10rem);
+  @include flex(column, stretch, flex-start);
+}
+
+.browser-head {
+  @include flex(row, center, flex-start, $space-3);
+  padding: $space-2 $space-4;
+  background: var(--color-surface-alt);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+
+  .dots {
+    @include flex(row, center, flex-start, 4px);
+    span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-border-strong);
+    }
+  }
+
+  .url-bar {
+    flex: 1;
+    text-align: center;
+    font-size: 0.72rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: $radius-sm;
+    color: var(--color-text-muted);
+    padding: 2px 0;
+    @include truncate;
+  }
+}
+
+.browser-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: $space-6;
+  background: var(--color-bg);
+}
+
+.form-head-preview {
+  text-align: center;
+  @include flex(column, center, flex-start, $space-1);
+  margin-bottom: $space-4;
+
+  .logo-circle {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+    font-size: 1.3rem;
+    border: 1px solid var(--color-border-strong);
+    margin-bottom: $space-2;
+  }
+
+  h2 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .intake-year {
+    font-size: 0.78rem;
+    color: var(--color-text-secondary);
+  }
+
+  .fee-badge {
+    margin-top: $space-2;
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: var(--color-success-muted);
+    border: 1px solid var(--color-success);
+    color: var(--color-success);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+}
+
+.instructions-card {
+  @include flex(row, flex-start, flex-start, $space-2);
+  padding: $space-3;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  margin-bottom: $space-4;
+
+  i {
+    color: var(--color-info);
+    font-size: 0.85rem;
+    margin-top: 2px;
+  }
+
+  p {
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+}
+
+.mock-form {
+  @include flex(column, stretch, flex-start, $space-4);
+}
+
+.mock-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $space-3;
+}
+
+.mock-field {
+  @include flex(column, flex-start, flex-start, 4px);
+
+  label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
+
+  .required-star {
+    color: var(--color-danger);
+    margin-left: 2px;
+  }
+
+  &--full {
+    grid-column: 1 / -1;
+  }
+}
+
+.mock-input {
+  width: 100%;
+  min-height: 2.2rem;
+  border-radius: $radius-sm;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  @include flex(row, center, flex-start);
+  padding: 0 $space-3;
+
+  .placeholder-mock {
+    font-size: 0.8rem;
+    color: var(--color-text-disabled);
+  }
+
+  .upload-mock {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    @include flex(row, center, flex-start, $space-2);
+  }
+}
+
+.mock-submit {
+  width: 100%;
+  padding: $space-2 0;
+  border-radius: $radius-md;
+  border: none;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-active));
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  @include flex(row, center, center, $space-2);
+  opacity: 0.5;
+  cursor: not-allowed;
+  margin-top: $space-2;
+}
