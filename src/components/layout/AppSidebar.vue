@@ -334,6 +334,8 @@ function onNavigate() {
 
 function onDocumentClick(e: MouseEvent) {
   if (!openMenu.value) return;
+  // If the sidebar is expanded (not collapsed), clicking outside should not close/collapse the submenu.
+  if (!isCollapsed.value) return;
   if (sidebarRef.value && !sidebarRef.value.contains(e.target as Node)) {
     openMenu.value = null;
   }
