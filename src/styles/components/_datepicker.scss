@@ -142,6 +142,11 @@
   border-radius: $radius-md;
   box-shadow: var(--shadow-card);
   padding: $space-3;
+
+  &.is-right-aligned {
+    left: auto;
+    right: 0;
+  }
 }
 
 .datepicker__header {

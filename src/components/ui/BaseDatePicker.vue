@@ -189,8 +189,15 @@ function isToday(day: number): boolean {
   )
 }
 
+const PANEL_WIDTH = 288 // 18rem
+const panelAlign = ref<'left' | 'right'>('left')
+
 function open() {
   if (props.disabled || isOpen.value) return
+  if (root.value) {
+    const rect = root.value.getBoundingClientRect()
+    panelAlign.value = window.innerWidth - rect.right < PANEL_WIDTH + 8 ? 'right' : 'left'
+  }
   // Jump the calendar to the selected date, else to today.
   const s = selected.value
   const anchor = s ?? { y: new Date().getFullYear(), m: new Date().getMonth() }
@@ -321,7 +328,13 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
       </span>
     </div>
 
-    <div v-if="isOpen" class="datepicker__panel" role="dialog" @keydown="onPanelKeydown">
+    <div
+      v-if="isOpen"
+      class="datepicker__panel"
+      :class="{ 'is-right-aligned': panelAlign === 'right' }"
+      role="dialog"
+      @keydown="onPanelKeydown"
+    >
       <!-- Header: arrows + clickable month/year fields -->
       <div class="datepicker__header">
         <div class="datepicker__seg">
