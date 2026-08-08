@@ -220,7 +220,7 @@ function submit() {
           </div>
         </div>
 
-        <div class="ipf-grid mt-4">
+        <div class="ipf-grid fb-marks-grid">
           <div class="form-field" :class="{ 'is-disabled-opacity': !form.has_written }">
             <label>{{ t('Max Written Marks') }}</label>
             <input

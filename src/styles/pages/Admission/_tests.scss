@@ -5,3 +5,7 @@
   min-height: calc(100vh - 12rem);
   max-height: 100vh;
 }
+
+.fb-marks-grid {
+  margin-top: $space-6; /* Adds 1.5rem (24px) top margin spacing */
+}
