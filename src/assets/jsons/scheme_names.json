@@ -1,0 +1,128 @@
+[
+  {
+    "Id": "JSC Grade",
+    "Name": "JSC Grade",
+    "Name_bn": "জেএসসি গ্রেড",
+    "LookupText": "JSC Grade - জেএসসি গ্রেড",
+    "grading_type": "GPA 5.00",
+    "board": "General",
+    "pass_marks": 33
+  },
+  {
+    "Id": "JDC Grade",
+    "Name": "JDC Grade",
+    "Name_bn": "জেডিসি গ্রেড",
+    "LookupText": "JDC Grade - জেডিসি গ্রেড",
+    "grading_type": "GPA 5.00",
+    "board": "Madrasah",
+    "pass_marks": 33
+  },
+  {
+    "Id": "SSC Grade",
+    "Name": "SSC Grade",
+    "Name_bn": "এসএসসি গ্রেড",
+    "LookupText": "SSC Grade - এসএসসি গ্রেড",
+    "grading_type": "GPA 5.00",
+    "board": "General",
+    "pass_marks": 33
+  },
+  {
+    "Id": "Dakhil Grade",
+    "Name": "Dakhil Grade",
+    "Name_bn": "দাখিল গ্রেড",
+    "LookupText": "Dakhil Grade - দাখিল গ্রেড",
+    "grading_type": "GPA 5.00",
+    "board": "Madrasah",
+    "pass_marks": 33
+  },
+  {
+    "Id": "SSC (Vocational)",
+    "Name": "SSC (Vocational)",
+    "Name_bn": "এসএসসি (ভোকেশনাল)",
+    "LookupText": "SSC (Vocational) - এসএসসি (ভোকেশনাল)",
+    "grading_type": "CGPA 4.00",
+    "board": "Technical (BTEB)",
+    "pass_marks": 40
+  },
+  {
+    "Id": "HSC Grade",
+    "Name": "HSC Grade",
+    "Name_bn": "এইচএসসি গ্রেড",
+    "LookupText": "HSC Grade - এইচএসসি গ্রেড",
+    "grading_type": "GPA 5.00",
+    "board": "General",
+    "pass_marks": 33
+  },
+  {
+    "Id": "Alim Grade",
+    "Name": "Alim Grade",
+    "Name_bn": "আলিম গ্রেড",
+    "LookupText": "Alim Grade - আলিম গ্রেড",
+    "grading_type": "GPA 5.00",
+    "board": "Madrasah",
+    "pass_marks": 33
+  },
+  {
+    "Id": "HSC (Vocational)",
+    "Name": "HSC (Vocational)",
+    "Name_bn": "এইচএসসি (ভোকেশনাল)",
+    "LookupText": "HSC (Vocational) - এইচএসসি (ভোকেশনাল)",
+    "grading_type": "CGPA 4.00",
+    "board": "Technical (BTEB)",
+    "pass_marks": 40
+  },
+  {
+    "Id": "HSC (BM)",
+    "Name": "HSC (BM)",
+    "Name_bn": "এইচএসসি (বি.এম)",
+    "LookupText": "HSC (BM) - এইচএসসি (বি.এম)",
+    "grading_type": "CGPA 4.00",
+    "board": "Technical (BTEB)",
+    "pass_marks": 40
+  },
+  {
+    "Id": "Diploma in Engineering",
+    "Name": "Diploma in Engineering",
+    "Name_bn": "ডিপ্লোমা ইন ইঞ্জিনিয়ারিং",
+    "LookupText": "Diploma in Engineering - ডিপ্লোমা ইন ইঞ্জিনিয়ারিং",
+    "grading_type": "CGPA 4.00",
+    "board": "Technical (BTEB)",
+    "pass_marks": 40
+  },
+  {
+    "Id": "Fazil Grade",
+    "Name": "Fazil Grade",
+    "Name_bn": "ফাজিল গ্রেড",
+    "LookupText": "Fazil Grade - ফাজিল গ্রেড",
+    "grading_type": "CGPA 4.00",
+    "board": "Madrasah",
+    "pass_marks": 33
+  },
+  {
+    "Id": "Kamil Grade",
+    "Name": "Kamil Grade",
+    "Name_bn": "কামিল গ্রেড",
+    "LookupText": "Kamil Grade - কামিল গ্রেড",
+    "grading_type": "CGPA 4.00",
+    "board": "Madrasah",
+    "pass_marks": 33
+  },
+  {
+    "Id": "Degree (Pass)",
+    "Name": "Degree (Pass)",
+    "Name_bn": "ডিগ্রি (পাস)",
+    "LookupText": "Degree (Pass) - ডিগ্রি (পাস)",
+    "grading_type": "CGPA 4.00",
+    "board": "University",
+    "pass_marks": 33
+  },
+  {
+    "Id": "Honours Grade",
+    "Name": "Honours Grade",
+    "Name_bn": "অনার্স গ্রেড",
+    "LookupText": "Honours Grade - অনার্স গ্রেড",
+    "grading_type": "CGPA 4.00",
+    "board": "University",
+    "pass_marks": 40
+  }
+]

@@ -513,5 +513,8 @@
   "Board": "Board",
   "Grades": "Grades",
   "Default": "Default",
-  "No schemes yet. Click “Add Scheme” to create the first one.": "No schemes yet. Click “Add Scheme” to create the first one."
+  "No schemes yet. Click “Add Scheme” to create the first one.": "No schemes yet. Click “Add Scheme” to create the first one.",
+  "Select scheme name": "Select scheme name",
+  "Auto-fills Grading Type, Board and Pass Marks — you can change them.": "Auto-fills Grading Type, Board and Pass Marks — you can change them.",
+  "Picking a Scheme Name auto-fills common grades for its Grading Type — then adjust.": "Picking a Scheme Name auto-fills common grades for its Grading Type — then adjust."
 }

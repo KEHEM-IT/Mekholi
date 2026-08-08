@@ -513,5 +513,8 @@
   "Board": "বোর্ড",
   "Grades": "গ্রেড",
   "Default": "ডিফল্ট",
-  "No schemes yet. Click “Add Scheme” to create the first one.": "এখনও কোনো স্কিম নেই। প্রথমটি তৈরি করতে “স্কিম যোগ করুন” এ ক্লিক করুন।"
+  "No schemes yet. Click “Add Scheme” to create the first one.": "এখনও কোনো স্কিম নেই। প্রথমটি তৈরি করতে “স্কিম যোগ করুন” এ ক্লিক করুন।",
+  "Select scheme name": "স্কিমের নাম নির্বাচন করুন",
+  "Auto-fills Grading Type, Board and Pass Marks — you can change them.": "গ্রেডিং ধরন, বোর্ড এবং পাস নম্বর স্বয়ংক্রিয়ভাবে পূরণ হয় — আপনি পরিবর্তন করতে পারেন।",
+  "Picking a Scheme Name auto-fills common grades for its Grading Type — then adjust.": "স্কিমের নাম বেছে নিলে তার গ্রেডিং ধরনের সাধারণ গ্রেড স্বয়ংক্রিয়ভাবে পূরণ হয় — তারপর ঠিক করুন।"
 }
