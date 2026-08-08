@@ -9,7 +9,7 @@
 //   ✕ button only, e.g. for forms where accidental dismissal would lose data)
 // Events: close
 // Slot: default (panel body)
-import { onBeforeUnmount, onMounted } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useTranslator } from '@/Translator'
 
 const props = withDefaults(
@@ -36,12 +36,22 @@ const { t } = useTranslator()
 
 const emit = defineEmits<{ close: [] }>()
 
+const isClosing = ref(false)
+
+function triggerClose() {
+  if (isClosing.value) return
+  isClosing.value = true
+  setTimeout(() => {
+    emit('close')
+  }, 220)
+}
+
 function onKeydown(event: KeyboardEvent) {
-  if (event.key === 'Escape' && props.closable) emit('close')
+  if (event.key === 'Escape' && props.closable) triggerClose()
 }
 
 function onClickOverlay(event: MouseEvent) {
-  if (event.target === event.currentTarget && props.closable && props.closeOnOverlay) emit('close')
+  if (event.target === event.currentTarget && props.closable && props.closeOnOverlay) triggerClose()
 }
 
 onMounted(() => {
@@ -57,10 +67,10 @@ onBeforeUnmount(() => {
 
 <template>
   <Teleport to="body">
-    <div class="modal-overlay" @mousedown.self="onClickOverlay">
+    <div class="modal-overlay" :class="{ 'is-closing': isClosing }" @mousedown.self="onClickOverlay">
       <div
         class="modal-panel"
-        :class="[{ 'modal-panel--wide': wide, 'modal-panel--tall': tall }, panelClass]"
+        :class="[{ 'modal-panel--wide': wide, 'modal-panel--tall': tall, 'is-closing': isClosing }, panelClass]"
         role="dialog"
         aria-modal="true"
       >
@@ -73,7 +83,7 @@ onBeforeUnmount(() => {
             type="button"
             class="modal-panel__close"
             :aria-label="t('Close')"
-            @click="emit('close')"
+            @click="triggerClose"
           >
             <i class="fa-duotone fa-xmark" />
           </button>
