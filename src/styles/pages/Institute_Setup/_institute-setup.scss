@@ -1184,3 +1184,15 @@
   color: var(--color-primary);
   white-space: nowrap;
 }
+
+// Institute Types cell — one type per line, comma after each
+.brd-itypes {
+  @include flex(column, flex-start, flex-start, 2px);
+  min-width: 0;
+}
+
+.brd-itypes__item {
+  display: block;
+  max-width: 100%;
+  @include truncate;
+}

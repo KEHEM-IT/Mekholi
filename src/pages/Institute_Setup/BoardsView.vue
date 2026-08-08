@@ -75,10 +75,14 @@ function f(item: unknown, key: string): unknown {
 }
 
 function instituteTypesLabel(ids: unknown): string {
+  return instituteTypeNames(ids).join(', ') || '—'
+}
+
+/** Institute-type ids → resolved names (for the stacked cell + sorting). */
+function instituteTypeNames(ids: unknown): string[] {
   const arr = Array.isArray(ids) ? (ids as number[]) : []
-  if (!arr.length) return '—'
-  const names = arr.map((id) => instituteTypeMap.value.get(Number(id)) ?? '').filter(Boolean)
-  return names.length ? names.join(', ') : arr.join(', ')
+  if (!arr.length) return []
+  return arr.map((id) => instituteTypeMap.value.get(Number(id)) ?? '').filter(Boolean)
 }
 
 async function loadAll() {
@@ -279,6 +283,20 @@ async function onImportPicked(event: Event) {
         <span class="brd-name">
           {{ f(row, 'board_name') }}
           <span v-if="f(row, 'is_builtin')" class="brd-badge">{{ t('Built-in') }}</span>
+        </span>
+      </template>
+
+      <!-- Institute Types: one type per line, comma-separated -->
+      <template #institute_type_ids="{ row }">
+        <span v-if="instituteTypeNames(f(row, 'institute_type_ids')).length === 0" class="brd-itypes">—</span>
+        <span v-else class="brd-itypes">
+          <span
+            v-for="(name, i) in instituteTypeNames(f(row, 'institute_type_ids'))"
+            :key="i"
+            class="brd-itypes__item"
+          >
+            {{ name }}{{ i < instituteTypeNames(f(row, 'institute_type_ids')).length - 1 ? ',' : '' }}
+          </span>
         </span>
       </template>
 
