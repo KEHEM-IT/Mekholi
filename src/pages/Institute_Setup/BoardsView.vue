@@ -280,10 +280,7 @@ async function onImportPicked(event: Event) {
       </template>
 
       <template #board_name="{ row }">
-        <span class="brd-name">
-          {{ f(row, 'board_name') }}
-          <span v-if="f(row, 'is_builtin')" class="brd-badge">{{ t('Built-in') }}</span>
-        </span>
+        {{ f(row, 'board_name') }}
       </template>
 
       <!-- Institute Types: one type per line, comma-separated -->
