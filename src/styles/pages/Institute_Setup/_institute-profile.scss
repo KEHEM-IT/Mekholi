@@ -63,6 +63,31 @@
       border-color: var(--color-info);
     }
   }
+
+  // ── Mobile: header buttons go full-width so nothing overflows ────────
+  // The Add (primary) button spans the full row; Export / Import share the
+  // second row 50/50. Applies to every Institute Setup page (Branches →
+  // Academic Sessions) since they all use .ipf-header__actions.
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    &__actions {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    &__actions .btn {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    &__actions .btn--primary {
+      flex-basis: 100%;
+      width: 100%;
+    }
+
+    &__actions .btn:not(.btn--primary) {
+      flex-basis: calc(50% - #{$space-2});
+    }
+  }
 }
 
 .ipf-layout {
