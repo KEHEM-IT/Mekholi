@@ -366,6 +366,60 @@ def _seed_admission_enquiries(conn):
         print(f"SQL: seeded default admission enquiry — {eq['candidate_name']}")
 
 
+DEFAULT_FIELDS_CONFIG = {
+    "candidate_name": {"visible": True, "required": True},
+    "candidate_name_bn": {"visible": True, "required": False},
+    "guardian_name": {"visible": True, "required": True},
+    "phone": {"visible": True, "required": True},
+    "email": {"visible": True, "required": False},
+    "desired_class": {"visible": True, "required": True},
+    "version": {"visible": True, "required": False},
+    "shift": {"visible": True, "required": False},
+    "previous_school": {"visible": True, "required": False},
+    "country": {"visible": True, "required": False},
+    "nationality": {"visible": True, "required": False},
+    "photo": {"visible": True, "required": True},
+    "birth_certificate": {"visible": True, "required": True}
+}
+
+DEFAULT_CUSTOM_FIELDS = [
+    {"label": "Sports or Extracurricular Achievements", "type": "text", "required": False}
+]
+
+
+def _seed_admission_forms(conn):
+    """Seed a default Admission Form builder template ONLY on an empty table."""
+    try:
+        count = conn.execute("SELECT COUNT(*) FROM admission_forms").fetchone()[0]
+    except sqlite3.OperationalError:
+        return
+    if count > 0:
+        return
+    # Resolve first available academic year
+    year = conn.execute("SELECT id FROM academic_years ORDER BY id DESC LIMIT 1").fetchone()
+    year_id = year["id"] if year else 0
+    
+    conn.execute(
+        "INSERT INTO admission_forms (form_title, form_title_bn, academic_year_id, application_fee,"
+        " open_date, close_date, fields_config, custom_fields, status, instructions, instructions_bn, is_active)"
+        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)",
+        (
+            "Online Admission Form - 2026",
+            "অনলাইন ভর্তি ফরম - ২০২৬",
+            year_id,
+            200.0,
+            "2026-01-01",
+            "2026-12-31",
+            json.dumps(DEFAULT_FIELDS_CONFIG),
+            json.dumps(DEFAULT_CUSTOM_FIELDS),
+            "Active",
+            "Please fill out all the fields and upload candidate passport photo + birth certificate to submit your admission form. An application fee of 200 BDT applies.",
+            "দয়া করে সবগুলো তথ্য পূরণ করুন এবং প্রার্থীর পাসপোর্ট সাইজের ছবি ও জন্ম নিবন্ধন সনদ আপলোড করে সাবমিট করুন। আবেদন ফি ২০০ টাকা প্রযোজ্য।"
+        )
+    )
+    print("SQL: seeded default admission form template")
+
+
 def _seed_exam_terms(conn):
     """Seed the default BD exam terms ONLY on a fresh/empty table, so terms
     the user deletes stay deleted (no resurrection on restart)."""
@@ -760,6 +814,23 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        CREATE TABLE IF NOT EXISTS admission_forms (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            form_title TEXT DEFAULT '',
+            form_title_bn TEXT DEFAULT '',
+            academic_year_id INTEGER DEFAULT 0,
+            application_fee REAL DEFAULT 0.0,
+            open_date TEXT DEFAULT '',
+            close_date TEXT DEFAULT '',
+            fields_config TEXT DEFAULT '{}',
+            custom_fields TEXT DEFAULT '[]',
+            status TEXT DEFAULT 'Draft',
+            instructions TEXT DEFAULT '',
+            instructions_bn TEXT DEFAULT '',
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     _migrate(conn)
@@ -769,6 +840,7 @@ def init_db():
     _seed_buildings_rooms(conn)
     _seed_academic_sessions(conn)
     _seed_admission_enquiries(conn)
+    _seed_admission_forms(conn)
 
     # Seed a blank profile so the API always has something to return.
     if conn.execute("SELECT COUNT(*) FROM institute_profiles").fetchone()[0] == 0:

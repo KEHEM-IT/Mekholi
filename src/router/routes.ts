@@ -134,8 +134,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'admission/form-builder',
         name: 'admission-form-builder',
-        component: () => import('@/pages/ComingSoonView.vue'),
-        meta: { title: 'Online Form Builder', titleBn: 'অনলাইন ফরম বিল্ডার', icon: 'fa-duotone fa-file-pen', module: 'Admission' },
+        component: () => import('@/pages/Admission/OnlineFormBuilderView.vue'),
         beforeEnter: requireAuth,
       },
       {
