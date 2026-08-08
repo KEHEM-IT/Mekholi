@@ -28,7 +28,7 @@ const form = reactive<Board>({
   ...(props.board ? (JSON.parse(JSON.stringify(props.board)) as Partial<Board>) : {}),
   regulatory: {
     ...emptyBoard().regulatory,
-    ...(props.board?.regulatory ?? {}),
+    ...props.board?.regulatory,
   },
 })
 

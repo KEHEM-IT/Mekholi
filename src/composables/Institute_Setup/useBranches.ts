@@ -6,7 +6,7 @@
 //   POST   /api/branches?id=N   → update   → { ok, id }
 //   DELETE /api/branches?id=N   → delete   → { ok }
 
-const API_BASE = 'http://localhost:5000'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
 
 export interface Branch {
   id?: number

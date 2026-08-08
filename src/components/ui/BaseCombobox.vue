@@ -114,7 +114,11 @@ function close(refocusControl = false) {
 }
 
 function toggle() {
-  isOpen.value ? close() : open()
+  if (isOpen.value) {
+    close()
+  } else {
+    open()
+  }
 }
 
 function selectOption(opt: ComboboxOption) {
@@ -188,7 +192,6 @@ function onSearchKeydown(event: KeyboardEvent) {
       }
       break
     }
-      break
     case 'Escape':
       event.preventDefault()
       close(true)

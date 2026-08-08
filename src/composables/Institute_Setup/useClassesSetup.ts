@@ -6,7 +6,7 @@
 //   POST   /api/{entity}?id=N → update → { ok, id }
 //   DELETE /api/{entity}?id=N → delete → { ok }
 
-const API_BASE = 'http://localhost:5000'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
 
 export type ClassSetupEntity = 'classes' | 'sections' | 'groups' | 'shifts'
 

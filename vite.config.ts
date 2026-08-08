@@ -90,5 +90,11 @@ export default defineConfig({
     port: 5173,
     // Allow any preview host (sandbox/cloud preview domains) in dev.
     allowedHosts: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+    },
   },
 })

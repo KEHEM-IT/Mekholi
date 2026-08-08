@@ -7,7 +7,7 @@
 //   DELETE /api/academic-sessions?id=N      → delete → { ok }
 //   POST   /api/academic-sessions/import    → bulk upsert with cross-check
 
-const API_BASE = 'http://localhost:5000'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
 
 export interface AcademicSessionTerm {
   id?: number
