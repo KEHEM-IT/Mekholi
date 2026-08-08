@@ -108,16 +108,9 @@ def update_exam(item_id, body):
 def delete_exam(item_id):
     conn = get_db()
     try:
-        row = conn.execute("SELECT is_builtin FROM exam_terms WHERE id=?", (item_id,)).fetchone()
-        if not row:
-            return False
-        if row["is_builtin"]:
-            raise PermissionError("Built-in exam terms cannot be deleted")
         cur = conn.execute("DELETE FROM exam_terms WHERE id=?", (item_id,))
         conn.commit()
         return cur.rowcount > 0
-    except PermissionError:
-        raise
     finally:
         conn.close()
 

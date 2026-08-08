@@ -57,11 +57,7 @@ def handle_delete(handler):
     if not item_id:
         res.error(handler, 400, "id is required")
         return
-    try:
-        deleted = exam_term_controller.delete_exam(item_id)
-    except PermissionError:
-        res.error(handler, 400, "Built-in exam terms cannot be deleted")
-        return
+    deleted = exam_term_controller.delete_exam(item_id)
     if not deleted:
         res.error(handler, 404, "Exam term not found")
         return

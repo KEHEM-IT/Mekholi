@@ -210,10 +210,13 @@ BUILTIN_EXAMS = [
 
 
 def _seed_exam_terms(conn):
-    """Insert the built-in Bangladesh exam terms once (idempotent by name)."""
+    """Seed the default BD exam terms ONLY on a fresh/empty table, so terms
+    the user deletes stay deleted (no resurrection on restart)."""
     try:
-        conn.execute("SELECT 1 FROM exam_terms LIMIT 1")
+        count = conn.execute("SELECT COUNT(*) FROM exam_terms").fetchone()[0]
     except sqlite3.OperationalError:
+        return  # table not created yet
+    if count > 0:
         return
     for e in BUILTIN_EXAMS:
         board = conn.execute(
@@ -221,12 +224,6 @@ def _seed_exam_terms(conn):
             (e["board"],),
         ).fetchone()
         board_id = board["id"] if board else 0
-        found = conn.execute(
-            "SELECT id FROM exam_terms WHERE TRIM(exam_name) = TRIM(?) COLLATE NOCASE",
-            (e["name"],),
-        ).fetchone()
-        if found:
-            continue
         conn.execute(
             "INSERT INTO exam_terms (exam_name, exam_name_bn, exam_type, board_id,"
             " term_id, class_ids, scheme_id, exam_start, exam_end,"
@@ -234,7 +231,7 @@ def _seed_exam_terms(conn):
             " VALUES (?, ?, ?, ?, 0, '[]', 0, '', '', 0, 0, 1, 1)",
             (e["name"], e["bn"], e["type"], board_id),
         )
-        print(f"SQL: seeded built-in exam term — {e['name']}")
+        print(f"SQL: seeded default exam term — {e['name']}")
 
 
 # Built-in Bangladesh subjects & curriculum (NCTB / BMEB / BTEB based).

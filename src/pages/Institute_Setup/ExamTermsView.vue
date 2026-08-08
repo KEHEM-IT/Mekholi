@@ -137,11 +137,6 @@ async function onSave(exam: ExamTerm) {
 }
 
 async function onDelete(item: ExamTerm) {
-  // Built-in BD exam terms are part of the registry — not deletable.
-  if (item.is_builtin) {
-    toast.error(t('Built-in exam terms cannot be deleted'))
-    return
-  }
   const id = item.id
   if (!id) return
   const ok = window.confirm(t('Delete "{name}"?', { name: item.exam_name }))
@@ -291,10 +286,7 @@ async function onImportPicked(event: Event) {
       :empty-text="t('No exam terms yet. Click “Add Exam Term” to create the first one.')"
     >
       <template #exam_name="{ row }">
-        <span class="brd-name">
-          {{ f(row, 'exam_name') }}
-          <span v-if="f(row, 'is_builtin')" class="brd-badge">{{ t('Built-in') }}</span>
-        </span>
+        {{ f(row, 'exam_name') }}
       </template>
 
       <template #is_active="{ row }">
@@ -311,7 +303,6 @@ async function onImportPicked(event: Event) {
           <i class="fa-duotone fa-pen" /> {{ t('Edit') }}
         </button>
         <button
-          v-if="!f(row, 'is_builtin')"
           type="button"
           class="btn btn--ghost br-card__btn br-card__btn--danger"
           @click="onDelete(row as ExamTerm)"
