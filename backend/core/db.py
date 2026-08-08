@@ -209,6 +209,68 @@ BUILTIN_EXAMS = [
 ]
 
 
+# Default Bangladesh school infrastructure (common buildings + rooms).
+# Seeded ONLY on empty tables, so rows the user deletes stay deleted
+# (no resurrection on restart). Rooms reference buildings by code, resolved
+# at seed time.
+DEFAULT_BUILDINGS = [
+    {"name": "Main Building", "bn": "মূল ভবন", "code": "BLK-01", "floors": 3},
+    {"name": "Science Building", "bn": "বিজ্ঞান ভবন", "code": "BLK-02", "floors": 2},
+    {"name": "Admin Building", "bn": "প্রশাসনিক ভবন", "code": "BLK-03", "floors": 1},
+]
+
+DEFAULT_ROOMS = [
+    # (room_no, room_no_bn, building_code, floor, type, capacity, facilities, status)
+    ("101", "", "BLK-01", 1, "Classroom", 50, ["projector", "whiteboard", "fan"], "Active"),
+    ("102", "", "BLK-01", 1, "Classroom", 45, ["whiteboard", "fan"], "Active"),
+    ("103", "", "BLK-01", 1, "Classroom", 40, ["projector", "ac", "whiteboard"], "Active"),
+    ("201", "", "BLK-01", 2, "Classroom", 50, ["projector", "ac", "smartboard"], "Active"),
+    ("202", "", "BLK-01", 2, "Classroom", 45, ["ac", "whiteboard"], "Active"),
+    ("Staff Room", "", "BLK-01", 2, "Staff Room", 20, ["ac", "fan"], "Active"),
+    ("Physics Lab", "পদার্থ ল্যাব", "BLK-02", 0, "Lab", 30, ["computer", "cctv"], "Active"),
+    ("Chemistry Lab", "রসায়ন ল্যাব", "BLK-02", 0, "Lab", 30, ["cctv", "fan"], "Active"),
+    ("Computer Lab", "কম্পিউটার ল্যাব", "BLK-02", 1, "Lab", 40, ["computer", "ac", "multimedia"], "Active"),
+    ("Library", "লাইব্রেরি", "BLK-02", 1, "Library", 60, ["fan", "cctv"], "Active"),
+    ("Principal Office", "প্রধান শিক্ষকের কক্ষ", "BLK-03", 0, "Office", 5, ["ac", "computer"], "Active"),
+    ("Auditorium", "অডিটোরিয়াম", "BLK-01", 3, "Auditorium", 300, ["ac", "multimedia", "cctv"], "Maintenance"),
+    ("Store Room", "গোদাম", "BLK-01", 0, "Store", 0, ["fan"], "Active"),
+]
+
+
+def _seed_buildings_rooms(conn):
+    """Seed the default BD buildings + rooms ONLY on empty tables."""
+    try:
+        b_count = conn.execute("SELECT COUNT(*) FROM buildings").fetchone()[0]
+    except sqlite3.OperationalError:
+        return  # tables not created yet
+    if b_count == 0:
+        for b in DEFAULT_BUILDINGS:
+            conn.execute(
+                "INSERT INTO buildings (building_name, building_name_bn, building_code,"
+                " floor_count, is_active) VALUES (?, ?, ?, ?, 1)",
+                (b["name"], b["bn"], b["code"], b["floors"]),
+            )
+            print(f"SQL: seeded default building — {b['name']} ({b['code']})")
+    try:
+        r_count = conn.execute("SELECT COUNT(*) FROM rooms").fetchone()[0]
+    except sqlite3.OperationalError:
+        return
+    if r_count == 0:
+        for (no, no_bn, code, floor, rtype, capacity, facilities, status) in DEFAULT_ROOMS:
+            bld = conn.execute(
+                "SELECT id FROM buildings WHERE TRIM(building_code) = TRIM(?) COLLATE NOCASE",
+                (code,),
+            ).fetchone()
+            building_id = bld["id"] if bld else 0
+            conn.execute(
+                "INSERT INTO rooms (room_no, room_no_bn, building_id, floor_no, room_type,"
+                " capacity, facilities, status, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)",
+                (no, no_bn, building_id, floor, rtype, capacity,
+                 json.dumps(facilities), status),
+            )
+            print(f"SQL: seeded default room — {no} ({rtype}, {code})")
+
+
 def _seed_exam_terms(conn):
     """Seed the default BD exam terms ONLY on a fresh/empty table, so terms
     the user deletes stay deleted (no resurrection on restart)."""
@@ -571,6 +633,7 @@ def init_db():
     _seed_boards(conn)
     _seed_subjects(conn)
     _seed_exam_terms(conn)
+    _seed_buildings_rooms(conn)
 
     # Seed a blank profile so the API always has something to return.
     if conn.execute("SELECT COUNT(*) FROM institute_profiles").fetchone()[0] == 0:
