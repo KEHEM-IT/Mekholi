@@ -7,11 +7,22 @@ import { useToast } from '@/composables/useToast'
 import BaseCombobox from '@/components/ui/BaseCombobox.vue'
 import BaseToggle from '@/components/ui/BaseToggle.vue'
 import gradingTypesJson from '@/assets/jsons/grading_types.json'
+import schemeNamesJson from '@/assets/jsons/scheme_names.json'
 import {
   emptyScheme,
   type GradeRow,
   type GradingScheme,
 } from '@/composables/Institute_Setup/useGradingSchemes'
+
+interface SchemePreset {
+  Id: string
+  Name: string
+  Name_bn: string
+  LookupText: string
+  grading_type: string
+  board: string
+  pass_marks: number
+}
 
 const props = defineProps<{
   scheme: GradingScheme | null
@@ -55,6 +66,39 @@ const classOptions = computed(() =>
   })),
 )
 
+// Scheme Name — combobox of Bangladesh board schemes (General / Madrasah /
+// BTEB / University). Picking one auto-fills Grading Type, Board, Pass Marks
+// and the grade rows; all of them stay editable afterwards.
+const schemeOptions = computed(() => {
+  const presets = (schemeNamesJson as SchemePreset[]).map((x) => ({
+    Id: x.Name,
+    LookupText: x.Name,
+    DisplayText: x.LookupText,
+  }))
+  // Editing / importing a custom name not in the presets? Keep it visible
+  // as a virtual option so the combobox still displays the stored value.
+  if (form.scheme_name && !presets.some((o) => o.Id === form.scheme_name)) {
+    presets.unshift({ Id: form.scheme_name, LookupText: form.scheme_name, DisplayText: form.scheme_name })
+  }
+  return presets
+})
+
+/** Auto-fill from the BD scheme preset when a scheme name is picked. */
+function onSchemeChange(opt: Record<string, unknown> | null) {
+  const preset = (schemeNamesJson as SchemePreset[]).find((x) => x.Id === opt?.Id)
+  if (!preset) return
+  form.scheme_name_bn = preset.Name_bn
+  form.grading_type = preset.grading_type
+  form.board_id = preset.board
+  form.pass_marks = preset.pass_marks
+  applyPreset(true)
+}
+
+/** Grading Type combobox @change — fill rows only when still empty. */
+function onGradingTypeChange() {
+  applyPreset()
+}
+
 // ── Grade rows ─────────────────────────────────────────────────────────
 
 function emptyGradeRow(): GradeRow {
@@ -69,8 +113,11 @@ function removeGradeRow(i: number) {
   form.grades.splice(i, 1)
 }
 
-/** Fill the table with a sensible preset for the chosen grading type. */
-function applyPreset() {
+/** Fill the table with a sensible preset for the chosen grading type.
+ *  `force` is used when picking a NEW scheme name (fresh scheme → fresh
+ *  rows); otherwise rows are only filled while empty so manual tweaks to
+ *  the grading type never clobber custom rows. */
+function applyPreset(force = false) {
   const presets: Record<string, GradeRow[]> = {
     'GPA 5.00': [
       { grade_name: 'A+', grade_name_bn: 'এ প্লাস', grade_point: 5, min_percent: 80, max_percent: 100, remarks: 'Excellent' },
@@ -96,7 +143,7 @@ function applyPreset() {
     ],
   }
   const preset = presets[form.grading_type]
-  if (preset) form.grades = JSON.parse(JSON.stringify(preset))
+  if (preset && (force || form.grades.length === 0)) form.grades = JSON.parse(JSON.stringify(preset))
 }
 
 // ── Validation ─────────────────────────────────────────────────────────
@@ -160,13 +207,17 @@ function submit() {
           {{ t('Scheme Details') }}
         </h4>
         <div class="ipfp-grid">
-          <div class="form-field">
+          <div class="form-field ipf-field--span2">
             <label>{{ t('Scheme Name') }} *</label>
-            <input v-model="form.scheme_name" type="text" :placeholder="t('e.g. SSC Grade, Dakhil Grade')" />
-          </div>
-          <div class="form-field">
-            <label>{{ t('Scheme Name (Bangla)') }}</label>
-            <input v-model="form.scheme_name_bn" type="text" :placeholder="t('e.g. এসএসসি গ্রেড')" />
+            <BaseCombobox
+              v-model="form.scheme_name"
+              :options="schemeOptions"
+              option-value="Id"
+              option-label="DisplayText"
+              :placeholder="t('Select scheme name')"
+              @change="onSchemeChange"
+            />
+            <small class="form-hint">{{ t('Auto-fills Grading Type, Board and Pass Marks — you can change them.') }}</small>
           </div>
           <div class="form-field">
             <label>{{ t('Grading Type') }} *</label>
@@ -176,7 +227,7 @@ function submit() {
               option-value="Id"
               option-label="DisplayText"
               :placeholder="t('Select grading type')"
-              @change="applyPreset"
+              @change="onGradingTypeChange"
             />
           </div>
           <div class="form-field">
@@ -223,7 +274,7 @@ function submit() {
             <i class="fa-duotone fa-plus" /> {{ t('Add Grade') }}
           </button>
         </div>
-        <p class="form-hint">{{ t('Pick a Grading Type above to auto-fill common grades, then adjust.') }}</p>
+        <p class="form-hint">{{ t('Picking a Scheme Name auto-fills common grades for its Grading Type — then adjust.') }}</p>
 
         <div v-if="form.grades.length" class="gs-grades">
           <div v-for="(g, i) in form.grades" :key="i" class="gs-grade-row">
