@@ -2,31 +2,37 @@
   {
     "Id": "Compulsory",
     "Name": "Compulsory",
-    "LookupText": "Compulsory"
+    "LookupText": "Compulsory - বাধ্যতামূলক",
+    "Name_bn": "বাধ্যতামূলক"
   },
   {
     "Id": "Optional",
     "Name": "Optional",
-    "LookupText": "Optional"
+    "LookupText": "Optional - ঐচ্ছিক",
+    "Name_bn": "ঐচ্ছিক"
   },
   {
     "Id": "Elective",
     "Name": "Elective",
-    "LookupText": "Elective"
+    "LookupText": "Elective - নৈর্বাচনিক",
+    "Name_bn": "নৈর্বাচনিক"
   },
   {
     "Id": "Vocational Trade",
     "Name": "Vocational Trade",
-    "LookupText": "Vocational Trade"
+    "LookupText": "Vocational Trade - ভোকেশনাল ট্রেড",
+    "Name_bn": "ভোকেশনাল ট্রেড"
   },
   {
     "Id": "Madrasah Subject",
     "Name": "Madrasah Subject",
-    "LookupText": "Madrasah Subject"
+    "LookupText": "Madrasah Subject - মাদরাসা বিষয়",
+    "Name_bn": "মাদরাসা বিষয়"
   },
   {
     "Id": "Language",
     "Name": "Language",
-    "LookupText": "Language"
+    "LookupText": "Language - ভাষা",
+    "Name_bn": "ভাষা"
   }
 ]
