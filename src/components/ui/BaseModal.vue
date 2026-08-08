@@ -17,6 +17,8 @@ const props = withDefaults(
     title?: string
     wide?: boolean
     tall?: boolean
+    /** Extra class(es) for the panel — lets a page scope its own modal sizing. */
+    panelClass?: string
     closable?: boolean
     closeOnOverlay?: boolean
   }>(),
@@ -24,6 +26,7 @@ const props = withDefaults(
     title: '',
     wide: false,
     tall: false,
+    panelClass: '',
     closable: true,
     closeOnOverlay: true,
   },
@@ -57,7 +60,7 @@ onBeforeUnmount(() => {
     <div class="modal-overlay" @mousedown.self="onClickOverlay">
       <div
         class="modal-panel"
-        :class="{ 'modal-panel--wide': wide, 'modal-panel--tall': tall }"
+        :class="[{ 'modal-panel--wide': wide, 'modal-panel--tall': tall }, panelClass]"
         role="dialog"
         aria-modal="true"
       >

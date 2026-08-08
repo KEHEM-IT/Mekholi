@@ -409,7 +409,7 @@ async function onImportPicked(event: Event) {
       v-if="showForm"
       :title="editingItem ? t('Edit') : t('Add')"
       wide
-      tall
+      panel-class="cs-form-modal"
       :close-on-overlay="false"
       @close="showForm = false"
     >
@@ -426,3 +426,15 @@ async function onImportPicked(event: Event) {
     </BaseModal>
   </section>
 </template>
+
+<!--
+  Scoped panel sizing for THIS page's Add/Edit form modal only — lives here,
+  not in the global modal css (unscoped on purpose: BaseModal teleports to
+  <body>, so the unique class is what scopes it to this page's modal).
+-->
+<style>
+.cs-form-modal {
+  min-height: 65vh;
+  max-height: 100vh;
+}
+</style>

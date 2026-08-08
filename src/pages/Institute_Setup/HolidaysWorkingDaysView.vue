@@ -407,7 +407,7 @@ async function onImportPicked(event: Event) {
       v-if="showForm"
       :title="editingItem ? t('Edit') : t('Add')"
       wide
-      tall
+      panel-class="hw-form-modal"
       :close-on-overlay="false"
       @close="showForm = false"
     >
@@ -421,3 +421,17 @@ async function onImportPicked(event: Event) {
     </BaseModal>
   </section>
 </template>
+
+<!--
+  Scoped panel sizing for THIS page's Add/Edit form modal only.
+  Lives here (not in the global modal css) so other modals keep their
+  natural height and the rule can't be lost in shared styles.
+  (Unscoped on purpose — BaseModal teleports to <body>, so a page-scoped
+  data attribute wouldn't reach the panel; the unique class scopes it.)
+-->
+<style>
+.hw-form-modal {
+  min-height: 65vh;
+  max-height: 100vh;
+}
+</style>
