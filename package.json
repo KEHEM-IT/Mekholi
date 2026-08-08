@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "run-p dev:frontend dev:backend",
+    "dev:frontend": "vite",
+    "dev:backend": "python backend/server.py || python3 backend/server.py",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
