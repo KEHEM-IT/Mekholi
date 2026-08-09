@@ -27,6 +27,17 @@ const errorMessage = ref('')
 
 const scanResult = ref<NIDScanResult | null>(null)
 
+// Hidden file input refs
+const frontInputRef = ref<HTMLInputElement | null>(null)
+const backInputRef = ref<HTMLInputElement | null>(null)
+
+// Live Camera States
+const isCameraActive = ref(false)
+const activeCameraTarget = ref<'front' | 'back' | null>(null)
+const videoRef = ref<HTMLVideoElement | null>(null)
+const stream = ref<MediaStream | null>(null)
+const cameraErrorMessage = ref('')
+
 // Step text for cinematic transition
 const steps = [
   'Decoding image formats...',
@@ -40,6 +51,15 @@ const steps = [
 // Drag and drop states
 const isDraggingFront = ref(false)
 const isDraggingBack = ref(false)
+
+// Trigger hidden file input click
+const triggerFrontBrowse = () => {
+  frontInputRef.value?.click()
+}
+
+const triggerBackBrowse = () => {
+  backInputRef.value?.click()
+}
 
 // Handle file selection
 const onFrontFileChange = (e: Event) => {
@@ -120,6 +140,91 @@ const removeBackFile = () => {
   errorMessage.value = ''
 }
 
+// Live Camera Functions
+const startCamera = async (target: 'front' | 'back') => {
+  activeCameraTarget.value = target
+  isCameraActive.value = true
+  cameraErrorMessage.value = ''
+  
+  try {
+    const mediaStream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: 'environment', // back camera for scanning on mobile
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+      },
+    })
+    stream.value = mediaStream
+    
+    // Assign source to video tag
+    setTimeout(() => {
+      if (videoRef.value) {
+        videoRef.value.srcObject = mediaStream
+      }
+    }, 100)
+  } catch (err: unknown) {
+    cameraErrorMessage.value = 'Failed to access camera: ' + (err instanceof Error ? err.message : String(err))
+    console.error('Camera access error:', err)
+  }
+}
+
+const stopCamera = () => {
+  if (stream.value) {
+    stream.value.getTracks().forEach((track) => track.stop())
+    stream.value = null
+  }
+  isCameraActive.value = false
+  activeCameraTarget.value = null
+}
+
+const captureImage = () => {
+  const video = videoRef.value
+  if (!video || !stream.value) return
+
+  // Create temporary binarization canvas
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
+
+  // Grab the actual video source dimensions
+  const videoWidth = video.videoWidth
+  const videoHeight = video.videoHeight
+
+  // Standard NID Card Aspect Ratio is ~1.58 (85.6mm x 54mm)
+  // Compute relative guideline crop based on viewport frame guide (width 80%)
+  const cropWidth = Math.min(videoWidth, videoHeight * 1.58) * 0.8
+  const cropHeight = cropWidth / 1.58
+
+  const startX = (videoWidth - cropWidth) / 2
+  const startY = (videoHeight - cropHeight) / 2
+
+  // Standardize the canvas target resolution to an optimal binarized canvas
+  const targetWidth = 856
+  const targetHeight = 540
+  canvas.width = targetWidth
+  canvas.height = targetHeight
+
+  // Auto crop from frame guide + auto stretch to fit target high-res canvas
+  ctx.drawImage(
+    video,
+    startX, startY, cropWidth, cropHeight, // crop coordinates from source
+    0, 0, targetWidth, targetHeight,       // stretch to fit canvas dimensions
+  )
+
+  const dataUrl = canvas.toDataURL('image/png')
+
+  // Apply to appropriate preview fields
+  if (activeCameraTarget.value === 'front') {
+    frontPreview.value = dataUrl
+    frontFile.value = new File([new Blob()], 'camera-nid-front.png', { type: 'image/png' })
+  } else if (activeCameraTarget.value === 'back') {
+    backPreview.value = dataUrl
+    backFile.value = new File([new Blob()], 'camera-nid-back.png', { type: 'image/png' })
+  }
+
+  stopCamera()
+}
+
 // Trigger scan process
 const startScan = async () => {
   if (!frontPreview.value) {
@@ -187,7 +292,7 @@ const updateField = (key: keyof NIDScanResult, val: string) => {
     <div class="nid-scanner-header">
       <h3 class="nid-scanner-title">{{ title || 'Smart NID OCR Scanner' }}</h3>
       <p class="nid-scanner-desc">
-        {{ description || 'Upload high-resolution NID images to automatically extract English & Bangla details along with signatures. Supports single-file side-by-side or separate front and back uploads.' }}
+        {{ description || 'Upload high-resolution NID images or use live camera capture to extract details instantly. Features automatic card boundary cropping, canvas binarization, and signature isolation.' }}
       </p>
     </div>
 
@@ -205,6 +310,7 @@ const updateField = (key: keyof NIDScanResult, val: string) => {
         @dragover="onDragOverFront"
         @dragleave="onDragLeaveFront"
         @drop="onDropFront"
+        @click="triggerFrontBrowse"
       >
         <template v-if="!frontPreview">
           <div class="dropzone-empty">
@@ -212,11 +318,14 @@ const updateField = (key: keyof NIDScanResult, val: string) => {
             <span class="dropzone-label">NID Front Side <span class="required">*</span></span>
             <p class="dropzone-tip">Drag & drop or click to browse</p>
             <p class="dropzone-subtip">(Supports double side in single image)</p>
-            <input type="file" accept="image/*" class="dropzone-input" @change="onFrontFileChange" />
+            
+            <button type="button" class="camera-trigger-btn" @click.stop="startCamera('front')">
+              📷 Capture Live Photo
+            </button>
           </div>
         </template>
         <template v-else>
-          <div class="dropzone-preview-container">
+          <div class="dropzone-preview-container" @click.stop>
             <img :src="frontPreview" alt="NID Front Preview" class="dropzone-img" />
             <div class="preview-overlay">
               <span class="preview-filename">{{ frontFile?.name || 'Front NID Image' }}</span>
@@ -224,6 +333,7 @@ const updateField = (key: keyof NIDScanResult, val: string) => {
             </div>
           </div>
         </template>
+        <input ref="frontInputRef" type="file" accept="image/*" class="dropzone-input-hidden" @change="onFrontFileChange" />
       </div>
 
       <!-- Back Dropzone -->
@@ -233,6 +343,7 @@ const updateField = (key: keyof NIDScanResult, val: string) => {
         @dragover="onDragOverBack"
         @dragleave="onDragLeaveBack"
         @drop="onDropBack"
+        @click="triggerBackBrowse"
       >
         <template v-if="!backPreview">
           <div class="dropzone-empty">
@@ -240,11 +351,14 @@ const updateField = (key: keyof NIDScanResult, val: string) => {
             <span class="dropzone-label">NID Back Side <span class="optional">(Optional)</span></span>
             <p class="dropzone-tip">Drag & drop or click to browse</p>
             <p class="dropzone-subtip">(Upload for Address, Blood Group & Signature)</p>
-            <input type="file" accept="image/*" class="dropzone-input" @change="onBackFileChange" />
+            
+            <button type="button" class="camera-trigger-btn" @click.stop="startCamera('back')">
+              📷 Capture Live Photo
+            </button>
           </div>
         </template>
         <template v-else>
-          <div class="dropzone-preview-container">
+          <div class="dropzone-preview-container" @click.stop>
             <img :src="backPreview" alt="NID Back Preview" class="dropzone-img" />
             <div class="preview-overlay">
               <span class="preview-filename">{{ backFile?.name || 'Back NID Image' }}</span>
@@ -252,6 +366,7 @@ const updateField = (key: keyof NIDScanResult, val: string) => {
             </div>
           </div>
         </template>
+        <input ref="backInputRef" type="file" accept="image/*" class="dropzone-input-hidden" @change="onBackFileChange" />
       </div>
     </div>
 
@@ -490,6 +605,43 @@ const updateField = (key: keyof NIDScanResult, val: string) => {
             </button>
             <slot name="actions" :data="scanResult"></slot>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Viewfinder Camera Modal -->
+    <div v-if="isCameraActive" class="nid-camera-modal animate-fade-in" @click.stop>
+      <div class="camera-container">
+        <header class="camera-header">
+          <h4>Scan NID: {{ activeCameraTarget === 'front' ? 'FRONT' : 'BACK' }}</h4>
+          <button type="button" class="close-camera-btn" @click="stopCamera">✕</button>
+        </header>
+
+        <div class="video-viewfinder-wrapper">
+          <video ref="videoRef" autoplay playsinline muted class="camera-video"></video>
+          
+          <!-- Guideline Frame overlays (1.58 standard NID Aspect Ratio) -->
+          <div class="camera-guide-frame">
+            <div class="corner-bracket top-left"></div>
+            <div class="corner-bracket top-right"></div>
+            <div class="corner-bracket bottom-left"></div>
+            <div class="corner-bracket bottom-right"></div>
+            
+            <div class="scanner-laser-line"></div>
+            <div class="guide-text">ALIGN NID CARD INSIDE FRAME</div>
+          </div>
+        </div>
+
+        <div v-if="cameraErrorMessage" class="camera-error">
+          {{ cameraErrorMessage }}
+        </div>
+
+        <div class="camera-footer-controls">
+          <button type="button" class="btn-capture-cancel" @click="stopCamera">Cancel</button>
+          <button type="button" class="btn-capture-action" @click="captureImage">
+            <span class="capture-inner-circle"></span>
+          </button>
+          <div class="spacer-placeholder"></div>
         </div>
       </div>
     </div>

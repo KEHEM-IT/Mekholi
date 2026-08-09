@@ -102,17 +102,17 @@
         width: 100%;
         height: 100%;
         position: relative;
+        gap: $space-2;
 
         .dropzone-icon {
           font-size: 2.5rem;
-          margin-bottom: $space-3;
+          margin-bottom: $space-1;
         }
 
         .dropzone-label {
           font-size: 1rem;
           font-weight: 600;
           color: $color-text;
-          margin-bottom: $space-2;
 
           .required {
             color: $color-danger;
@@ -128,23 +128,38 @@
         .dropzone-tip {
           font-size: 0.85rem;
           color: $color-text-secondary;
-          margin-bottom: $space-1;
+          margin: 0;
         }
 
         .dropzone-subtip {
           font-size: 0.75rem;
           color: $color-text-muted;
+          margin-bottom: $space-1;
         }
 
-        .dropzone-input {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          opacity: 0;
+        .camera-trigger-btn {
+          background: $color-primary-muted;
+          color: $color-primary;
+          border: 1px solid rgba(99, 102, 241, 0.4);
+          padding: $space-2 $space-4;
+          font-size: 0.82rem;
+          font-weight: 700;
+          border-radius: $radius-sm;
           cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          transition: background $transition-fast, color $transition-fast;
+
+          &:hover {
+            background: $color-primary;
+            color: $color-text-inverse;
+          }
         }
+      }
+
+      .dropzone-input-hidden {
+        display: none;
       }
 
       .dropzone-preview-container {
@@ -727,6 +742,214 @@
             }
           }
         }
+      }
+    }
+  }
+
+  // Live Viewfinder Camera Capture Modal
+  .nid-camera-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 99999; // overlay above standard modals (z-index 9999)
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: $space-4;
+
+    .camera-container {
+      background: $color-surface;
+      border: 1px solid $color-border;
+      border-radius: $radius-lg;
+      width: 100%;
+      max-width: 580px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+    }
+
+    .camera-header {
+      padding: $space-4;
+      border-bottom: 1px solid $color-border;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h4 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: $color-text;
+      }
+
+      .close-camera-btn {
+        background: transparent;
+        border: none;
+        color: $color-text-secondary;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 4px;
+        transition: color $transition-fast;
+        &:hover {
+          color: $color-text;
+        }
+      }
+    }
+
+    .video-viewfinder-wrapper {
+      position: relative;
+      background: #000;
+      width: 100%;
+      height: 360px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+
+      .camera-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      // Card Guideline Frame Overlay
+      .camera-guide-frame {
+        position: absolute;
+        width: 80%;
+        height: 50.6%; // 80% / 1.58 standard aspect ratio
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        border-radius: $radius-md;
+        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65); // dim outside guide box
+        pointer-events: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        // Corner Brackets
+        .corner-bracket {
+          position: absolute;
+          width: 24px;
+          height: 24px;
+          border-color: $color-primary;
+          border-style: solid;
+          border-width: 0;
+          
+          &.top-left {
+            top: -3px;
+            left: -3px;
+            border-top-width: 4px;
+            border-left-width: 4px;
+            border-top-left-radius: $radius-sm;
+          }
+          &.top-right {
+            top: -3px;
+            right: -3px;
+            border-top-width: 4px;
+            border-right-width: 4px;
+            border-top-right-radius: $radius-sm;
+          }
+          &.bottom-left {
+            bottom: -3px;
+            left: -3px;
+            border-bottom-width: 4px;
+            border-left-width: 4px;
+            border-bottom-left-radius: $radius-sm;
+          }
+          &.bottom-right {
+            bottom: -3px;
+            right: -3px;
+            border-bottom-width: 4px;
+            border-right-width: 4px;
+            border-bottom-right-radius: $radius-sm;
+          }
+        }
+
+        // Scanner Laser Line Effect
+        .scanner-laser-line {
+          position: absolute;
+          width: 100%;
+          height: 2px;
+          background: $color-primary;
+          box-shadow: 0 0 10px 2px $color-primary;
+          animation: scan-vertical 2s ease-in-out infinite;
+        }
+
+        .guide-text {
+          position: absolute;
+          bottom: -$space-6;
+          font-size: 0.7rem;
+          font-weight: 700;
+          color: $color-primary;
+          letter-spacing: 0.12em;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85);
+        }
+      }
+    }
+
+    .camera-error {
+      background: $color-danger-muted;
+      color: $color-text;
+      padding: $space-3;
+      font-size: 0.85rem;
+      text-align: center;
+      border-bottom: 1px solid $color-border;
+    }
+
+    .camera-footer-controls {
+      padding: $space-4 $space-6;
+      background: $color-bg;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .btn-capture-cancel {
+        background: transparent;
+        color: $color-text-secondary;
+        border: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        padding: $space-2 $space-4;
+        transition: color $transition-fast;
+        &:hover {
+          color: $color-text;
+        }
+      }
+
+      .btn-capture-action {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        border: 4px solid $color-text;
+        background: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: transform $transition-fast;
+
+        &:hover {
+          transform: scale(1.05);
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+
+        .capture-inner-circle {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          background: #fff;
+        }
+      }
+
+      .spacer-placeholder {
+        width: 60px;
       }
     }
   }
