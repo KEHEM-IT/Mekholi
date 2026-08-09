@@ -1,0 +1,210 @@
+@use '../../abstracts' as *;
+
+// Students Module Styles
+.std-dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
+  gap: $space-4;
+  margin-bottom: $space-6;
+}
+
+.std-dash-card {
+  @include card;
+  @include flex(row, center, space-between, $space-3);
+  padding: $space-4 $space-4;
+
+  &__info {
+    @include flex(column, flex-start, center, 4px);
+  }
+
+  &__label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+  }
+
+  &__value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-text);
+  }
+
+  &__icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: $radius-md;
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+    font-size: 1.15rem;
+  }
+
+  &--info {
+    border-color: var(--color-info);
+    .std-dash-card__icon {
+      background: var(--color-info-muted);
+      color: var(--color-info);
+    }
+  }
+
+  &--success {
+    border-color: var(--color-success);
+    .std-dash-card__icon {
+      background: var(--color-success-muted);
+      color: var(--color-success);
+    }
+  }
+
+  &--warning {
+    border-color: var(--color-warning);
+    .std-dash-card__icon {
+      background: var(--color-warning-muted);
+      color: var(--color-warning);
+    }
+  }
+}
+
+.std-form-modal {
+  min-height: calc(100vh - 10rem);
+  max-height: 100vh;
+}
+
+.std-id-card-preview {
+  @include card;
+  background:
+    radial-gradient(100% 100% at 0% 0%, var(--color-primary-muted) 0%, transparent 65%),
+    linear-gradient(135deg, var(--color-surface-alt), var(--color-surface));
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  padding: $space-6;
+  width: 100%;
+  max-width: 380px;
+  margin: $space-6 auto 0;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+}
+
+.std-id-card-header {
+  border-bottom: 2px solid var(--color-border-strong);
+  padding-bottom: $space-3;
+  margin-bottom: $space-4;
+
+  h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  p {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    margin-top: 2px;
+  }
+}
+
+.std-id-card-avatar {
+  display: grid;
+  place-items: center;
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 50%;
+  background: var(--color-surface-alt);
+  color: var(--color-primary);
+  font-size: 2.2rem;
+  border: 2px solid var(--color-primary);
+  margin: 0 auto $space-4;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.std-id-card-info {
+  @include flex(column, center, center, 4px);
+  margin-bottom: $space-4;
+
+  h4 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  p {
+    font-size: 0.82rem;
+    color: var(--color-text-secondary);
+  }
+}
+
+.std-id-card-footer {
+  border-top: 1px solid var(--color-border);
+  padding-top: $space-3;
+  @include flex(row, center, space-between, $space-2);
+
+  span {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+}
+
+.std-cert-preview {
+  @include card;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  padding: $space-8;
+  max-width: 600px;
+  margin: $space-6 auto 0;
+  text-align: center;
+  position: relative;
+  box-shadow: var(--shadow-card);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: $space-2;
+    border: 2px double var(--color-border-strong);
+    border-radius: $radius-md;
+    pointer-events: none;
+  }
+}
+
+.std-cert-title {
+  font-family: serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: $space-6;
+}
+
+.std-cert-body {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  margin-bottom: $space-6;
+}
+
+.std-cert-footer {
+  @include flex(row, center, space-between, $space-4);
+  margin-top: $space-8;
+  padding: 0 $space-6;
+
+  .sig-line {
+    border-top: 1px solid var(--color-text-muted);
+    width: 8rem;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    padding-top: 4px;
+    text-align: center;
+  }
+}

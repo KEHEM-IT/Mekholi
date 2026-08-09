@@ -667,6 +667,66 @@ def _seed_admission_settings(conn):
     print("SQL: seeded default admission settings")
 
 
+DEFAULT_STUDENTS = [
+    {
+        "student_id": "STD-2026-0001", "candidate_name": "Mehedi Hasan", "candidate_name_bn": "মেহেদী হাসান",
+        "guardian_name": "Abul Hasan", "phone": "01712345678", "email": "mehedi@gmail.com",
+        "class_name": "Class 6", "section_name": "A", "roll_no": 1, "gender": "Male",
+        "date_of_birth": "2015-05-15", "blood_group": "O+", "religion": "Islam",
+        "stipend_eligible": 1, "stipend_mfs_provider": "bKash", "stipend_mfs_number": "01712345678",
+        "government_uid": "20158219381029381", "behavior_points": 105
+    },
+    {
+        "student_id": "STD-2026-0002", "candidate_name": "Zarah Ahmed", "candidate_name_bn": "জারা আহমেদ",
+        "guardian_name": "Dr. Imtiaz Ahmed", "phone": "01819876543", "email": "zarah@gmail.com",
+        "class_name": "Class 6", "section_name": "A", "roll_no": 2, "gender": "Female",
+        "date_of_birth": "2015-08-20", "blood_group": "A+", "religion": "Islam",
+        "stipend_eligible": 0, "stipend_mfs_provider": "", "stipend_mfs_number": "",
+        "government_uid": "20158219381029382", "behavior_points": 100
+    },
+    {
+        "student_id": "STD-2026-0003", "candidate_name": "Sadia Islam", "candidate_name_bn": "সাদিয়া ইসলাম",
+        "guardian_name": "Rafiqul Islam", "phone": "01711122233", "email": "sadia@gmail.com",
+        "class_name": "Class 9", "section_name": "B", "roll_no": 1, "gender": "Female",
+        "date_of_birth": "2012-03-10", "blood_group": "B+", "religion": "Islam",
+        "stipend_eligible": 1, "stipend_mfs_provider": "Nagad", "stipend_mfs_number": "01711122233",
+        "government_uid": "20128219381029383", "behavior_points": 95
+    }
+]
+
+
+def _seed_students(conn):
+    """Seed default student records ONLY on an empty table."""
+    try:
+        count = conn.execute("SELECT COUNT(*) FROM students").fetchone()[0]
+    except sqlite3.OperationalError:
+        return
+    if count > 0:
+        return
+    # Resolve first available academic year
+    year = conn.execute("SELECT id FROM academic_years ORDER BY id DESC LIMIT 1").fetchone()
+    year_id = year["id"] if year else 0
+    
+    for s in DEFAULT_STUDENTS:
+        conn.execute(
+            "INSERT INTO students (student_id, candidate_name, candidate_name_bn, guardian_name,"
+            " phone, email, academic_year_id, class_name, section_name, roll_no, gender, date_of_birth,"
+            " blood_group, religion, stipend_eligible, stipend_mfs_provider, stipend_mfs_number,"
+            " government_uid, behavior_points, is_active)"
+            " VALUES (:student_id, :candidate_name, :candidate_name_bn, :guardian_name,"
+            " :phone, :email, ?, :class_name, :section_name, :roll_no, :gender, :date_of_birth,"
+            " :blood_group, :religion, :stipend_eligible, :stipend_mfs_provider, :stipend_mfs_number,"
+            " :government_uid, :behavior_points, 1)",
+            (
+                year_id, s["student_id"], s["candidate_name"], s["candidate_name_bn"], s["guardian_name"],
+                s["phone"], s["email"], s["class_name"], s["section_name"], s["roll_no"], s["gender"], s["date_of_birth"],
+                s["blood_group"], s["religion"], s["stipend_eligible"], s["stipend_mfs_provider"], s["stipend_mfs_number"],
+                s["government_uid"], s["behavior_points"]
+            )
+        )
+        print(f"SQL: seeded default student — {s['student_id']} ({s['candidate_name']})")
+
+
 def _seed_exam_terms(conn):
     """Seed the default BD exam terms ONLY on a fresh/empty table, so terms
     the user deletes stay deleted (no resurrection on restart)."""
@@ -1160,6 +1220,31 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        CREATE TABLE IF NOT EXISTS students (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id TEXT UNIQUE NOT NULL,
+            candidate_name TEXT DEFAULT '',
+            candidate_name_bn TEXT DEFAULT '',
+            guardian_name TEXT DEFAULT '',
+            phone TEXT DEFAULT '',
+            email TEXT DEFAULT '',
+            academic_year_id INTEGER REFERENCES academic_years(id) ON DELETE SET NULL,
+            class_name TEXT DEFAULT '',
+            section_name TEXT DEFAULT '',
+            roll_no INTEGER DEFAULT 0,
+            gender TEXT DEFAULT '',
+            date_of_birth TEXT DEFAULT '',
+            blood_group TEXT DEFAULT '',
+            religion TEXT DEFAULT '',
+            stipend_eligible INTEGER DEFAULT 0,
+            stipend_mfs_provider TEXT DEFAULT '',
+            stipend_mfs_number TEXT DEFAULT '',
+            government_uid TEXT DEFAULT '',
+            behavior_points INTEGER DEFAULT 100,
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     _migrate(conn)
@@ -1175,6 +1260,7 @@ def init_db():
     _seed_admission_tests(conn)
     _seed_admission_lotteries(conn)
     _seed_admission_settings(conn)
+    _seed_students(conn)
 
     # Seed a blank profile so the API always has something to return.
     if conn.execute("SELECT COUNT(*) FROM institute_profiles").fetchone()[0] == 0:
