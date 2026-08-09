@@ -90,6 +90,24 @@ def _migrate(conn):
     except sqlite3.OperationalError:
         pass
 
+    # Migrate classes: add intake capacity & quota parameters
+    try:
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(classes)").fetchall()]
+        if cols:
+            if "intake_capacity" not in cols:
+                conn.execute("ALTER TABLE classes ADD COLUMN intake_capacity INTEGER DEFAULT 40")
+            if "quota_general" not in cols:
+                conn.execute("ALTER TABLE classes ADD COLUMN quota_general INTEGER DEFAULT 80")
+            if "quota_freedom_fighter" not in cols:
+                conn.execute("ALTER TABLE classes ADD COLUMN quota_freedom_fighter INTEGER DEFAULT 10")
+            if "quota_disabled" not in cols:
+                conn.execute("ALTER TABLE classes ADD COLUMN quota_disabled INTEGER DEFAULT 5")
+            if "quota_staff" not in cols:
+                conn.execute("ALTER TABLE classes ADD COLUMN quota_staff INTEGER DEFAULT 5")
+            print("SQL: migrated classes — added intake_capacity and quota parameters")
+    except sqlite3.OperationalError:
+        pass
+
 
 # Built-in Bangladesh education boards (the official registry). Seeded once
 # on server start; marked is_builtin=1 so they can't be deleted from the UI
@@ -809,6 +827,11 @@ def init_db():
             class_name TEXT DEFAULT '', class_name_bn TEXT DEFAULT '',
             phase TEXT DEFAULT '', sort_order INTEGER DEFAULT 0,
             academic_year_id INTEGER DEFAULT 0, branch_id INTEGER DEFAULT 0,
+            intake_capacity INTEGER DEFAULT 40,
+            quota_general INTEGER DEFAULT 80,
+            quota_freedom_fighter INTEGER DEFAULT 10,
+            quota_disabled INTEGER DEFAULT 5,
+            quota_staff INTEGER DEFAULT 5,
             is_active INTEGER DEFAULT 1,
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))

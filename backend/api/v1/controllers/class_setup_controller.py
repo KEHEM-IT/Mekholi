@@ -9,7 +9,9 @@ from backend.core.db import get_db
 ENTITIES = {
     "classes": {
         "fields": ["class_name", "class_name_bn", "phase", "sort_order",
-                   "academic_year_id", "branch_id", "is_active"],
+                   "academic_year_id", "branch_id", "intake_capacity",
+                   "quota_general", "quota_freedom_fighter", "quota_disabled",
+                   "quota_staff", "is_active"],
         "json_fields": [],
         "order": "sort_order ASC, id ASC",
     },
@@ -117,6 +119,16 @@ def _normalize(entity, body, item_id=None):
         vals["sort_order"] = int(body.get("sort_order") or 0)
     if "capacity" in vals:
         vals["capacity"] = int(body.get("capacity") or 0)
+    if "intake_capacity" in vals:
+        vals["intake_capacity"] = int(body.get("intake_capacity") or 40)
+    if "quota_general" in vals:
+        vals["quota_general"] = int(body.get("quota_general") or 80)
+    if "quota_freedom_fighter" in vals:
+        vals["quota_freedom_fighter"] = int(body.get("quota_freedom_fighter") or 10)
+    if "quota_disabled" in vals:
+        vals["quota_disabled"] = int(body.get("quota_disabled") or 5)
+    if "quota_staff" in vals:
+        vals["quota_staff"] = int(body.get("quota_staff") or 5)
     vals["id"] = item_id
     return vals
 

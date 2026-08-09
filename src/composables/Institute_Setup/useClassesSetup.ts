@@ -18,6 +18,11 @@ export interface ClassItem {
   sort_order: number | null
   academic_year_id: number | null
   branch_id: number | null
+  intake_capacity?: number
+  quota_general?: number
+  quota_freedom_fighter?: number
+  quota_disabled?: number
+  quota_staff?: number
   is_active: boolean
 }
 
@@ -56,7 +61,11 @@ export type ClassSetupItem = ClassItem | SectionItem | GroupItem | ShiftItem
 export function emptyItem(entity: ClassSetupEntity): ClassSetupItem {
   switch (entity) {
     case 'classes':
-      return { class_name: '', class_name_bn: '', phase: '', sort_order: null, academic_year_id: null, branch_id: null, is_active: true }
+      return {
+        class_name: '', class_name_bn: '', phase: '', sort_order: null, academic_year_id: null, branch_id: null,
+        intake_capacity: 40, quota_general: 80, quota_freedom_fighter: 10, quota_disabled: 5, quota_staff: 5,
+        is_active: true
+      }
     case 'sections':
       return { section_name: '', section_name_bn: '', class_id: null, shift_id: null, capacity: null, room_id: null, is_active: true }
     case 'groups':

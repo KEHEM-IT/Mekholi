@@ -917,5 +917,18 @@
   "Unverified": "অযাচাইকৃত",
   "Partially Verified": "আংশিক যাচাইকৃত",
   "Fully Verified": "সম্পূর্ণ যাচাইকৃত",
-  "Successfully updated verification records!": "সফলভাবে যাচাইকরণ রেকর্ড আপডেট করা হয়েছে!"
+  "Successfully updated verification records!": "সফলভাবে যাচাইকরণ রেকর্ড আপডেট করা হয়েছে!",
+  "Seat/Quota Planning": "আসন/কোটা পরিকল্পনা",
+  "Define available seat intake capacities and map quota percentage boundaries for each class level.": "প্রতিটি শ্রেণি স্তরের জন্য আসন ক্ষমতা ও কোটা সীমানা নির্ধারণ করুন।",
+  "Select Intake Scope": "ভর্তির পরিধি নির্বাচন করুন",
+  "No class levels found in the selected sessional year.": "নির্বাচিত শিক্ষাবর্ষে কোনো শ্রেণির স্তর পাওয়া যায়নি।",
+  "Configure": "সেটআপ",
+  "Configure Class Intake Capacity": "শ্রেণির আসন ক্ষমতা সেটআপ",
+  "Intake Seat Capacity": "ভর্তি আসন ক্ষমতা",
+  "Define the intake percentage allocation for each quota. The sum of all quotas must equal exactly 100%.": "প্রতিটি কোটার জন্য শতকরা হার নির্ধারণ করুন। সকল কোটার যোগফল অবশ্যই ঠিক ১০০% হতে হবে।",
+  "Cumulative Allocation:": "সমষ্টিগত বরাদ্দ:",
+  "Save Seat Allocations": "আসন বরাদ্দ সংরক্ষণ করুন",
+  "Intake capacity must be greater than zero": "আসন ক্ষমতা অবশ্যই শূন্যের বেশি হতে হবে",
+  "Total quota allocation percentage must sum up to exactly 100%": "সকল কোটার মোট যোগফল অবশ্যই ঠিক ১০০% হতে হবে",
+  "Successfully updated seat and quota allocations!": "সফলভাবে আসন ও কোটা বরাদ্দ আপডেট করা হয়েছে!"
 }

@@ -176,8 +176,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'admission/seat-quota',
         name: 'admission-seat-quota',
-        component: () => import('@/pages/ComingSoonView.vue'),
-        meta: { title: 'Seat/Quota', titleBn: 'আসন/কোটা', icon: 'fa-duotone fa-chair', module: 'Admission' },
+        component: () => import('@/pages/Admission/SeatQuota/SeatQuotaView.vue'),
         beforeEnter: requireAuth,
       },
       {
