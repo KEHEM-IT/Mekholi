@@ -164,8 +164,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'admission/waiting-list',
         name: 'admission-waiting-list',
-        component: () => import('@/pages/ComingSoonView.vue'),
-        meta: { title: 'Waiting List', titleBn: 'অপেক্ষমান তালিকা', icon: 'fa-duotone fa-user-clock', module: 'Admission' },
+        component: () => import('@/pages/Admission/WaitingList/WaitingListView.vue'),
         beforeEnter: requireAuth,
       },
       {

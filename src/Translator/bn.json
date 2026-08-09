@@ -881,5 +881,19 @@
   "Are you sure you want to lock and publish the merit list for \"{class}\"? This will update candidate application statuses.": "আপনি কি নিশ্চিত যে আপনি \"{class}\"-এর মেধা তালিকাটি লক ও পাবলিশ করতে চান? এটি শিক্ষার্থীদের আবেদনপত্রের অবস্থা আপডেট করবে।",
   "Merit Rank": "মেধা ক্রম",
   "Total Score": "সর্বমোট নম্বর",
-  "Merit roster compiled for class!": "শ্রেণির মেধা তালিকা সফলভাবে প্রস্তুত করা হয়েছে!"
+  "Merit roster compiled for class!": "শ্রেণির মেধা তালিকা সফলভাবে প্রস্তুত করা হয়েছে!",
+  "Review ranked waitlist queues, track dynamic seat vacancies, and promote qualified candidates into selection vacancies.": "অপেক্ষমান তালিকার কিউ পর্যালোচনা করুন, গতিশীল আসন শূন্যতা ট্র্যাক করুন এবং যোগ্য প্রার্থীদের নির্বাচিত তালিকায় উন্নীত করুন।",
+  "Select Class Scope & Review Vacancies": "শ্রেণির পরিধি নির্বাচন ও আসন শূন্যতা পর্যালোচনা",
+  "Seat Intake Capacity": "মোট ভর্তি আসন ক্ষমতা",
+  "Available Class Vacancies": "মোট উপলব্ধ আসন শূন্যতা",
+  "Auto-Promote Next": "পরবর্তী প্রার্থীকে অটো-প্রমোট করুন",
+  "No waitlisted candidates in the queue for this class.": "এই শ্রেণির অপেক্ষমান তালিকায় কোনো প্রার্থী নেই।",
+  "Promote": "প্রমোট করুন",
+  "Promote Candidate": "প্রার্থীকে প্রমোট করুন",
+  "Are you sure you want to promote waitlisted candidate \"{name}\" into the active selected roster? This will update their application status to Selected.": "আপনি কি নিশ্চিত যে আপনি অপেক্ষমান তালিকার প্রার্থী \"{name}\"-কে সক্রিয় নির্বাচিত তালিকায় উন্নীত করতে চান? এটি তাদের আবেদনপত্রের অবস্থা নির্বাচিত-তে আপডেট করবে।",
+  "Candidate promoted successfully!": "প্রার্থীকে সফলভাবে প্রমোট করা হয়েছে!",
+  "Promotion failed — is server.py running?": "প্রমোশন ব্যর্থ হয়েছে — server.py সচল আছে কি?",
+  "Auto-promote waitlist #1 \"{name}\" into the active vacancy?": "আপনি কি অপেক্ষমান তালিকার ১ নম্বরে থাকা \"{name}\"-কে স্বয়ংক্রিয়ভাবে প্রমোট করতে চান?",
+  "No class vacancies available! Please increase capacity first.": "কোনো আসন শূন্যতা খালি নেই! দয়া করে প্রথমে আসন ধারণক্ষমতা বৃদ্ধি করুন।",
+  "Waitlist Position": "অপেক্ষমান কিউ অবস্থান"
 }
