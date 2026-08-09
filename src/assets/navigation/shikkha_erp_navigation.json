@@ -300,6 +300,11 @@
     "icon": "fa-duotone fa-user-group",
     "sub_menus": [
      {
+      "name": "Student Dashboard",
+      "name_bn": "শিক্ষার্থী ড্যাশবোর্ড",
+      "icon": "fa-duotone fa-gauge-high"
+     },
+     {
       "name": "Student List",
       "name_bn": "শিক্ষার্থী তালিকা",
       "icon": "fa-duotone fa-list-ul"
@@ -310,9 +315,19 @@
       "icon": "fa-duotone fa-file-import"
      },
      {
+      "name": "Stipend & Scholarship",
+      "name_bn": "উপবৃত্তি ও স্কলারশিপ",
+      "icon": "fa-duotone fa-hand-holding-dollar"
+     },
+     {
       "name": "Promote/Transfer",
       "name_bn": "উন্নীত/স্থানান্তর",
       "icon": "fa-duotone fa-right-left"
+     },
+     {
+      "name": "Unique ID (UID) Sync",
+      "name_bn": "ইউনিক আইডি সিঙ্ক",
+      "icon": "fa-duotone fa-fingerprint"
      },
      {
       "name": "ID Cards",
@@ -323,6 +338,11 @@
       "name": "TC & Certificates",
       "name_bn": "টিসি ও সার্টিফিকেট",
       "icon": "fa-duotone fa-certificate"
+     },
+     {
+      "name": "Behavior & Discipline",
+      "name_bn": "আচরণ ও শৃঙ্খলা",
+      "icon": "fa-duotone fa-heart-pulse"
      }
     ]
    },
