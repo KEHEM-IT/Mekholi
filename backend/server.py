@@ -19,6 +19,25 @@ Run:
 """
 
 import sys
+import subprocess
+import shutil
+
+# ── Self-healing dependency installer ─────────────────────────────────
+try:
+    import pytesseract
+except ImportError:
+    print("pytesseract python package not found. Installing...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "pytesseract"])
+
+if not shutil.which("tesseract"):
+    print("tesseract system binary not found. Installing via apt-get...")
+    try:
+        subprocess.check_call(["sudo", "apt-get", "update", "-y"])
+        subprocess.check_call(["sudo", "apt-get", "install", "-y", "tesseract-ocr", "tesseract-ocr-ben", "tesseract-ocr-eng"])
+        print("Tesseract system binaries successfully installed!")
+    except Exception as e:
+        print(f"Warning: Failed to install system tesseract via apt: {e}")
+
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from socketserver import ThreadingMixIn

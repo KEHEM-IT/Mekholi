@@ -16,7 +16,12 @@ import BaseModal from '@/components/ui/BaseModal.vue'
 
 const activeScannerRole = ref<'father' | 'mother' | null>(null)
 
-function handleScannerSuccess(data: NIDScanResult) {
+function handleScannerSuccess(data: NIDScanResult | undefined) {
+  console.log("handleScannerSuccess called with data:", data)
+  if (!data) {
+    toast.error(t("No NID scan data received"))
+    return
+  }
   if (activeScannerRole.value === 'father') {
     form.father_name = data.name_en || data.name_bn || form.father_name
     form.father_nid = data.nid_no || form.father_nid
@@ -441,7 +446,6 @@ function submit() {
       @close="activeScannerRole = null"
     >
       <NIDScanner
-        @scan-success="handleScannerSuccess"
         @reset="activeScannerRole = null"
       >
         <template #actions="{ data }">
