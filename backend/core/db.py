@@ -108,6 +108,26 @@ def _migrate(conn):
     except sqlite3.OperationalError:
         pass
 
+    # Migrate students: add advanced parent and address fields
+    try:
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(students)").fetchall()]
+        if cols:
+            if "father_name" not in cols:
+                conn.execute("ALTER TABLE students ADD COLUMN father_name TEXT DEFAULT ''")
+            if "father_nid" not in cols:
+                conn.execute("ALTER TABLE students ADD COLUMN father_nid TEXT DEFAULT ''")
+            if "mother_name" not in cols:
+                conn.execute("ALTER TABLE students ADD COLUMN mother_name TEXT DEFAULT ''")
+            if "mother_nid" not in cols:
+                conn.execute("ALTER TABLE students ADD COLUMN mother_nid TEXT DEFAULT ''")
+            if "present_address" not in cols:
+                conn.execute("ALTER TABLE students ADD COLUMN present_address TEXT DEFAULT ''")
+            if "permanent_address" not in cols:
+                conn.execute("ALTER TABLE students ADD COLUMN permanent_address TEXT DEFAULT ''")
+            print("SQL: migrated students — added father/mother names & NIDs + addresses")
+    except sqlite3.OperationalError:
+        pass
+
 
 # Built-in Bangladesh education boards (the official registry). Seeded once
 # on server start; marked is_builtin=1 so they can't be deleted from the UI
@@ -1221,6 +1241,12 @@ def init_db():
             candidate_name TEXT DEFAULT '',
             candidate_name_bn TEXT DEFAULT '',
             guardian_name TEXT DEFAULT '',
+            father_name TEXT DEFAULT '',
+            father_nid TEXT DEFAULT '',
+            mother_name TEXT DEFAULT '',
+            mother_nid TEXT DEFAULT '',
+            present_address TEXT DEFAULT '',
+            permanent_address TEXT DEFAULT '',
             phone TEXT DEFAULT '',
             email TEXT DEFAULT '',
             academic_year_id INTEGER REFERENCES academic_years(id) ON DELETE SET NULL,
@@ -1237,6 +1263,8 @@ def init_db():
             government_uid TEXT DEFAULT '',
             behavior_points INTEGER DEFAULT 100,
             is_active INTEGER DEFAULT 1,
+            photo TEXT DEFAULT '',
+            birth_certificate TEXT DEFAULT '',
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );

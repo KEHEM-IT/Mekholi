@@ -38,6 +38,12 @@ const COLS: ColDef[] = [
   { header: 'Candidate Name', key: 'candidate_name', parse: normText },
   { header: 'Candidate Name (Bangla)', key: 'candidate_name_bn', parse: normText },
   { header: 'Guardian Name', key: 'guardian_name', parse: normText },
+  { header: "Father's Name", key: 'father_name', parse: normText },
+  { header: "Father's NID", key: 'father_nid', parse: normText },
+  { header: "Mother's Name", key: 'mother_name', parse: normText },
+  { header: "Mother's NID", key: 'mother_nid', parse: normText },
+  { header: 'Present Address', key: 'present_address', parse: normText },
+  { header: 'Permanent Address', key: 'permanent_address', parse: normText },
   { header: 'Contact Phone', key: 'phone', parse: normText },
   { header: 'Email Address', key: 'email', parse: normText },
   { header: 'Academic Year ID', key: 'academic_year_id', parse: numOrNull },
@@ -53,6 +59,8 @@ const COLS: ColDef[] = [
   { header: 'Stipend MFS Number', key: 'stipend_mfs_number', parse: normText },
   { header: 'Government UID', key: 'government_uid', parse: normText },
   { header: 'Behavior Points', key: 'behavior_points', parse: numOrNull },
+  { header: 'Student Photo URL', key: 'photo', parse: normText },
+  { header: 'Birth Certificate URL', key: 'birth_certificate', parse: normText },
   { header: 'Is Active (Yes/No)', key: 'is_active', fmt: boolText, parse: parseBool },
 ]
 

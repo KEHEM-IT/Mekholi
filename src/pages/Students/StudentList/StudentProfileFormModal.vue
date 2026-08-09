@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Form modal to create or update student profiles, supporting standard
 // biographics, class assignments, and government unique ID sync logs.
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useTranslator } from '@/Translator'
 import { useToast } from '@/composables/useToast'
 import BaseCombobox from '@/components/ui/BaseCombobox.vue'
@@ -9,6 +9,7 @@ import BaseDatePicker from '@/components/ui/BaseDatePicker.vue'
 import classNamesJson from '@/assets/jsons/class_names.json'
 import gendersJson from '@/assets/jsons/genders.json'
 import { emptyStudent, type Student } from '@/composables/Students/useStudents'
+import { uploadToImgbb, validateLogoFile } from '@/composables/useImgbbUpload'
 
 const props = defineProps<{
   student: Student | null
@@ -31,6 +32,55 @@ const form = reactive<Student>({
 // Ensure default academic year if adding and years are loaded
 if (!form.id && props.years.length > 0 && !form.academic_year_id) {
   form.academic_year_id = Number(props.years[0].id)
+}
+
+const sameAsPresent = ref(false)
+
+function onSameAddressChange() {
+  if (sameAsPresent.value) {
+    form.permanent_address = form.present_address
+  } else {
+    form.permanent_address = ''
+  }
+}
+
+// Watch present address changes: if sameAsPresent is true, mirror it!
+watch(
+  () => form.present_address,
+  (newVal) => {
+    if (sameAsPresent.value) {
+      form.permanent_address = newVal
+    }
+  },
+)
+
+const isUploadingPhoto = ref(false)
+
+async function onPhotoPicked(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+  
+  const err = validateLogoFile(file)
+  if (err) {
+    toast.error(err)
+    return
+  }
+  
+  isUploadingPhoto.value = true
+  try {
+    const url = await uploadToImgbb(file)
+    form.photo = url
+    toast.success(t('Profile photo uploaded successfully!'))
+  } catch (e) {
+    toast.error(t('Upload failed: {error}', { error: e instanceof Error ? e.message : 'unknown' }))
+  } finally {
+    isUploadingPhoto.value = false
+  }
+}
+
+function removePhoto() {
+  form.photo = ''
 }
 
 // ── Option Lists ────────────────────────────────────────────────────────
@@ -132,6 +182,31 @@ function submit() {
           <i class="fa-duotone fa-user-graduate" />
           {{ t('Student Identity & Contact') }}
         </h4>
+
+        <!-- Profile Photo Row -->
+        <div class="ipf-upload mb-4">
+          <div class="ipf-upload__preview ipf-upload__preview--logo">
+            <img v-if="form.photo" :src="form.photo" alt="Profile" />
+            <i v-else class="fa-duotone fa-user" />
+          </div>
+          <div class="ipf-upload__controls">
+            <span class="ipf-upload__label">
+              {{ t('Student Profile Photo') }}
+              <span>{{ t('JPG, PNG or WEBP — max 5 MB') }}</span>
+            </span>
+            <div class="ipf-upload__actions">
+              <span class="btn btn--ghost btn--small ipf-upload__button">
+                <i class="fa-duotone" :class="isUploadingPhoto ? 'fa-spinner fa-spin' : 'fa-cloud-arrow-up'" />
+                {{ form.photo ? t('Change Photo') : t('Upload Photo') }}
+                <input type="file" accept="image/*" class="ipf-upload__input" :disabled="isUploadingPhoto" @change="onPhotoPicked" />
+              </span>
+              <button v-if="form.photo" type="button" class="btn btn--ghost btn--small text-danger" @click="removePhoto">
+                <i class="fa-duotone fa-trash" /> {{ t('Remove') }}
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div class="ipfp-grid">
           <div class="form-field">
             <label>{{ t('Student ID') }} *</label>
@@ -171,6 +246,61 @@ function submit() {
           <div class="form-field">
             <label>{{ t('Email Address') }}</label>
             <input v-model="form.email" type="email" :placeholder="t('e.g. parent@example.com')" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Parent & Family Details -->
+      <div class="ipfp-section">
+        <h4 class="ipfp-section__title">
+          <i class="fa-duotone fa-users" />
+          {{ t('Parent & Family Details') }}
+        </h4>
+        <div class="ipfp-grid">
+          <div class="form-field">
+            <label>{{ t("Father's Name") }}</label>
+            <input v-model="form.father_name" type="text" :placeholder="t('Enter father\'s name')" />
+          </div>
+          <div class="form-field">
+            <label>{{ t("Father's NID") }}</label>
+            <input v-model="form.father_nid" type="text" maxlength="17" :placeholder="t('Enter father\'s NID')" />
+          </div>
+          <div class="form-field">
+            <label>{{ t("Mother's Name") }}</label>
+            <input v-model="form.mother_name" type="text" :placeholder="t('Enter mother\'s name')" />
+          </div>
+          <div class="form-field">
+            <label>{{ t("Mother's NID") }}</label>
+            <input v-model="form.mother_nid" type="text" maxlength="17" :placeholder="t('Enter mother\'s NID')" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Address Details -->
+      <div class="ipfp-section">
+        <h4 class="ipfp-section__title">
+          <i class="fa-duotone fa-map-location-dot" />
+          {{ t('Address Details') }}
+        </h4>
+        <div class="ipfp-grid">
+          <div class="form-field ipf-field--full">
+            <label>{{ t('Present Address') }}</label>
+            <textarea v-model="form.present_address" rows="2" :placeholder="t('Enter present address details...')" />
+          </div>
+          <div class="form-field ipf-field--full">
+            <div class="form-field__check">
+              <input id="sameAddressCheck" v-model="sameAsPresent" type="checkbox" @change="onSameAddressChange" />
+              <label for="sameAddressCheck" class="form-field__check-label">{{ t('Same as Present Address') }}</label>
+            </div>
+          </div>
+          <div class="form-field ipf-field--full" :class="{ 'is-disabled-opacity': sameAsPresent }">
+            <label>{{ t('Permanent Address') }}</label>
+            <textarea
+              v-model="form.permanent_address"
+              rows="2"
+              :disabled="sameAsPresent"
+              :placeholder="t('Enter permanent address details...')"
+            />
           </div>
         </div>
       </div>

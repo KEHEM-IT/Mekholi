@@ -10,10 +10,12 @@ from backend.core.db import get_db
 
 FIELDS = [
     "student_id", "candidate_name", "candidate_name_bn", "guardian_name",
+    "father_name", "father_nid", "mother_name", "mother_nid",
+    "present_address", "permanent_address",
     "phone", "email", "academic_year_id", "class_name", "section_name", "roll_no",
     "gender", "date_of_birth", "blood_group", "religion", "stipend_eligible",
     "stipend_mfs_provider", "stipend_mfs_number", "government_uid",
-    "behavior_points", "is_active",
+    "behavior_points", "is_active", "photo", "birth_certificate",
 ]
 BOOLEAN_FIELDS = ("is_active", "stipend_eligible")
 

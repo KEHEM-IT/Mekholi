@@ -14,6 +14,12 @@ export interface Student {
   candidate_name: string
   candidate_name_bn: string
   guardian_name: string
+  father_name?: string
+  father_nid?: string
+  mother_name?: string
+  mother_nid?: string
+  present_address?: string
+  permanent_address?: string
   phone: string
   email: string
   academic_year_id: number | null
@@ -30,6 +36,8 @@ export interface Student {
   government_uid: string
   behavior_points: number
   is_active: boolean
+  photo?: string
+  birth_certificate?: string
   created_at?: string
   updated_at?: string
 }
@@ -40,6 +48,12 @@ export function emptyStudent(): Student {
     candidate_name: '',
     candidate_name_bn: '',
     guardian_name: '',
+    father_name: '',
+    father_nid: '',
+    mother_name: '',
+    mother_nid: '',
+    present_address: '',
+    permanent_address: '',
     phone: '',
     email: '',
     academic_year_id: null,
@@ -56,6 +70,8 @@ export function emptyStudent(): Student {
     government_uid: '',
     behavior_points: 100,
     is_active: true,
+    photo: '',
+    birth_certificate: '',
   }
 }
 
