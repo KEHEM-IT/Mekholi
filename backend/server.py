@@ -23,20 +23,73 @@ import subprocess
 import shutil
 
 # ── Self-healing dependency installer ─────────────────────────────────
-try:
-    import pytesseract
-except ImportError:
-    print("pytesseract python package not found. Installing...")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "pytesseract"])
+import platform
+import os
 
-if not shutil.which("tesseract"):
-    print("tesseract system binary not found. Installing via apt-get...")
+is_windows = platform.system() == "Windows"
+
+def heal_python_packages():
+    # pytesseract
     try:
-        subprocess.check_call(["sudo", "apt-get", "update", "-y"])
-        subprocess.check_call(["sudo", "apt-get", "install", "-y", "tesseract-ocr", "tesseract-ocr-ben", "tesseract-ocr-eng"])
-        print("Tesseract system binaries successfully installed!")
-    except Exception as e:
-        print(f"Warning: Failed to install system tesseract via apt: {e}")
+        import pytesseract
+    except ImportError:
+        print("pytesseract python package not found. Installing...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "pytesseract"])
+
+    # Pillow
+    try:
+        from PIL import Image
+    except ImportError:
+        print("Pillow python package not found. Installing...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "Pillow"])
+
+    # OpenCV
+    try:
+        import cv2
+    except ImportError:
+        cv_pkg = "opencv-python" if is_windows else "opencv-python-headless"
+        print(f"{cv_pkg} python package not found. Installing...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", cv_pkg])
+
+heal_python_packages()
+
+import pytesseract
+
+if is_windows:
+    common_paths = [
+        r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+        r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+        os.path.join(os.environ.get("LOCALAPPDATA", ""), "Tesseract-OCR", "tesseract.exe")
+    ]
+    tess_configured = False
+    if shutil.which("tesseract"):
+        tess_configured = True
+        print("Tesseract binary successfully detected in Windows PATH!")
+    else:
+        for path in common_paths:
+            if os.path.exists(path):
+                pytesseract.pytesseract.tesseract_cmd = path
+                tess_configured = True
+                print(f"Configured pytesseract to local binary: {path}")
+                break
+                
+    if not tess_configured:
+        print("\n" + "="*80)
+        print("⚠️  WARNING: Tesseract OCR Binary is missing on Windows!")
+        print("To enable the NID Scanning plugin, please:")
+        print("1. Download the Tesseract installer for Windows from:")
+        print("   https://github.com/UB-Mannheim/tesseract/wiki")
+        print("2. Install it to default 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'")
+        print("="*80 + "\n")
+else:
+    if not shutil.which("tesseract"):
+        print("tesseract system binary not found. Installing via apt-get...")
+        try:
+            subprocess.check_call(["sudo", "apt-get", "update", "-y"])
+            subprocess.check_call(["sudo", "apt-get", "install", "-y", "tesseract-ocr", "tesseract-ocr-ben", "tesseract-ocr-eng"])
+            print("Tesseract system binaries successfully installed!")
+        except Exception as e:
+            print(f"Warning: Failed to install system tesseract via apt: {e}. OCR might fail.")
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path

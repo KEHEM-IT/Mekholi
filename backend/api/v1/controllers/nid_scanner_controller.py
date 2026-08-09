@@ -12,6 +12,22 @@ import re
 import cv2
 import numpy as np
 import pytesseract
+import platform
+import os
+import shutil
+
+# Configure Tesseract path on Windows
+if platform.system() == "Windows":
+    common_paths = [
+        r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+        r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+        os.path.join(os.environ.get("LOCALAPPDATA", ""), "Tesseract-OCR", "tesseract.exe")
+    ]
+    if not shutil.which("tesseract"):
+        for path in common_paths:
+            if os.path.exists(path):
+                pytesseract.pytesseract.tesseract_cmd = path
+                break
 
 def decode_base64_image(base64_str):
     """Decode a base64 image string (with or without data URI scheme) into an OpenCV image."""
