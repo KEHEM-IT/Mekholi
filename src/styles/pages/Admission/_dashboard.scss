@@ -1,0 +1,136 @@
+@use '../../abstracts' as *;
+
+// Admission Dashboard Styles
+.adm-dash-pipeline {
+  @include card;
+  background: var(--color-surface);
+  border-color: var(--color-border-strong);
+  padding: $space-4;
+  margin-top: $space-6;
+}
+
+.pipeline-flow-header {
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: $space-4;
+  @include flex(row, center, flex-start, $space-2);
+
+  i {
+    color: var(--color-primary);
+  }
+}
+
+.pipeline-flow-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+  gap: $space-4;
+  align-items: center;
+
+  @include respond-to(lg) {
+    grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  }
+}
+
+.pipeline-flow-step {
+  @include flex(column, center, center, $space-2);
+  padding: $space-4;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  text-align: center;
+  position: relative;
+
+  &__icon {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+    font-size: 1.3rem;
+    border: 1px solid var(--color-border-strong);
+  }
+
+  &__value {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-text);
+  }
+
+  &__label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+  }
+
+  &--success {
+    border-color: var(--color-success);
+    .pipeline-flow-step__icon {
+      background: var(--color-success-muted);
+      color: var(--color-success);
+    }
+  }
+
+  &--info {
+    border-color: var(--color-info);
+    .pipeline-flow-step__icon {
+      background: var(--color-info-muted);
+      color: var(--color-info);
+    }
+  }
+
+  &--warning {
+    border-color: var(--color-warning);
+    .pipeline-flow-step__icon {
+      background: var(--color-warning-muted);
+      color: var(--color-warning);
+    }
+  }
+}
+
+.pipeline-flow-arrow {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-text-muted);
+  font-size: 1.2rem;
+
+  @include respond-to(lg) {
+    display: flex;
+  }
+}
+
+.adm-dash-notices {
+  @include card;
+  background: var(--color-surface-alt);
+  border-color: var(--color-border);
+  padding: $space-4;
+  margin-top: $space-6;
+}
+
+.notice-item {
+  @include flex(row, center, flex-start, $space-3);
+  padding: $space-3 0;
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &__date {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    width: 6rem;
+    flex-shrink: 0;
+  }
+
+  &__content {
+    font-size: 0.85rem;
+    color: var(--color-text);
+  }
+}

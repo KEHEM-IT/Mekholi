@@ -126,6 +126,12 @@ export const routes: RouteRecordRaw[] = [
       },
       // Admission sub-menus
       {
+        path: 'admission',
+        name: 'admission-dashboard',
+        component: () => import('@/pages/Admission/Dashboard/DashboardView.vue'),
+        beforeEnter: requireAuth,
+      },
+      {
         path: 'admission/enquiries',
         name: 'admission-enquiries',
         component: () => import('@/pages/Admission/Enquiries/EnquiriesView.vue'),

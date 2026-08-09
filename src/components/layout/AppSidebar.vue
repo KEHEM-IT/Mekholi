@@ -68,6 +68,7 @@ const SUBMENU_ROUTES: Record<string, string> = {
   "Classrooms / Rooms / Buildings": "institute-setup-rooms",
   "Academic Sessions & Terms": "institute-setup-sessions",
   // Admission
+  "Admission Dashboard": "admission-dashboard",
   "Admission Enquiries": "admission-enquiries",
   "Online Form Builder": "admission-form-builder",
   "Applications": "admission-applications",

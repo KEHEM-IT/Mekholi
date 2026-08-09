@@ -959,5 +959,19 @@
   "Nagad merchant API credentials": "নগদ মার্চেন্ট এপিআই ক্রেডেনশিয়াল",
   "Nagad Merchant ID": "নগদ মার্চেন্ট আইডি",
   "Nagad Signature Key": "নগদ সিগনেচার কী",
-  "Successfully updated global admission settings!": "সফলভাবে বিশ্বব্যাপী ভর্তি সেটিংস আপডেট করা হয়েছে!"
+  "Successfully updated global admission settings!": "সফলভাবে বিশ্বব্যাপী ভর্তি সেটিংস আপডেট করা হয়েছে!",
+  "Admission Dashboard": "ভর্তি ড্যাশবোর্ড",
+  "Real-time overview of prospective candidate inquiries, submitted applications, payment collections, and exam schedules.": "সম্ভাব্য প্রার্থীর খোঁজখবর, দাখিলকৃত আবেদনপত্র, পেমেন্ট সংগ্রহ এবং পরীক্ষার সময়সূচির রিয়েল-টাইম ওভারভিউ।",
+  "Total Enquiries": "মোট অনুসন্ধান",
+  "Online Applications": "অনলাইন আবেদনপত্র",
+  "Admission Intake Pipeline & Conversion Flow": "ভর্তি কার্যক্রমের পাইপলাইন ও কনভার্সন ফ্লো",
+  "Logged Enquiries": "লগকৃত অনুসন্ধান",
+  "Applications Submitted": "দাখিলকৃত আবেদন",
+  "Paid Application Fees": "পরিশোধিত আবেদন ফি",
+  "Admissions Circular Notices": "ভর্তি সংক্রান্ত নোটিশ",
+  "Written entrance examinations scheduled to be conducted inside BLK-01 / Main Building classrooms.": "মূল ভবনের ক্লাসরুমগুলোতে লিখিত প্রবেশিকা পরীক্ষা অনুষ্ঠিত হওয়ার সময়সূচি নির্ধারণ করা হয়েছে।",
+  "Exams mapped": "পরীক্ষা ম্যাপ করা হয়েছে",
+  "Digital Lottery Draw configured and completed for all designated non-viva class levels.": "সকল ভাইভা-বিহীন শ্রেণির স্তরের জন্য ডিজিটাল লটারি ড্র কনফিগার ও সম্পন্ন করা হয়েছে।",
+  "Draw sessions executed": "ড্র সেশন সম্পন্ন হয়েছে",
+  "Online Admission Application Window for session 2026 is officially open on the public portal!": "শিক্ষাবর্ষ ২০২৬-এর জন্য অনলাইন ভর্তি আবেদন উইন্ডো আনুষ্ঠানিকভাবে সক্রিয় করা হয়েছে!"
 }

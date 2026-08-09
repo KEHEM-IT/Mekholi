@@ -238,6 +238,11 @@
     "icon": "fa-duotone fa-user-graduate",
     "sub_menus": [
      {
+      "name": "Admission Dashboard",
+      "name_bn": "ভর্তি ড্যাশবোর্ড",
+      "icon": "fa-duotone fa-gauge-high"
+     },
+     {
       "name": "Admission Enquiries",
       "name_bn": "ভর্তি অনুসন্ধান",
       "icon": "fa-duotone fa-clipboard-question"
