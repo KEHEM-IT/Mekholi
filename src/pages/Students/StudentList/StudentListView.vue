@@ -3,6 +3,7 @@
 // Student List: displays a sortable, sticky-header table containing enrolled student registers,
 // and supports full CRUD actions, status toggling, and Excel bulk exports.
 import { computed, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useTranslator } from '@/Translator'
 import { useToast } from '@/composables/useToast'
 import { fetchAcademicYears, type AcademicYear } from '@/composables/Institute_Setup/useAcademicYears'
@@ -22,6 +23,8 @@ defineOptions({ name: 'StudentListView' })
 
 const { t } = useTranslator()
 const toast = useToast()
+const route = useRoute()
+const router = useRouter()
 
 const students = ref<Student[]>([])
 const years = ref<AcademicYear[]>([])
@@ -93,6 +96,28 @@ onMounted(async () => {
   const minDelay = new Promise((r) => setTimeout(r, MIN_SKELETON_MS))
   await Promise.all([loadAll(), minDelay])
   isPageLoading.value = false
+
+  // NID Scanner Prefill Logic
+  if (route.query.prefill === 'nid') {
+    const prefillDataStr = localStorage.getItem('nid_prefill_student')
+    if (prefillDataStr) {
+      try {
+        const prefillData = JSON.parse(prefillDataStr)
+        editingStudent.value = {
+          ...prefillData,
+          id: undefined, // treated as new student
+          is_active: true,
+          roll_no: 0,
+          behavior_points: 100,
+        } as unknown as Student
+        showForm.value = true
+        localStorage.removeItem('nid_prefill_student')
+        router.replace({ name: 'student-list' })
+      } catch (e) {
+        console.error('Failed to parse NID prefill data:', e)
+      }
+    }
+  }
 })
 
 function openAdd() {

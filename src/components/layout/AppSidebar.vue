@@ -89,6 +89,7 @@ const SUBMENU_ROUTES: Record<string, string> = {
   "ID Cards": "student-id-cards",
   "TC & Certificates": "student-certificates",
   "Behavior & Discipline": "student-behavior-logs",
+  "NID Scanner": "student-nid-scanner",
 };
 
 function onSubmenuClick(sub: NavSubMenu) {

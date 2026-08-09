@@ -99,6 +99,12 @@ export const routes: RouteRecordRaw[] = [
         beforeEnter: requireAuth,
       },
       {
+        path: 'students/nid-scanner',
+        name: 'student-nid-scanner',
+        component: () => import('@/pages/Students/NIDScanner/NIDScannerView.vue'),
+        beforeEnter: requireAuth,
+      },
+      {
         path: 'institute-setup',
         name: 'institute-setup',
         component: () => import('@/pages/Institute_Setup/Index.vue'),

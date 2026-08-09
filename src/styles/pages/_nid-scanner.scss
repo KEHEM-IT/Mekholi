@@ -1,0 +1,753 @@
+// ============================================================
+// Mekholi — Smart NID OCR Scanner Page & Plugin Stylesheet
+// ============================================================
+@use '../abstracts' as *;
+
+.nid-scanner-plugin {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  padding: $space-6;
+  width: 100%;
+  margin-bottom: $space-6;
+  box-shadow: $shadow-card;
+
+  // Header styles
+  .nid-scanner-header {
+    margin-bottom: $space-6;
+    border-bottom: 1px solid $color-border;
+    padding-bottom: $space-4;
+
+    .nid-scanner-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: $color-primary;
+      margin-bottom: $space-2;
+    }
+
+    .nid-scanner-desc {
+      font-size: 0.9rem;
+      color: $color-text-secondary;
+      line-height: $line-height-base;
+    }
+  }
+
+  // Error block
+  .nid-scanner-error {
+    background: $color-danger-muted;
+    border: 1px solid $color-danger;
+    border-radius: $radius-md;
+    padding: $space-4;
+    margin-bottom: $space-6;
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+
+    .error-icon {
+      font-size: 1.2rem;
+    }
+
+    .error-text {
+      color: $color-text;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  }
+
+  // Upload dropzone grid
+  .nid-scanner-upload-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $space-6;
+    margin-bottom: $space-6;
+
+    @media (min-width: $breakpoint-md) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .nid-dropzone {
+      position: relative;
+      border: 2px dashed $color-border-strong;
+      border-radius: $radius-md;
+      background: $color-bg;
+      min-height: 220px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      transition: border-color $transition-base, background-color $transition-base;
+      cursor: pointer;
+
+      &:hover {
+        border-color: $color-primary;
+        background: rgba($color-primary, 0.04);
+      }
+
+      &.is-dragging {
+        border-color: $color-primary-hover;
+        background: rgba($color-primary, 0.08);
+      }
+
+      &.has-file {
+        border-style: solid;
+        border-color: $color-border;
+      }
+
+      .dropzone-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: $space-6;
+        width: 100%;
+        height: 100%;
+        position: relative;
+
+        .dropzone-icon {
+          font-size: 2.5rem;
+          margin-bottom: $space-3;
+        }
+
+        .dropzone-label {
+          font-size: 1rem;
+          font-weight: 600;
+          color: $color-text;
+          margin-bottom: $space-2;
+
+          .required {
+            color: $color-danger;
+          }
+
+          .optional {
+            color: $color-text-muted;
+            font-size: 0.8rem;
+            font-weight: normal;
+          }
+        }
+
+        .dropzone-tip {
+          font-size: 0.85rem;
+          color: $color-text-secondary;
+          margin-bottom: $space-1;
+        }
+
+        .dropzone-subtip {
+          font-size: 0.75rem;
+          color: $color-text-muted;
+        }
+
+        .dropzone-input {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+          cursor: pointer;
+        }
+      }
+
+      .dropzone-preview-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        .dropzone-img {
+          max-width: 100%;
+          max-height: 240px;
+          object-fit: contain;
+          border-radius: $radius-sm;
+        }
+
+        .preview-overlay {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: rgba(0, 0, 0, 0.75);
+          padding: $space-3;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .preview-filename {
+            font-size: 0.8rem;
+            color: $color-text;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 70%;
+          }
+
+          .remove-btn {
+            background: $color-danger;
+            color: $color-text;
+            border: none;
+            padding: $space-1 $space-3;
+            border-radius: $radius-sm;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background $transition-fast;
+
+            &:hover {
+              background: $color-danger-hover;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Scan Actions
+  .nid-scanner-actions {
+    display: flex;
+    justify-content: center;
+
+    .scan-btn {
+      background: $color-primary;
+      color: $color-text;
+      border: none;
+      padding: $space-4 $space-8;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: $radius-md;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: $space-3;
+      box-shadow: $shadow-sm;
+      transition: background $transition-fast, transform $transition-fast, opacity $transition-fast;
+
+      &:hover:not(:disabled) {
+        background: $color-primary-hover;
+        transform: translateY(-1px);
+      }
+
+      &:active:not(:disabled) {
+        background: $color-primary-active;
+        transform: translateY(0);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .btn-icon {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  // Cinematic scanner loading
+  .nid-scanner-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $space-8;
+    background: $color-bg;
+    border-radius: $radius-md;
+    border: 1px solid $color-border;
+    min-height: 250px;
+
+    .loading-spinner-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin-bottom: $space-6;
+
+      .loading-spinner {
+        width: 100%;
+        height: 100%;
+        border: 4px solid rgba($color-primary, 0.1);
+        border-top-color: $color-primary;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      .loading-scanner-beam {
+        position: absolute;
+        top: 10%;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: $color-primary;
+        box-shadow: 0 0 12px 2px $color-primary;
+        animation: scan-vertical 2s ease-in-out infinite;
+      }
+    }
+
+    .loading-step-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: $color-text;
+      margin-bottom: $space-3;
+    }
+
+    .loading-progress-bar {
+      width: 250px;
+      height: 6px;
+      background: $color-border;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: $space-3;
+
+      .loading-progress-fill {
+        height: 100%;
+        background: $color-primary;
+        transition: width 0.4s ease;
+      }
+    }
+
+    .loading-step-text {
+      font-size: 0.85rem;
+      color: $color-text-secondary;
+      font-family: monospace;
+    }
+  }
+
+  // Scanning Results panel
+  .nid-scanner-results-container {
+    .results-layout-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: $space-8;
+
+      @media (min-width: $breakpoint-lg) {
+        grid-template-columns: 1.1fr 1.2fr;
+      }
+    }
+
+    .section-sub-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: $color-text;
+      margin-bottom: $space-4;
+      border-left: 3px solid $color-primary;
+      padding-left: $space-2;
+    }
+
+    // Editable form
+    .editable-form-column {
+      display: flex;
+      flex-direction: column;
+      gap: $space-4;
+
+      .verification-form {
+        background: $color-bg;
+        border: 1px solid $color-border;
+        border-radius: $radius-md;
+        padding: $space-6;
+        display: flex;
+        flex-direction: column;
+        gap: $space-4;
+
+        .form-group-half {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: $space-4;
+
+          @media (min-width: $breakpoint-sm) {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+
+        .form-group-three {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: $space-4;
+
+          @media (min-width: $breakpoint-sm) {
+            grid-template-columns: 1fr 1fr 1fr;
+          }
+        }
+
+        .form-control-item {
+          display: flex;
+          flex-direction: column;
+          gap: $space-2;
+
+          label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: $color-text-secondary;
+          }
+
+          .verify-input {
+            background: $color-surface;
+            border: 1px solid $color-border;
+            border-radius: $radius-sm;
+            padding: $space-2 $space-3;
+            color: $color-text;
+            font-size: 0.9rem;
+            width: 100%;
+            transition: border-color $transition-fast;
+
+            &:focus {
+              border-color: $color-primary;
+              outline: none;
+            }
+
+            &.font-bangla {
+              font-family: 'Hind Siliguri', sans-serif;
+            }
+
+            &.font-uppercase {
+              text-transform: uppercase;
+            }
+          }
+
+          .verify-textarea {
+            background: $color-surface;
+            border: 1px solid $color-border;
+            border-radius: $radius-sm;
+            padding: $space-3;
+            color: $color-text;
+            font-size: 0.9rem;
+            width: 100%;
+            resize: vertical;
+            transition: border-color $transition-fast;
+
+            &:focus {
+              border-color: $color-primary;
+              outline: none;
+            }
+
+            &.font-bangla {
+              font-family: 'Hind Siliguri', sans-serif;
+            }
+          }
+        }
+      }
+
+      .results-action-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: $space-4;
+        margin-top: $space-4;
+
+        .reset-btn {
+          background: transparent;
+          color: $color-text-secondary;
+          border: 1px solid $color-border;
+          padding: $space-3 $space-6;
+          border-radius: $radius-sm;
+          cursor: pointer;
+          font-weight: 500;
+          transition: background $transition-fast, color $transition-fast;
+
+          &:hover {
+            background: $color-surface-hover;
+            color: $color-text;
+          }
+        }
+      }
+    }
+
+    // Visual card mockup
+    .visual-mockup-column {
+      .nid-mockup-card {
+        display: flex;
+        flex-direction: column;
+        gap: $space-6;
+
+        .nid-card-side {
+          position: relative;
+          background: #fdfdfd; // Realistic NID light background
+          border: 1px solid #c0c4cc;
+          border-radius: 12px;
+          color: #1a1a1a; // Dark text inside card mockup
+          padding: 1rem;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+          overflow: hidden;
+          width: 100%;
+          max-width: 460px;
+          min-height: 250px;
+          margin: 0 auto;
+
+          .card-glow-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.05) 100%);
+            pointer-events: none;
+            z-index: 2;
+          }
+
+          .card-inner-border {
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+            padding: 8px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+          }
+
+          // Card Front
+          &.card-front {
+            .mockup-header {
+              display: flex;
+              gap: 8px;
+              border-bottom: 1px solid #1a1a1a;
+              padding-bottom: 6px;
+              margin-bottom: 8px;
+
+              .bd-logo-circle {
+                font-size: 1.8rem;
+                display: flex;
+                align-items: center;
+              }
+
+              .header-text-container {
+                display: flex;
+                flex-direction: column;
+
+                .title-bn {
+                  font-family: 'Hind Siliguri', sans-serif;
+                  font-size: 0.85rem;
+                  font-weight: bold;
+                  color: #006a4e; // Bangladesh Green
+                  line-height: 1.1;
+                }
+
+                .title-en {
+                  font-size: 0.55rem;
+                  font-weight: 500;
+                  color: #006a4e;
+                  line-height: 1.1;
+                }
+
+                .subtitle-card {
+                  font-size: 0.6rem;
+                  font-weight: bold;
+                  color: #d80027; // Bangladesh Red
+                  margin-top: 2px;
+                  line-height: 1.1;
+                }
+              }
+            }
+
+            .mockup-body {
+              display: flex;
+              gap: 12px;
+              height: 100%;
+
+              .holder-photo-container {
+                width: 80px;
+                height: 100px;
+                background: #e4e7ed;
+                border: 1px solid #c0c4cc;
+                border-radius: 4px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                flex-shrink: 0;
+
+                .photo-icon {
+                  font-size: 2rem;
+                  color: #909399;
+                }
+
+                .photo-label {
+                  font-size: 0.55rem;
+                  color: #909399;
+                  font-weight: bold;
+                  margin-top: 4px;
+                }
+              }
+
+              .holder-details {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                font-size: 0.72rem;
+                width: 100%;
+                line-height: 1.35;
+
+                .details-row {
+                  display: flex;
+                  gap: 4px;
+
+                  .detail-lbl {
+                    font-weight: bold;
+                    width: 70px;
+                    color: #4a4a4a;
+                    flex-shrink: 0;
+
+                    &.text-red {
+                      color: #d80027;
+                    }
+                  }
+
+                  .detail-val {
+                    font-weight: bold;
+                    color: #000;
+
+                    &.font-bangla {
+                      font-family: 'Hind Siliguri', sans-serif;
+                    }
+
+                    &.font-uppercase {
+                      text-transform: uppercase;
+                    }
+
+                    &.font-red {
+                      color: #d80027;
+                    }
+
+                    &.font-red-bold {
+                      color: #d80027;
+                      font-weight: 800;
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          // Card Back
+          &.card-back {
+            background: #fafafa;
+            color: #222;
+
+            .back-notice {
+              font-family: 'Hind Siliguri', sans-serif;
+              font-size: 0.5rem;
+              text-align: center;
+              border-bottom: 1px solid #1a1a1a;
+              padding-bottom: 4px;
+              margin-bottom: 6px;
+              line-height: 1.25;
+            }
+
+            .back-address-block {
+              font-size: 0.65rem;
+              line-height: 1.35;
+              margin-bottom: 8px;
+
+              .lbl {
+                font-weight: bold;
+                color: #555;
+              }
+
+              .val {
+                font-weight: bold;
+                color: #000;
+                font-family: 'Hind Siliguri', sans-serif;
+              }
+            }
+
+            .back-meta-grid {
+              display: grid;
+              grid-template-columns: 1.2fr 0.8fr;
+              gap: 6px;
+              font-size: 0.65rem;
+              border-bottom: 1px solid #c0c4cc;
+              padding-bottom: 6px;
+              margin-bottom: 6px;
+
+              .meta-item {
+                display: flex;
+                flex-direction: column;
+
+                .lbl {
+                  color: #555;
+                  font-size: 0.58rem;
+                }
+
+                .val {
+                  font-weight: bold;
+                  color: #000;
+
+                  &.text-danger {
+                    color: #d80027;
+                  }
+
+                  &.font-bangla {
+                    font-family: 'Hind Siliguri', sans-serif;
+                  }
+                }
+              }
+            }
+
+            .back-signature-block {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+
+              .signature-display {
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 2px;
+
+                .cropped-signature {
+                  max-height: 100%;
+                  max-width: 140px;
+                  object-fit: contain;
+                }
+
+                .sig-placeholder {
+                  font-size: 0.6rem;
+                  color: #909399;
+                  font-family: monospace;
+                  border: 1px dashed #dcdfe6;
+                  padding: 2px 8px;
+                  border-radius: 4px;
+                }
+              }
+
+              .signature-line {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.55rem;
+                border-top: 1px solid #1a1a1a;
+                padding-top: 2px;
+                color: #333;
+
+                .lbl {
+                  font-weight: bold;
+                }
+
+                .val {
+                  font-weight: 500;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes scan-vertical {
+  0%, 100% { top: 10%; }
+  50% { top: 90%; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

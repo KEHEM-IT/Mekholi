@@ -3,12 +3,14 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import { translate } from './Translator'
+import NIDScannerPlugin from './plugins/NIDScanner'
 import './styles/main.scss'
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+app.use(NIDScannerPlugin)
 
 // Global translator — `$t('staff.male')` works in any template app-wide,
 // reactive to the user's chosen language (see src/Translator/).

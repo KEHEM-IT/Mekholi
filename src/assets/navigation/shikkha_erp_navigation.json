@@ -343,6 +343,11 @@
       "name": "Behavior & Discipline",
       "name_bn": "আচরণ ও শৃঙ্খলা",
       "icon": "fa-duotone fa-heart-pulse"
+     },
+     {
+      "name": "NID Scanner",
+      "name_bn": "এনআইডি স্ক্যানার",
+      "icon": "fa-duotone fa-scanner-image"
      }
     ]
    },
