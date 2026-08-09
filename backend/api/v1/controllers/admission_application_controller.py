@@ -14,6 +14,7 @@ FIELDS = [
     "previous_school", "country", "nationality", "photo", "birth_certificate",
     "payment_status", "payment_method", "payment_transaction_id",
     "application_status", "viva_marks", "written_marks", "remarks",
+    "verification_status", "verification_checklist",
 ]
 
 
@@ -40,6 +41,16 @@ def _normalize(body, item_id=None):
         vals["payment_status"] = "Pending"
     if not vals["application_status"]:
         vals["application_status"] = "Submitted"
+    if not vals["verification_status"]:
+        vals["verification_status"] = "Unverified"
+        
+    val = body.get("verification_checklist")
+    if isinstance(val, dict):
+        vals["verification_checklist"] = json.dumps(val)
+    elif isinstance(val, str):
+        vals["verification_checklist"] = val
+    else:
+        vals["verification_checklist"] = "{}"
 
     vals["id"] = item_id
     return vals

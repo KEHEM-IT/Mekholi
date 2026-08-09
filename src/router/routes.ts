@@ -170,8 +170,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'admission/document-verification',
         name: 'admission-document-verification',
-        component: () => import('@/pages/ComingSoonView.vue'),
-        meta: { title: 'Document Verification', titleBn: 'ডকুমেন্ট যাচাই', icon: 'fa-duotone fa-file-circle-check', module: 'Admission' },
+        component: () => import('@/pages/Admission/DocumentVerification/DocumentVerificationView.vue'),
         beforeEnter: requireAuth,
       },
       {

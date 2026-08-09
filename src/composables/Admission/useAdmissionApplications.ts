@@ -32,6 +32,8 @@ export interface AdmissionApplication {
   viva_marks: number
   written_marks: number
   remarks: string
+  verification_status: 'Unverified' | 'Partially Verified' | 'Verified'
+  verification_checklist: Record<string, boolean>
   created_at?: string
   updated_at?: string
 }
@@ -60,6 +62,8 @@ export function emptyApplication(): AdmissionApplication {
     viva_marks: 0,
     written_marks: 0,
     remarks: '',
+    verification_status: 'Unverified',
+    verification_checklist: {},
   }
 }
 

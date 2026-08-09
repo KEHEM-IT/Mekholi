@@ -78,6 +78,18 @@ def _migrate(conn):
     except sqlite3.OperationalError:
         pass
 
+    # Migrate admission_applications: add document verification fields
+    try:
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(admission_applications)").fetchall()]
+        if cols:
+            if "verification_status" not in cols:
+                conn.execute("ALTER TABLE admission_applications ADD COLUMN verification_status TEXT DEFAULT 'Unverified'")
+            if "verification_checklist" not in cols:
+                conn.execute("ALTER TABLE admission_applications ADD COLUMN verification_checklist TEXT DEFAULT '{}'")
+            print("SQL: migrated admission_applications — added verification_status and verification_checklist")
+    except sqlite3.OperationalError:
+        pass
+
 
 # Built-in Bangladesh education boards (the official registry). Seeded once
 # on server start; marked is_builtin=1 so they can't be deleted from the UI
@@ -1025,6 +1037,8 @@ def init_db():
             viva_marks REAL DEFAULT 0.0,
             written_marks REAL DEFAULT 0.0,
             remarks TEXT DEFAULT '',
+            verification_status TEXT DEFAULT 'Unverified',
+            verification_checklist TEXT DEFAULT '{}',
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );

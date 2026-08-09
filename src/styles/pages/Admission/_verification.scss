@@ -1,0 +1,54 @@
+@use '../../abstracts' as *;
+
+// Document Verification Styles
+.verify-modal {
+  min-height: calc(100vh - 12rem);
+  max-height: 100vh;
+}
+
+.verify-checklist {
+  @include flex(column, stretch, flex-start, $space-3);
+  width: 100%;
+}
+
+.verify-checklist-item {
+  @include flex(row, center, space-between, $space-4);
+  padding: $space-3 $space-4;
+  border-radius: $radius-md;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
+  
+  &__label {
+    @include flex(row, center, flex-start, $space-2);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--color-text);
+
+    i {
+      color: var(--color-primary);
+    }
+  }
+
+  &__actions {
+    @include flex(row, center, flex-end, $space-3);
+  }
+
+  &__view-btn {
+    @include flex(row, center, center);
+    padding: 2px 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-info);
+    background: var(--color-info-muted);
+    border: 1px solid var(--color-info);
+    border-radius: $radius-sm;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+      background: var(--color-info-hover);
+      color: #fff;
+    }
+  }
+}
