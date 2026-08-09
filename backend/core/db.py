@@ -714,15 +714,10 @@ def _seed_students(conn):
             " blood_group, religion, stipend_eligible, stipend_mfs_provider, stipend_mfs_number,"
             " government_uid, behavior_points, is_active)"
             " VALUES (:student_id, :candidate_name, :candidate_name_bn, :guardian_name,"
-            " :phone, :email, ?, :class_name, :section_name, :roll_no, :gender, :date_of_birth,"
+            " :phone, :email, :academic_year_id, :class_name, :section_name, :roll_no, :gender, :date_of_birth,"
             " :blood_group, :religion, :stipend_eligible, :stipend_mfs_provider, :stipend_mfs_number,"
             " :government_uid, :behavior_points, 1)",
-            (
-                year_id, s["student_id"], s["candidate_name"], s["candidate_name_bn"], s["guardian_name"],
-                s["phone"], s["email"], s["class_name"], s["section_name"], s["roll_no"], s["gender"], s["date_of_birth"],
-                s["blood_group"], s["religion"], s["stipend_eligible"], s["stipend_mfs_provider"], s["stipend_mfs_number"],
-                s["government_uid"], s["behavior_points"]
-            )
+            {**s, "academic_year_id": year_id}
         )
         print(f"SQL: seeded default student — {s['student_id']} ({s['candidate_name']})")
 
