@@ -19,12 +19,7 @@
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(3px);
   
-  /* Fade-in transition on overlay */
-  animation: modal-fade-in 1s ease forwards;
-
-  &.is-closing {
-    animation: modal-fade-out 1.2s ease forwards;
-  }
+  /* No opacity transition on overlay background */
 
   @media (max-width: #{$breakpoint-sm - 1px}) {
     padding: 0;
@@ -130,16 +125,6 @@
   @media (max-width: #{$breakpoint-sm - 1px}) {
     padding: $space-3 $space-4;
   }
-}
-
-@keyframes modal-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes modal-fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
 }
 
 @keyframes modal-slide-in {
