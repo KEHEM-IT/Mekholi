@@ -10,6 +10,79 @@
   background: var(--color-surface);
   overflow: hidden;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+
+  &.is-fullscreen {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9999 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: var(--color-surface) !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+
+    .dt__scroll {
+      flex: 1 1 auto;
+      max-height: none !important;
+      height: 100% !important;
+    }
+  }
+
+  // Force rotation to landscape mode only on mobile devices (portrait mode)
+  @media (max-width: #{$breakpoint-md - 1px}) and (orientation: portrait) {
+    &.is-fullscreen {
+      width: 100vh !important;
+      height: 100vw !important;
+      transform: rotate(90deg) !important;
+      transform-origin: top left !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 100vw !important;
+      z-index: 99999 !important;
+    }
+  }
+}
+
+.dt__toolbar {
+  @include flex(row, center, space-between);
+  padding: $space-2 $space-4;
+  background: var(--color-surface-alt);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.dt__toolbar-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.dt__fullscreen-btn {
+  @include flex(row, center, center);
+  width: 1.8rem;
+  height: 1.8rem;
+  background: transparent;
+  border: none;
+  border-radius: $radius-sm;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    background-color $transition-fast,
+    color $transition-fast;
+
+  &:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-primary);
+  }
+
+  i {
+    font-size: 0.85rem;
+  }
 }
 
 .dt__scroll {

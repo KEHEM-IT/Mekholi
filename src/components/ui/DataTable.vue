@@ -21,8 +21,9 @@
 //
 // The wrapper handles the fixed height: the header stays sticky and the
 // body scrolls independently.
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import type { VNode } from 'vue'
+import { useTranslator } from '@/Translator'
 
 export type SortDir = 'asc' | 'desc'
 
@@ -55,8 +56,56 @@ const props = withDefaults(
 
 const emit = defineEmits<{ 'sort-change': [payload: { key: string; dir: SortDir }] }>()
 
+const { t } = useTranslator()
+
 const sortKey = ref<string>(props.defaultSortKey)
 const sortDir = ref<SortDir>(props.defaultSortDir)
+
+const isFullScreen = ref(false)
+const tableContainer = ref<HTMLElement | null>(null)
+
+function onFullscreenChange() {
+  isFullScreen.value = document.fullscreenElement === tableContainer.value
+}
+
+onMounted(() => {
+  document.addEventListener('fullscreenchange', onFullscreenChange)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('fullscreenchange', onFullscreenChange)
+})
+
+async function toggleFullScreen() {
+  if (!tableContainer.value) return
+  
+  if (!document.fullscreenElement) {
+    try {
+      if (tableContainer.value.requestFullscreen) {
+        await tableContainer.value.requestFullscreen()
+        isFullScreen.value = true
+        
+        // Try locking orientation on mobile devices
+        if (screen.orientation && 'lock' in screen.orientation) {
+          await screen.orientation.lock('landscape').catch(() => {
+            // Safe fallback: normal exit if locking isn't supported on desktop
+          })
+        }
+      }
+    } catch {
+      // Inline CSS fallback is active anyway
+      isFullScreen.value = true
+    }
+  } else {
+    if (document.exitFullscreen) {
+      await document.exitFullscreen()
+      isFullScreen.value = false
+      if (screen.orientation && 'unlock' in screen.orientation) {
+        screen.orientation.unlock()
+      }
+    }
+  }
+}
 
 function toggleSort(col: TableColumn) {
   if (!col.sortable) return
@@ -106,7 +155,20 @@ const sortedRows = computed<unknown[]>(() => {
 </script>
 
 <template>
-  <div class="dt">
+  <div ref="tableContainer" class="dt" :class="{ 'is-fullscreen': isFullScreen }">
+    <div class="dt__toolbar">
+      <span class="dt__toolbar-title" v-if="isFullScreen">{{ t('Admission Roster View') }}</span>
+      <span v-else></span>
+      <button
+        type="button"
+        class="dt__fullscreen-btn"
+        :title="isFullScreen ? t('Exit Fullscreen') : t('Fullscreen Mode')"
+        @click="toggleFullScreen"
+      >
+        <i class="fa-duotone" :class="isFullScreen ? 'fa-compress' : 'fa-expand'" />
+      </button>
+    </div>
+
     <div class="dt__scroll">
       <table class="dt__table">
         <thead class="dt__head">
