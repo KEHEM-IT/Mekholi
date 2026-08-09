@@ -43,7 +43,19 @@ function triggerClose() {
   isClosing.value = true
   setTimeout(() => {
     emit('close')
-  }, 1200)
+  }, 1000)
+}
+
+function onPanelClick(event: MouseEvent) {
+  const btn = (event.target as HTMLElement).closest('button')
+  if (btn) {
+    const text = btn.textContent?.trim() || ''
+    if (text === t('Cancel') || text === 'Cancel' || text === 'বাতিল' || btn.classList.contains('btn-cancel')) {
+      event.preventDefault()
+      event.stopPropagation()
+      triggerClose()
+    }
+  }
 }
 
 function onKeydown(event: KeyboardEvent) {
@@ -73,6 +85,7 @@ onBeforeUnmount(() => {
         :class="[{ 'modal-panel--wide': wide, 'modal-panel--tall': tall, 'is-closing': isClosing }, panelClass]"
         role="dialog"
         aria-modal="true"
+        @click.capture="onPanelClick"
       >
         <header class="modal-panel__head">
           <h3 class="modal-panel__title">
