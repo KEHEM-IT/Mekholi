@@ -1,30 +1,46 @@
 # Admission Module — Guide & Directory Concept Map
 
-> **Purpose:** This document is the living reference and overview for the **Admission** module.
-> It details the student intake pipeline, custom form generation, applications reviews, and exam planning.
+> **Purpose:** This document is the living reference, overview, and architectural concept map for the **Admission** module.
+> It details the student intake pipeline, custom form generation, applicant evaluations, exam parameters, randomized digital lotteries, merit calculations, document audits, and seat planning.
 >
-> All subcategories are organized under structured directories for premium SaaS scalability.
+> All subcategories are fully implemented and organized under structured page directories for premium SaaS scalability.
 
 ---
 
 ## 📂 1. Directory Structure: Modular Sub-Directories
 
-The Admission module is organized into **4 highly independent, specialized directories**. Each folder encapsulates a single stage in your student intake workflow, housing its Page View, Form Modal, and any localized helper assets:
+The Admission module has been fully refactored from a flat layout into **9 independent sub-directories**. Each subdirectory encapsulates a single page concept, housing its Page View, Form Modal, and any localized helper assets:
 
 ```
 src/pages/Admission/
 ├── README.md                   # This overview guide
-├── Enquiries/                  # Stage 1: Lead Capture, Front-desk CRM
+├── Enquiries/                  # Step 1: Lead Capture, Front-desk CRM
 │   ├── EnquiriesView.vue
 │   └── EnquiryFormModal.vue
-├── FormBuilder/                # Stage 2: Public Registration Form customization
+├── FormBuilder/                # Step 2: Public Registration Form customization
 │   └── FormBuilderView.vue
-├── Applications/               # Stage 3: Applicant Profiles review, Audits, Grading
+├── Applications/               # Step 3: Applicant Profiles review, Audits, Grading
 │   ├── ApplicationsView.vue
 │   └── ApplicationFormModal.vue
-└── Tests/                      # Stage 4: Exam Scheduling & Venue Allocations
-    ├── TestsView.vue
-    └── TestFormModal.vue
+├── Tests/                      # Step 4: Exam Scheduling & Venue Allocations
+│   ├── TestsView.vue
+│   └── TestFormModal.vue
+├── DigitalLottery/             # Step 5: Randomized selection & quota draws
+│   ├── DigitalLotteryView.vue
+│   └── LotteryDrawModal.vue
+├── MeritList/                  # Step 6: Real-time GPA/CGPA scores ranking & publication
+│   ├── MeritListView.vue
+│   └── PublishMeritListModal.vue
+├── WaitingList/                # Step 7: Queue movements & automated promotions
+│   └── WaitingListView.vue
+├── DocumentVerification/       # Step 8: Document audits & verification sign-offs
+│   ├── DocumentVerificationView.vue
+│   └── VerificationModal.vue
+├── SeatQuota/                  # Step 9: Intake capacity & quota mapping
+│   ├── SeatQuotaView.vue
+│   └── SeatQuotaFormModal.vue
+└── Settings/                   # Step 10: Global intake calendar & payment credentials
+    └── AdmissionSettingsView.vue
 ```
 
 ---
@@ -43,8 +59,8 @@ Every folder under `src/pages/Admission/` follows the same proven design pattern
 ### Styling Rule: No Inline Styles! 🚫
 To maintain your strict **SASS 7-1 Architecture**, all custom styles must live in the global `src/styles/` directory:
 *   Global design variables and tokens live inside `src/styles/abstracts/_variables.scss`.
-*   Module-level SASS stylesheets are housed under `src/styles/pages/Admission/` (such as `_form-builder.scss`, `_enquiries.scss`, and `_tests.scss`).
-*   Modal dimensions and scroll boundaries are styled using classes inside `_enquiries.scss` or `_tests.scss` with the global `.modal-panel` capping rules.
+*   Module-level SASS stylesheets are housed under `src/styles/pages/Admission/` (such as `_form-builder.scss`, `_enquiries.scss`, `_tests.scss`, `_lottery.scss`, `_merit.scss`, `_waiting.scss`, `_verification.scss`, `_seat.scss`, and `_settings.scss`).
+*   Modal dimensions and scroll boundaries are styled using classes inside `src/styles/pages/Admission/` with the global `.modal-panel` capping rules.
 
 ---
 
@@ -58,6 +74,12 @@ All Admission sub-directories are fully integrated into the backend SQL database
 | **FormBuilder** | `admission_forms` | `fields_config`, `custom_fields` | `id` PRIMARY KEY, `academic_year_id` FOREIGN KEY |
 | **Applications** | `admission_applications` | — | `id` PRIMARY KEY, `academic_year_id` FOREIGN KEY |
 | **Tests** | `admission_tests` | — | `id` PRIMARY KEY, `academic_year_id`, `room_id` FOREIGN KEYS |
+| **DigitalLottery** | `admission_lotteries` | `quota_config`, `selected_applicant_ids`, `waiting_applicant_ids` | `id` PRIMARY KEY, `academic_year_id` FOREIGN KEY |
+| **MeritList** | `admission_applications` *(dynamic)* | — | Derived on-the-fly via written and viva scores |
+| **WaitingList** | `admission_applications` *(dynamic)* | — | Derived on-the-fly via waitlist ranks |
+| **DocumentVerification** | `admission_applications` *(dynamic)* | `verification_checklist` | `id` PRIMARY KEY, `academic_year_id` FOREIGN KEY |
+| **SeatQuota** | `classes` *(dynamic)* | — | Integrates capacity parameters inside core classes |
+| **Settings** | `admission_settings` | `age_limits`, `payment_credentials` | `id` PRIMARY KEY, `academic_year_id` FOREIGN KEY |
 
 ---
 
@@ -71,6 +93,12 @@ All active sub-directories are mounted as lazy-loaded routes under the `/admissi
 | 2 | `FormBuilder` | `/admission/form-builder` | `admission-form-builder` | `FormBuilder/FormBuilderView.vue` |
 | 3 | `Applications` | `/admission/applications` | `admission-applications` | `Applications/ApplicationsView.vue` |
 | 4 | `Tests` | `/admission/tests` | `admission-tests` | `Tests/TestsView.vue` |
+| 5 | `DigitalLottery` | `/admission/digital-lottery` | `admission-digital-lottery` | `DigitalLottery/DigitalLotteryView.vue` |
+| 6 | `MeritList` | `/admission/merit-list` | `admission-merit-list` | `MeritList/MeritListView.vue` |
+| 7 | `WaitingList` | `/admission/waiting-list` | `admission-waiting-list` | `WaitingList/WaitingListView.vue` |
+| 8 | `DocumentVerification` | `/admission/document-verification` | `admission-document-verification` | `DocumentVerification/DocumentVerificationView.vue` |
+| 9 | `SeatQuota` | `/admission/seat-quota` | `admission-seat-quota` | `SeatQuota/SeatQuotaView.vue` |
+| 10 | `Settings` | `/admission/settings` | `admission-settings` | `Settings/AdmissionSettingsView.vue` |
 
 ---
 
