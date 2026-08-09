@@ -10,6 +10,24 @@ import classNamesJson from '@/assets/jsons/class_names.json'
 import gendersJson from '@/assets/jsons/genders.json'
 import { emptyStudent, type Student } from '@/composables/Students/useStudents'
 import { uploadToImgbb, validateLogoFile } from '@/composables/useImgbbUpload'
+import NIDScanner from '@/plugins/NIDScanner/NIDScanner.vue'
+import type { NIDScanResult } from '@/plugins/NIDScanner/nidScannerService'
+import BaseModal from '@/components/ui/BaseModal.vue'
+
+const activeScannerRole = ref<'father' | 'mother' | null>(null)
+
+function handleScannerSuccess(data: NIDScanResult) {
+  if (activeScannerRole.value === 'father') {
+    form.father_name = data.name_en || data.name_bn || form.father_name
+    form.father_nid = data.nid_no || form.father_nid
+    toast.success(t("Father's details updated from scanned NID!"))
+  } else if (activeScannerRole.value === 'mother') {
+    form.mother_name = data.name_en || data.name_bn || form.mother_name
+    form.mother_nid = data.nid_no || form.mother_nid
+    toast.success(t("Mother's details updated from scanned NID!"))
+  }
+  activeScannerRole.value = null
+}
 
 const props = defineProps<{
   student: Student | null
@@ -262,7 +280,12 @@ function submit() {
             <input v-model="form.father_name" type="text" :placeholder="t('Enter father\'s name')" />
           </div>
           <div class="form-field">
-            <label>{{ t("Father's NID") }}</label>
+            <div class="label-with-action">
+              <label>{{ t("Father's NID") }}</label>
+              <button type="button" class="scan-lbl-btn" @click="activeScannerRole = 'father'">
+                <i class="fa-duotone fa-scanner-image" /> {{ t('Scan NID') }}
+              </button>
+            </div>
             <input v-model="form.father_nid" type="text" maxlength="17" :placeholder="t('Enter father\'s NID')" />
           </div>
           <div class="form-field">
@@ -270,7 +293,12 @@ function submit() {
             <input v-model="form.mother_name" type="text" :placeholder="t('Enter mother\'s name')" />
           </div>
           <div class="form-field">
-            <label>{{ t("Mother's NID") }}</label>
+            <div class="label-with-action">
+              <label>{{ t("Mother's NID") }}</label>
+              <button type="button" class="scan-lbl-btn" @click="activeScannerRole = 'mother'">
+                <i class="fa-duotone fa-scanner-image" /> {{ t('Scan NID') }}
+              </button>
+            </div>
             <input v-model="form.mother_nid" type="text" maxlength="17" :placeholder="t('Enter mother\'s NID')" />
           </div>
         </div>
@@ -404,5 +432,29 @@ function submit() {
         {{ props.student ? t('Update Profile') : t('Create Profile') }}
       </button>
     </div>
+
+    <!-- Scanner Dialog inside form -->
+    <BaseModal
+      v-if="activeScannerRole !== null"
+      :title="activeScannerRole === 'father' ? t('Scan Father\'s NID Card') : t('Scan Mother\'s NID Card')"
+      wide
+      @close="activeScannerRole = null"
+    >
+      <NIDScanner
+        @scan-success="handleScannerSuccess"
+        @reset="activeScannerRole = null"
+      >
+        <template #actions="{ data }">
+          <button
+            type="button"
+            class="btn btn--primary"
+            :disabled="!data"
+            @click="handleScannerSuccess(data)"
+          >
+            <i class="fa-duotone fa-square-check" /> {{ t('Apply Scanned Details') }}
+          </button>
+        </template>
+      </NIDScanner>
+    </BaseModal>
   </div>
 </template>
