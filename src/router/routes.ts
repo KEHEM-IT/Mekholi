@@ -182,8 +182,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'admission/settings',
         name: 'admission-settings',
-        component: () => import('@/pages/ComingSoonView.vue'),
-        meta: { title: 'Admission Settings', titleBn: 'ভর্তি সেটিংস', icon: 'fa-duotone fa-sliders', module: 'Admission' },
+        component: () => import('@/pages/Admission/Settings/AdmissionSettingsView.vue'),
         beforeEnter: requireAuth,
       },
       { path: 'forbidden', name: 'forbidden', component: () => import('@/pages/ForbiddenView.vue') },

@@ -1,0 +1,91 @@
+@use '../../abstracts' as *;
+
+// Admission Settings Styles
+.adm-settings-tabs {
+  @include flex(row, center, flex-start, $space-3);
+  margin-bottom: $space-4;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.adm-settings-tab {
+  padding: $space-2 $space-4;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition:
+    border-color $transition-fast,
+    color $transition-fast;
+
+  &:hover {
+    color: var(--color-text);
+  }
+
+  &.is-active {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+}
+
+.age-limits-table {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.age-limits-row {
+  display: grid;
+  grid-template-columns: 1fr 10rem 10rem;
+  padding: $space-3 $space-4;
+  border-bottom: 1px solid var(--color-border);
+  align-items: center;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr 6rem 6rem;
+    padding: $space-2 $space-2;
+    font-size: 0.8rem;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &--header {
+    background: var(--color-surface-alt);
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+  }
+
+  .class-label-text {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .limit-input-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    input {
+      width: 4rem;
+      padding: 4px 8px !important;
+      font-size: 0.85rem !important;
+      text-align: center;
+    }
+
+    span {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+  }
+}

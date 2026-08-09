@@ -620,6 +620,53 @@ def _seed_admission_lotteries(conn):
     print("SQL: seeded default admission lottery draw result")
 
 
+DEFAULT_AGE_LIMITS = {
+    "Play": {"min": 3, "max": 4},
+    "Nursery": {"min": 4, "max": 5},
+    "KG": {"min": 5, "max": 6},
+    "Class 1": {"min": 6, "max": 8},
+    "Class 6": {"min": 11, "max": 13},
+    "Class 9": {"min": 14, "max": 16}
+}
+
+DEFAULT_PAYMENT_CREDS = {
+    "bkash_merchant_id": "BK_MER_928172",
+    "bkash_app_key": "BK_APP_KEY_819273",
+    "nagad_merchant_id": "NG_MER_102938",
+    "nagad_signature_key": "NG_SIG_KEY_718293"
+}
+
+
+def _seed_admission_settings(conn):
+    """Seed a default Admission Settings configuration ONLY on an empty table."""
+    try:
+        count = conn.execute("SELECT COUNT(*) FROM admission_settings").fetchone()[0]
+    except sqlite3.OperationalError:
+        return
+    if count > 0:
+        return
+    # Resolve first available academic year
+    year = conn.execute("SELECT id FROM academic_years ORDER BY id DESC LIMIT 1").fetchone()
+    year_id = year["id"] if year else 0
+    
+    conn.execute(
+        "INSERT INTO admission_settings (academic_year_id, open_date, close_date, application_fee,"
+        " age_limits, payment_credentials, terms_en, terms_bn, is_active)"
+        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)",
+        (
+            year_id,
+            "2026-10-01",
+            "2026-12-31",
+            200.0,
+            json.dumps(DEFAULT_AGE_LIMITS),
+            json.dumps(DEFAULT_PAYMENT_CREDS),
+            "I certify that all details submitted are true and correct to the best of my knowledge.",
+            "আমি প্রত্যয়ন করছি যে দাখিলকৃত সকল তথ্য আমার জ্ঞান ও বিশ্বাসমতে সত্য এবং সঠিক।"
+        )
+    )
+    print("SQL: seeded default admission settings")
+
+
 def _seed_exam_terms(conn):
     """Seed the default BD exam terms ONLY on a fresh/empty table, so terms
     the user deletes stay deleted (no resurrection on restart)."""
@@ -1099,6 +1146,20 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        CREATE TABLE IF NOT EXISTS admission_settings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            academic_year_id INTEGER REFERENCES academic_years(id) ON DELETE SET NULL,
+            open_date TEXT DEFAULT '',
+            close_date TEXT DEFAULT '',
+            application_fee REAL DEFAULT 0.0,
+            age_limits TEXT DEFAULT '{}',
+            payment_credentials TEXT DEFAULT '{}',
+            terms_en TEXT DEFAULT '',
+            terms_bn TEXT DEFAULT '',
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     _migrate(conn)
@@ -1113,6 +1174,7 @@ def init_db():
     _seed_admission_applications(conn)
     _seed_admission_tests(conn)
     _seed_admission_lotteries(conn)
+    _seed_admission_settings(conn)
 
     # Seed a blank profile so the API always has something to return.
     if conn.execute("SELECT COUNT(*) FROM institute_profiles").fetchone()[0] == 0:
