@@ -217,3 +217,50 @@ th[aria-sort='descending'] .dt__sort {
     opacity: 0.5;
   }
 }
+
+// Animated cell skeletons inside the table loader
+.dt__sk-cell {
+  display: inline-block;
+  height: 0.85rem;
+  width: 70%;
+  border-radius: $radius-sm;
+
+  &--short {
+    width: 40%;
+  }
+}
+
+// Standalone minimalist empty state container (no borders, no headers)
+.dt__empty-standalone {
+  @include flex(column, center, center, $space-3);
+  padding: $space-8 $space-4;
+  text-align: center;
+  width: 100%;
+}
+
+.dt__empty-icon {
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  font-size: 1.8rem;
+  border: 1px solid var(--color-border);
+  margin-bottom: $space-2;
+}
+
+.dt__empty-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  max-width: 28rem;
+  line-height: 1.4;
+}
+
+// Remove borders when only the empty state is displayed
+.dt.is-empty-state {
+  border: none !important;
+  background: transparent !important;
+}

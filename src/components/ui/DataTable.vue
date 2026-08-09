@@ -45,12 +45,14 @@ const props = withDefaults(
     emptyText?: string
     defaultSortKey?: string
     defaultSortDir?: SortDir
+    loading?: boolean
   }>(),
   {
     rowKey: 'id',
     emptyText: 'No data',
     defaultSortKey: '',
     defaultSortDir: 'asc',
+    loading: false,
   },
 )
 
@@ -155,8 +157,9 @@ const sortedRows = computed<unknown[]>(() => {
 </script>
 
 <template>
-  <div ref="tableContainer" class="dt" :class="{ 'is-fullscreen': isFullScreen }">
-    <div class="dt__toolbar">
+  <div ref="tableContainer" class="dt" :class="{ 'is-fullscreen': isFullScreen, 'is-empty-state': !rows.length && !loading }">
+    <!-- Clean small toolbar bar containing full screen button — only show if has rows or loading -->
+    <div v-if="rows.length || loading" class="dt__toolbar">
       <span class="dt__toolbar-title" v-if="isFullScreen">{{ t('Admission Roster View') }}</span>
       <span v-else></span>
       <button
@@ -169,7 +172,8 @@ const sortedRows = computed<unknown[]>(() => {
       </button>
     </div>
 
-    <div class="dt__scroll">
+    <!-- Table content — only show if has rows or loading -->
+    <div v-if="rows.length || loading" class="dt__scroll">
       <table class="dt__table">
         <thead class="dt__head">
           <tr>
@@ -214,34 +218,52 @@ const sortedRows = computed<unknown[]>(() => {
           </tr>
         </thead>
         <tbody class="dt__body">
-          <tr v-for="(row, i) in sortedRows" :key="String((row as Record<string, unknown>)[rowKey] ?? i)">
-            <td
-              v-for="col in columns"
-              :key="col.key"
-              :style="{ textAlign: col.align ?? 'left' }"
-            >
-              <!-- Slot override wins -->
-              <slot v-if="$slots[col.key]" :name="col.key" :row="row">
-                {{ (row as Record<string, unknown>)[col.key] }}
-              </slot>
-              <template v-else-if="col.render">
-                {{ col.render(row) }}
-              </template>
-              <template v-else>
-                {{ (row as Record<string, unknown>)[col.key] }}
-              </template>
-            </td>
-            <td v-if="$slots.actions" class="dt__actions" :style="{ textAlign: 'right' }">
-              <slot name="actions" :row="row" />
-            </td>
-          </tr>
+          <!-- ── Loading Skeleton Rows ───────────────────────────────────── -->
+          <template v-if="loading">
+            <tr v-for="r in 6" :key="'sk-' + r">
+              <td v-for="col in columns" :key="'sk-col-' + col.key">
+                <span class="skeleton dt__sk-cell" />
+              </td>
+              <td v-if="$slots.actions" class="dt__actions">
+                <span class="skeleton dt__sk-cell dt__sk-cell--short" />
+              </td>
+            </tr>
+          </template>
+
+          <!-- ── Real Data Rows ─────────────────────────────────────────── -->
+          <template v-else>
+            <tr v-for="(row, i) in sortedRows" :key="String((row as Record<string, unknown>)[rowKey] ?? i)">
+              <td
+                v-for="col in columns"
+                :key="col.key"
+                :style="{ textAlign: col.align ?? 'left' }"
+              >
+                <!-- Slot override wins -->
+                <slot v-if="$slots[col.key]" :name="col.key" :row="row">
+                  {{ (row as Record<string, unknown>)[col.key] }}
+                </slot>
+                <template v-else-if="col.render">
+                  {{ col.render(row) }}
+                </template>
+                <template v-else>
+                  {{ (row as Record<string, unknown>)[col.key] }}
+                </template>
+              </td>
+              <td v-if="$slots.actions" class="dt__actions" :style="{ textAlign: 'right' }">
+                <slot name="actions" :row="row" />
+              </td>
+            </tr>
+          </template>
         </tbody>
       </table>
     </div>
 
-    <div v-if="!rows.length" class="dt__empty">
-      <i class="fa-duotone fa-inbox" />
-      {{ emptyText }}
+    <!-- Standalone Empty State — only show if empty and not loading -->
+    <div v-if="!rows.length && !loading" class="dt__empty-standalone">
+      <div class="dt__empty-icon">
+        <i class="fa-duotone fa-inbox" />
+      </div>
+      <p class="dt__empty-text">{{ emptyText }}</p>
     </div>
   </div>
 </template>
