@@ -257,7 +257,7 @@ async function onSave(item: Student) {
       </template>
 
       <template #actions="{ row }">
-        <button type="button" class="btn btn--ghost br-card__btn" @click="openEdit(row as Student)">
+        <button type="button" class="btn btn--primary btn--small" @click="openEdit(row as Student)">
           <i class="fa-duotone fa-hand-holding-dollar" /> {{ t('Configure') }}
         </button>
       </template>
