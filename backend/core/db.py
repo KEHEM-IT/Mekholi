@@ -134,7 +134,11 @@ def _migrate(conn):
                 conn.execute("ALTER TABLE students ADD COLUMN stipend_status TEXT DEFAULT 'Active'")
             if "stipend_criteria" not in cols:
                 conn.execute("ALTER TABLE students ADD COLUMN stipend_criteria TEXT DEFAULT 'General'")
-            print("SQL: migrated students — added father/mother names & NIDs + addresses + advanced stipend fields")
+            if "photo" not in cols:
+                conn.execute("ALTER TABLE students ADD COLUMN photo TEXT DEFAULT ''")
+            if "birth_certificate" not in cols:
+                conn.execute("ALTER TABLE students ADD COLUMN birth_certificate TEXT DEFAULT ''")
+            print("SQL: migrated students — added father/mother names & NIDs + addresses + advanced stipend fields + photo & birth_certificate")
     except sqlite3.OperationalError:
         pass
 

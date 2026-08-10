@@ -79,7 +79,7 @@ def create_student(body):
             # Find last count
             last = conn.execute("SELECT id FROM students ORDER BY id DESC LIMIT 1").fetchone()
             count = last["id"] + 1 if last else 1
-            vals["student_id"] = f"STD-{year_str}-{String(count).padStart(4, '0')}"
+            vals["student_id"] = f"STD-{year_str}-{str(count).zfill(4)}"
             
         fields = list(vals.keys())
         cols = ", ".join(fields)
