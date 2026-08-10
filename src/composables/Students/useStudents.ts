@@ -33,6 +33,11 @@ export interface Student {
   stipend_eligible: boolean
   stipend_mfs_provider: string
   stipend_mfs_number: string
+  stipend_type?: string
+  stipend_amount?: number
+  stipend_frequency?: string
+  stipend_status?: string
+  stipend_criteria?: string
   government_uid: string
   behavior_points: number
   is_active: boolean
@@ -67,6 +72,11 @@ export function emptyStudent(): Student {
     stipend_eligible: false,
     stipend_mfs_provider: '',
     stipend_mfs_number: '',
+    stipend_type: '',
+    stipend_amount: 0,
+    stipend_frequency: 'Quarterly',
+    stipend_status: 'Active',
+    stipend_criteria: 'General',
     government_uid: '',
     behavior_points: 100,
     is_active: true,
