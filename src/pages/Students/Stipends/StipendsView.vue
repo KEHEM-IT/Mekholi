@@ -1,7 +1,7 @@
 <!-- Students > Stipend & Scholarship Planning Page -->
 <script setup lang="ts">
 // Stipends & Scholarships: registers PESP/SEIP government stipend eligible students,
-// configures mobile banking provider (bKash/Nagad), and verifies MFS payment numbers.
+// configures MFS gateways, handles advanced conditional allocations, and displays real-time financial stats.
 import { computed, onMounted, ref, watch } from 'vue'
 import { useTranslator } from '@/Translator'
 import { useToast } from '@/composables/useToast'
@@ -36,8 +36,9 @@ const editingStudent = ref<Student | null>(null)
 const tableColumns = computed<TableColumn[]>(() => [
   { key: 'student_id', label: t('Student ID'), sortable: true },
   { key: 'candidate_name', label: t('Student Name'), sortable: true, render: (r) => renderStudentName(r as Student) },
-  { key: 'class_name', label: t('Class'), sortable: true },
-  { key: 'stipend_eligible', label: t('Stipend Eligible'), sortable: true, align: 'center', render: (r) => ((r as Student).stipend_eligible ? t('Eligible') : t('—')) },
+  { key: 'stipend_type', label: t('Scheme / Category'), sortable: true, align: 'center', render: (r) => (r as Student).stipend_type || '—' },
+  { key: 'stipend_amount', label: t('Disbursed Amount'), sortable: true, align: 'center', render: (r) => (r as Student).stipend_amount ? `৳ ${(r as Student).stipend_amount}` : '—' },
+  { key: 'stipend_status', label: t('Status'), sortable: true, align: 'center' },
   { key: 'stipend_mfs_provider', label: t('MFS Provider'), sortable: true, align: 'center', render: (r) => (r as Student).stipend_mfs_provider || '—' },
   { key: 'stipend_mfs_number', label: t('MFS Mobile Number'), sortable: true, align: 'center', render: (r) => (r as Student).stipend_mfs_number || '—' },
 ])
@@ -66,6 +67,34 @@ function renderStudentName(row: Student): string {
   }
   return row.candidate_name
 }
+
+// Compute real-time KPIs based on filtered students list
+const stats = computed(() => {
+  let totalRecipients = 0
+  let activeRecipients = 0
+  let suspendedRecipients = 0
+  let totalBudget = 0
+  
+  for (const s of filteredStudents.value) {
+    if (s.stipend_eligible) {
+      totalRecipients++
+      const status = s.stipend_status || 'Active'
+      if (status === 'Active') {
+        activeRecipients++
+        totalBudget += Number(s.stipend_amount || 0)
+      } else if (status === 'Suspended') {
+        suspendedRecipients++
+      }
+    }
+  }
+  
+  return {
+    totalRecipients,
+    activeRecipients,
+    suspendedRecipients,
+    totalBudget,
+  }
+})
 
 function filterRoster() {
   if (!activeYearId.value) {
@@ -105,7 +134,7 @@ function openEdit(item: Student) {
 async function onSave(item: Student) {
   const saved = await saveStudent(item)
   if (saved) {
-    toast.success(t('Successfully updated stipend mapping!'))
+    toast.success(t('Successfully updated stipend configurations!'))
     showForm.value = false
     await loadAll()
   } else {
@@ -141,6 +170,38 @@ async function onSave(item: Student) {
         <p>{{ t('Define candidate eligibility registries, map verified parent mobile banking MFS gateways, and audit safety net disbursement lists.') }}</p>
       </div>
     </header>
+
+    <!-- Financial KPI Summary Widget Ribbon -->
+    <div v-if="filteredStudents.length > 0" class="std-dash-grid animate-fade-in">
+      <div class="std-dash-card std-dash-card--info">
+        <div class="std-dash-card__info">
+          <span class="std-dash-card__label">{{ t('Total Recipients') }}</span>
+          <span class="std-dash-card__value">{{ stats.totalRecipients }}</span>
+        </div>
+        <div class="std-dash-card__icon"><i class="fa-duotone fa-user-group" /></div>
+      </div>
+      <div class="std-dash-card std-dash-card--success">
+        <div class="std-dash-card__info">
+          <span class="std-dash-card__label">{{ t('Active Disbursements') }}</span>
+          <span class="std-dash-card__value">{{ stats.activeRecipients }}</span>
+        </div>
+        <div class="std-dash-card__icon"><i class="fa-duotone fa-check-double" /></div>
+      </div>
+      <div class="std-dash-card std-dash-card--warning">
+        <div class="std-dash-card__info">
+          <span class="std-dash-card__label">{{ t('Suspended Accounts') }}</span>
+          <span class="std-dash-card__value">{{ stats.suspendedRecipients }}</span>
+        </div>
+        <div class="std-dash-card__icon"><i class="fa-duotone fa-triangle-exclamation" /></div>
+      </div>
+      <div class="std-dash-card">
+        <div class="std-dash-card__info">
+          <span class="std-dash-card__label">{{ t('Total Allocation Budget') }}</span>
+          <span class="std-dash-card__value">৳ {{ stats.totalBudget.toLocaleString() }}</span>
+        </div>
+        <div class="std-dash-card__icon" style="background: rgba(99, 102, 241, 0.16); color: rgb(99, 102, 241);"><i class="fa-duotone fa-sack-dollar" /></div>
+      </div>
+    </div>
 
     <!-- Selection filters -->
     <div class="ipf-section">
@@ -180,6 +241,21 @@ async function onSave(item: Student) {
       default-sort-key="student_id"
       :empty-text="t('No students found in the selected class and sessional year.')"
     >
+      <template #stipend_status="{ row }">
+        <span 
+          v-if="(row as Student).stipend_eligible" 
+          class="status-badge" 
+          :class="{
+            'status-badge--success': ((row as Student).stipend_status || 'Active') === 'Active',
+            'status-badge--warning': (row as Student).stipend_status === 'Suspended',
+            'status-badge--danger': (row as Student).stipend_status === 'Terminated'
+          }"
+        >
+          {{ (row as Student).stipend_status || 'Active' }}
+        </span>
+        <span v-else>—</span>
+      </template>
+
       <template #actions="{ row }">
         <button type="button" class="btn btn--ghost br-card__btn" @click="openEdit(row as Student)">
           <i class="fa-duotone fa-hand-holding-dollar" /> {{ t('Configure') }}

@@ -344,3 +344,29 @@
     }
   }
 }
+
+// Status Badges for Stipends Grid
+.status-badge {
+  padding: 4px 10px;
+  border-radius: $radius-sm;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-block;
+
+  &--success {
+    background: var(--color-success-muted) !important;
+    color: var(--color-success) !important;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+  }
+  &--warning {
+    background: var(--color-warning-muted) !important;
+    color: var(--color-warning) !important;
+    border: 1px solid rgba(234, 179, 8, 0.3);
+  }
+  &--danger {
+    background: var(--color-danger-muted) !important;
+    color: var(--color-danger) !important;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+}

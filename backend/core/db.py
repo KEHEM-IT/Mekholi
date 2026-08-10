@@ -124,7 +124,17 @@ def _migrate(conn):
                 conn.execute("ALTER TABLE students ADD COLUMN present_address TEXT DEFAULT ''")
             if "permanent_address" not in cols:
                 conn.execute("ALTER TABLE students ADD COLUMN permanent_address TEXT DEFAULT ''")
-            print("SQL: migrated students — added father/mother names & NIDs + addresses")
+            if "stipend_type" not in cols:
+                conn.execute("ALTER TABLE students ADD COLUMN stipend_type TEXT DEFAULT ''")
+            if "stipend_amount" not in cols:
+                conn.execute("ALTER TABLE students ADD COLUMN stipend_amount REAL DEFAULT 0.0")
+            if "stipend_frequency" not in cols:
+                conn.execute("ALTER TABLE students ADD COLUMN stipend_frequency TEXT DEFAULT 'Quarterly'")
+            if "stipend_status" not in cols:
+                conn.execute("ALTER TABLE students ADD COLUMN stipend_status TEXT DEFAULT 'Active'")
+            if "stipend_criteria" not in cols:
+                conn.execute("ALTER TABLE students ADD COLUMN stipend_criteria TEXT DEFAULT 'General'")
+            print("SQL: migrated students — added father/mother names & NIDs + addresses + advanced stipend fields")
     except sqlite3.OperationalError:
         pass
 

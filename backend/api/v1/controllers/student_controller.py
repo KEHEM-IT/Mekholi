@@ -16,6 +16,7 @@ FIELDS = [
     "gender", "date_of_birth", "blood_group", "religion", "stipend_eligible",
     "stipend_mfs_provider", "stipend_mfs_number", "government_uid",
     "behavior_points", "is_active", "photo", "birth_certificate",
+    "stipend_type", "stipend_amount", "stipend_frequency", "stipend_status", "stipend_criteria",
 ]
 BOOLEAN_FIELDS = ("is_active", "stipend_eligible")
 
@@ -28,6 +29,10 @@ def _normalize(body, item_id=None):
         vals["academic_year_id"] = int(body.get("academic_year_id") or 0)
     except (TypeError, ValueError):
         vals["academic_year_id"] = 0
+    try:
+        vals["stipend_amount"] = float(body.get("stipend_amount") or 0.0)
+    except (TypeError, ValueError):
+        vals["stipend_amount"] = 0.0
     try:
         vals["roll_no"] = int(body.get("roll_no") or 0)
     except (TypeError, ValueError):
