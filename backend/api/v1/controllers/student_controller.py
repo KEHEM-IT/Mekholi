@@ -161,3 +161,31 @@ def import_students(items):
         raise
     finally:
         conn.close()
+
+
+def list_promotion_history():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM promotion_history ORDER BY id DESC").fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def create_promotion_history(data):
+    conn = get_db()
+    try:
+        conn.execute(
+            "INSERT INTO promotion_history (student_id, candidate_name, source_class, target_class, "
+            "source_year, target_year, promotion_type, roll_no, destination_branch, tc_no, remarks) "
+            "VALUES (:student_id, :candidate_name, :source_class, :target_class, "
+            ":source_year, :target_year, :promotion_type, :roll_no, :destination_branch, :tc_no, :remarks)",
+            data
+        )
+        conn.commit()
+        return True
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
