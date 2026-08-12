@@ -707,6 +707,15 @@ function removeCommittee(i: number) {
         </p>
       </div>
       <div class="ipf-header__actions">
+        <a
+          href="/Institute_Profile_129348.xlsx"
+          download="Institute_Profile_129348.xlsx"
+          class="btn ipf-header__download"
+          :title="t('Download pre-filled Excel template')"
+        >
+          <i class="fa-duotone fa-file-download" />
+          {{ t("Template") }}
+        </a>
         <button type="button" class="btn btn--primary ipf-header__view" @click="showPreview = true">
           <i class="fa-duotone fa-eye" />
           {{ t("View") }}
