@@ -345,6 +345,17 @@
   }
 }
 
+// Responsive Grid for Promote/Transfer Page
+.promote-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $space-4;
+
+  @media (min-width: 640px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 // Status Badges for Stipends Grid
 .status-badge {
   padding: 4px 10px;

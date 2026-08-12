@@ -383,55 +383,53 @@ async function executeTransfer() {
         <i class="fa-duotone fa-right-left" />
         {{ t('Sessional Mass Promotion Planning') }}
       </h4>
-      <div class="ipfp-grid">
-        <div class="ipfp-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem; grid-column: span 2;">
-          <!-- Source -->
-          <div class="form-field">
-            <label>{{ t('Source Class Level') }} *</label>
-            <BaseCombobox
-              v-model="activeClass"
-              :options="classOptions"
-              option-value="Id"
-              option-label="DisplayText"
-              :placeholder="t('Select class')"
-            />
-          </div>
-          <div class="form-field">
-            <label>{{ t('Source Academic Year') }} *</label>
-            <BaseCombobox
-              v-model="activeYearId"
-              :options="yearOptions"
-              option-value="Id"
-              option-label="DisplayText"
-              :placeholder="t('Select year')"
-            />
-          </div>
+      <div class="promote-grid">
+        <!-- Source -->
+        <div class="form-field">
+          <label>{{ t('Source Class Level') }} *</label>
+          <BaseCombobox
+            v-model="activeClass"
+            :options="classOptions"
+            option-value="Id"
+            option-label="DisplayText"
+            :placeholder="t('Select class')"
+          />
+        </div>
+        <div class="form-field">
+          <label>{{ t('Source Academic Year') }} *</label>
+          <BaseCombobox
+            v-model="activeYearId"
+            :options="yearOptions"
+            option-value="Id"
+            option-label="DisplayText"
+            :placeholder="t('Select year')"
+          />
+        </div>
 
-          <!-- Target -->
-          <div class="form-field">
-            <label>{{ t('Target Promotion Class') }} *</label>
-            <BaseCombobox
-              v-model="promotionClass"
-              :options="classOptions"
-              option-value="Id"
-              option-label="DisplayText"
-              :placeholder="t('Select class')"
-            />
-          </div>
-          <div class="form-field">
-            <label>{{ t('Target Promotion Year') }} *</label>
-            <BaseCombobox
-              v-model="promotionYearId"
-              :options="yearOptions"
-              option-value="Id"
-              option-label="DisplayText"
-              :placeholder="t('Select year')"
-            />
-          </div>
+        <!-- Target -->
+        <div class="form-field">
+          <label>{{ t('Target Promotion Class') }} *</label>
+          <BaseCombobox
+            v-model="promotionClass"
+            :options="classOptions"
+            option-value="Id"
+            option-label="DisplayText"
+            :placeholder="t('Select class')"
+          />
+        </div>
+        <div class="form-field">
+          <label>{{ t('Target Promotion Year') }} *</label>
+          <BaseCombobox
+            v-model="promotionYearId"
+            :options="yearOptions"
+            option-value="Id"
+            option-label="DisplayText"
+            :placeholder="t('Select year')"
+          />
         </div>
 
         <!-- Auto-field Option: Roll Resequencing -->
-        <div class="form-field" style="grid-column: span 2;">
+        <div class="form-field" style="grid-column: 1 / -1;">
           <label>{{ t('New Roll Assignment Method') }}</label>
           <BaseCombobox
             v-model="rollMethod"
@@ -442,7 +440,7 @@ async function executeTransfer() {
           />
         </div>
 
-        <div class="form-field flex align-end" style="grid-column: span 2; margin-top: 1rem;">
+        <div class="form-field flex align-end" style="grid-column: 1 / -1; margin-top: 1rem;">
           <button
             type="button"
             class="btn btn--primary w-full"
@@ -523,7 +521,7 @@ async function executeTransfer() {
               <i class="fa-duotone fa-angles-right" />
               {{ t('Transfer Certificate Details') }}
             </h4>
-            <div class="ipfp-grid">
+            <div class="promote-grid">
               <div class="form-field">
                 <label>{{ t('Student Name') }}</label>
                 <input :value="transferTarget ? transferTarget.candidate_name : ''" type="text" disabled class="is-disabled" />
@@ -552,7 +550,7 @@ async function executeTransfer() {
                   :placeholder="t('Select reason')"
                 />
               </div>
-              <div class="form-field ipf-field--full">
+              <div class="form-field" style="grid-column: 1 / -1;">
                 <label>{{ t('Remarks') }}</label>
                 <textarea v-model="transferRemarks" rows="2" :placeholder="t('e.g. Cleared all sessional fee accounts and library dues.')"></textarea>
               </div>
