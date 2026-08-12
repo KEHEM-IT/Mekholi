@@ -134,12 +134,31 @@ const historyColumns = computed<TableColumn[]>(() => [
   { key: 'remarks', label: t('Remarks') },
 ])
 
+// Map JSON English word names to DB "Class N" standards
+const classMap: Record<string, string> = {
+  'One': 'Class 1',
+  'Two': 'Class 2',
+  'Three': 'Class 3',
+  'Four': 'Class 4',
+  'Five': 'Class 5',
+  'Six': 'Class 6',
+  'Seven': 'Class 7',
+  'Eight': 'Class 8',
+  'Nine': 'Class 9',
+  'Ten': 'Class 10',
+  'Eleven': 'Class 11',
+  'Twelve': 'Class 12',
+}
+
 const classOptions = computed(() =>
-  (classNamesJson as { Id: number; Name: string; NameInBangla: string; Phase: string; SortOrder: number }[]).map((c) => ({
-    Id: String(c.Name),
-    LookupText: `${c.Name} - ${c.NameInBangla}`,
-    DisplayText: `${c.Name} - ${c.NameInBangla}`,
-  })),
+  (classNamesJson as { Id: number; Name: string; NameInBangla: string; Phase: string; SortOrder: number }[]).map((c) => {
+    const dbName = classMap[c.Name] || c.Name
+    return {
+      Id: dbName,
+      LookupText: `${c.Name} - ${c.NameInBangla}`,
+      DisplayText: `${c.Name} - ${c.NameInBangla}`,
+    }
+  }),
 )
 
 const yearOptions = computed(() =>
