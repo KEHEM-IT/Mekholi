@@ -1297,6 +1297,17 @@ def init_db():
             remarks TEXT DEFAULT '',
             created_at TEXT DEFAULT (datetime('now'))
         );
+        CREATE TABLE IF NOT EXISTS generated_certificates (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id TEXT NOT NULL,
+            candidate_name TEXT NOT NULL,
+            certificate_type TEXT NOT NULL,
+            certificate_no TEXT UNIQUE NOT NULL,
+            issue_date TEXT DEFAULT '',
+            recipient_details TEXT DEFAULT '{}',
+            remarks TEXT DEFAULT '',
+            created_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     _migrate(conn)

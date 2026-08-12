@@ -189,3 +189,31 @@ def create_promotion_history(data):
         raise
     finally:
         conn.close()
+
+
+def list_generated_certificates():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM generated_certificates ORDER BY id DESC").fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def create_generated_certificate(data):
+    conn = get_db()
+    try:
+        conn.execute(
+            "INSERT INTO generated_certificates (student_id, candidate_name, certificate_type, "
+            "certificate_no, issue_date, recipient_details, remarks) "
+            "VALUES (:student_id, :candidate_name, :certificate_type, "
+            ":certificate_no, :issue_date, :recipient_details, :remarks)",
+            data
+        )
+        conn.commit()
+        return True
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
