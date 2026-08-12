@@ -425,6 +425,11 @@
 }
 
 // Student List Photo Column
+.std-list-photo-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
 .std-list-photo {
   display: inline-block;
   width: 2.5rem;
@@ -433,6 +438,13 @@
   object-fit: cover;
   border: 2px solid var(--color-border);
   background: var(--color-surface-alt);
+  cursor: pointer;
+  transition: transform $transition-fast, border-color $transition-fast;
+
+  &:hover {
+    transform: scale(1.1);
+    border-color: var(--color-primary);
+  }
 
   &--fallback {
     display: inline-flex;
@@ -444,6 +456,51 @@
     background: var(--color-primary-muted);
     border-color: var(--color-primary);
   }
+}
+
+.std-list-photo-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.8);
+  transform-origin: bottom center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  padding: $space-2;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity $transition-fast, transform $transition-fast, visibility $transition-fast;
+  z-index: 100;
+  pointer-events: none;
+  text-align: center;
+
+  img {
+    width: 8rem;
+    height: 8rem;
+    border-radius: $radius-md;
+    object-fit: cover;
+    display: block;
+    margin-bottom: $space-1;
+  }
+
+  &-name {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text);
+    white-space: nowrap;
+    max-width: 8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.std-list-photo-wrapper:hover .std-list-photo-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) scale(1);
 }
 
 // Student ID Cards Premium Templates & Print Sheets

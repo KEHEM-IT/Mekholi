@@ -254,15 +254,21 @@ function handleExport() {
       :empty-text="t('No students found in the selected register. Bulk import candidates or create one manually.')"
     >
       <template #photo="{ row }">
-        <img
-          v-if="(row as Student).photo"
-          :src="(row as Student).photo"
-          :alt="(row as Student).candidate_name"
-          class="std-list-photo"
-        />
-        <span v-else class="std-list-photo std-list-photo--fallback">
-          {{ ((row as Student).candidate_name || '?').trim().charAt(0).toUpperCase() }}
-        </span>
+        <div class="std-list-photo-wrapper">
+          <img
+            v-if="(row as Student).photo"
+            :src="(row as Student).photo"
+            :alt="(row as Student).candidate_name"
+            class="std-list-photo"
+          />
+          <span v-else class="std-list-photo std-list-photo--fallback">
+            {{ ((row as Student).candidate_name || '?').trim().charAt(0).toUpperCase() }}
+          </span>
+          <div v-if="(row as Student).photo" class="std-list-photo-tooltip">
+            <img :src="(row as Student).photo" :alt="(row as Student).candidate_name" />
+            <span class="std-list-photo-tooltip-name">{{ (row as Student).candidate_name }}</span>
+          </div>
+        </div>
       </template>
 
       <template #is_active="{ row }">
