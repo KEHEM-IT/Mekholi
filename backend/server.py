@@ -4,8 +4,8 @@
 
 Serves the Institute Profile CRUD API used by the Vite dev frontend:
 
-    GET  /api/profile?eiin=130430  → profile document (or 404)
-    POST /api/profile?eiin=130430  → upsert profile document
+    GET  /api/profile?id=1        → profile document (or 404)
+    POST /api/profile?id=1        → upsert profile document
 
 Architecture:
     server.py                  – entry point + HTTP plumbing
@@ -186,7 +186,7 @@ class ThreadedServer(ThreadingMixIn, HTTPServer):
 def main():
     init_db()
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 5000
-    print(f"SQL API: http://localhost:{port}/api/profile?eiin=130430")
+    print(f"SQL API: http://localhost:{port}/api/profile?id=1")
     ThreadedServer(("0.0.0.0", port), Handler).serve_forever()
 
 
