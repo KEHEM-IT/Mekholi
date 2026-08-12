@@ -10,7 +10,7 @@ from backend.api.v1.controllers import profile_controller
 from backend.utils import response as res
 
 # Default EIIN used when the query param is absent.
-DEFAULT_EIIN = "130430"
+DEFAULT_EIIN = "129348"
 
 
 def _read_json_body(handler):

@@ -46,7 +46,7 @@ export const profileProgress = computed(() => {
 export async function saveProfile(form: Record<string, unknown>): Promise<boolean> {
   isSaving.value = true
   try {
-    const eiin = String(form.eiin || '130430')
+    const eiin = String(form.eiin || '129348')
     const res = await fetch(`${API_BASE}/api/profile?eiin=${encodeURIComponent(eiin)}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -67,7 +67,7 @@ export async function saveProfile(form: Record<string, unknown>): Promise<boolea
  *  Returns the form object or null if API is unavailable. */
 export async function loadProfile(): Promise<Record<string, unknown> | null> {
   try {
-    const res = await fetch(`${API_BASE}/api/profile?eiin=130430`)
+    const res = await fetch(`${API_BASE}/api/profile?eiin=129348`)
     if (!res.ok) return null
     const data = await res.json()
     isLoadedFromApi.value = true
