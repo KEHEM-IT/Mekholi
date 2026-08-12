@@ -381,3 +381,203 @@
     border: 1px solid rgba(239, 68, 68, 0.3);
   }
 }
+
+// Student ID Cards Premium Templates & Print Sheets
+.id-cards-grid-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $space-6;
+  margin-top: $space-6;
+
+  @media (min-width: $breakpoint-md) {
+    grid-template-columns: 1fr 340px;
+  }
+}
+
+.id-card-preview-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  padding: $space-6;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+}
+
+// Card templates
+.std-id-card-preview {
+  margin: 0 auto;
+  transition: all $transition-base;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  background: #111;
+  color: #fff;
+  border: 1px solid #333;
+
+  // Portrait layout: 240px x 380px
+  &.orientation-portrait {
+    width: 250px;
+    height: 390px;
+    padding: $space-4;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .std-id-card-avatar {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto $space-3;
+    }
+
+    .std-id-card-info {
+      text-align: center;
+      gap: 4px;
+    }
+  }
+
+  // Landscape layout: 380px x 240px
+  &.orientation-landscape {
+    width: 390px;
+    height: 250px;
+    padding: $space-4;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .card-middle-content {
+      display: flex;
+      gap: $space-4;
+      align-items: center;
+      text-align: left;
+      flex: 1;
+      margin-top: $space-2;
+    }
+
+    .std-id-card-avatar {
+      width: 80px;
+      height: 80px;
+      margin: 0;
+      flex-shrink: 0;
+    }
+
+    .std-id-card-info {
+      text-align: left;
+      align-items: flex-start;
+      gap: 2px;
+      margin: 0;
+    }
+  }
+
+  // Template Theme: Modern Dark
+  &.theme-modern-dark {
+    background: radial-gradient(circle at 100% 0%, rgba(99, 102, 241, 0.25) 0%, transparent 70%), #15181e;
+    border: 1.5px solid var(--color-primary);
+
+    .std-id-card-header h3 { color: var(--color-primary); }
+    .std-id-card-avatar { border: 2.5px solid var(--color-primary); color: var(--color-primary); }
+    .std-id-card-footer span { color: var(--color-text-secondary); }
+  }
+
+  // Template Theme: Corporate Blue
+  &.theme-corporate-blue {
+    background: #f4f6fa;
+    color: #1a202c;
+    border: 1.5px solid #2b6cb0;
+
+    .std-id-card-header {
+      background: #2b6cb0;
+      padding: $space-2;
+      margin: -$space-4 -$space-4 $space-3;
+      h3 { color: #fff; }
+      p { color: #ebf8ff; }
+    }
+    
+    &.orientation-landscape .std-id-card-header {
+      margin: -$space-4 -$space-4 0;
+    }
+
+    .std-id-card-avatar {
+      border: 2.5px solid #2b6cb0;
+      background: #fff;
+      color: #2b6cb0;
+    }
+
+    .std-id-card-info {
+      p { color: #4a5568; }
+      strong { color: #2b6cb0; }
+    }
+
+    .std-id-card-footer {
+      border-top: 1px solid #cbd5e0;
+      span { color: #718096; }
+    }
+  }
+
+  // Template Theme: Emerald Minimal
+  &.theme-emerald-minimal {
+    background: #f7fafc;
+    color: #2d3748;
+    border: 2px solid #2f855a;
+
+    .std-id-card-header {
+      border-bottom: 2px solid #2f855a;
+      h3 { color: #2f855a; }
+      p { color: #718096; }
+    }
+
+    .std-id-card-avatar {
+      border: 2px dashed #2f855a;
+      background: #fff;
+      color: #2f855a;
+      border-radius: $radius-md;
+    }
+
+    .std-id-card-info p { color: #4a5568; }
+
+    .std-id-card-footer {
+      border-top: 1px solid #e2e8f0;
+      span { color: #2f855a; }
+    }
+  }
+}
+
+// Printable A4 Mass Sheet Layout
+.id-cards-print-sheet {
+  display: none; // Hidden during screen display
+}
+
+@media print {
+  // Hide everything except the print sheet
+  body * {
+    visibility: hidden;
+  }
+
+  .id-cards-print-sheet, .id-cards-print-sheet * {
+    visibility: visible;
+  }
+
+  .id-cards-print-sheet {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 210mm; // Standard A4 width
+    height: 297mm; // Standard A4 height
+    background: #fff !important;
+    color: #000 !important;
+    padding: 10mm;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr; // Exactly 2 columns
+    grid-gap: 8mm; // Exactly 8mm gaps between cards
+    box-shadow: none !important;
+
+    // Force background graphics printing
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+
+    .std-id-card-preview {
+      box-shadow: none !important;
+      border-color: #a0aec0 !important;
+      page-break-inside: avoid;
+    }
+  }
+}
