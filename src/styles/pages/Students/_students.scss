@@ -74,10 +74,8 @@
 
 .std-id-card-preview {
   @include card;
-  background:
-    radial-gradient(100% 100% at 0% 0%, var(--color-primary-muted) 0%, transparent 65%),
-    linear-gradient(135deg, var(--color-surface-alt), var(--color-surface));
-  border: 1px solid var(--color-border);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: $radius-lg;
   padding: $space-6;
   width: 100%;
@@ -85,24 +83,50 @@
   margin: $space-6 auto 0;
   text-align: center;
   box-shadow: var(--shadow-card);
+  color: #1a202c;
+}
+
+.std-id-card-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto $space-2;
+  border-radius: $radius-md;
+  overflow: hidden;
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  i {
+    font-size: 1.5rem;
+    color: #4a5568;
+  }
 }
 
 .std-id-card-header {
-  border-bottom: 2px solid var(--color-border-strong);
-  padding-bottom: $space-3;
-  margin-bottom: $space-4;
+  border-bottom: 2px solid #2b6cb0;
+  padding-bottom: $space-2;
+  margin-bottom: $space-3;
 
   h3 {
     font-size: 1.05rem;
     font-weight: 800;
-    color: var(--color-text);
+    color: #2b6cb0;
     margin: 0;
   }
 
   p {
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
+    font-size: 0.7rem;
+    color: #718096;
     margin-top: 2px;
+    letter-spacing: 0.05em;
   }
 }
 
@@ -112,10 +136,10 @@
   width: 5.5rem;
   height: 5.5rem;
   border-radius: 50%;
-  background: var(--color-surface-alt);
-  color: var(--color-primary);
+  background: #f7fafc;
+  color: #2b6cb0;
   font-size: 2.2rem;
-  border: 2px solid var(--color-primary);
+  border: 2.5px solid #2b6cb0;
   margin: 0 auto $space-4;
   box-shadow: var(--shadow-sm);
   overflow: hidden;
@@ -134,27 +158,45 @@
   h4 {
     font-size: 1.1rem;
     font-weight: 800;
-    color: var(--color-text);
+    color: #1a202c;
     margin: 0;
   }
 
   p {
     font-size: 0.82rem;
-    color: var(--color-text-secondary);
+    color: #4a5568;
   }
 }
 
 .std-id-card-footer {
-  border-top: 1px solid var(--color-border);
-  padding-top: $space-3;
-  @include flex(row, center, space-between, $space-2);
+  border-top: 1px solid #e2e8f0;
+  padding-top: $space-2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: $space-2;
+}
 
-  span {
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
+.signature-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.signature-line {
+  width: 100%;
+  height: 1px;
+  background: #cbd5e0;
+  margin-bottom: 2px;
+}
+
+.signature-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .std-cert-preview {
@@ -604,16 +646,16 @@
   }
 }
 
-// Card templates
+// Card templates - White Professional Design
 .std-id-card-preview {
   margin: 0 auto;
   transition: all $transition-base;
   border-radius: $radius-lg;
   overflow: hidden;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  background: #111;
-  color: #fff;
-  border: 1px solid #333;
+  background: #ffffff;
+  color: #1a202c;
+  border: 1px solid #e2e8f0;
 
   // Portrait layout: responsive scaling
   &.orientation-portrait {
@@ -727,19 +769,42 @@
     }
   }
 
-  // Template Theme: Modern Dark
+  // Template Theme: Modern Dark (now White Blue)
   &.theme-modern-dark {
-    background: radial-gradient(circle at 100% 0%, rgba(99, 102, 241, 0.25) 0%, transparent 70%), #15181e;
-    border: 1.5px solid var(--color-primary);
+    background: #ffffff;
+    border: 1.5px solid #2b6cb0;
 
-    .std-id-card-header h3 { color: var(--color-primary); }
-    .std-id-card-avatar { border: 2.5px solid var(--color-primary); color: var(--color-primary); }
-    .std-id-card-footer span { color: var(--color-text-secondary); }
+    .std-id-card-header {
+      border-bottom-color: #2b6cb0;
+      h3 { color: #2b6cb0; }
+      p { color: #718096; }
+    }
+
+    .std-id-card-logo {
+      border-color: #2b6cb0;
+      background: #ebf8ff;
+      i { color: #2b6cb0; }
+    }
+
+    .std-id-card-avatar {
+      border: 2.5px solid #2b6cb0;
+      color: #2b6cb0;
+      background: #f7fafc;
+    }
+
+    .std-id-card-info {
+      h4 { color: #1a202c; }
+      p { color: #4a5568; }
+      strong { color: #2b6cb0; }
+    }
+
+    .signature-line { background: #cbd5e0; }
+    .signature-label { color: #718096; }
   }
 
   // Template Theme: Corporate Blue
   &.theme-corporate-blue {
-    background: #f4f6fa;
+    background: #ffffff;
     color: #1a202c;
     border: 1.5px solid #2b6cb0;
 
@@ -747,12 +812,19 @@
       background: #2b6cb0;
       padding: $space-2;
       margin: -$space-4 -$space-4 $space-3;
+      border-bottom: none;
       h3 { color: #fff; }
       p { color: #ebf8ff; }
     }
-    
+
     &.orientation-landscape .std-id-card-header {
       margin: -$space-4 -$space-4 0;
+    }
+
+    .std-id-card-logo {
+      border-color: #2b6cb0;
+      background: #ebf8ff;
+      i { color: #2b6cb0; }
     }
 
     .std-id-card-avatar {
@@ -766,15 +838,13 @@
       strong { color: #2b6cb0; }
     }
 
-    .std-id-card-footer {
-      border-top: 1px solid #cbd5e0;
-      span { color: #718096; }
-    }
+    .signature-line { background: #cbd5e0; }
+    .signature-label { color: #718096; }
   }
 
   // Template Theme: Emerald Minimal
   &.theme-emerald-minimal {
-    background: #f7fafc;
+    background: #ffffff;
     color: #2d3748;
     border: 2px solid #2f855a;
 
@@ -782,6 +852,12 @@
       border-bottom: 2px solid #2f855a;
       h3 { color: #2f855a; }
       p { color: #718096; }
+    }
+
+    .std-id-card-logo {
+      border-color: #2f855a;
+      background: #f0fff4;
+      i { color: #2f855a; }
     }
 
     .std-id-card-avatar {
@@ -793,10 +869,8 @@
 
     .std-id-card-info p { color: #4a5568; }
 
-    .std-id-card-footer {
-      border-top: 1px solid #e2e8f0;
-      span { color: #2f855a; }
-    }
+    .signature-line { background: #cbd5e0; }
+    .signature-label { color: #2f855a; }
   }
 }
 

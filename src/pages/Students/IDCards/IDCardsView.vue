@@ -7,6 +7,7 @@ import { useTranslator } from '@/Translator'
 import { useToast } from '@/composables/useToast'
 import { fetchAcademicYears, type AcademicYear } from '@/composables/Institute_Setup/useAcademicYears'
 import { fetchStudents, type Student } from '@/composables/Students/useStudents'
+import { instituteProfile } from '@/composables/Institute_Setup/useInstituteProfile'
 import DataTable, { type TableColumn } from '@/components/ui/DataTable.vue'
 import BaseCombobox from '@/components/ui/BaseCombobox.vue'
 import classNamesJson from '@/assets/jsons/class_names.json'
@@ -15,6 +16,10 @@ defineOptions({ name: 'IDCardsView' })
 
 const { t } = useTranslator()
 const toast = useToast()
+
+// Institute logo from profile
+const instituteLogo = computed(() => String(instituteProfile.value?.institute_logo ?? ''))
+const instituteName = computed(() => String(instituteProfile.value?.institute_name_en ?? 'Sofir Uddin School'))
 
 const isPageLoading = ref(true)
 const MIN_SKELETON_MS = 2000
@@ -329,9 +334,15 @@ function printCard() {
           <!-- Live Visual Mockup Box -->
           <div v-if="previewTarget" class="live-mockup-wrapper animate-fade-in">
             <div class="std-id-card-preview" :class="[cardOrientation, cardTemplate]">
+              <!-- Institute Logo -->
+              <div class="std-id-card-logo">
+                <img v-if="instituteLogo" :src="instituteLogo" :alt="instituteName" />
+                <i v-else class="fa-duotone fa-school" />
+              </div>
+
               <!-- Header -->
               <div class="std-id-card-header">
-                <h3>{{ t('Sofir Uddin School') }}</h3>
+                <h3>{{ instituteName }}</h3>
                 <p>{{ t('STUDENT IDENTITY CARD') }}</p>
               </div>
               
@@ -367,10 +378,16 @@ function printCard() {
                 </div>
               </template>
 
-              <!-- Footer -->
+              <!-- Footer with Signatures -->
               <div class="std-id-card-footer">
-                <span>{{ t('Session 2026') }}</span>
-                <span>{{ t('Verified ID') }}</span>
+                <div class="signature-block">
+                  <span class="signature-line" />
+                  <span class="signature-label">{{ t('Class Teacher') }}</span>
+                </div>
+                <div class="signature-block">
+                  <span class="signature-line" />
+                  <span class="signature-label">{{ t('Headmaster') }}</span>
+                </div>
               </div>
             </div>
 
@@ -415,9 +432,15 @@ function printCard() {
         class="std-id-card-preview" 
         :class="[cardOrientation, cardTemplate]"
       >
+        <!-- Institute Logo -->
+        <div class="std-id-card-logo">
+          <img v-if="instituteLogo" :src="instituteLogo" :alt="instituteName" />
+          <i v-else class="fa-duotone fa-school" />
+        </div>
+
         <!-- Header -->
         <div class="std-id-card-header">
-          <h3>{{ t('Sofir Uddin School') }}</h3>
+          <h3>{{ instituteName }}</h3>
           <p>{{ t('STUDENT IDENTITY CARD') }}</p>
         </div>
         
@@ -453,10 +476,16 @@ function printCard() {
           </div>
         </template>
 
-        <!-- Footer -->
+        <!-- Footer with Signatures -->
         <div class="std-id-card-footer">
-          <span>{{ t('Session 2026') }}</span>
-          <span>{{ t('Verified ID') }}</span>
+          <div class="signature-block">
+            <span class="signature-line" />
+            <span class="signature-label">{{ t('Class Teacher') }}</span>
+          </div>
+          <div class="signature-block">
+            <span class="signature-line" />
+            <span class="signature-label">{{ t('Headmaster') }}</span>
+          </div>
         </div>
       </div>
     </div>
