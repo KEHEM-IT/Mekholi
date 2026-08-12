@@ -299,7 +299,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
           >
             <i v-if="isSelected(opt)" class="fa-solid fa-check" />
           </span>
-          {{ opt[optionLabel] }}
+          <span class="combobox__option-text" :title="String(opt[optionLabel])">{{ opt[optionLabel] }}</span>
         </li>
         <li v-if="!filteredOptions.length" class="combobox__empty">{{ displayEmptyText }}</li>
       </ul>
