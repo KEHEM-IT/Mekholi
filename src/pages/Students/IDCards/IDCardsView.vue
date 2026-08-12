@@ -293,7 +293,7 @@ function printCard() {
           </template>
 
           <template #actions="{ row }">
-            <button type="button" class="btn btn--ghost br-card__btn" @click="triggerRowPreview(row as Student)">
+            <button type="button" class="btn btn--primary" @click="triggerRowPreview(row as Student)">
               <i class="fa-duotone fa-eye" /> {{ t('Focus Preview') }}
             </button>
           </template>
