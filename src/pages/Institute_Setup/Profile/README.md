@@ -1,43 +1,54 @@
 # 📝 Institute Profile — Page Blueprint & Architecture
 
-This directory contains the **Institute Profile** page, which manages the central General and MPO identity of the institution (linked to the default EIIN `130430`).
+This directory contains the **Institute Profile** page, which manages the central identity of the institution. Uses `id` (auto-increment PK) as the primary lookup — EIIN is optional for private schools.
 
 ---
 
 ## 🎨 1. Frontend Wires & Interface
 
 ### A. Core View (`ProfileView.vue`)
-*   **Purpose:** Form-driven central dashboard editing basic info, contact details, head of institution, staff statistics (total, male, MPO), banking details, facility toggles, and managing repeatable rows of school committee members.
-*   **State Management:** Stores central profile state inside the `instituteProfile` global reactive ref, computed `profileProgress` (percentage completion of mandatory fields).
-*   **Branding & Logo Upload:** Features a drag-and-drop file uploader linked to `useImgbbUpload` to upload institute logo, with automated base64 file validations.
-*   **State / Geo Cascades:** Connects division, district, upazila, and union selection fields using the reactive, bilingual geographical cascading helper `bdGeo.ts`.
+*   **Purpose:** Form-driven dashboard for editing basic info, contact details, head of institution, staff statistics, banking details, facility toggles, and managing committee members.
+*   **State Management:** Stores profile state in `instituteProfile` global reactive ref, computed `profileProgress` (completion percentage).
+*   **Branding & Logo Upload:** Drag-and-drop uploader linked to `useImgbbUpload` with file validations.
+*   **State / Geo Cascades:** Division, district, upazila, union cascading via `bdGeo.ts`.
+*   **Excel Wires:** Export/Import via `useInstituteProfileExcel.ts` (3-sheet workbook).
+*   **Template Download:** "Template" button downloads pre-filled Excel for EIIN 129348.
 
 ### B. Preview Modal (`ProfilePreviewModal.vue`)
-*   A premium, read-only document mockup sheet displaying the complete institutional profile, MPO approval stamps, board identifiers, and committee rosters in a clean card layout.
+*   Read-only document mockup displaying complete institutional profile.
 
 ### C. UI Elements Used
 *   `BaseCombobox.vue`: Geolocation cascades, bank names, account purposes.
 *   `BaseDatePicker.vue`: Establishment date, joining date, MPO approval date.
-*   `BaseToggle.vue`: English version toggle, committee left toggle, facility active toggles.
-
-### D. Excel Wires (`useInstituteProfileExcel.ts`)
-*   **Export (`exportProfileToExcel`):** Generates a 3-sheet workbook:
-    1.  `Profile`: Key-value rows for scalar fields and 15 facility yes/no toggles.
-    2.  `Committee Members`: Lists name, phone, position, and status.
-    3.  `Classifications`: Lists institutional types and groups.
-*   **Import (`importProfileFromExcel`):** Parses the 3 sheets back, matching fields by their English column headers, allowing bulk edits.
+*   `BaseToggle.vue`: English version toggle, committee left toggle, facility toggles.
 
 ---
 
 ## ⚙️ 2. Backend Wires & Database
 
-*   **Database Tables (`core/db.py`):**
-    *   `institute_profiles`: Stores scalar text, integers, and `classifications` as a JSON string.
-    *   `committee_members`: Linked via `profile_id` with `ON DELETE CASCADE`.
-    *   `facilities`: Composite primary key `(profile_id, facility_key)`.
-*   **Controller (`profile_controller.py`):**
-    *   `get_profile(eiin)`: Queries SQLite, serializes classifications and committee lists into a single consolidated JSON document.
-    *   `upsert_profile(eiin, body)`: Coordinates a safe database transaction. Replaces the committee list wholesale, merges facility toggles, and updates scalar columns.
-*   **Routes (`profile_routes.py`):**
-    *   `GET  /api/profile?eiin=130430`
-    *   `POST /api/profile?eiin=130430`
+### API Design (ID-based, not EIIN)
+*   Uses `id` (auto-increment PK) as primary lookup key
+*   EIIN is optional — works for private schools without EIIN
+*   Default institute ID = 1 (first institute created)
+
+### Endpoints
+| Method | URL | Description |
+|--------|-----|-------------|
+| GET | `/api/profile?id=1` | Fetch full profile document |
+| GET | `/api/profile/card-info?id=1` | Fetch only name + logo (optimized) |
+| POST | `/api/profile?id=1` | Upsert profile document |
+
+### Database Tables (`core/db.py`)
+*   `institute_profiles`: Stores scalar fields, `classifications` as JSON. `id` is PK, `eiin` is optional UNIQUE.
+*   `committee_members`: Linked via `profile_id` with `ON DELETE CASCADE`.
+*   `facilities`: Composite PK `(profile_id, facility_key)`.
+
+### Controller (`profile_controller.py`)
+*   `get_profile_by_id(id)`: Fetch by ID (primary method).
+*   `get_card_info_by_id(id)`: Optimized — returns only name + logo.
+*   `upsert_profile_by_id(id, body)`: Create or update by ID.
+*   Legacy EIIN-based functions kept for backward compatibility.
+
+### Seeding
+*   Blank profile seeded with `id=1` and empty EIIN (private school support).
+*   No hardcoded EIIN references.

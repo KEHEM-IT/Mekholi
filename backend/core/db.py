@@ -1326,15 +1326,15 @@ def init_db():
     _seed_students(conn)
 
     # Seed a blank profile so the API always has something to return.
+    # Uses id=1 (first institute) — EIIN is optional for private schools.
     if conn.execute("SELECT COUNT(*) FROM institute_profiles").fetchone()[0] == 0:
-        conn.execute("INSERT INTO institute_profiles (eiin) VALUES ('130430')")
-        pid = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+        conn.execute("INSERT INTO institute_profiles (id, eiin) VALUES (1, '')")
         for key in DEFAULT_FACILITY_KEYS:
             conn.execute(
                 "INSERT INTO facilities (profile_id,facility_key,enabled) VALUES (?,?,0)",
-                (pid, key),
+                (1, key),
             )
-        print("SQL: seeded blank profile (EIIN: 130430)")
+        print("SQL: seeded blank profile (id: 1, no EIIN)")
 
     conn.commit()
     conn.close()
