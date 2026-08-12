@@ -1,7 +1,7 @@
 <!-- Students > Student ID Cards Page -->
 <script setup lang="ts">
 // Student ID Cards: displays a roster list of active students, supports selective bulk checks,
-// configures premium card themes/orientations, and generates A4 printable sheets.
+// configures premium card themes/orientations, and generates A4 printable sheets with automatic validity checks.
 import { computed, onMounted, ref, watch } from 'vue'
 import { useTranslator } from '@/Translator'
 import { useToast } from '@/composables/useToast'
@@ -23,7 +23,7 @@ const years = ref<AcademicYear[]>([])
 const students = ref<Student[]>([])
 const filteredStudents = ref<Student[]>([])
 
-// Selection state
+// Selection state — default to Class 6 and first available year
 const activeYearId = ref<number | null>(null)
 const activeClass = ref('Class 6')
 
@@ -48,12 +48,14 @@ const selectedStudentIds = ref<Record<number, boolean>>({})
 // Live card preview focus
 const previewTarget = ref<Student | null>(null)
 
+// Search filter inside roster
+const searchQuery = ref('')
+
 // ── Table columns ──────────────────────────────────────────────────────
 const tableColumns = computed<TableColumn[]>(() => [
   { key: 'select', label: t('Select'), align: 'center' },
   { key: 'student_id', label: t('Student ID'), sortable: true },
   { key: 'candidate_name', label: t('Student Name'), sortable: true, render: (r) => renderStudentName(r as Student) },
-  { key: 'class_name', label: t('Class'), sortable: true },
   { key: 'roll_no', label: t('Roll No'), sortable: true, align: 'center', render: (r) => String((r as Student).roll_no ?? '—') },
 ])
 
@@ -76,6 +78,17 @@ const yearOptions = computed(() =>
 // List of all checked students
 const checkedStudents = computed(() => {
   return filteredStudents.value.filter(s => !!selectedStudentIds.value[s.id!])
+})
+
+// Searchable and filtered list
+const searchedStudents = computed(() => {
+  const q = searchQuery.value.trim().toLowerCase()
+  if (!q) return filteredStudents.value
+  return filteredStudents.value.filter(
+    s => s.candidate_name.toLowerCase().includes(q) || 
+         s.student_id.toLowerCase().includes(q) ||
+         (s.candidate_name_bn && s.candidate_name_bn.includes(q))
+  )
 })
 
 // ── Render Helpers ─────────────────────────────────────────────────────
@@ -222,13 +235,27 @@ function printCard() {
     <!-- Main Workspace Grid -->
     <div class="id-cards-grid-layout">
       <!-- Left side: Student list data table -->
-      <div class="roster-table-block">
+      <div class="roster-table-block ipf-section" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; box-shadow: var(--shadow-card);">
+        <div class="table-header-controls" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+          <h4 class="ipf-section__title" style="margin: 0;">
+            <i class="fa-duotone fa-list-ul" />
+            {{ t('Student Register') }}
+          </h4>
+          <input 
+            v-model="searchQuery" 
+            type="search" 
+            class="search-input" 
+            :placeholder="t('Search name or ID...')"
+            style="max-width: 240px; padding: 6px 12px; font-size: 0.85rem;"
+          />
+        </div>
+
         <DataTable
           :columns="tableColumns"
-          :rows="filteredStudents"
+          :rows="searchedStudents"
           row-key="id"
           default-sort-key="student_id"
-          :empty-text="t('No active student records found inside this class.')"
+          :empty-text="t('No active student records found. Select a different class or academic year to load.')"
         >
           <!-- Selective check column -->
           <template #select="{ row }">
@@ -238,96 +265,129 @@ function printCard() {
               @change="selectedStudentIds[(row as Student).id!] = ($event.target as HTMLInputElement).checked"
               class="std-checkbox"
               style="transform: scale(1.15); cursor: pointer;"
+              @click.stop
             />
           </template>
 
           <template #actions="{ row }">
             <button type="button" class="btn btn--ghost br-card__btn" @click="triggerRowPreview(row as Student)">
-              <i class="fa-duotone fa-eye" /> {{ t('Preview') }}
+              <i class="fa-duotone fa-eye" /> {{ t('Focus Preview') }}
             </button>
           </template>
         </DataTable>
       </div>
 
       <!-- Right side: Live Card Preview & Layout Controllers -->
-      <div class="id-card-preview-panel">
-        <h4 class="section-sub-title" style="border-left: 3px solid var(--color-primary); padding-left: 8px; text-align: left; margin-bottom: 1.5rem;">
-          {{ t('Design & Live Preview') }}
-        </h4>
+      <div class="id-card-preview-panel" style="background: var(--color-surface-alt); border: 1.5px solid var(--color-border-strong); padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; justify-content: space-between; min-height: 480px;">
+        <div>
+          <h4 class="section-sub-title" style="border-left: 3px solid var(--color-primary); padding-left: 8px; text-align: left; margin-bottom: 1.5rem; font-weight: 600; color: var(--color-text);">
+            {{ t('ID Card Console') }}
+          </h4>
 
-        <!-- Controls -->
-        <div class="design-controls" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; text-align: left;">
-          <div class="form-field">
-            <label>{{ t('Card Design Theme') }}</label>
-            <BaseCombobox
-              v-model="cardTemplate"
-              :options="templateOptions"
-              option-value="Id"
-              option-label="DisplayText"
-              :clearable="false"
-            />
+          <!-- Controls -->
+          <div class="design-controls" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; text-align: left;">
+            <div class="form-field">
+              <label style="font-size: 0.8rem; font-weight: 600; color: var(--color-text-secondary);">{{ t('Card Design Theme') }}</label>
+              <BaseCombobox
+                v-model="cardTemplate"
+                :options="templateOptions"
+                option-value="Id"
+                option-label="DisplayText"
+                :clearable="false"
+              />
+            </div>
+            <div class="form-field">
+              <label style="font-size: 0.8rem; font-weight: 600; color: var(--color-text-secondary);">{{ t('Card Orientation') }}</label>
+              <BaseCombobox
+                v-model="cardOrientation"
+                :options="orientationOptions"
+                option-value="Id"
+                option-label="DisplayText"
+                :clearable="false"
+              />
+            </div>
           </div>
-          <div class="form-field">
-            <label>{{ t('Card Orientation') }}</label>
-            <BaseCombobox
-              v-model="cardOrientation"
-              :options="orientationOptions"
-              option-value="Id"
-              option-label="DisplayText"
-              :clearable="false"
-            />
+
+          <!-- Live Visual Mockup Box -->
+          <div v-if="previewTarget" class="live-mockup-wrapper animate-fade-in" style="padding: 1rem; background: var(--color-bg); border-radius: 8px; border: 1px dashed var(--color-border); display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+            <div class="std-id-card-preview" :class="[cardOrientation, cardTemplate]">
+              <!-- Header -->
+              <div class="std-id-card-header">
+                <h3>{{ t('Sofir Uddin School') }}</h3>
+                <p>{{ t('STUDENT IDENTITY CARD') }}</p>
+              </div>
+              
+              <!-- Landscape specific wrapper -->
+              <div v-if="cardOrientation === 'orientation-landscape'" class="card-middle-content">
+                <div class="std-id-card-avatar">
+                  <img v-if="previewTarget.photo" :src="previewTarget.photo" alt="Student Photo" />
+                  <i v-else class="fa-duotone fa-user-graduate" />
+                </div>
+
+                <div class="std-id-card-info">
+                  <h4 style="font-size: 0.95rem;">{{ previewTarget.candidate_name }}</h4>
+                  <p>{{ t('ID:') }} <strong>{{ previewTarget.student_id }}</strong></p>
+                  <p>{{ t('Class:') }} {{ previewTarget.class_name }}</p>
+                  <p>{{ t('Sec:') }} {{ previewTarget.section_name }} · {{ t('Roll:') }} {{ previewTarget.roll_no }}</p>
+                  <p v-if="previewTarget.blood_group">{{ t('Blood:') }} {{ previewTarget.blood_group }}</p>
+                </div>
+              </div>
+
+              <!-- Portrait specific layout -->
+              <template v-else>
+                <div class="std-id-card-avatar">
+                  <img v-if="previewTarget.photo" :src="previewTarget.photo" alt="Student Photo" />
+                  <i v-else class="fa-duotone fa-user-graduate" />
+                </div>
+
+                <div class="std-id-card-info">
+                  <h4 style="font-size: 1rem; margin-bottom: 2px;">{{ previewTarget.candidate_name }}</h4>
+                  <p>{{ t('Student ID:') }} <strong>{{ previewTarget.student_id }}</strong></p>
+                  <p>{{ t('Class:') }} {{ previewTarget.class_name }} · {{ t('Section:') }} {{ previewTarget.section_name }}</p>
+                  <p>{{ t('Roll No:') }} {{ previewTarget.roll_no }}</p>
+                  <p v-if="previewTarget.blood_group">{{ t('Blood Group:') }} {{ previewTarget.blood_group }}</p>
+                </div>
+              </template>
+
+              <!-- Footer -->
+              <div class="std-id-card-footer">
+                <span>{{ t('Session 2026') }}</span>
+                <span>{{ t('Verified ID') }}</span>
+              </div>
+            </div>
+
+            <!-- Verification Metadata checklist tags (real-world validation standards!) -->
+            <div class="validity-indicators" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 0.5rem; width: 100%;">
+              <span class="status-badge status-badge--success" style="font-size: 0.65rem; padding: 2px 8px;">
+                ✓ {{ t('Active') }}
+              </span>
+              <span 
+                class="status-badge" 
+                :class="previewTarget.photo ? 'status-badge--success' : 'status-badge--danger'" 
+                style="font-size: 0.65rem; padding: 2px 8px;"
+              >
+                {{ previewTarget.photo ? '✓ Photo Attached' : '✗ No Photo' }}
+              </span>
+              <span 
+                class="status-badge" 
+                :class="previewTarget.government_uid && previewTarget.government_uid.length === 17 ? 'status-badge--success' : 'status-badge--warning'" 
+                style="font-size: 0.65rem; padding: 2px 8px;"
+              >
+                {{ previewTarget.government_uid && previewTarget.government_uid.length === 17 ? '✓ Synced UID' : '✗ Unsynced UID' }}
+              </span>
+            </div>
+          </div>
+          <div v-else class="empty-preview-mockup" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 260px; background: var(--color-bg); border: 1px dashed var(--color-border); border-radius: 8px;">
+            <i class="fa-duotone fa-id-card" style="font-size: 3rem; color: var(--color-text-muted); margin-bottom: 1rem;" />
+            <p class="text-muted" style="font-size: 0.82rem; max-width: 80%;">{{ t('Select a student from the register roster list to focus preview card.') }}</p>
           </div>
         </div>
 
-        <!-- Live Visual Mockup Box -->
-        <div v-if="previewTarget" class="live-mockup-wrapper" style="padding: 1rem; background: var(--color-bg); border-radius: 8px; border: 1px dashed var(--color-border);">
-          <div class="std-id-card-preview" :class="[cardOrientation, cardTemplate]">
-            <!-- Header -->
-            <div class="std-id-card-header">
-              <h3>{{ t('Sofir Uddin School') }}</h3>
-              <p>{{ t('STUDENT IDENTITY CARD') }}</p>
-            </div>
-            
-            <!-- Landscape specific wrapper -->
-            <div v-if="cardOrientation === 'orientation-landscape'" class="card-middle-content">
-              <div class="std-id-card-avatar">
-                <img v-if="previewTarget.photo" :src="previewTarget.photo" alt="Student Photo" />
-                <i v-else class="fa-duotone fa-user-graduate" />
-              </div>
-
-              <div class="std-id-card-info">
-                <h4 style="font-size: 0.95rem;">{{ previewTarget.candidate_name }}</h4>
-                <p>{{ t('ID:') }} <strong>{{ previewTarget.student_id }}</strong></p>
-                <p>{{ t('Class:') }} {{ previewTarget.class_name }}</p>
-                <p>{{ t('Sec:') }} {{ previewTarget.section_name }} · {{ t('Roll:') }} {{ previewTarget.roll_no }}</p>
-                <p v-if="previewTarget.blood_group">{{ t('Blood:') }} {{ previewTarget.blood_group }}</p>
-              </div>
-            </div>
-
-            <!-- Portrait specific layout -->
-            <template v-else>
-              <div class="std-id-card-avatar">
-                <img v-if="previewTarget.photo" :src="previewTarget.photo" alt="Student Photo" />
-                <i v-else class="fa-duotone fa-user-graduate" />
-              </div>
-
-              <div class="std-id-card-info">
-                <h4 style="font-size: 1rem; margin-bottom: 2px;">{{ previewTarget.candidate_name }}</h4>
-                <p>{{ t('Student ID:') }} <strong>{{ previewTarget.student_id }}</strong></p>
-                <p>{{ t('Class:') }} {{ previewTarget.class_name }} · {{ t('Section:') }} {{ previewTarget.section_name }}</p>
-                <p>{{ t('Roll No:') }} {{ previewTarget.roll_no }}</p>
-                <p v-if="previewTarget.blood_group">{{ t('Blood Group:') }} {{ previewTarget.blood_group }}</p>
-              </div>
-            </template>
-
-            <!-- Footer -->
-            <div class="std-id-card-footer">
-              <span>{{ t('Session 2026') }}</span>
-              <span>{{ t('Verified ID') }}</span>
-            </div>
-          </div>
+        <div v-if="previewTarget" class="panel-print-actions" style="margin-top: 1.5rem; border-top: 1px solid var(--color-border-strong); padding-top: 1.25rem;">
+          <button type="button" class="btn btn--primary w-full" @click="printCard">
+            <i class="fa-duotone fa-print" /> {{ t('Print Roster Cards') }} ({{ checkedStudents.length }})
+          </button>
         </div>
-        <p v-else class="text-muted" style="font-size: 0.85rem;">{{ t('Select a student from the list to preview card.') }}</p>
       </div>
     </div>
 
