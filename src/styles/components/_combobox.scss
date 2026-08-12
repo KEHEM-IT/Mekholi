@@ -163,14 +163,6 @@
   }
 }
 
-.combobox__option-text {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .combobox__empty {
   padding: $space-3;
   font-size: 0.85rem;

@@ -81,8 +81,8 @@ const selectedOption = computed<ComboboxOption | null>(() => selectedOptions.val
 const truncatedSelectedText = computed<string>(() => {
   if (!selectedOption.value) return displayPlaceholder.value
   const label = String(selectedOption.value[props.optionLabel] ?? '')
-  if (label.length > 20) {
-    return label.substring(0, 20) + '...'
+  if (label.length > 25) {
+    return label.substring(0, 25) + '...'
   }
   return label
 })
@@ -308,7 +308,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
           >
             <i v-if="isSelected(opt)" class="fa-solid fa-check" />
           </span>
-          <span class="combobox__option-text" :title="String(opt[optionLabel])">{{ opt[optionLabel] }}</span>
+          {{ opt[optionLabel] }}
         </li>
         <li v-if="!filteredOptions.length" class="combobox__empty">{{ displayEmptyText }}</li>
       </ul>
