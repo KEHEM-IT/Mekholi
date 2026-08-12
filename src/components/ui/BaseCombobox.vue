@@ -81,8 +81,8 @@ const selectedOption = computed<ComboboxOption | null>(() => selectedOptions.val
 const truncatedSelectedText = computed<string>(() => {
   if (!selectedOption.value) return displayPlaceholder.value
   const label = String(selectedOption.value[props.optionLabel] ?? '')
-  if (label.length > 30) {
-    return label.substring(0, 30) + '...'
+  if (label.length > 20) {
+    return label.substring(0, 20) + '...'
   }
   return label
 })
