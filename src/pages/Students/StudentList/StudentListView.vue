@@ -41,6 +41,7 @@ const activeYearId = ref<number | null>(null)
 
 // ── Table columns ──────────────────────────────────────────────────────
 const tableColumns = computed<TableColumn[]>(() => [
+  { key: 'photo', label: t('Photo'), align: 'center' },
   { key: 'student_id', label: t('Student ID'), sortable: true },
   { key: 'candidate_name', label: t('Student Name'), sortable: true, render: (r) => renderStudentName(r as Student) },
   { key: 'guardian_name', label: t('Guardian Name'), sortable: true },
@@ -252,6 +253,18 @@ function handleExport() {
       default-sort-key="student_id"
       :empty-text="t('No students found in the selected register. Bulk import candidates or create one manually.')"
     >
+      <template #photo="{ row }">
+        <img
+          v-if="(row as Student).photo"
+          :src="(row as Student).photo"
+          :alt="(row as Student).candidate_name"
+          class="std-list-photo"
+        />
+        <span v-else class="std-list-photo std-list-photo--fallback">
+          {{ ((row as Student).candidate_name || '?').trim().charAt(0).toUpperCase() }}
+        </span>
+      </template>
+
       <template #is_active="{ row }">
         <BaseToggle
           :model-value="Boolean((row as Student).is_active)"

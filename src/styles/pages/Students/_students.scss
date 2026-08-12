@@ -424,6 +424,28 @@
   }
 }
 
+// Student List Photo Column
+.std-list-photo {
+  display: inline-block;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface-alt);
+
+  &--fallback {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    background: var(--color-primary-muted);
+    border-color: var(--color-primary);
+  }
+}
+
 // Student ID Cards Premium Templates & Print Sheets
 .id-cards-grid-layout {
   display: grid;
