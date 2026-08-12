@@ -7,7 +7,7 @@ import { useTranslator } from '@/Translator'
 import { useToast } from '@/composables/useToast'
 import { fetchAcademicYears, type AcademicYear } from '@/composables/Institute_Setup/useAcademicYears'
 import { fetchStudents, type Student } from '@/composables/Students/useStudents'
-import { instituteProfile } from '@/composables/Institute_Setup/useInstituteProfile'
+import { useCardInfo } from '@/composables/Institute_Setup/useCardInfo'
 import DataTable, { type TableColumn } from '@/components/ui/DataTable.vue'
 import BaseCombobox from '@/components/ui/BaseCombobox.vue'
 import classNamesJson from '@/assets/jsons/class_names.json'
@@ -17,9 +17,9 @@ defineOptions({ name: 'IDCardsView' })
 const { t } = useTranslator()
 const toast = useToast()
 
-// Institute logo from profile
-const instituteLogo = computed(() => String(instituteProfile.value?.institute_logo ?? ''))
-const instituteName = computed(() => String(instituteProfile.value?.institute_name_en ?? 'Sofir Uddin School'))
+// Optimized: fetch only institute name and logo (not the full profile)
+const { instituteNameEn, instituteLogo, load: loadCardInfo } = useCardInfo()
+const instituteName = computed(() => instituteNameEn.value || 'Sofir Uddin School')
 
 const isPageLoading = ref(true)
 const MIN_SKELETON_MS = 2000
@@ -168,7 +168,7 @@ async function loadAll() {
 
 onMounted(async () => {
   const minDelay = new Promise((r) => setTimeout(r, MIN_SKELETON_MS))
-  await Promise.all([loadAll(), minDelay])
+  await Promise.all([loadAll(), loadCardInfo(), minDelay])
   isPageLoading.value = false
 })
 

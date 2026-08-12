@@ -35,6 +35,21 @@ def handle_get(handler):
     res.ok(handler, profile)
 
 
+def handle_get_card_info(handler):
+    """GET /api/profile/card-info?eiin=… → optimized endpoint for ID cards.
+    
+    Returns only institute_name_en and institute_logo — used by the
+    ID card generator to avoid fetching the full profile document.
+    """
+    eiin = _get_eiin(handler)
+    card_info = profile_controller.get_card_info(eiin)
+    if card_info is None:
+        # Return empty defaults instead of 404 — card still renders
+        res.ok(handler, {"institute_name_en": "", "institute_logo": ""})
+        return
+    res.ok(handler, card_info)
+
+
 def handle_post(handler):
     """POST /api/profile?eiin=… → upsert the profile document."""
     eiin = _get_eiin(handler)
@@ -49,12 +64,18 @@ def handle_post(handler):
 
 def register_profile_routes(handler, method, path):
     """Dispatch /api/profile requests to the right handler."""
-    if not path.startswith("/api/profile"):
-        return False
-    if method == "GET":
-        handle_get(handler)
-    elif method == "POST":
-        handle_post(handler)
-    else:
-        res.error(handler, 405, "Method not allowed")
-    return True
+    if path.startswith("/api/profile/card-info"):
+        if method == "GET":
+            handle_get_card_info(handler)
+        else:
+            res.error(handler, 405, "Method not allowed")
+        return True
+    if path.startswith("/api/profile"):
+        if method == "GET":
+            handle_get(handler)
+        elif method == "POST":
+            handle_post(handler)
+        else:
+            res.error(handler, 405, "Method not allowed")
+        return True
+    return False

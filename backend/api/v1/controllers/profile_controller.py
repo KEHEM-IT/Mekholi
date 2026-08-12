@@ -43,6 +43,29 @@ def get_profile(eiin):
         conn.close()
 
 
+def get_card_info(eiin):
+    """Fetch only the fields needed for ID card generation (optimized).
+    
+    Returns institute_name_en and institute_logo only — avoids pulling
+    the full profile (classifications, committee, facilities, bank, etc.)
+    when all we need is the header block for ID cards.
+    """
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT institute_name_en, institute_logo FROM institute_profiles WHERE eiin=?",
+            (eiin,),
+        ).fetchone()
+        if row is None:
+            return None
+        return {
+            "institute_name_en": row["institute_name_en"] if row["institute_name_en"] else "",
+            "institute_logo": row["institute_logo"] if row["institute_logo"] else "",
+        }
+    finally:
+        conn.close()
+
+
 def _normalize_values(body, eiin):
     """Coerce the raw JSON body into DB-ready values."""
     vals = {f: body.get(f, "") for f in PROFILE_FIELDS}
