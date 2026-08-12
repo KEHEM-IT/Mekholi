@@ -972,15 +972,19 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: 210mm; // Standard A4 width
-    height: 297mm; // Standard A4 height
+    width: 190mm; // A4 width minus margins
+    height: 277mm; // A4 height minus margins
     background: #fff !important;
     color: #000 !important;
     padding: 10mm;
+    margin: 0;
     display: grid !important;
-    grid-template-columns: 1fr 1fr; // Exactly 2 columns
-    grid-gap: 8mm; // Exactly 8mm gaps between cards
+    grid-template-columns: 1fr 1fr; // 2 columns
+    grid-template-rows: repeat(4, 1fr); // 4 rows = 8 cards per page
+    grid-gap: 5mm; // Consistent gap between cards
     box-shadow: none !important;
+    box-sizing: border-box;
+    overflow: hidden;
 
     // Force background graphics printing
     -webkit-print-color-adjust: exact;
@@ -988,8 +992,87 @@
 
     .std-id-card-preview {
       box-shadow: none !important;
-      border-color: #a0aec0 !important;
+      border: 1px solid #a0aec0 !important;
       page-break-inside: avoid;
+      margin: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 100% !important;
+      min-height: auto !important;
+      aspect-ratio: auto !important;
+      padding: 8px !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-sizing: border-box;
+      overflow: hidden;
+
+      // Scale down card content for print
+      .std-id-card-logo {
+        width: 24px;
+        height: 24px;
+        margin: 0 auto 2px;
+
+        i { font-size: 0.8rem; }
+      }
+
+      .std-id-card-header {
+        padding-bottom: 2px;
+        margin-bottom: 4px;
+
+        h3 { font-size: 0.65rem; }
+        p { font-size: 0.45rem; margin-top: 1px; }
+      }
+
+      .std-id-card-avatar {
+        width: 40px;
+        height: 40px;
+        margin: 0 auto 4px;
+        font-size: 1rem;
+      }
+
+      .std-id-card-info {
+        gap: 1px;
+        margin-bottom: 4px;
+
+        h4 { font-size: 0.6rem; }
+        p { font-size: 0.5rem; }
+      }
+
+      .std-id-card-footer {
+        padding-top: 2px;
+
+        .signature-line { margin-bottom: 1px; }
+        .signature-label { font-size: 0.4rem; }
+      }
+
+      // Portrait orientation in print
+      &.orientation-portrait {
+        .std-id-card-avatar {
+          width: 36px;
+          height: 36px;
+          margin: 0 auto 3px;
+        }
+      }
+
+      // Landscape orientation in print
+      &.orientation-landscape {
+        .card-middle-content {
+          gap: 6px;
+          margin-top: 2px;
+        }
+
+        .std-id-card-avatar {
+          width: 32px;
+          height: 32px;
+        }
+
+        .std-id-card-info {
+          gap: 0;
+
+          p { font-size: 0.45rem; }
+        }
+      }
     }
   }
 }
