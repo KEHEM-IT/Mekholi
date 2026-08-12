@@ -78,6 +78,15 @@ const selectedOptions = computed<ComboboxOption[]>(
 
 const selectedOption = computed<ComboboxOption | null>(() => selectedOptions.value[0] ?? null)
 
+const truncatedSelectedText = computed<string>(() => {
+  if (!selectedOption.value) return displayPlaceholder.value
+  const label = String(selectedOption.value[props.optionLabel] ?? '')
+  if (label.length > 25) {
+    return label.substring(0, 25) + '...'
+  }
+  return label
+})
+
 const filteredOptions = computed(() => {
   const q = query.value.trim().toLowerCase()
   if (!q) return props.options
@@ -251,7 +260,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
         </template>
         <!-- Single select -->
         <template v-else>
-          {{ selectedOption ? String(selectedOption[optionLabel]) : displayPlaceholder }}
+          {{ truncatedSelectedText }}
         </template>
       </span>
       <span class="combobox__actions">

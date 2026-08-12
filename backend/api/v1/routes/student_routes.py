@@ -78,6 +78,42 @@ def handle_import(handler):
         res.error(handler, 500, f"Import failed: {err}")
 
 
+def handle_get_history(handler):
+    """GET /api/students/promotion-history — retrieve audit trails."""
+    try:
+        res.ok(handler, {"history": student_controller.list_promotion_history()})
+    except Exception as err:
+        res.error(handler, 500, f"Failed to retrieve history: {err}")
+
+
+def handle_post_history(handler):
+    """POST /api/students/promotion-history — create a history entry."""
+    body = _read_json_body(handler)
+    try:
+        student_controller.create_promotion_history(body)
+        res.created(handler, {"ok": True})
+    except Exception as err:
+        res.error(handler, 500, f"Failed to create log entry: {err}")
+
+
+def handle_get_certificates(handler):
+    """GET /api/students/certificates — retrieve issued certificates logs."""
+    try:
+        res.ok(handler, {"certificates": student_controller.list_generated_certificates()})
+    except Exception as err:
+        res.error(handler, 500, f"Failed to retrieve certificates: {err}")
+
+
+def handle_post_certificates(handler):
+    """POST /api/students/certificates — log a newly issued certificate."""
+    body = _read_json_body(handler)
+    try:
+        student_controller.create_generated_certificate(body)
+        res.created(handler, {"ok": True})
+    except Exception as err:
+        res.error(handler, 500, f"Failed to log certificate: {err}")
+
+
 def register_student_routes(handler, method, path):
     """Dispatch /api/students requests to the right handler."""
     if not path.startswith("/api/students"):
@@ -85,6 +121,22 @@ def register_student_routes(handler, method, path):
     if path == "/api/students/import":
         if method == "POST":
             handle_import(handler)
+        else:
+            res.error(handler, 405, "Method not allowed")
+        return True
+    if path == "/api/students/promotion-history":
+        if method == "GET":
+            handle_get_history(handler)
+        elif method == "POST":
+            handle_post_history(handler)
+        else:
+            res.error(handler, 405, "Method not allowed")
+        return True
+    if path == "/api/students/certificates":
+        if method == "GET":
+            handle_get_certificates(handler)
+        elif method == "POST":
+            handle_post_certificates(handler)
         else:
             res.error(handler, 405, "Method not allowed")
         return True

@@ -1282,6 +1282,32 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+        CREATE TABLE IF NOT EXISTS promotion_history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id TEXT NOT NULL,
+            candidate_name TEXT NOT NULL,
+            source_class TEXT NOT NULL,
+            target_class TEXT NOT NULL,
+            source_year TEXT NOT NULL,
+            target_year TEXT NOT NULL,
+            promotion_type TEXT NOT NULL,
+            roll_no INTEGER DEFAULT 0,
+            destination_branch TEXT DEFAULT '',
+            tc_no TEXT DEFAULT '',
+            remarks TEXT DEFAULT '',
+            created_at TEXT DEFAULT (datetime('now'))
+        );
+        CREATE TABLE IF NOT EXISTS generated_certificates (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id TEXT NOT NULL,
+            candidate_name TEXT NOT NULL,
+            certificate_type TEXT NOT NULL,
+            certificate_no TEXT UNIQUE NOT NULL,
+            issue_date TEXT DEFAULT '',
+            recipient_details TEXT DEFAULT '{}',
+            remarks TEXT DEFAULT '',
+            created_at TEXT DEFAULT (datetime('now'))
+        );
     """)
 
     _migrate(conn)
