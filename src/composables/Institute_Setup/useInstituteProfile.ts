@@ -5,6 +5,11 @@
 //   Dev (no server)  → form starts empty, user fills it in
 //   Dev (with server) → calls http://localhost:5000/api/profile (SQLite)
 //   Production        → form only (no external API dependency)
+//
+// API Design:
+//   - Uses `id` (auto-increment PK) as the primary lookup key
+//   - EIIN is optional — works for private schools without EIIN
+//   - Default institute ID = 1 (first institute created)
 
 import { computed, ref } from 'vue'
 
@@ -14,6 +19,9 @@ export const isSaving = ref(false)
 export const isLoadedFromApi = ref(false)
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
+
+// Primary institute ID (auto-increment PK, first institute = 1)
+const INSTITUTE_ID = '1'
 
 // Shared snapshot of the currently saved/loaded institute profile. The
 // Institute Setup dashboard (Index.vue) derives its completion progress
@@ -46,8 +54,7 @@ export const profileProgress = computed(() => {
 export async function saveProfile(form: Record<string, unknown>): Promise<boolean> {
   isSaving.value = true
   try {
-    const eiin = String(form.eiin || '129348')
-    const res = await fetch(`${API_BASE}/api/profile?eiin=${encodeURIComponent(eiin)}`, {
+    const res = await fetch(`${API_BASE}/api/profile?id=${INSTITUTE_ID}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form),
@@ -67,7 +74,7 @@ export async function saveProfile(form: Record<string, unknown>): Promise<boolea
  *  Returns the form object or null if API is unavailable. */
 export async function loadProfile(): Promise<Record<string, unknown> | null> {
   try {
-    const res = await fetch(`${API_BASE}/api/profile?eiin=129348`)
+    const res = await fetch(`${API_BASE}/api/profile?id=${INSTITUTE_ID}`)
     if (!res.ok) return null
     const data = await res.json()
     isLoadedFromApi.value = true

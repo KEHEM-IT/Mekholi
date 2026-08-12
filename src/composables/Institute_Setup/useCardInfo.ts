@@ -17,8 +17,8 @@ export interface CardInfo {
 // Cached result — the institute name/logo rarely changes during a session
 let cachedCardInfo: CardInfo | null = null
 
-// EIIN for L. R. Govt. High School (from Institute Setup > Profile)
-const INSTITUTE_EIIN = '129348'
+// Primary institute ID (auto-increment PK, first institute = 1)
+const INSTITUTE_ID = '1'
 
 /**
  * Fetch only the institute name and logo for ID card generation.
@@ -28,7 +28,7 @@ export async function fetchCardInfo(): Promise<CardInfo> {
   if (cachedCardInfo) return cachedCardInfo
 
   try {
-    const res = await fetch(`${API_BASE}/api/profile/card-info?eiin=${INSTITUTE_EIIN}`)
+    const res = await fetch(`${API_BASE}/api/profile/card-info?id=${INSTITUTE_ID}`)
     if (!res.ok) throw new Error('Card info fetch failed')
     const data = await res.json()
     cachedCardInfo = {

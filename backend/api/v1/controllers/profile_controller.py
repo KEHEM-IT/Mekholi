@@ -1,5 +1,11 @@
 # backend/api/v1/controllers/profile_controller.py
-"""Business logic for the institute profile resource."""
+"""Business logic for the institute profile resource.
+
+API Design:
+  - Uses `id` (auto-increment PK) as the primary lookup key
+  - EIIN is optional — works for private schools without EIIN
+  - Falls back to id=1 (first institute) when no ID specified
+"""
 
 import json
 
@@ -31,8 +37,101 @@ NUMBER_FIELDS = (
 )
 
 
+# ── ID-based lookups (primary API) ─────────────────────────────────────
+
+
+def get_profile_by_id(institute_id):
+    """Fetch a profile by ID (primary key), or None when it does not exist.
+    
+    This is the primary lookup method — works for all institutes
+    regardless of whether they have an EIIN.
+    """
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT * FROM institute_profiles WHERE id=?", (institute_id,)
+        ).fetchone()
+        return profile_to_dict(row, conn) if row else None
+    finally:
+        conn.close()
+
+
+def get_card_info_by_id(institute_id):
+    """Fetch only the fields needed for ID card generation (optimized).
+    
+    Returns institute_name_en and institute_logo only — avoids pulling
+    the full profile (classifications, committee, facilities, bank, etc.)
+    when all we need is the header block for ID cards.
+    """
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT institute_name_en, institute_logo FROM institute_profiles WHERE id=?",
+            (institute_id,),
+        ).fetchone()
+        if row is None:
+            return None
+        return {
+            "institute_name_en": row["institute_name_en"] if row["institute_name_en"] else "",
+            "institute_logo": row["institute_logo"] if row["institute_logo"] else "",
+        }
+    finally:
+        conn.close()
+
+
+def upsert_profile_by_id(institute_id, body):
+    """Insert or update a profile (upsert) with its related tables.
+    
+    Uses ID as the primary key. Creates new profile if ID doesn't exist.
+    """
+    conn = get_db()
+    try:
+        # Check if profile with this ID exists
+        existing = conn.execute(
+            "SELECT id FROM institute_profiles WHERE id=?", (institute_id,)
+        ).fetchone()
+        
+        vals = _normalize_values(body, institute_id)
+        
+        if existing:
+            # Update existing profile
+            set_clause = ", ".join(f"{k}=?" for k in vals.keys())
+            set_clause += ", updated_at=datetime('now')"
+            conn.execute(
+                f"UPDATE institute_profiles SET {set_clause} WHERE id=?",
+                (*vals.values(), institute_id),
+            )
+            pid = institute_id
+        else:
+            # Insert new profile
+            cols = ", ".join(vals.keys())
+            phs = ", ".join("?" for _ in vals)
+            conn.execute(
+                f"INSERT INTO institute_profiles ({cols}, id, updated_at) "
+                f"VALUES ({phs}, ?, datetime('now'))",
+                (*vals.values(), institute_id),
+            )
+            pid = institute_id
+
+        _replace_committee(conn, pid, body.get("committee_members"))
+        _replace_facilities(conn, pid, body.get("facilities"))
+        conn.commit()
+        return True
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+# ── EIIN-based lookups (backward compatibility) ────────────────────────
+
+
 def get_profile(eiin):
-    """Fetch a profile by EIIN, or None when it does not exist."""
+    """Fetch a profile by EIIN (legacy support).
+    
+    New code should use get_profile_by_id() instead.
+    """
     conn = get_db()
     try:
         row = conn.execute(
@@ -44,12 +143,7 @@ def get_profile(eiin):
 
 
 def get_card_info(eiin):
-    """Fetch only the fields needed for ID card generation (optimized).
-    
-    Returns institute_name_en and institute_logo only — avoids pulling
-    the full profile (classifications, committee, facilities, bank, etc.)
-    when all we need is the header block for ID cards.
-    """
+    """Fetch card info by EIIN (legacy support)."""
     conn = get_db()
     try:
         row = conn.execute(
@@ -64,6 +158,38 @@ def get_card_info(eiin):
         }
     finally:
         conn.close()
+
+
+def upsert_profile(eiin, body):
+    """Insert or update a profile by EIIN (legacy support)."""
+    conn = get_db()
+    try:
+        vals = _normalize_values(body, eiin)
+        cols = ", ".join(vals)
+        phs = ", ".join(f":{k}" for k in vals)
+        ups = ", ".join(f"{k}=excluded.{k}" for k in vals)
+        conn.execute(
+            f"INSERT INTO institute_profiles ({cols}, updated_at) "
+            f"VALUES ({phs}, datetime('now')) "
+            f"ON CONFLICT(eiin) DO UPDATE SET {ups}, updated_at=datetime('now')",
+            vals,
+        )
+        pid = conn.execute(
+            "SELECT id FROM institute_profiles WHERE eiin=?", (eiin,)
+        ).fetchone()["id"]
+
+        _replace_committee(conn, pid, body.get("committee_members"))
+        _replace_facilities(conn, pid, body.get("facilities"))
+        conn.commit()
+        return True
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+# ── Shared helpers ──────────────────────────────────────────────────────
 
 
 def _normalize_values(body, eiin):
@@ -116,32 +242,3 @@ def _replace_facilities(conn, pid, facilities_body):
                 "INSERT INTO facilities (profile_id,facility_key,enabled) VALUES (?,?,?)",
                 (pid, key, 1 if val else 0),
             )
-
-
-def upsert_profile(eiin, body):
-    """Insert or update a profile (upsert) with its related tables."""
-    conn = get_db()
-    try:
-        vals = _normalize_values(body, eiin)
-        cols = ", ".join(vals)
-        phs = ", ".join(f":{k}" for k in vals)
-        ups = ", ".join(f"{k}=excluded.{k}" for k in vals)
-        conn.execute(
-            f"INSERT INTO institute_profiles ({cols}, updated_at) "
-            f"VALUES ({phs}, datetime('now')) "
-            f"ON CONFLICT(eiin) DO UPDATE SET {ups}, updated_at=datetime('now')",
-            vals,
-        )
-        pid = conn.execute(
-            "SELECT id FROM institute_profiles WHERE eiin=?", (eiin,)
-        ).fetchone()["id"]
-
-        _replace_committee(conn, pid, body.get("committee_members"))
-        _replace_facilities(conn, pid, body.get("facilities"))
-        conn.commit()
-        return True
-    except Exception:
-        conn.rollback()
-        raise
-    finally:
-        conn.close()
