@@ -386,21 +386,222 @@
 .id-cards-grid-layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: $space-6;
+  gap: $space-4;
   margin-top: $space-6;
+  align-items: start;
 
+  // Small tablets: still stacked but with more breathing room
+  @media (min-width: $breakpoint-sm) {
+    gap: $space-6;
+  }
+
+  // Medium tablets: two columns with flexible right panel
   @media (min-width: $breakpoint-md) {
-    grid-template-columns: 1fr 340px;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+    gap: $space-6;
+  }
+
+  // Large screens: give the table more room, fixed comfortable right panel
+  @media (min-width: $breakpoint-lg) {
+    grid-template-columns: minmax(0, 1.4fr) minmax(300px, 380px);
+    gap: $space-8;
+  }
+
+  // Extra wide: generous spacing
+  @media (min-width: $breakpoint-xl) {
+    grid-template-columns: minmax(0, 1.6fr) minmax(320px, 400px);
+    gap: $space-8;
   }
 }
 
 .id-card-preview-panel {
+  background: var(--color-surface-alt);
+  border: 1.5px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  padding: $space-4;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 400px;
+
+  @media (min-width: $breakpoint-md) {
+    padding: $space-6;
+    min-height: 480px;
+  }
+}
+
+// Roster table block
+.roster-table-block {
+  padding: $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: $radius-lg;
-  padding: $space-6;
-  text-align: center;
   box-shadow: var(--shadow-card);
+
+  @media (min-width: $breakpoint-md) {
+    padding: $space-6;
+    gap: $space-4;
+  }
+}
+
+// Table header controls — responsive stacking
+.table-header-controls {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  align-items: stretch;
+
+  @media (min-width: $breakpoint-sm) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+}
+
+.roster-title {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.roster-search {
+  width: 100%;
+  max-width: 100%;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+
+  @media (min-width: $breakpoint-sm) {
+    max-width: 240px;
+  }
+}
+
+// Console title
+.console-title {
+  border-left: 3px solid var(--color-primary);
+  padding-left: 8px;
+  text-align: left;
+  margin-bottom: $space-4;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+// Design controls
+.design-controls {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  margin-bottom: $space-4;
+  text-align: left;
+
+  @media (min-width: $breakpoint-lg) {
+    gap: $space-4;
+  }
+}
+
+.control-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+// Live mockup wrapper
+.live-mockup-wrapper {
+  padding: $space-3;
+  background: var(--color-bg);
+  border-radius: $radius-md;
+  border: 1px dashed var(--color-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-3;
+
+  @media (min-width: $breakpoint-md) {
+    padding: $space-4;
+    gap: $space-4;
+  }
+}
+
+// Card student name in preview
+.card-student-name {
+  font-size: 0.95rem;
+
+  .orientation-portrait & {
+    font-size: 1rem;
+    margin-bottom: 2px;
+  }
+}
+
+// Validity indicators
+.validity-indicators {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: $space-2;
+  width: 100%;
+
+  @media (min-width: $breakpoint-md) {
+    gap: 8px;
+  }
+}
+
+.badge-sm {
+  font-size: 0.65rem;
+  padding: 2px 8px;
+}
+
+// Empty preview state
+.empty-preview-mockup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: var(--color-bg);
+  border: 1px dashed var(--color-border);
+  border-radius: $radius-md;
+  padding: $space-4;
+
+  @media (min-width: $breakpoint-md) {
+    min-height: 260px;
+  }
+}
+
+.empty-icon {
+  font-size: 2.5rem;
+  color: var(--color-text-muted);
+  margin-bottom: $space-3;
+
+  @media (min-width: $breakpoint-md) {
+    font-size: 3rem;
+  }
+}
+
+.empty-text {
+  font-size: 0.8rem;
+  max-width: 80%;
+  text-align: center;
+
+  @media (min-width: $breakpoint-md) {
+    font-size: 0.82rem;
+  }
+}
+
+// Panel print actions
+.panel-print-actions {
+  margin-top: $space-4;
+  border-top: 1px solid var(--color-border-strong);
+  padding-top: $space-3;
+
+  @media (min-width: $breakpoint-md) {
+    margin-top: $space-6;
+    padding-top: $space-4;
+  }
 }
 
 // Card templates
@@ -414,57 +615,115 @@
   color: #fff;
   border: 1px solid #333;
 
-  // Portrait layout: 240px x 380px
+  // Portrait layout: responsive scaling
   &.orientation-portrait {
-    width: 250px;
-    height: 390px;
-    padding: $space-4;
+    width: 100%;
+    max-width: 250px;
+    aspect-ratio: 250 / 390;
+    height: auto;
+    min-height: 320px;
+    padding: $space-3;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
+    @media (min-width: $breakpoint-md) {
+      max-width: 250px;
+      min-height: 390px;
+      padding: $space-4;
+    }
+
     .std-id-card-avatar {
-      width: 90px;
-      height: 90px;
-      margin: 0 auto $space-3;
+      width: 70px;
+      height: 70px;
+      margin: 0 auto $space-2;
+
+      @media (min-width: $breakpoint-md) {
+        width: 90px;
+        height: 90px;
+        margin: 0 auto $space-3;
+      }
     }
 
     .std-id-card-info {
       text-align: center;
-      gap: 4px;
+      gap: 3px;
+
+      @media (min-width: $breakpoint-md) {
+        gap: 4px;
+      }
+
+      p {
+        font-size: 0.75rem;
+
+        @media (min-width: $breakpoint-md) {
+          font-size: 0.82rem;
+        }
+      }
     }
   }
 
-  // Landscape layout: 380px x 240px
+  // Landscape layout: responsive scaling
   &.orientation-landscape {
-    width: 390px;
-    height: 250px;
-    padding: $space-4;
+    width: 100%;
+    max-width: 390px;
+    aspect-ratio: 390 / 250;
+    height: auto;
+    min-height: 200px;
+    padding: $space-3;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
+    @media (min-width: $breakpoint-md) {
+      max-width: 390px;
+      min-height: 250px;
+      padding: $space-4;
+    }
+
     .card-middle-content {
       display: flex;
-      gap: $space-4;
+      gap: $space-3;
       align-items: center;
       text-align: left;
       flex: 1;
-      margin-top: $space-2;
+      margin-top: $space-1;
+
+      @media (min-width: $breakpoint-md) {
+        gap: $space-4;
+        margin-top: $space-2;
+      }
     }
 
     .std-id-card-avatar {
-      width: 80px;
-      height: 80px;
+      width: 60px;
+      height: 60px;
       margin: 0;
       flex-shrink: 0;
+
+      @media (min-width: $breakpoint-md) {
+        width: 80px;
+        height: 80px;
+      }
     }
 
     .std-id-card-info {
       text-align: left;
       align-items: flex-start;
-      gap: 2px;
+      gap: 1px;
       margin: 0;
+
+      @media (min-width: $breakpoint-md) {
+        gap: 2px;
+      }
+
+      p {
+        font-size: 0.72rem;
+
+        @media (min-width: $breakpoint-md) {
+          font-size: 0.82rem;
+        }
+      }
     }
   }
 

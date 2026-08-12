@@ -254,18 +254,17 @@ function printCard() {
     <!-- Main Workspace Grid -->
     <div class="id-cards-grid-layout">
       <!-- Left side: Student list data table -->
-      <div class="roster-table-block ipf-section" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; box-shadow: var(--shadow-card);">
-        <div class="table-header-controls" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
-          <h4 class="ipf-section__title" style="margin: 0;">
+      <div class="roster-table-block ipf-section">
+        <div class="table-header-controls">
+          <h4 class="ipf-section__title roster-title">
             <i class="fa-duotone fa-list-ul" />
             {{ t('Student Register') }}
           </h4>
-          <input 
-            v-model="searchQuery" 
-            type="search" 
-            class="search-input" 
+          <input
+            v-model="searchQuery"
+            type="search"
+            class="search-input roster-search"
             :placeholder="t('Search name or ID...')"
-            style="max-width: 240px; padding: 6px 12px; font-size: 0.85rem;"
           />
         </div>
 
@@ -297,16 +296,16 @@ function printCard() {
       </div>
 
       <!-- Right side: Live Card Preview & Layout Controllers -->
-      <div class="id-card-preview-panel" style="background: var(--color-surface-alt); border: 1.5px solid var(--color-border-strong); padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; justify-content: space-between; min-height: 480px;">
-        <div>
-          <h4 class="section-sub-title" style="border-left: 3px solid var(--color-primary); padding-left: 8px; text-align: left; margin-bottom: 1.5rem; font-weight: 600; color: var(--color-text);">
+      <div class="id-card-preview-panel">
+        <div class="id-card-preview-top">
+          <h4 class="section-sub-title console-title">
             {{ t('ID Card Console') }}
           </h4>
 
           <!-- Controls -->
-          <div class="design-controls" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; text-align: left;">
+          <div class="design-controls">
             <div class="form-field">
-              <label style="font-size: 0.8rem; font-weight: 600; color: var(--color-text-secondary);">{{ t('Card Design Theme') }}</label>
+              <label class="control-label">{{ t('Card Design Theme') }}</label>
               <BaseCombobox
                 v-model="cardTemplate"
                 :options="templateOptions"
@@ -316,7 +315,7 @@ function printCard() {
               />
             </div>
             <div class="form-field">
-              <label style="font-size: 0.8rem; font-weight: 600; color: var(--color-text-secondary);">{{ t('Card Orientation') }}</label>
+              <label class="control-label">{{ t('Card Orientation') }}</label>
               <BaseCombobox
                 v-model="cardOrientation"
                 :options="orientationOptions"
@@ -328,7 +327,7 @@ function printCard() {
           </div>
 
           <!-- Live Visual Mockup Box -->
-          <div v-if="previewTarget" class="live-mockup-wrapper animate-fade-in" style="padding: 1rem; background: var(--color-bg); border-radius: 8px; border: 1px dashed var(--color-border); display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+          <div v-if="previewTarget" class="live-mockup-wrapper animate-fade-in">
             <div class="std-id-card-preview" :class="[cardOrientation, cardTemplate]">
               <!-- Header -->
               <div class="std-id-card-header">
@@ -344,7 +343,7 @@ function printCard() {
                 </div>
 
                 <div class="std-id-card-info">
-                  <h4 style="font-size: 0.95rem;">{{ previewTarget.candidate_name }}</h4>
+                  <h4 class="card-student-name">{{ previewTarget.candidate_name }}</h4>
                   <p>{{ t('ID:') }} <strong>{{ previewTarget.student_id }}</strong></p>
                   <p>{{ t('Class:') }} {{ previewTarget.class_name }}</p>
                   <p>{{ t('Sec:') }} {{ previewTarget.section_name }} · {{ t('Roll:') }} {{ previewTarget.roll_no }}</p>
@@ -360,7 +359,7 @@ function printCard() {
                 </div>
 
                 <div class="std-id-card-info">
-                  <h4 style="font-size: 1rem; margin-bottom: 2px;">{{ previewTarget.candidate_name }}</h4>
+                  <h4 class="card-student-name">{{ previewTarget.candidate_name }}</h4>
                   <p>{{ t('Student ID:') }} <strong>{{ previewTarget.student_id }}</strong></p>
                   <p>{{ t('Class:') }} {{ previewTarget.class_name }} · {{ t('Section:') }} {{ previewTarget.section_name }}</p>
                   <p>{{ t('Roll No:') }} {{ previewTarget.roll_no }}</p>
@@ -375,34 +374,32 @@ function printCard() {
               </div>
             </div>
 
-            <!-- Verification Metadata checklist tags (real-world validation standards!) -->
-            <div class="validity-indicators" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 0.5rem; width: 100%;">
-              <span class="status-badge status-badge--success" style="font-size: 0.65rem; padding: 2px 8px;">
+            <!-- Verification Metadata checklist tags -->
+            <div class="validity-indicators">
+              <span class="status-badge status-badge--success badge-sm">
                 ✓ {{ t('Active') }}
               </span>
-              <span 
-                class="status-badge" 
-                :class="previewTarget.photo ? 'status-badge--success' : 'status-badge--danger'" 
-                style="font-size: 0.65rem; padding: 2px 8px;"
+              <span
+                class="status-badge badge-sm"
+                :class="previewTarget.photo ? 'status-badge--success' : 'status-badge--danger'"
               >
                 {{ previewTarget.photo ? '✓ Photo Attached' : '✗ No Photo' }}
               </span>
-              <span 
-                class="status-badge" 
-                :class="previewTarget.government_uid && previewTarget.government_uid.length === 17 ? 'status-badge--success' : 'status-badge--warning'" 
-                style="font-size: 0.65rem; padding: 2px 8px;"
+              <span
+                class="status-badge badge-sm"
+                :class="previewTarget.government_uid && previewTarget.government_uid.length === 17 ? 'status-badge--success' : 'status-badge--warning'"
               >
                 {{ previewTarget.government_uid && previewTarget.government_uid.length === 17 ? '✓ Synced UID' : '✗ Unsynced UID' }}
               </span>
             </div>
           </div>
-          <div v-else class="empty-preview-mockup" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 260px; background: var(--color-bg); border: 1px dashed var(--color-border); border-radius: 8px;">
-            <i class="fa-duotone fa-id-card" style="font-size: 3rem; color: var(--color-text-muted); margin-bottom: 1rem;" />
-            <p class="text-muted" style="font-size: 0.82rem; max-width: 80%;">{{ t('Select a student from the register roster list to focus preview card.') }}</p>
+          <div v-else class="empty-preview-mockup">
+            <i class="fa-duotone fa-id-card empty-icon" />
+            <p class="text-muted empty-text">{{ t('Select a student from the register roster list to focus preview card.') }}</p>
           </div>
         </div>
 
-        <div v-if="previewTarget" class="panel-print-actions" style="margin-top: 1.5rem; border-top: 1px solid var(--color-border-strong); padding-top: 1.25rem;">
+        <div v-if="previewTarget" class="panel-print-actions">
           <button type="button" class="btn btn--primary w-full" @click="printCard">
             <i class="fa-duotone fa-print" /> {{ t('Print Roster Cards') }} ({{ checkedStudents.length }})
           </button>
