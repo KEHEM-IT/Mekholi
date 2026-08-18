@@ -43,7 +43,8 @@ export const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/LanguageThemeSettingsView.vue'),
         beforeEnter: requireAuth,
       },
-      // Students sub-menus
+      // Institute Setup
+      {
         path: 'institute-setup',
         name: 'institute-setup',
         component: () => import('@/pages/Institute_Setup/Index.vue'),
