@@ -1162,6 +1162,7 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
+    """)
 
     _migrate(conn)
     _seed_academic_years(conn)
@@ -1190,7 +1191,6 @@ def init_db():
 
     conn.commit()
     conn.close()
-""")
 
 
 def profile_to_dict(row, conn):
