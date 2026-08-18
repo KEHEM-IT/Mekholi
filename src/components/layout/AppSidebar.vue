@@ -79,17 +79,6 @@ const SUBMENU_ROUTES: Record<string, string> = {
   "Document Verification": "admission-document-verification",
   "Seat/Quota": "admission-seat-quota",
   "Admission Settings": "admission-settings",
-  // Students
-  "Student Dashboard": "students-dashboard",
-  "Student List": "student-list",
-  "Add/Bulk Import": "student-bulk-import",
-  "Stipend & Scholarship": "student-stipend",
-  "Promote/Transfer": "student-promote-transfer",
-  "Unique ID (UID) Sync": "student-unique-id-sync",
-  "ID Cards": "student-id-cards",
-  "TC & Certificates": "student-certificates",
-  "Behavior & Discipline": "student-behavior-logs",
-  "NID Scanner": "student-nid-scanner",
 };
 
 function onSubmenuClick(sub: NavSubMenu) {
