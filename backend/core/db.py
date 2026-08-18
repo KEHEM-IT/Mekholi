@@ -669,18 +669,6 @@ def _seed_admission_settings(conn):
     print("SQL: seeded default admission settings")
 
 
-            " phone, email, academic_year_id, class_name, section_name, roll_no, gender, date_of_birth,"
-            " blood_group, religion, stipend_eligible, stipend_mfs_provider, stipend_mfs_number,"
-            " government_uid, behavior_points, is_active)"
-            " VALUES (:student_id, :candidate_name, :candidate_name_bn, :guardian_name,"
-            " :phone, :email, :academic_year_id, :class_name, :section_name, :roll_no, :gender, :date_of_birth,"
-            " :blood_group, :religion, :stipend_eligible, :stipend_mfs_provider, :stipend_mfs_number,"
-            " :government_uid, :behavior_points, 1)",
-            {**s, "academic_year_id": year_id}
-        )
-        print(f"SQL: seeded default student — {s['student_id']} ({s['candidate_name']})")
-
-
 def _seed_exam_terms(conn):
     """Seed the default BD exam terms ONLY on a fresh/empty table, so terms
     the user deletes stay deleted (no resurrection on restart)."""
@@ -1202,6 +1190,7 @@ def init_db():
 
     conn.commit()
     conn.close()
+""")
 
 
 def profile_to_dict(row, conn):
