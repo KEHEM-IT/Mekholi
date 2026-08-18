@@ -108,38 +108,6 @@ def _migrate(conn):
     except sqlite3.OperationalError:
         pass
 
-    # Migrate students: add advanced parent and address fields
-    try:
-        cols = [r[1] for r in conn.execute("PRAGMA table_info(students)").fetchall()]
-        if cols:
-            if "father_name" not in cols:
-                conn.execute("ALTER TABLE students ADD COLUMN father_name TEXT DEFAULT ''")
-            if "father_nid" not in cols:
-                conn.execute("ALTER TABLE students ADD COLUMN father_nid TEXT DEFAULT ''")
-            if "mother_name" not in cols:
-                conn.execute("ALTER TABLE students ADD COLUMN mother_name TEXT DEFAULT ''")
-            if "mother_nid" not in cols:
-                conn.execute("ALTER TABLE students ADD COLUMN mother_nid TEXT DEFAULT ''")
-            if "present_address" not in cols:
-                conn.execute("ALTER TABLE students ADD COLUMN present_address TEXT DEFAULT ''")
-            if "permanent_address" not in cols:
-                conn.execute("ALTER TABLE students ADD COLUMN permanent_address TEXT DEFAULT ''")
-            if "stipend_type" not in cols:
-                conn.execute("ALTER TABLE students ADD COLUMN stipend_type TEXT DEFAULT ''")
-            if "stipend_amount" not in cols:
-                conn.execute("ALTER TABLE students ADD COLUMN stipend_amount REAL DEFAULT 0.0")
-            if "stipend_frequency" not in cols:
-                conn.execute("ALTER TABLE students ADD COLUMN stipend_frequency TEXT DEFAULT 'Quarterly'")
-            if "stipend_status" not in cols:
-                conn.execute("ALTER TABLE students ADD COLUMN stipend_status TEXT DEFAULT 'Active'")
-            if "stipend_criteria" not in cols:
-                conn.execute("ALTER TABLE students ADD COLUMN stipend_criteria TEXT DEFAULT 'General'")
-            if "photo" not in cols:
-                conn.execute("ALTER TABLE students ADD COLUMN photo TEXT DEFAULT ''")
-            if "birth_certificate" not in cols:
-                conn.execute("ALTER TABLE students ADD COLUMN birth_certificate TEXT DEFAULT ''")
-            print("SQL: migrated students — added father/mother names & NIDs + addresses + advanced stipend fields + photo & birth_certificate")
-    except sqlite3.OperationalError:
         pass
 
 
@@ -701,49 +669,6 @@ def _seed_admission_settings(conn):
     print("SQL: seeded default admission settings")
 
 
-DEFAULT_STUDENTS = [
-    {
-        "student_id": "STD-2026-0001", "candidate_name": "Mehedi Hasan", "candidate_name_bn": "মেহেদী হাসান",
-        "guardian_name": "Abul Hasan", "phone": "01712345678", "email": "mehedi@gmail.com",
-        "class_name": "Class 6", "section_name": "A", "roll_no": 1, "gender": "Male",
-        "date_of_birth": "2015-05-15", "blood_group": "O+", "religion": "Islam",
-        "stipend_eligible": 1, "stipend_mfs_provider": "bKash", "stipend_mfs_number": "01712345678",
-        "government_uid": "20158219381029381", "behavior_points": 105
-    },
-    {
-        "student_id": "STD-2026-0002", "candidate_name": "Zarah Ahmed", "candidate_name_bn": "জারা আহমেদ",
-        "guardian_name": "Dr. Imtiaz Ahmed", "phone": "01819876543", "email": "zarah@gmail.com",
-        "class_name": "Class 6", "section_name": "A", "roll_no": 2, "gender": "Female",
-        "date_of_birth": "2015-08-20", "blood_group": "A+", "religion": "Islam",
-        "stipend_eligible": 0, "stipend_mfs_provider": "", "stipend_mfs_number": "",
-        "government_uid": "20158219381029382", "behavior_points": 100
-    },
-    {
-        "student_id": "STD-2026-0003", "candidate_name": "Sadia Islam", "candidate_name_bn": "সাদিয়া ইসলাম",
-        "guardian_name": "Rafiqul Islam", "phone": "01711122233", "email": "sadia@gmail.com",
-        "class_name": "Class 9", "section_name": "B", "roll_no": 1, "gender": "Female",
-        "date_of_birth": "2012-03-10", "blood_group": "B+", "religion": "Islam",
-        "stipend_eligible": 1, "stipend_mfs_provider": "Nagad", "stipend_mfs_number": "01711122233",
-        "government_uid": "20128219381029383", "behavior_points": 95
-    }
-]
-
-
-def _seed_students(conn):
-    """Seed default student records ONLY on an empty table."""
-    try:
-        count = conn.execute("SELECT COUNT(*) FROM students").fetchone()[0]
-    except sqlite3.OperationalError:
-        return
-    if count > 0:
-        return
-    # Resolve first available academic year
-    year = conn.execute("SELECT id FROM academic_years ORDER BY id DESC LIMIT 1").fetchone()
-    year_id = year["id"] if year else 0
-    
-    for s in DEFAULT_STUDENTS:
-        conn.execute(
-            "INSERT INTO students (student_id, candidate_name, candidate_name_bn, guardian_name,"
             " phone, email, academic_year_id, class_name, section_name, roll_no, gender, date_of_birth,"
             " blood_group, religion, stipend_eligible, stipend_mfs_provider, stipend_mfs_number,"
             " government_uid, behavior_points, is_active)"
@@ -1249,66 +1174,6 @@ def init_db():
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
         );
-        CREATE TABLE IF NOT EXISTS students (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            student_id TEXT UNIQUE NOT NULL,
-            candidate_name TEXT DEFAULT '',
-            candidate_name_bn TEXT DEFAULT '',
-            guardian_name TEXT DEFAULT '',
-            father_name TEXT DEFAULT '',
-            father_nid TEXT DEFAULT '',
-            mother_name TEXT DEFAULT '',
-            mother_nid TEXT DEFAULT '',
-            present_address TEXT DEFAULT '',
-            permanent_address TEXT DEFAULT '',
-            phone TEXT DEFAULT '',
-            email TEXT DEFAULT '',
-            academic_year_id INTEGER REFERENCES academic_years(id) ON DELETE SET NULL,
-            class_name TEXT DEFAULT '',
-            section_name TEXT DEFAULT '',
-            roll_no INTEGER DEFAULT 0,
-            gender TEXT DEFAULT '',
-            date_of_birth TEXT DEFAULT '',
-            blood_group TEXT DEFAULT '',
-            religion TEXT DEFAULT '',
-            stipend_eligible INTEGER DEFAULT 0,
-            stipend_mfs_provider TEXT DEFAULT '',
-            stipend_mfs_number TEXT DEFAULT '',
-            government_uid TEXT DEFAULT '',
-            behavior_points INTEGER DEFAULT 100,
-            is_active INTEGER DEFAULT 1,
-            photo TEXT DEFAULT '',
-            birth_certificate TEXT DEFAULT '',
-            created_at TEXT DEFAULT (datetime('now')),
-            updated_at TEXT DEFAULT (datetime('now'))
-        );
-        CREATE TABLE IF NOT EXISTS promotion_history (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            student_id TEXT NOT NULL,
-            candidate_name TEXT NOT NULL,
-            source_class TEXT NOT NULL,
-            target_class TEXT NOT NULL,
-            source_year TEXT NOT NULL,
-            target_year TEXT NOT NULL,
-            promotion_type TEXT NOT NULL,
-            roll_no INTEGER DEFAULT 0,
-            destination_branch TEXT DEFAULT '',
-            tc_no TEXT DEFAULT '',
-            remarks TEXT DEFAULT '',
-            created_at TEXT DEFAULT (datetime('now'))
-        );
-        CREATE TABLE IF NOT EXISTS generated_certificates (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            student_id TEXT NOT NULL,
-            candidate_name TEXT NOT NULL,
-            certificate_type TEXT NOT NULL,
-            certificate_no TEXT UNIQUE NOT NULL,
-            issue_date TEXT DEFAULT '',
-            recipient_details TEXT DEFAULT '{}',
-            remarks TEXT DEFAULT '',
-            created_at TEXT DEFAULT (datetime('now'))
-        );
-    """)
 
     _migrate(conn)
     _seed_academic_years(conn)
@@ -1323,7 +1188,6 @@ def init_db():
     _seed_admission_tests(conn)
     _seed_admission_lotteries(conn)
     _seed_admission_settings(conn)
-    _seed_students(conn)
 
     # Seed a blank profile so the API always has something to return.
     # Uses id=1 (first institute) — EIIN is optional for private schools.

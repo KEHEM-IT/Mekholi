@@ -44,67 +44,6 @@ export const routes: RouteRecordRaw[] = [
         beforeEnter: requireAuth,
       },
       // Students sub-menus
-      {
-        path: 'students',
-        name: 'students-dashboard',
-        component: () => import('@/pages/Students/Dashboard/DashboardView.vue'),
-        beforeEnter: requireAuth,
-      },
-      {
-        path: 'students/student-list',
-        name: 'student-list',
-        component: () => import('@/pages/Students/StudentList/StudentListView.vue'),
-        beforeEnter: requireAuth,
-      },
-      {
-        path: 'students/add-import',
-        name: 'student-bulk-import',
-        component: () => import('@/pages/Students/BulkImport/BulkImportView.vue'),
-        beforeEnter: requireAuth,
-      },
-      {
-        path: 'students/stipend',
-        name: 'student-stipend',
-        component: () => import('@/pages/Students/Stipends/StipendsView.vue'),
-        beforeEnter: requireAuth,
-      },
-      {
-        path: 'students/promote-transfer',
-        name: 'student-promote-transfer',
-        component: () => import('@/pages/Students/PromoteTransfer/PromoteTransferView.vue'),
-        beforeEnter: requireAuth,
-      },
-      {
-        path: 'students/uid-sync',
-        name: 'student-unique-id-sync',
-        component: () => import('@/pages/Students/UniqueIdSync/UniqueIdSyncView.vue'),
-        beforeEnter: requireAuth,
-      },
-      {
-        path: 'students/id-cards',
-        name: 'student-id-cards',
-        component: () => import('@/pages/Students/IDCards/IDCardsView.vue'),
-        beforeEnter: requireAuth,
-      },
-      {
-        path: 'students/certificates',
-        name: 'student-certificates',
-        component: () => import('@/pages/Students/Certificates/CertificatesView.vue'),
-        beforeEnter: requireAuth,
-      },
-      {
-        path: 'students/behavior-logs',
-        name: 'student-behavior-logs',
-        component: () => import('@/pages/Students/BehaviorLogs/BehaviorLogsView.vue'),
-        beforeEnter: requireAuth,
-      },
-      {
-        path: 'students/nid-scanner',
-        name: 'student-nid-scanner',
-        component: () => import('@/pages/Students/NIDScanner/NIDScannerView.vue'),
-        beforeEnter: requireAuth,
-      },
-      {
         path: 'institute-setup',
         name: 'institute-setup',
         component: () => import('@/pages/Institute_Setup/Index.vue'),
